@@ -10,7 +10,7 @@
     <url>http://testmycode.net</url>
 
 
-   
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,10 +20,6 @@
 
     <build>
         <plugins>
-            
-            
-            
-            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -32,10 +28,10 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                </configuration>                
+                </configuration>
             </plugin>
-            
-            
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -56,23 +52,17 @@
                     </execution>
                 </executions>
             </plugin>
-            
-            
-            
+
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-eclipse-compiler</artifactId>
-                        <version>2.6.0-01</version>
-                    </dependency>
-                </dependencies>
+                <version>3.3</version>
                 <configuration>
-                    <compilerId>groovy-eclipse-compiler</compilerId>
+                  <source>1.4</source>
+                  <target>1.4</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <artifactId>groovy-eclipse-compiler</artifactId>
                 <groupId>org.codehaus.groovy</groupId>
@@ -97,7 +87,7 @@
                     </storyReport>
                 </configuration>
             </plugin>
-             
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
@@ -109,7 +99,7 @@
                    <!-- <instrumentation></instrumentation>  include here if no classes being tested-->
                 </configuration>
             </plugin>
-        
+
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
@@ -120,7 +110,7 @@
 
 
 
-   
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
