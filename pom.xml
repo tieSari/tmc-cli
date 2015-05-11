@@ -106,7 +106,7 @@
                     <format>xml</format>
                     <maxmem>256m</maxmem>
                     <aggregate>true</aggregate>
-                    <instrumentation></instrumentation>
+                   <!-- <instrumentation></instrumentation>  include here if no classes being tested-->
                 </configuration>
             </plugin>
         

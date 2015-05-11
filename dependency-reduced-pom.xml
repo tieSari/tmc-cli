@@ -81,7 +81,6 @@
           <format>xml</format>
           <maxmem>256m</maxmem>
           <aggregate>true</aggregate>
-          <instrumentation />
         </configuration>
       </plugin>
       <plugin>
