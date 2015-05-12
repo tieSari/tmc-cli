@@ -44,8 +44,13 @@ public class Server implements IOinterface {
                 break;
             }
             
-            Command c = ProtocolParser.getCommand(inputLine);
-            c.execute();
+            Command c;
+            try {
+                c = ProtocolParser.getCommand(inputLine);
+                c.execute();
+            } catch (ProtocolException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             if (inputLine.equals("q")) {
                 break;
