@@ -22,7 +22,7 @@ public class Main {
                 new InputStreamReader(clientSocket.getInputStream()));
 
         String inputLine, outputLine;
-
+        
         while ((inputLine = in.readLine()) != null) {
             outputLine = inputLine+" Recieved";
             out.println(outputLine);
