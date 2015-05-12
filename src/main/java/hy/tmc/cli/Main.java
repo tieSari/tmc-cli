@@ -21,10 +21,11 @@ public class Main {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));
 
+        
         String inputLine, outputLine;
 
         while ((inputLine = in.readLine()) != null) {
-            outputLine = inputLine+" Recieved";
+            outputLine = inputLine + " Recieved";
             out.println(outputLine);
             if (outputLine.equals("Bye Recieved")) {
                 break;
