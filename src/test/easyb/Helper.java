@@ -10,16 +10,20 @@ import java.io.InputStreamReader;
  */
 public class Helper {
 
-    public static String startCommand(String command) {
+    public static String startCommand(String command, String cliPath) {
         Process p = null;
+
+        if (cliPath == null) {
+            cliPath = "cli/frontend.sh";
+        }
+
         try {
-            p = new ProcessBuilder("bash", "cli/frontend.sh", command).start();
+            p = new ProcessBuilder("bash", cliPath, command).start();
             p.waitFor();
         } catch (Exception e) {
             return "";
         }
         InputStream inputStream = p.getInputStream();
-        System.out.println(inputStream.toString());
 
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
