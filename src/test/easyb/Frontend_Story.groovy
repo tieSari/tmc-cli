@@ -5,15 +5,12 @@ package easyb
 
  */
 
-before "", {
-    helper = new Helper()
-}
 
 scenario "user wants to see available commands", {
 
     given "command help to cli",{
 
-        output = helper.startCommand("help")
+        output = Helper.startCommand("help")
 
     }
 
