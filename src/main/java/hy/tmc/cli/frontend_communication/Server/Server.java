@@ -34,41 +34,19 @@ public class Server {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));
 
-        String inputLine, outputLine;
+        String inputLine=null;
+        String outputLine;
 
-        while ((inputLine = in.readLine()) != null) {
-            outputLine = inputLine + " Recieved";
-            out.println(outputLine);
-            if (outputLine.equals("Bye Recieved")) {
+        while (true) {
+            inputLine = in.readLine();
+            if (inputLine == null){
                 break;
             }
+            if (inputLine.equals("q")){
+                break;
+            }
+            outputLine = "server says hi!";
+            out.println(outputLine);
         }
     }
-
-    /*
-     System.out.println("Hello world!");
-     int portNumber = 3576;
-
-     ServerSocket serverSocket = new ServerSocket(portNumber);
-     Socket clientSocket = serverSocket.accept();
-     PrintWriter out
-     = new PrintWriter(clientSocket.getOutputStream(), true);
-     BufferedReader in = new BufferedReader(
-     new InputStreamReader(clientSocket.getInputStream()));
-
-     String inputLine, outputLine;
-
-     while ((inputLine = in.readLine()) != null) {
-     outputLine = inputLine+" Recieved";
-     out.println(outputLine);
-     if (outputLine.equals("Bye Recieved")) {
-     break;
-     }
-     }
-    
-    
-    
-    
-    
-     */
 }
