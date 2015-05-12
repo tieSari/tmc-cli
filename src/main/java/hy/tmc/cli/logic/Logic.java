@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hy.tmc.cli.frontend_communication;
 
-import java.io.IOException;
+package hy.tmc.cli.logic;
 
 /**
  *
- * @author pihla
+ * @author ilari
  */
-public interface IOinterface {
-    public void start() throws IOException;
+public class Logic {
+    
 }

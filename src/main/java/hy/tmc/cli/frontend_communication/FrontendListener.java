@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hy.tmc.cli.Listeners.IO;
+package hy.tmc.cli.frontend_communication;
 
 /**
  *
- * @author kristianw
+ * @author pihla
  */
-public interface Reader {
-
-    public void read(String input);
+public interface FrontendListener {
+    public void start();
+    public void printLine(String line);
 }

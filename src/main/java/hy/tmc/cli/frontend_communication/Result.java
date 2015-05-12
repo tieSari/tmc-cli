@@ -10,5 +10,15 @@ package hy.tmc.cli.frontend_communication;
  * @author pihla
  */
 public enum Result {
-    OK, ERROR;
+    SUCCESS, ERROR, RESULT_DATA;
+    
+    private String data;
+    
+    public String getData(){
+        return this.data;
+    }
+    
+    public void setData(){
+        
+    }
 }

@@ -5,23 +5,31 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Result;
 import static hy.tmc.cli.frontend_communication.Result.*;
+import hy.tmc.cli.logic.Logic;
 
 /**
  *
  * @author pihla
  */
-public class Help implements Command {
+public class Help extends Command {
 
+    public Help(FrontendListener front, Logic backend) {
+        super(front, backend);
+    }
+
+    
     @Override
     public void execute() {
-        System.out.println("");
+        this.frontend.printLine("a very helpful message");
     }
-
+    
     @Override
-    public Result getResult() {
-        return OK;
+    public void setParameter(String key, String value) {
     }
+    
+    
     
 }
