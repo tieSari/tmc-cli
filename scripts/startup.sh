@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#This script starts the server if it is not running.
+#TODO If the port is occupied or another error occurs, it fails.
+#Needs tmc-client.jar in classpath or same directory
+
 PORT=$1
 echo "Using port $PORT"
 RESPONSE=eval nc -z -w5 localhost $PORT; RESPONSE=$?
