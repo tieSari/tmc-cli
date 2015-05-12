@@ -5,11 +5,17 @@
 #Needs tmc-client.jar in classpath or same directory
 
 PORT=$1
-echo "Using port $PORT"
+if [ -z $PORT ]; then
+  echo "Bad parameters"
+  exit 0
+else
+  echo "Using port $PORT"
+fi
 RESPONSE=eval nc -z -w5 localhost $PORT; RESPONSE=$?
 
 if [ $RESPONSE = 1 ]; then
   eval nohup java -jar tmc-client.jar &> /dev/null &
+  #$! et saa viimesen background prosessin parametrin
   echo "Server started"
 else
   echo "Server is already running. Not doing anything."
