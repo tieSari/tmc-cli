@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hy.tmc.cli.Commands;
+package hy.tmc.cli.frontend_communication;
 
 /**
  *
- * @author kristianw
+ * @author pihla
  */
-public interface Command {
-    public void execute();
+public enum Result {
+    OK, ERROR;
 }

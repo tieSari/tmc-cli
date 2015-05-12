@@ -5,6 +5,8 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
+import hy.tmc.cli.frontend_communication.Commands.Command;
+import hy.tmc.cli.frontend_communication.IOinterface;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author kristianw
  */
-public class Server {
+public class Server implements IOinterface {
 
     private int portNumber;
 
@@ -26,27 +28,35 @@ public class Server {
         this.portNumber = portNumber;
     }
 
-    public void listen() throws IOException {
+    @Override
+    public void start() throws IOException {
         ServerSocket serverSocket = new ServerSocket(portNumber);
         Socket clientSocket = serverSocket.accept();
-        PrintWriter out
-                = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));
 
-        String inputLine=null;
+        String inputLine = null;
         String outputLine;
 
         while (true) {
             inputLine = in.readLine();
-            if (inputLine == null){
+            if (inputLine == null) {
                 break;
             }
-            if (inputLine.equals("q")){
+            
+            Command c = ProtocolParser.getCommand(inputLine);
+            c.execute();
+            
+            if (inputLine.equals("q")) {
                 break;
             }
-            outputLine = "server says hi!";
-            out.println(outputLine);
+            printLine("server says hi!", clientSocket);
         }
+    }
+
+    public void printLine(String outputLine, Socket clientSocket) throws IOException{
+        PrintWriter out
+                = new PrintWriter(clientSocket.getOutputStream(), true);
+        out.println(outputLine);
     }
 }
