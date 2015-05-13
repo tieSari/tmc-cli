@@ -6,7 +6,7 @@
 
 package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.ReplyToPing;
+import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
@@ -26,5 +26,9 @@ public class CommandFactory {
     
     public static Command ReplyToPing(FrontendListener front, Logic back) {
         return new ReplyToPing(front, back);
+    }
+    
+    public static Command Authenticate(FrontendListener front, Logic back) {
+        return new Authenticate(front, back);
     }
 }

@@ -36,6 +36,7 @@ public class ProtocolParser {
         commandsByName.put("help", Help(this.server, this.logic));
         commandsByName.put("ping", ReplyToPing(this.server, this.logic));
         commandsByName.put("echo", Echo(this.server, this.logic));
+        commandsByName.put("auth", Authenticate(this.server, this.logic));
         //commandsByName.put("listcourses", null);
     }
     
