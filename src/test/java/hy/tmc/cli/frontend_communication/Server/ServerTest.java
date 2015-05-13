@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package hy.tmc.cli.frontend_communication.Server;
 
-import hy.tmc.cli.frontend_communication.Commands.Command;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,11 +15,14 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author pihla
+ * @author ilari
  */
-public class ProtocolParserTest {
+public class ServerTest {
     
-    public ProtocolParserTest() {
+    private ServerBottle server;
+    private TestClient client;
+    
+    public ServerTest() {
     }
     
     @BeforeClass
@@ -32,11 +35,24 @@ public class ProtocolParserTest {
     
     @Before
     public void setUp() {
+        server = new ServerBottle(new Server(1234, null));
+        client = new TestClient(1234);
     }
     
     @After
     public void tearDown() {
     }
+
+    /**
+     * Test of start method, of class Server.
+     */
+    @Test
+    public void testServerRepliesToPing() {
+        server.start();
+        String answer = client.send("ping");
+        server.stop();
+    }
+
 
     
 }
