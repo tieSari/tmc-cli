@@ -3,3 +3,7 @@
 .classpath
 .project
 .settings/
+.idea/
+.idea/*
+.idea/**
+tmc-cli.iml

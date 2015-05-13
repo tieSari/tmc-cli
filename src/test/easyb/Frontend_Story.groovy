@@ -1,17 +1,19 @@
-package easyb
+
+import hy.tmc.cli.testhelpers.Helper;
+
 /**
 
  * Story for frontend
 
  */
 
+description 'User can list commands'
 
 scenario "user wants to see available commands", {
 
     given "command help to cli",{
-
-        output = Helper.startCommand("help")
-
+        helper = new Helper()
+        output = helper.startCommand("help", null)
     }
 
     then "cli returns list of commands", {
