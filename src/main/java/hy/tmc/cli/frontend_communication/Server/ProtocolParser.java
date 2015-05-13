@@ -6,9 +6,7 @@
 package hy.tmc.cli.frontend_communication.Server;
 
 import hy.tmc.cli.frontend_communication.Commands.Command;
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.ReplyToPing;
-import hy.tmc.cli.frontend_communication.Commands.Echo;
-import hy.tmc.cli.frontend_communication.Commands.Help;
+import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
 import hy.tmc.cli.logic.Logic;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,16 +29,13 @@ public class ProtocolParser {
     public ProtocolParser(Server server, Logic logic){
         this.server = server;
         this.logic = logic;
-        this.init();
+        this.createCommandMap();
     }
 
-    /**
-     * Init commands 
-     */
-    public void init() {
-        commandsByName.put("help", new Help(this.server, this.logic));
-        commandsByName.put("ping", new ReplyToPing(this.server, this.logic));
-        commandsByName.put("echo", new Echo(this.server, this.logic));
+    private void createCommandMap() {
+        commandsByName.put("help", Help(this.server, this.logic));
+        commandsByName.put("ping", ReplyToPing(this.server, this.logic));
+        commandsByName.put("echo", Echo(this.server, this.logic));
         //commandsByName.put("listcourses", null);
     }
     
