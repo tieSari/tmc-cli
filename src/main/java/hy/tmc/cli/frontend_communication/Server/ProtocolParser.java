@@ -10,6 +10,7 @@ import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.Repl
 import hy.tmc.cli.frontend_communication.Commands.Echo;
 import hy.tmc.cli.frontend_communication.Commands.Help;
 import hy.tmc.cli.frontend_communication.Commands.Login;
+import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
 import hy.tmc.cli.logic.Logic;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,13 +25,18 @@ public class ProtocolParser {
     private Logic logic;
     private final HashMap<String, Command> commandsByName = new HashMap<>();
     
+    /**
+     * Constructor for Protocol Parser
+     * @param server
+     * @param logic
+     */
     public ProtocolParser(Server server, Logic logic){
         this.server = server;
         this.logic = logic;
-        this.init();
+        this.createCommandMap();
     }
 
-    public void init() {
+    public void createCommandMap() {
         commandsByName.put("help", new Help(this.server, this.logic));
         commandsByName.put("login", new Login(this.server, this.logic));
         commandsByName.put("ping", new ReplyToPing(this.server, this.logic));
@@ -38,23 +44,28 @@ public class ProtocolParser {
         //commandsByName.put("listcourses", null);
     }
     
+    /**
+     * Search for command by inputline 
+     * @param inputLine
+     * @return
+     * @throws ProtocolException
+     */
     public Command getCommand(String inputLine) throws ProtocolException{
-       String[] elements = inputLine.split(";");
+       String[] elements = inputLine.split(" ");
        String commandName = elements[0];
        if(!commandsByName.containsKey(commandName)){
            throw new ProtocolException("Invalid command name");
        }
-       String[] data = Arrays.copyOfRange(elements, 1, elements.length);
        Command command = commandsByName.get(commandName);
-       command = giveData(data, command);
+       command = giveData(elements, command);
        return command;
     }
     
-    private Command giveData(String[] data, Command command){
-        for (String keyValuePair : data){
-            String[] t = keyValuePair.split("=");
-            String key = t[0];
-            String value = t[1];
+    
+    private Command giveData(String[] userInput, Command command){
+        for (int i=1; i+1 < userInput.length; i+=2){
+            String key = userInput[i];
+            String value = userInput[i+1];
             command.setParameter(key, value);
         }
         return command;

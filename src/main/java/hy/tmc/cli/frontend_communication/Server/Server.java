@@ -27,50 +27,66 @@ public class Server implements FrontendListener {
     private Socket clientSocket;
     private ProtocolParser parser;
 
+    /**
+     * Server constructor
+     *
+     * @param portNumber
+     * @param logic
+     */
     public Server(int portNumber, Logic logic) {
         this.portNumber = portNumber;
         this.parser = new ProtocolParser(this, logic);
     }
 
+    /**
+     * Start is general function to set up server listening for the frontend
+     */
     @Override
     public void start() {
-        try {
-            ServerSocket serverSocket = new ServerSocket(portNumber);
-            clientSocket = serverSocket.accept();
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()));
-            
-            String inputLine = null;
-            String outputLine;
-            
-            while (true) {
-                inputLine = in.readLine();
-                if (inputLine == null) {
-                    break;
+        while (true) {
+            try {
+                ServerSocket serverSocket = new ServerSocket(portNumber);
+                clientSocket = serverSocket.accept();
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(clientSocket.getInputStream()));
+
+                String inputLine = null;
+                String outputLine;
+
+                while (true) {
+                    inputLine = in.readLine();
+                    if (inputLine == null) {
+                        break;
+                    }
+                    try {
+                        Command command = parser.getCommand(inputLine);
+                        command.execute();
+                    } catch (ProtocolException ex) {
+                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    if (inputLine.equals("q")) {
+                        break;
+                    }
+                    printLine("server says hi!");
                 }
-                try {
-                    Command command = parser.getCommand(inputLine);
-                    command.execute();
-                } catch (ProtocolException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                if (inputLine.equals("q")) {
-                    break;
-                }
-                printLine("server says hi!");
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * Prints line to server output
+     *
+     * @param outputLine
+     */
     @Override
     public void printLine(String outputLine) {
-        if (clientSocket == null){
+        if (clientSocket == null) {
             return;
         }
-        
+
         PrintWriter out;
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -78,7 +94,7 @@ public class Server implements FrontendListener {
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     private void findFreePort() {
