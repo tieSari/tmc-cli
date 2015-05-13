@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class Echo extends Command {
 
-    private HashMap<String, String> data;
+    private HashMap<String, String> data = new HashMap<>();
 
     /**
      *
