@@ -43,7 +43,8 @@ function send_command () {
 
 }
 
-./startup.sh
+#echo "Servu paalle"
+bash startup.sh
 
 case "$1" in
     "help") command_help;;
