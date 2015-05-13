@@ -34,6 +34,11 @@ public class Login extends Command {
         }
     }
 
+    @Override
+    protected void functionality() {
+
+    }
+
     private boolean checkIfAuthenticationOk(String username, String password) {
         return username.equals("matti") && password.equals("meikalainen");
     }
@@ -42,7 +47,7 @@ public class Login extends Command {
     public void setParameter(String key, String value) {
         System.out.println(key);
         System.out.println(value);
-        data.put(key,value);
+        data.put(key, value);
     }
 
     @Override
