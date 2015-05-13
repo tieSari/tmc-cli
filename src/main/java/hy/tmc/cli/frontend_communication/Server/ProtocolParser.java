@@ -6,10 +6,7 @@
 package hy.tmc.cli.frontend_communication.Server;
 
 import hy.tmc.cli.frontend_communication.Commands.Command;
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.ReplyToPing;
-import hy.tmc.cli.frontend_communication.Commands.Echo;
-import hy.tmc.cli.frontend_communication.Commands.Help;
-import hy.tmc.cli.frontend_communication.Commands.Login;
+import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
 import hy.tmc.cli.logic.Logic;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,20 +21,31 @@ public class ProtocolParser {
     private Logic logic;
     private final HashMap<String, Command> commandsByName = new HashMap<>();
     
+    /**
+     * Constructor for Protocol Parser
+     * @param server
+     * @param logic
+     */
     public ProtocolParser(Server server, Logic logic){
         this.server = server;
         this.logic = logic;
-        this.init();
+        this.createCommandMap();
     }
 
-    public void init() {
-        commandsByName.put("help", new Help(this.server, this.logic));
-        commandsByName.put("login", new Login(this.server, this.logic));
-        commandsByName.put("ping", new ReplyToPing(this.server, this.logic));
-        commandsByName.put("echo", new Echo(this.server, this.logic));
+
+    private void createCommandMap() {
+        commandsByName.put("help", Help(this.server, this.logic));
+        commandsByName.put("ping", ReplyToPing(this.server, this.logic));
+        commandsByName.put("echo", Echo(this.server, this.logic));
         //commandsByName.put("listcourses", null);
     }
     
+    /**
+     * Search for command by inputline 
+     * @param inputLine
+     * @return
+     * @throws ProtocolException
+     */
     public Command getCommand(String inputLine) throws ProtocolException{
        String[] elements = inputLine.split(";");
        String commandName = elements[0];
@@ -49,6 +57,7 @@ public class ProtocolParser {
        command = giveData(data, command);
        return command;
     }
+    
     
     private Command giveData(String[] data, Command command){
         for (String keyValuePair : data){
