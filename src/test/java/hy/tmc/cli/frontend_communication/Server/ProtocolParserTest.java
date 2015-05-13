@@ -53,7 +53,7 @@ public class ProtocolParserTest {
     
     @Test 
     public void testGiveData() throws ProtocolException{
-        String inputLine = "echo;data=testi";
+        String inputLine = "echo data testi";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command echo = instance.getCommand(inputLine);
         try {
