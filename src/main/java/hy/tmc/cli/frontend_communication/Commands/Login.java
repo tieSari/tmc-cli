@@ -1,5 +1,7 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.frontend_communication.FrontendListener;
+import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.logic.Logic;
 
@@ -7,8 +9,8 @@ import hy.tmc.cli.logic.Logic;
  * Created by samutamm on 13/05/15.
  */
 public class Login extends Command {
-    public Login(Server backend, Logic frontend) {
-        super(backend, frontend);
+    public Login(FrontendListener front, Logic backend) {
+        super(front, backend);
     }
 
     @Override
@@ -20,5 +22,10 @@ public class Login extends Command {
     public void setParameter(String key, String value) {
         System.out.println(key);
         System.out.println(value);
+    }
+
+    @Override
+    public void checkData() throws ProtocolException {
+
     }
 }
