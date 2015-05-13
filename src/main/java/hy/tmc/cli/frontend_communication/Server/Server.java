@@ -27,11 +27,19 @@ public class Server implements FrontendListener {
     private Socket clientSocket;
     private ProtocolParser parser;
 
+    /**
+     * Server constructor 
+     * @param portNumber
+     * @param logic
+     */
     public Server(int portNumber, Logic logic) {
         this.portNumber = portNumber;
         this.parser = new ProtocolParser(this, logic);
     }
 
+    /**
+     * Start is general function to set up server listening for the frontend 
+     */
     @Override
     public void start() {
         try {
@@ -65,6 +73,10 @@ public class Server implements FrontendListener {
         }
     }
 
+    /**
+     * Prints line to server output
+     * @param outputLine
+     */
     @Override
     public void printLine(String outputLine) {
         if (clientSocket == null){

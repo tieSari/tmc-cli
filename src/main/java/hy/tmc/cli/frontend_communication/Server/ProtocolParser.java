@@ -23,12 +23,20 @@ public class ProtocolParser {
     private Logic logic;
     private final HashMap<String, Command> commandsByName = new HashMap<>();
     
+    /**
+     * Constructor for Protocol Parser
+     * @param server
+     * @param logic
+     */
     public ProtocolParser(Server server, Logic logic){
         this.server = server;
         this.logic = logic;
         this.init();
     }
 
+    /**
+     * Init commands 
+     */
     public void init() {
         commandsByName.put("help", new Help(this.server, this.logic));
         commandsByName.put("ping", new ReplyToPing(this.server, this.logic));
@@ -36,6 +44,12 @@ public class ProtocolParser {
         //commandsByName.put("listcourses", null);
     }
     
+    /**
+     * Search for command by inputline 
+     * @param inputLine
+     * @return
+     * @throws ProtocolException
+     */
     public Command getCommand(String inputLine) throws ProtocolException{
        String[] elements = inputLine.split(";");
        String commandName = elements[0];
@@ -47,6 +61,7 @@ public class ProtocolParser {
        command = giveData(data, command);
        return command;
     }
+    
     
     private Command giveData(String[] data, Command command){
         for (String keyValuePair : data){
