@@ -1,4 +1,4 @@
-package easyb;
+package hy.tmc.cli.testhelpers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
  */
 public class Helper {
 
-    public static String startCommand(String command, String cliPath) {
+    public String startCommand(String command, String cliPath) {
         Process p = null;
 
         if (cliPath == null) {

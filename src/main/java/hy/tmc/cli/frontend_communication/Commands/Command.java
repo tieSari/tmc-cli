@@ -9,7 +9,7 @@ import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
 
-public abstract class Command {
+public abstract class Command implements Runnable {
     
     protected final FrontendListener frontend;
     protected final Logic backend;
@@ -17,6 +17,11 @@ public abstract class Command {
     public Command(FrontendListener front, Logic backend){
         this.frontend = front;
         this.backend = backend;
+    }
+    
+    @Override
+    public void run(){
+        this.execute();
     }
     
     
