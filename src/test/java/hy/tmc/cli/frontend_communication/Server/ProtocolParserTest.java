@@ -25,25 +25,10 @@ public class ProtocolParserTest {
     private Server server;
     private Logic logic;
     
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-    
     public ProtocolParserTest() {
         this.logic = new Logic();
         this.server = new Server(1234, logic);
         
-    }
-    
-    @Before
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
-    }
-
-    @After
-    public void cleanUpStreams() {
-        System.setOut(null);
-        System.setErr(null);
     }
 
     /**
@@ -63,6 +48,19 @@ public class ProtocolParserTest {
         String inputLine = "";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command result = instance.getCommand(inputLine);
+        
+    }
+    
+    @Test 
+    public void testGiveData() throws ProtocolException{
+        String inputLine = "echo;data=testi";
+        ProtocolParser instance = new ProtocolParser(this.server, this.logic);
+        Command echo = instance.getCommand(inputLine);
+        try {
+            echo.checkData();
+        } catch(ProtocolException p){
+            fail("testCheckDataSuccess failed");
+        }
         
     }
     
