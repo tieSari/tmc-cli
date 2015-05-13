@@ -6,6 +6,9 @@
 package hy.tmc.cli.frontend_communication.Server;
 
 import hy.tmc.cli.frontend_communication.Commands.Command;
+import hy.tmc.cli.logic.Logic;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,23 +22,28 @@ import static org.junit.Assert.*;
  */
 public class ProtocolParserTest {
     
+    private Server server;
+    private Logic logic;
+    
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    
     public ProtocolParserTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
+        this.logic = new Logic();
+        this.server = new Server(1234, logic);
+        
     }
     
     @Before
-    public void setUp() {
+    public void setUpStreams() {
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errContent));
     }
-    
+
     @After
-    public void tearDown() {
+    public void cleanUpStreams() {
+        System.setOut(null);
+        System.setErr(null);
     }
 
     /**
@@ -44,13 +52,18 @@ public class ProtocolParserTest {
     @Test
     public void testGetCommand() throws Exception {
         System.out.println("getCommand");
-        String inputLine = "";
-        ProtocolParser instance = null;
-        Command expResult = null;
+        String inputLine = "help";
+        ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command result = instance.getCommand(inputLine);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNotNull(result);
+    }
+    
+    @Test (expected=ProtocolException.class)
+    public void testInvalidData() throws ProtocolException{
+        String inputLine = "";
+        ProtocolParser instance = new ProtocolParser(this.server, this.logic);
+        Command result = instance.getCommand(inputLine);
+        
     }
     
 }
