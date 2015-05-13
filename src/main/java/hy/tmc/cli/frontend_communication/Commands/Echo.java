@@ -6,7 +6,11 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.frontend_communication.FrontendListener;
+import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,19 +18,27 @@ import hy.tmc.cli.logic.Logic;
  */
 public class Echo extends Command {
 
-    private String data;
+    private HashMap<String, String> data;
+
     public Echo(FrontendListener front, Logic backend) {
         super(front, backend);
     }
 
     @Override
     public void execute() {
-        frontend.printLine(data);
+        frontend.printLine(data.get("data"));
     }
 
     @Override
     public void setParameter(String key, String value) {
-        this.data = value;
+        data.put("data", value);
     }
-    
+
+    @Override
+    public void checkData() throws ProtocolException {
+        if (data.get("data") == null) {
+            throw new ProtocolException("Not enough data");
+        }
+    }
+
 }

@@ -30,6 +30,11 @@ public class Help extends Command {
     public void setParameter(String key, String value) {
     }
     
+    @Override
+    public void checkData(){
+        
+    }
+    
     
     
 }
