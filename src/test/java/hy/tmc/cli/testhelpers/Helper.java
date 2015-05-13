@@ -10,10 +10,6 @@ import java.io.InputStreamReader;
  */
 public class Helper {
 
-    public Helper() {
-
-    }
-
     public String startCommand(String command, String cliPath) {
         Process p = null;
 
