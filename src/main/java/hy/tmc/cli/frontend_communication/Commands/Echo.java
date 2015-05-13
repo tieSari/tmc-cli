@@ -33,7 +33,6 @@ public class Echo extends Command {
     
     @Override
     protected void functionality() {
-        
         frontend.printLine(data.get("data"));
     }
 
@@ -42,7 +41,7 @@ public class Echo extends Command {
         data.put("data", value);
     }
 
-    @Override
+    @Override 
     public void checkData() throws ProtocolException {
         if (data.get("data") == null) {
             throw new ProtocolException("Not enough data");
