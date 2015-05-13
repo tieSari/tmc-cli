@@ -20,12 +20,19 @@ public class Echo extends Command {
 
     private HashMap<String, String> data = new HashMap<>();
 
+    /**
+     *
+     * @param front
+     * @param backend
+     */
     public Echo(FrontendListener front, Logic backend) {
         super(front, backend);
+        data = new HashMap<>();
     }
 
+    
     @Override
-    public void execute() {
+    protected void functionality() {
         frontend.printLine(data.get("data"));
     }
 
@@ -34,7 +41,7 @@ public class Echo extends Command {
         data.put("data", value);
     }
 
-    @Override
+    @Override 
     public void checkData() throws ProtocolException {
         if (data.get("data") == null) {
             throw new ProtocolException("Not enough data");

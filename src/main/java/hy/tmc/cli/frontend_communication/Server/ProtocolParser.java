@@ -48,23 +48,21 @@ public class ProtocolParser {
      * @throws ProtocolException
      */
     public Command getCommand(String inputLine) throws ProtocolException{
-       String[] elements = inputLine.split(";");
+       String[] elements = inputLine.split(" ");
        String commandName = elements[0];
        if(!commandsByName.containsKey(commandName)){
            throw new ProtocolException("Invalid command name");
        }
-       String[] data = Arrays.copyOfRange(elements, 1, elements.length);
        Command command = commandsByName.get(commandName);
-       command = giveData(data, command);
+       command = giveData(elements, command);
        return command;
     }
     
     
-    private Command giveData(String[] data, Command command){
-        for (String keyValuePair : data){
-            String[] t = keyValuePair.split("=");
-            String key = t[0];
-            String value = t[1];
+    private Command giveData(String[] userInput, Command command){
+        for (int i=1; i+1 < userInput.length; i+=2){
+            String key = userInput[i];
+            String value = userInput[i+1];
             command.setParameter(key, value);
         }
         return command;
