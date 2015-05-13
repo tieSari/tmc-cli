@@ -17,6 +17,7 @@ public class Login extends Command {
     private HashMap<String, String> data = new HashMap<>();
 
 
+    // login;username=u;password=u
     @Override
     public void execute() {
         String username = data.get("username");
