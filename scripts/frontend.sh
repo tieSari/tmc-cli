@@ -43,6 +43,8 @@ function send_command () {
 
 }
 
+./startup.sh
+
 case "$1" in
     "help") command_help;;
     "login") command_login;;
