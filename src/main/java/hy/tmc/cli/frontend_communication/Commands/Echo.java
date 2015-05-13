@@ -20,12 +20,20 @@ public class Echo extends Command {
 
     private HashMap<String, String> data;
 
+    /**
+     *
+     * @param front
+     * @param backend
+     */
     public Echo(FrontendListener front, Logic backend) {
         super(front, backend);
+        data = new HashMap<>();
     }
 
+    
     @Override
-    public void execute() {
+    protected void functionality() {
+        
         frontend.printLine(data.get("data"));
     }
 
