@@ -1,4 +1,4 @@
 #!/bin/bash
 
-
-eval ps aux | grep tmc-client | killa
+kill -9 `cat config`
+echo "" > config
