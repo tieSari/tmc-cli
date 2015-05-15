@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.Server;
+package helpers;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

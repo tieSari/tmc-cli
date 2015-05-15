@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
+import helpers.TestClient;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,7 +72,7 @@ public class ServerTest {
     }
     
     @Test
-    public void serverThrowsExceptionWhenMessageViolatesProtocol() {
+    public void messageViolatesProtocolTest() {
         try {
             client.sendMessage("al2kjn238fh1o");
             assertEquals(Server.PROTOCOL_ERROR_MSG, client.reply());
