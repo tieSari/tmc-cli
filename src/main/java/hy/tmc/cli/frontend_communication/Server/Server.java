@@ -82,6 +82,10 @@ public class Server implements FrontendListener {
             }
         }
     }
+    
+    public void close() throws IOException{
+        this.serverSocket.close();
+    }
 
     /**
      * Prints line to server output
