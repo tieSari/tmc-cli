@@ -22,7 +22,7 @@ public class Help extends Command {
 
     
     @Override
-    public void execute() {
+    protected void functionality() {
         this.frontend.printLine("a very helpful message");
     }
     

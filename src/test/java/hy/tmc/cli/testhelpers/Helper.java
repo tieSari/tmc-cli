@@ -14,7 +14,7 @@ public class Helper {
         Process p = null;
 
         if (cliPath == null) {
-            cliPath = "cli/frontend.sh";
+            cliPath = "scipts/frontend.sh";
         }
 
         try {

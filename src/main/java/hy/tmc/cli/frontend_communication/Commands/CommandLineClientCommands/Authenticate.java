@@ -49,4 +49,9 @@ public class Authenticate extends Command {
         throw new ProtocolException("Not enough data, username needed");
     }
 
+    @Override
+    protected void functionality() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

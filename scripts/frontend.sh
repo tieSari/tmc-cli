@@ -43,6 +43,20 @@ function send_command () {
 
 }
 
+control_c()
+# run if user hits control-c
+{
+  echo -en "\Cancelling\n"
+  exit $?
+}
+
+
+# catch crtl_c and run function control_c if user hits ctrl-c
+trap control_c SIGINT
+
+#echo "Servu paalle"
+bash startup.sh
+
 case "$1" in
     "help") command_help;;
     "login") command_login;;
