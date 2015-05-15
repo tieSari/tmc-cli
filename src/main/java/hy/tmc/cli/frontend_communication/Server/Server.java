@@ -26,6 +26,7 @@ public class Server implements FrontendListener {
     private int portNumber;
     private Socket clientSocket;
     private ProtocolParser parser;
+    private ServerSocket serverSocket;
 
     /**
      * Server constructor
@@ -35,6 +36,12 @@ public class Server implements FrontendListener {
      */
     public Server(int portNumber, Logic logic) {
         this.portNumber = portNumber;
+        try {
+            serverSocket = new ServerSocket(portNumber);
+        } catch (IOException ex) {
+            System.out.println("Server creation failed");
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.parser = new ProtocolParser(this, logic);
     }
 
@@ -43,16 +50,14 @@ public class Server implements FrontendListener {
      */
     @Override
     public void start() {
+
         while (true) {
             try {
-                ServerSocket serverSocket = new ServerSocket(portNumber);
                 clientSocket = serverSocket.accept();
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
 
                 String inputLine = null;
-                String outputLine;
-
                 while (true) {
                     inputLine = in.readLine();
                     if (inputLine == null) {
@@ -61,6 +66,8 @@ public class Server implements FrontendListener {
                     try {
                         Command command = parser.getCommand(inputLine);
                         command.execute();
+                        clientSocket.close();
+                        break;
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }

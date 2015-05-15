@@ -49,8 +49,10 @@ function login () {
 
 # Backend cmd send
 function send_command () {
-    OUTPUT=$(echo $@ | nc localhost 1234)
-    echo $OUTPUT
+#    OUTPUT=$(echo $@ | nc localhost 1234)
+#    echo $OUTPUT
+    echo $@ | nc localhost 1234
+
     return 0;
 
 }
