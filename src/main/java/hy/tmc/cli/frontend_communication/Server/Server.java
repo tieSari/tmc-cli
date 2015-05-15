@@ -26,6 +26,7 @@ public class Server implements FrontendListener {
     private int portNumber;
     private Socket clientSocket;
     private ProtocolParser parser;
+    private ServerSocket serverSocket;
 
     /**
      * Server constructor
@@ -35,6 +36,12 @@ public class Server implements FrontendListener {
      */
     public Server(int portNumber, Logic logic) {
         this.portNumber = portNumber;
+        try {
+            serverSocket = new ServerSocket(portNumber);
+        } catch (IOException ex) {
+            System.out.println("Serverin luonti epäonnistui");
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.parser = new ProtocolParser(this, logic);
     }
 
@@ -43,9 +50,9 @@ public class Server implements FrontendListener {
      */
     @Override
     public void start() {
+
         while (true) {
             try {
-                ServerSocket serverSocket = new ServerSocket(portNumber);
                 clientSocket = serverSocket.accept();
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
@@ -55,12 +62,14 @@ public class Server implements FrontendListener {
 
                 while (true) {
                     inputLine = in.readLine();
+                    System.out.println("Uusi inputline: " + inputLine);
                     if (inputLine == null) {
                         break;
                     }
                     try {
                         Command command = parser.getCommand(inputLine);
                         command.execute();
+                        System.out.println("EI jumittanu");
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }
