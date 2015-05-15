@@ -8,7 +8,10 @@ package hy.tmc.cli.frontend_communication.Server;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.logic.Logic;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -62,6 +65,15 @@ public class ProtocolParserTest {
             fail("testCheckDataSuccess failed");
         }
         
+    }
+    
+    @AfterClass
+    public void closeServer(){
+        try {
+            this.server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ProtocolParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
