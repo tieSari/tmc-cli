@@ -38,6 +38,7 @@ public class Helper {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line = null;
             while ((line = br.readLine()) != null) {
+                System.out.println("rivi: " + line);
                 sb.append(line).append(System.getProperty("line.separator"));
             }
         } catch (IOException e) {
