@@ -29,7 +29,7 @@ public class URLCommunicator {
     /**
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request
+     * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HTTPResult makePostRequest(String url, String... params) {
@@ -38,7 +38,7 @@ public class URLCommunicator {
             HttpClient client = new DefaultHttpClient();
             HttpPost post = new HttpPost(url);
 
-            String encoding = Base64.encodeBase64String(("clitest:1234").getBytes());
+            String encoding = Base64.encodeBase64String((params[0]).getBytes());
             post.setHeader("Authorization", "Basic " + encoding);
 
             post.setHeader("User-Agent", USER_AGENT);
@@ -66,15 +66,21 @@ public class URLCommunicator {
     /**
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request
+     * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
+    
+    
     public static HTTPResult makeGetRequest(String url, String... params) {
         try {
 
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet(url);
 
+
+            String encoding = Base64.encodeBase64String((params[0]).getBytes());
+            request.setHeader("Authorization", "Basic " + encoding);
+            
             request.addHeader("User-Agent", USER_AGENT);
 
             HttpResponse response = client.execute(request);
