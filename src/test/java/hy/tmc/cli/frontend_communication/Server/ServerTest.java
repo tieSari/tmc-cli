@@ -20,6 +20,8 @@ import static org.junit.Assert.*;
  *
  * @author ilari
  */
+
+@Deprecated
 public class ServerTest {
     
     private Server server;
@@ -27,6 +29,8 @@ public class ServerTest {
     public ServerTest() {
     }
     
+    
+   
     @BeforeClass
     public static void setUpClass() {
     }

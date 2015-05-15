@@ -23,6 +23,8 @@ import static org.junit.Assert.*;
  *
  * @author pihla
  */
+
+@Deprecated
 public class ProtocolParserTest {
     
     private Server server;
