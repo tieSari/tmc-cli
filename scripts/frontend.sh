@@ -3,6 +3,7 @@
 # echo $@
 # echo $1
 
+
 #function command_help () {
 #    declare -A array
 #    array[help]=description
@@ -69,7 +70,13 @@ control_c()
 trap control_c SIGINT
 
 #echo "Servu paalle"
-bash startup.sh
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+STARTUP=$DIR
+STARTUP+="/startup.sh"
+
+bash $STARTUP
 
 case "$1" in
 #    "help") command_help;;
