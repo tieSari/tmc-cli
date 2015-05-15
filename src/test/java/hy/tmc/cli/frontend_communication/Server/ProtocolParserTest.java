@@ -30,8 +30,12 @@ public class ProtocolParserTest {
     
     public ProtocolParserTest() {
         this.logic = new Logic();
-        this.server = new Server(1234, logic);
         
+    }
+    
+    @Before
+    public void startServer(){
+       this.server = new Server(8034, logic); 
     }
 
     /**
@@ -63,8 +67,7 @@ public class ProtocolParserTest {
             echo.checkData();
         } catch(ProtocolException p){
             fail("testCheckDataSuccess failed");
-        }
-        
+        }     
     }
     
     @After
