@@ -31,7 +31,7 @@ public class Authenticate extends Command {
             ClientData.setUserData(data.get("username"), data.get("password"));
             return "Auth successful. Saved userdata in session";
         } 
-        return "Auth unsuccesful. Check your connection and/or credentials";
+        return "Auth unsuccessful. Check your connection and/or credentials";
     }
     
     @Override

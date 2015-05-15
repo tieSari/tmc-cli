@@ -2,18 +2,12 @@
 package hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands;
 
 import hy.tmc.cli.frontend_communication.Commands.Authenticate;
-import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
-import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.logic.Logic;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  *
@@ -35,19 +29,19 @@ public class AuthenticateTest {
     @Test
     public void canAuthenticateWithTestCredentials() throws ProtocolException {
         String result = executeWithParams("username", testUsername, "password", testPassword);
-        assertTrue(result.contains("Auth successful"));
+        assertTrue(result.contains("Auth successful."));
     }
     
     @Test
     public void cannotAuthenticateWithUnexistantCredentials() throws ProtocolException {
         String result = executeWithParams("username", "samu", "password", "salis");
-        assertTrue(result.contains("There was something wrong with the connection"));
+        assertTrue(result.contains("Auth unsuccessful."));
     }
     
     @Test
     public void failsWithWrongKeys() throws ProtocolException {
         String result = executeWithParams("usernamee", testUsername, "passwordi", testPassword);
-        assertTrue(result.contains("There was something wrong with the connection"));
+        assertTrue(result.contains("Auth unsuccessful."));
     }
 
     private String executeWithParams(String key1, String param1,
