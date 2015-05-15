@@ -23,7 +23,7 @@ public class Help extends Command {
     
     @Override
     protected void functionality() {
-        this.frontend.printLine("a very helpful message");
+        this.frontend.printLine("Commands: login, help, ping");
     }
     
     @Override
