@@ -27,8 +27,16 @@ public class Authenticate extends Command {
 
     @Override
     public void execute() {
-       String url = data.get("url");
-       this.frontend.printLine(makePostRequest(url, "").getData());
+       String auth = data.get("username") + ":" + data.get("password");
+       int code = makeGetRequest("http://tmc.mooc.fi/staging/user", auth).getStatusCode();
+       this.frontend.printLine("code:" + code);
+       if (code >= 200 && code < 300) {
+           this.frontend.printLine("Auth successful. Username and password saved.");
+           return;
+       }
+           this.frontend.printLine("There was something wrong with the connection, or " +
+                   "your username or your password");
+       
     }
 
     @Override
