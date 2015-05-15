@@ -27,7 +27,7 @@ public class ListCourses extends Command {
 
     @Override
     public void execute() {
-        this.frontend.printLine(JSONParser.parseCourses());
+        this.frontend.printLine(JSONParser.parseCourseNames());
     }
     
     @Override
