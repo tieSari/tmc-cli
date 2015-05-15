@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands;
 
+import hy.tmc.cli.Configuration.ClientData;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.*;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
@@ -25,18 +26,19 @@ public class Authenticate extends Command {
         data = new HashMap<>();
     }
 
+    private String returnResponse(int statusCode) {
+        if (statusCode >= 200 && statusCode < 300) {
+            ClientData.setUserData(data.get("username"), data.get("password"));
+            return "Auth successful. Saved userdata in session";
+        } 
+        return "Auth unsuccesful. Check your connection and/or credentials";
+    }
+    
     @Override
     public void execute() {
        String auth = data.get("username") + ":" + data.get("password");
        int code = makeGetRequest("http://tmc.mooc.fi/staging/user", auth).getStatusCode();
-       this.frontend.printLine("code:" + code);
-       if (code >= 200 && code < 300) {
-           this.frontend.printLine("Auth successful. Username and password saved.");
-           return;
-       }
-           this.frontend.printLine("There was something wrong with the connection, or " +
-                   "your username or your password");
-       
+       this.frontend.printLine(returnResponse(code));
     }
 
     @Override
