@@ -11,9 +11,9 @@ CONFIGPATH=$DIR
 CONFIGPATH+="/config"
 
 CLIENTPATH=$DIR
-CLIENTPATH+="tmc-client.jar"
+CLIENTPATH+="/tmc-client.jar"
 
-if [ pgrep `cat config` &> /dev/null ]; then
+if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
   eval "(nohup java -jar $CLIENTPATH &> /dev/null) &"
   PID=$!
   echo $PID > $CONFIGPATH

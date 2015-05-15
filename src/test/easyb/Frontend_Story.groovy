@@ -19,7 +19,7 @@ scenario "user wants to see available commands", {
     then "cli returns list of commands", {
 
         ensure(output) {
-            contains("a very helpful message");
+            contains("Commands: ");
         }
     }
 
