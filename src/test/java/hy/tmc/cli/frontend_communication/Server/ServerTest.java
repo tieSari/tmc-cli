@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package hy.tmc.cli.frontend_communication.Server;
 
 import java.io.IOException;
@@ -20,30 +19,34 @@ import static org.junit.Assert.*;
  *
  * @author ilari
  */
-
-@Deprecated
 public class ServerTest {
-    
+
     private Server server;
-    
+    private TestClient client;
+
     public ServerTest() {
     }
-    
-    
-   
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
-        server = new Server(8080, null);
+        int port = 4321;
+        server = new Server(port, null);
+        server.start();
+        try {
+            client = new TestClient(port);
+        } catch (IOException ex) {
+            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     @After
     public void tearDown() {
         try {
@@ -58,8 +61,24 @@ public class ServerTest {
      */
     @Test
     public void testServerRepliesToPing() {
+        try {
+            client.sendMessage("ping");
+            assertEquals("pong", client.reply());
+        } catch (IOException ex) {
+            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("IOException was raised");
+        }
+    }
+    
+    @Test
+    public void serverThrowsExceptionWhenMessageViolatesProtocol() {
+        try {
+            client.sendMessage("al2kjn238fh1o");
+            assertEquals(Server.PROTOCOL_ERROR_MSG, client.reply());
+        } catch (IOException ex) {
+            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("IOException was raised");
+        }
     }
 
-
-    
 }

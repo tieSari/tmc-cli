@@ -7,13 +7,12 @@ import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        // TODO code all application logic here
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         Logic backend = new Logic();
         FrontendListener frontendListener = new Server(1234, backend);
-        
         frontendListener.start();
+
     }
 
 }

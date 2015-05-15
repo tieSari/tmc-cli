@@ -19,12 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author pihla
- */
 
-@Deprecated
 public class ProtocolParserTest {
     
     private Server server;
@@ -37,7 +32,17 @@ public class ProtocolParserTest {
     
     @Before
     public void startServer(){
-       this.server = new Server(8034, logic); 
+       this.server = new Server(43221, logic); 
+       this.server.start();
+    }
+    
+    @After
+    public void closeServer(){
+        try {
+            this.server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ProtocolParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -72,13 +77,7 @@ public class ProtocolParserTest {
         }     
     }
     
-    @After
-    public void closeServer(){
-        try {
-            this.server.close();
-        } catch (IOException ex) {
-            Logger.getLogger(ProtocolParserTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    
     
 }
+
