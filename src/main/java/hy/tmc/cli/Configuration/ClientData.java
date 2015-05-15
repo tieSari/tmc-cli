@@ -5,32 +5,18 @@ package hy.tmc.cli.Configuration;
  */
 public class ClientData {
 
-    private static int PID = 0;
-    private static int PORT = 1234; // change plz. This is the default port
+    private static int PID;
+    private static final int PORT = 1234; // change plz. This is the default port
     private static String USERNAME = "";
     private static String PASSWORD = "";
 
-    public static void logIn(String username, String password) {
+    public static void setUserData(String username, String password) {
         USERNAME = username;
         PASSWORD = password;
     }
 
-    public static void logIn(String username, String password, int pid) {
-        PID = pid;
-        USERNAME = username;
-        PASSWORD = password;
-    }
-
-    public static void logIn(String username, String password, int pid, int port) {
-        PID = pid;
-        USERNAME = username;
-        PASSWORD = password;
-        PORT = port;
-    }
 
     public static void logOutCurrentUser() {
-        PID = 0;
-        PORT = 1234;
         USERNAME = "";
         PASSWORD = "";
     }
@@ -42,6 +28,11 @@ public class ClientData {
     public static int getPORT() {
         return PORT;
     }
+
+    public static void setPID(int PID) {
+        ClientData.PID = PID;
+    }
+    
 
     public static String getUSERNAME() {
         return USERNAME;
