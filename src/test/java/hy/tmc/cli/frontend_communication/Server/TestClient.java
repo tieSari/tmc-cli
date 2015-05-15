@@ -27,20 +27,22 @@ public class TestClient {
     }
 
     public String send(String data) {
-        System.out.println("send ping");
+        
         try {
-            Socket kkSocket = new Socket("127.0.0.1", port);
-            PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+            Socket socket = new Socket("127.0.0.1", port);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(kkSocket.getInputStream()));
+                    new InputStreamReader(socket.getInputStream()));
 
             out.write(data);
             out.flush();
-            if (in.ready()) {
-                return in.readLine();
-            } else {
-                return ERROR;
+            //if (in.ready()) {
+            String reply =  in.readLine();
+            if (reply==null) {
+                System.out.println("send ping");
+                return "evil ducks";
             }
+            return reply;
         } catch (IOException ex) {
             Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
             return ERROR;
