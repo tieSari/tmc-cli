@@ -36,6 +36,7 @@ public class EchoTest {
     @Before
     public void startServer(){
        this.server = new Server(8034, logic); 
+       this.server.start();
     }
 
     /**

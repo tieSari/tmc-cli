@@ -1,1 +1,1 @@
-print "Toimii"
+print('Toimii')
