@@ -11,5 +11,5 @@ if [ pgrep `cat config` &> /dev/null ]; then
   echo $PID > config
   echo "Server started"
 else
-  echo "Server is already running. Not doing anything."
+  echo "Server is already running."
 fi
