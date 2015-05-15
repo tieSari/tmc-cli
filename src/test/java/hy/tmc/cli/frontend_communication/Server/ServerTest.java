@@ -6,6 +6,9 @@
 
 package hy.tmc.cli.frontend_communication.Server;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,8 +22,7 @@ import static org.junit.Assert.*;
  */
 public class ServerTest {
     
-    private ServerBottle server;
-    private TestClient client;
+    private Server server;
     
     public ServerTest() {
     }
@@ -35,12 +37,16 @@ public class ServerTest {
     
     @Before
     public void setUp() {
-        server = new ServerBottle(new Server(1234, null));
-        client = new TestClient(1234);
+        server = new Server(8080, null);
     }
     
     @After
     public void tearDown() {
+        try {
+            server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -48,10 +54,6 @@ public class ServerTest {
      */
     @Test
     public void testServerRepliesToPing() {
-        server.start();
-        String answer = client.send("ping");
-        server.stop();
-        assertEquals("pong", answer);
     }
 
 

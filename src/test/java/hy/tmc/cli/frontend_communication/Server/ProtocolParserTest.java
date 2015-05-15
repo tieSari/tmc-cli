@@ -30,8 +30,12 @@ public class ProtocolParserTest {
     
     public ProtocolParserTest() {
         this.logic = new Logic();
-        this.server = new Server(1234, logic);
         
+    }
+    
+    @Before
+    public void startServer(){
+       this.server = new Server(8034, logic); 
     }
 
     /**
@@ -47,7 +51,7 @@ public class ProtocolParserTest {
     }
     
     @Test (expected=ProtocolException.class)
-    public void testInvalidData() throws ProtocolException{
+    public void testInvalidData() throws ProtocolException {
         String inputLine = "";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command result = instance.getCommand(inputLine);
@@ -55,7 +59,7 @@ public class ProtocolParserTest {
     }
     
     @Test 
-    public void testGiveData() throws ProtocolException{
+    public void testGiveData() throws ProtocolException {
         String inputLine = "echo data testi";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command echo = instance.getCommand(inputLine);
@@ -63,11 +67,10 @@ public class ProtocolParserTest {
             echo.checkData();
         } catch(ProtocolException p){
             fail("testCheckDataSuccess failed");
-        }
-        
+        }     
     }
     
-    @AfterClass
+    @After
     public void closeServer(){
         try {
             this.server.close();
