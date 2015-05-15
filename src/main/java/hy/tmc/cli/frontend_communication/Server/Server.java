@@ -39,7 +39,7 @@ public class Server implements FrontendListener {
         try {
             serverSocket = new ServerSocket(portNumber);
         } catch (IOException ex) {
-            System.out.println("Serverin luonti epäonnistui");
+            System.out.println("Server creation failed");
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.parser = new ProtocolParser(this, logic);
@@ -62,14 +62,12 @@ public class Server implements FrontendListener {
 
                 while (true) {
                     inputLine = in.readLine();
-                    System.out.println("Uusi inputline: " + inputLine);
                     if (inputLine == null) {
                         break;
                     }
                     try {
                         Command command = parser.getCommand(inputLine);
                         command.execute();
-                        System.out.println("EI jumittanu");
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }
