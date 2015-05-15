@@ -58,8 +58,6 @@ public class Server implements FrontendListener {
                         new InputStreamReader(clientSocket.getInputStream()));
 
                 String inputLine = null;
-                String outputLine;
-
                 while (true) {
                     inputLine = in.readLine();
                     if (inputLine == null) {
@@ -68,6 +66,8 @@ public class Server implements FrontendListener {
                     try {
                         Command command = parser.getCommand(inputLine);
                         command.execute();
+                        clientSocket.close();
+                        break;
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }
