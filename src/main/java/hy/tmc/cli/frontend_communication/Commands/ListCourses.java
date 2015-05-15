@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.backendCommunication.JSONParser;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
@@ -24,6 +25,11 @@ public class ListCourses extends Command {
     protected void functionality() {
     }
 
+    @Override
+    public void execute() {
+        this.frontend.printLine(JSONParser.parseCourseNames());
+    }
+    
     @Override
     public void setParameter(String key, String value) {
     }

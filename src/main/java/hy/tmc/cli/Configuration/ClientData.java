@@ -15,6 +15,9 @@ public class ClientData {
         PASSWORD = password;
     }
 
+    public static String getFormattedUserData() {
+        return USERNAME + ":" + PASSWORD;
+    }
 
     public static void logOutCurrentUser() {
         USERNAME = "";
