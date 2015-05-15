@@ -1,5 +1,7 @@
 package hy.tmc.cli.Configuration;
 
+import static hy.tmc.cli.backendCommunication.Authorization.Authorization.encode;
+
 /**
  * This class will be initialized when connection was successfull. Use this to get data
  */
@@ -15,6 +17,9 @@ public class ClientData {
         PASSWORD = password;
     }
 
+    public static String getFormattedUserData() {
+        return USERNAME + ":" + PASSWORD;
+    }
 
     public static void logOutCurrentUser() {
         USERNAME = "";
