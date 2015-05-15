@@ -13,7 +13,7 @@ scenario "user wants to see available commands", {
 
     given "command help to cli",{
         helper = new Helper()
-        output = helper.startCommand("help", "scripts/frontend.sh")
+        output = helper.printOutput("help", "scripts/frontend.sh")
     }
 
     then "cli returns list of commands", {
