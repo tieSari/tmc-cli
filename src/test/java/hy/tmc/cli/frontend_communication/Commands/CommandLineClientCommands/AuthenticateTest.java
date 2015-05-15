@@ -29,19 +29,19 @@ public class AuthenticateTest {
     @Test
     public void canAuthenticateWithTestCredentials() throws ProtocolException {
         String result = executeWithParams("username", testUsername, "password", testPassword);
-        assertTrue(result.contains("Auth successful"));
+        assertTrue(result.contains("Auth successful."));
     }
     
     @Test
     public void cannotAuthenticateWithUnexistantCredentials() throws ProtocolException {
         String result = executeWithParams("username", "samu", "password", "salis");
-        assertTrue(result.contains("There was something wrong with the connection"));
+        assertTrue(result.contains("Auth unsuccessful."));
     }
     
     @Test
     public void failsWithWrongKeys() throws ProtocolException {
         String result = executeWithParams("usernamee", testUsername, "passwordi", testPassword);
-        assertTrue(result.contains("There was something wrong with the connection"));
+        assertTrue(result.contains("Auth unsuccessful."));
     }
 
     private String executeWithParams(String key1, String param1,
