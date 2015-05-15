@@ -8,7 +8,10 @@ package hy.tmc.cli.frontend_communication.Server;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.logic.Logic;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,8 +30,12 @@ public class ProtocolParserTest {
     
     public ProtocolParserTest() {
         this.logic = new Logic();
-        this.server = new Server(1234, logic);
         
+    }
+    
+    @Before
+    public void startServer(){
+       this.server = new Server(8034, logic); 
     }
 
     /**
@@ -44,7 +51,7 @@ public class ProtocolParserTest {
     }
     
     @Test (expected=ProtocolException.class)
-    public void testInvalidData() throws ProtocolException{
+    public void testInvalidData() throws ProtocolException {
         String inputLine = "";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command result = instance.getCommand(inputLine);
@@ -52,7 +59,7 @@ public class ProtocolParserTest {
     }
     
     @Test 
-    public void testGiveData() throws ProtocolException{
+    public void testGiveData() throws ProtocolException {
         String inputLine = "echo data testi";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command echo = instance.getCommand(inputLine);
@@ -60,8 +67,16 @@ public class ProtocolParserTest {
             echo.checkData();
         } catch(ProtocolException p){
             fail("testCheckDataSuccess failed");
+        }     
+    }
+    
+    @After
+    public void closeServer(){
+        try {
+            this.server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ProtocolParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
 }
