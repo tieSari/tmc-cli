@@ -32,7 +32,7 @@ public class ProtocolParser {
     public void createCommandMap() {
         commandsByName.put("auth", new Authenticate(this.server, this.logic));
         commandsByName.put("help", new Help(this.server, this.logic));
-        commandsByName.put("login", new Login(this.server, this.logic));
+        commandsByName.put("login", CommandFactory.Login(this.server, this.logic));
         commandsByName.put("ping", new ReplyToPing(this.server, this.logic));
         commandsByName.put("echo", new Echo(this.server, this.logic));
         commandsByName.put("listCourses", new ListCourses(this.server, this.logic));
