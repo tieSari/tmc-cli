@@ -1,7 +1,7 @@
 package hy.tmc.cli.Configuration;
 
 /**
- * This class will be created when connection was successfull
+ * This class will be initialized when connection was successfull. Use this to get data
  */
 public class ClientData {
 

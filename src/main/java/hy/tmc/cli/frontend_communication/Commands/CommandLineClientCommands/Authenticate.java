@@ -46,7 +46,7 @@ public class Authenticate extends Command {
 
     @Override
     public void checkData() throws ProtocolException {
-        throw new ProtocolException("Not enough data, username needed");
+        
     }
 
     @Override
