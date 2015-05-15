@@ -5,7 +5,6 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
@@ -31,8 +30,13 @@ public class CommandFactory {
         return new Authenticate(front, back);
     }
 
+    
     public static Command Login(FrontendListener front, Logic back) {
-        return new Login(front, back);
+        return new Authenticate(front, back); // NOTE: login == Authenticate
+    }
+    
+    public static Command ListCourses(FrontendListener front, Logic back) {
+        return new ListCourses(front, back);
     }
 
 }

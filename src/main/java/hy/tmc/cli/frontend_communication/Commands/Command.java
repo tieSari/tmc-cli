@@ -8,6 +8,8 @@ package hy.tmc.cli.frontend_communication.Commands;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -25,6 +27,10 @@ public abstract class Command implements Runnable {
      */
     protected final Logic backend;
 
+    
+    protected Map<String, String> data;
+    
+    
     /**
      *
      * @param front
@@ -33,6 +39,7 @@ public abstract class Command implements Runnable {
     public Command(FrontendListener front, Logic backend) {
         this.frontend = front;
         this.backend = backend;
+        data = new HashMap();
     }
 
     @Override

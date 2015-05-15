@@ -1,10 +1,13 @@
 package hy.tmc.cli.frontend_communication.Server;
 
+import hy.tmc.cli.frontend_communication.Commands.ReplyToPing;
+import hy.tmc.cli.frontend_communication.Commands.Authenticate;
 import hy.tmc.cli.frontend_communication.Commands.*;
 import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.Authenticate;
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.*;
 import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
+
+import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
 
 /**
  *
@@ -29,11 +32,12 @@ public class ProtocolParser {
     }
 
     public void createCommandMap() {
-        commandsByName.put("auth", new Authenticate(this.server, this.logic));
-        commandsByName.put("help", new Help(this.server, this.logic));
-        commandsByName.put("login", new Login(this.server, this.logic));
-        commandsByName.put("ping", new ReplyToPing(this.server, this.logic));
-        commandsByName.put("echo", new Echo(this.server, this.logic));
+        commandsByName.put("auth", Authenticate(this.server, this.logic));
+        commandsByName.put("help", Help(this.server, this.logic));
+        commandsByName.put("login", Login(this.server, this.logic));
+        commandsByName.put("ping", ReplyToPing(this.server, this.logic));
+        commandsByName.put("echo", Echo(this.server, this.logic));
+        commandsByName.put("listCourses", ListCourses(this.server, this.logic));
 
         //commandsByName.put("listcourses", null);
     }

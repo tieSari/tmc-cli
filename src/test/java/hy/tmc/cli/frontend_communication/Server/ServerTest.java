@@ -70,10 +70,11 @@ public class ServerTest {
         }
     }
     
-    @Test (expected = ProtocolException.class)
+    @Test
     public void serverThrowsExceptionWhenMessageViolatesProtocol() {
         try {
             client.sendMessage("al2kjn238fh1o");
+            assertEquals(Server.PROTOCOL_ERROR_MSG, client.reply());
         } catch (IOException ex) {
             Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("IOException was raised");

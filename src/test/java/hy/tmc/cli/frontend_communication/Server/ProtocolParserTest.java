@@ -20,7 +20,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-
 public class ProtocolParserTest {
     
     private Server server;

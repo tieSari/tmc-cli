@@ -23,9 +23,10 @@ import java.util.logging.Logger;
  */
 public class Server implements FrontendListener, Runnable {
 
-    private int portNumber;
+    public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
+    private final int portNumber;
     private Socket clientSocket;
-    private ProtocolParser parser;
+    private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private Thread running;
     
@@ -67,12 +68,8 @@ public class Server implements FrontendListener, Runnable {
                         break;
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                        printLine(Server.PROTOCOL_ERROR_MSG);
                     }
-
-                    if (inputLine.equals("q")) {
-                        break;
-                    }
-                    printLine("server says hi!");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,8 +102,6 @@ public class Server implements FrontendListener, Runnable {
         if (clientSocket == null) {
             return;
         }
-
-        System.out.println("replying: "+ outputLine);
         
         PrintWriter out;
         try {

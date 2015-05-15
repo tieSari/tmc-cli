@@ -7,3 +7,4 @@
 .idea/*
 .idea/**
 tmc-cli.iml
+scripts/config
