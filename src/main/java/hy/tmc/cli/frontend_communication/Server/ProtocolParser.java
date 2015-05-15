@@ -5,17 +5,9 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
-import hy.tmc.cli.frontend_communication.Commands.Command;
-<<<<<<< HEAD
-=======
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.ReplyToPing;
-import hy.tmc.cli.frontend_communication.Commands.Echo;
-import hy.tmc.cli.frontend_communication.Commands.Help;
-import hy.tmc.cli.frontend_communication.Commands.Login;
->>>>>>> 1084b84e89c3c1e8181ccdf556bba46b6b18262b
-import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
+import hy.tmc.cli.frontend_communication.Commands.*;
+import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.*;
 import hy.tmc.cli.logic.Logic;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
