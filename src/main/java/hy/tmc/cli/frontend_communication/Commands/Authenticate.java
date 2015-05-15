@@ -6,6 +6,7 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.Configuration.ServerData;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.*;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
@@ -37,7 +38,7 @@ public class Authenticate extends Command {
     @Override
     public void execute() {
        String auth = data.get("username") + ":" + data.get("password");
-       int code = makeGetRequest("http://tmc.mooc.fi/staging/user", auth).getStatusCode();
+       int code = makeGetRequest(ServerData.getAuthUrl(), auth).getStatusCode();
        this.frontend.printLine(returnResponse(code));
     }
 

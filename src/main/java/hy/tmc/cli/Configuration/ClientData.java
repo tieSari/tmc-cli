@@ -1,7 +1,5 @@
 package hy.tmc.cli.Configuration;
 
-import static hy.tmc.cli.backendCommunication.Authorization.Authorization.encode;
-
 /**
  * This class will be initialized when connection was successfull. Use this to get data
  */

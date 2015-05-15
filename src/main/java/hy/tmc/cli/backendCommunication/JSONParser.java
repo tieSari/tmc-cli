@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.Configuration.ServerData;
 
 /**
  *
@@ -17,23 +18,25 @@ import hy.tmc.cli.Configuration.ClientData;
  */
 public class JSONParser {
 
-    public static String parseCourses() {
-        HTTPResult httpResult = URLCommunicator.makeGetRequest("https://tmc.mooc.fi/staging/courses.json?api_version=7", ClientData.getFormattedUserData());
+    
+    private static JsonObject getJSONFrom(String url) {
+        HTTPResult httpResult = URLCommunicator.makeGetRequest(url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
         
-        JsonElement jelement = new JsonParser().parse(data);
-        System.out.println(data);
-        JsonObject jobject = jelement.getAsJsonObject();
-        JsonArray jarray = jobject.getAsJsonArray("courses");
-        System.out.println(jarray);
+        return new JsonParser().parse(data).getAsJsonObject();
+
+    }
+    
+    public static String parseCourseNames() {
+        JsonObject jObject = getJSONFrom(ServerData.getCoursesUrl());
+        JsonArray jarray = jObject.getAsJsonArray("courses");
+        
         StringBuilder result = new StringBuilder();
         for (JsonElement element : jarray) {
             result.append(element.getAsJsonObject().get("name"));
             result.append("\n");
         }
         
-        //jobject = jarray.get(0).getAsJsonObject();
-        //String result = jobject.get("name").toString();
         return result.toString();
     }
 
