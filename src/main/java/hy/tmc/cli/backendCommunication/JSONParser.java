@@ -20,6 +20,7 @@ public class JSONParser {
 
     
     private static JsonObject getJSONFrom(String url) {
+        
         HTTPResult httpResult = URLCommunicator.makeGetRequest(url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
         
