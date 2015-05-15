@@ -21,6 +21,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 /**
  *
@@ -38,7 +39,7 @@ public class URLCommunicator {
     public static HTTPResult makePostRequest(String url, String... params) {
         try {
 
-            HttpClient client = new DefaultHttpClient();
+            HttpClient client = HttpClientBuilder.create().build();
             HttpPost post = new HttpPost(url);
 
             String encoding = Base64.encodeBase64String((params[0]).getBytes());
@@ -95,7 +96,7 @@ public class URLCommunicator {
     }
 
     private static HttpResponse createAndExecuteGet(String url, String[] params) throws IOException {
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(url);
         request.setHeader("Authorization", "Basic " + encode(params[0]));
         request.addHeader("User-Agent", USER_AGENT);
