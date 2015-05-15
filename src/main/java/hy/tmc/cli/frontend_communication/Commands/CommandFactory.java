@@ -5,7 +5,6 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 

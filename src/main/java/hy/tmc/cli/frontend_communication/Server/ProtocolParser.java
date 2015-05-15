@@ -1,8 +1,9 @@
 package hy.tmc.cli.frontend_communication.Server;
 
+import hy.tmc.cli.frontend_communication.Commands.ReplyToPing;
+import hy.tmc.cli.frontend_communication.Commands.Authenticate;
 import hy.tmc.cli.frontend_communication.Commands.*;
 import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.Authenticate;
-import hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands.*;
 import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 
