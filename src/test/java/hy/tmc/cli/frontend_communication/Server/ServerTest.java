@@ -51,6 +51,7 @@ public class ServerTest {
         server.start();
         String answer = client.send("ping");
         server.stop();
+        assertEquals("pong", answer);
     }
 
 
