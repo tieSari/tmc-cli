@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.backendCommunication.JSONParser;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
@@ -27,6 +28,10 @@ public class ListCourses extends Command {
 
     @Override
     public void execute() {
+        if (!ClientData.userDataExists()) {
+            this.frontend.printLine("Please authorize first.");
+            return;
+        }
         this.frontend.printLine(JSONParser.parseCourseNames());
     }
     
