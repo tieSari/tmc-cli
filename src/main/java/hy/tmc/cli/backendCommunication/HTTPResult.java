@@ -29,8 +29,6 @@ public class HTTPResult {
         this.success = success;
     }
 
-    
-    
     public String getData() {
         return data;
     }

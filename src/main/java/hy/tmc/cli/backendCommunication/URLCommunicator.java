@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.backendCommunication;
 
+import hy.tmc.cli.Configuration.ClientData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,6 +36,9 @@ public class URLCommunicator {
     public static HTTPResult makePostRequest(String url, String... params) {
         try {
 
+            
+            
+            
             HttpClient client = new DefaultHttpClient();
             HttpPost post = new HttpPost(url);
 
