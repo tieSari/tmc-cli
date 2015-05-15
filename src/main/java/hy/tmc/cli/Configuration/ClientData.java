@@ -15,6 +15,11 @@ public class ClientData {
         PASSWORD = password;
     }
 
+    public static boolean userDataExists() {
+        return !(USERNAME.isEmpty() || PASSWORD.isEmpty());
+    }
+    
+    
     public static String getFormattedUserData() {
         return USERNAME + ":" + PASSWORD;
     }
