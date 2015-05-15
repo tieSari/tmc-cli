@@ -25,7 +25,6 @@ public class URLCommunicatorTest {
 
     @Test
     public void createGetRequest() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        //Method[] declaredMethods = URLCommunicator.class.getDeclaredMethods();
         Method createMethod = URLCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class);
         createMethod.setAccessible(true);
         Object instance = URLCommunicator.class.newInstance();
@@ -34,8 +33,7 @@ public class URLCommunicatorTest {
         });
 
         HttpResponse httpResponse = (HttpResponse) result;
-        System.out.println("Statusline: " + httpResponse.getStatusLine());
-        assertEquals(httpResponse.getStatusLine(), "HTTP/1.1 200 OK");
+        assertEquals(httpResponse.getStatusLine().getStatusCode(), 200);
     }
 
 }
