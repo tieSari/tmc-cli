@@ -27,7 +27,7 @@ public class ReplyToPing extends Command {
     }
 
     @Override
-    public void execute() {
+    protected void functionality() {
         this.frontend.printLine(answer);
     }
 

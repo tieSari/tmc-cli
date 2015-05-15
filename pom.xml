@@ -28,6 +28,7 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+
                 </configuration>
             </plugin>
 
@@ -99,6 +100,15 @@
                     <format>html</format>
                     <maxmem>256m</maxmem>
                     <aggregate>true</aggregate>
+                    <instrumentation>
+                        <ignores>
+                            <ignore>hy.tmc.cli.frontend_communication.Result*</ignore>
+                        </ignores>
+                        <excludes>
+                            <exclude>hy/tmc/cli/frontend_communication/Result*.enum</exclude>
+                            <exclude>hy/tmc/cli/frontend_communication/Result*.class</exclude>
+                        </excludes>
+                    </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->
                 </configuration>
             </plugin>

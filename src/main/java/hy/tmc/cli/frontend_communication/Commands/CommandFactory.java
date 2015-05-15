@@ -27,8 +27,13 @@ public class CommandFactory {
     public static Command ReplyToPing(FrontendListener front, Logic back) {
         return new ReplyToPing(front, back);
     }
+<<<<<<< HEAD
     
     public static Command Authenticate(FrontendListener front, Logic back) {
         return new Authenticate(front, back);
     }
+=======
+
+    public static Command Login(FrontendListener front, Logic back) { return new Login(front, back); }
+>>>>>>> origin/clihelp
 }
