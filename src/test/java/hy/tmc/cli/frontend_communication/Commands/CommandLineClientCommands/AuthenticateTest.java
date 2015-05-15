@@ -1,18 +1,13 @@
 
 package hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands;
 
-import hy.tmc.cli.frontend_communication.Commands.Command;
+import hy.tmc.cli.frontend_communication.Commands.Authenticate;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
-import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.logic.Logic;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  *
