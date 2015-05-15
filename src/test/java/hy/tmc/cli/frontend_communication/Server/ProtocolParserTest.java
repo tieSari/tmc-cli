@@ -47,7 +47,7 @@ public class ProtocolParserTest {
     }
     
     @Test (expected=ProtocolException.class)
-    public void testInvalidData() throws ProtocolException{
+    public void testInvalidData() throws ProtocolException {
         String inputLine = "";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command result = instance.getCommand(inputLine);
@@ -55,7 +55,7 @@ public class ProtocolParserTest {
     }
     
     @Test 
-    public void testGiveData() throws ProtocolException{
+    public void testGiveData() throws ProtocolException {
         String inputLine = "echo data testi";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command echo = instance.getCommand(inputLine);
@@ -67,7 +67,7 @@ public class ProtocolParserTest {
         
     }
     
-    @AfterClass
+    @After
     public void closeServer(){
         try {
             this.server.close();
