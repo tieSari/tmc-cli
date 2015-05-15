@@ -1,20 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.backendCommunication;
 
-/**
- *
- * @author chang
- */
 public class HTTPResult {
      
     private String data;
     private int statusCode;
     private boolean success;
     
+    /**
+     *
+     * @param data
+     * @param statusCode
+     * @param success
+     */
     public HTTPResult(String data, int statusCode, boolean success) {
         this.data = data;
         this.statusCode = statusCode;
@@ -44,7 +41,4 @@ public class HTTPResult {
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
-    
-    
-    
 }

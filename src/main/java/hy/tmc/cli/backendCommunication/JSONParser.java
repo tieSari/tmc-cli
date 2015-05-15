@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.backendCommunication;
 
 import com.google.gson.JsonArray;
@@ -12,20 +7,14 @@ import com.google.gson.JsonParser;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.Configuration.ServerData;
 
-/**
- *
- * @author chang
- */
 public class JSONParser {
 
     
     private static JsonObject getJSONFrom(String url) {
-        
         HTTPResult httpResult = URLCommunicator.makeGetRequest(url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
         
         return new JsonParser().parse(data).getAsJsonObject();
-
     }
     
     public static String parseCourseNames() {

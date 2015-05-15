@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.backendCommunication;
 
 import static hy.tmc.cli.backendCommunication.Authorization.Authorization.*;
@@ -22,10 +17,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-/**
- *
- * @author chang
- */
 public class URLCommunicator {
 
     /**

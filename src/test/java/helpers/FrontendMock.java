@@ -26,7 +26,7 @@ public class FrontendMock implements FrontendListener {
         this.line = line;
     }
     
-    public String getLine(){
+    public String getMostRecentLine(){
         return line;
     }
     

@@ -50,7 +50,7 @@ public class AuthenticateTest {
         auth.setParameter(key2, param2);
         auth.execute();
         FrontendMock mock =  serverMock;
-        String result = mock.getLine();
+        String result = mock.getMostRecentLine();
         return result;
     }
     

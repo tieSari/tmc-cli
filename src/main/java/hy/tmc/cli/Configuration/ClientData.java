@@ -1,12 +1,12 @@
 package hy.tmc.cli.Configuration;
 
 /**
- * This class will be initialized when connection was successfull. Use this to get data
+ * This class will be initialized when Auth is successful. Use this to get data of user
  */
 public class ClientData {
 
     private static int PID;
-    private static final int PORT = 1234; // change plz. This is the default port
+    private static final int PORT = 1234;
     private static String USERNAME = "";
     private static String PASSWORD = "";
 
@@ -18,7 +18,6 @@ public class ClientData {
     public static boolean userDataExists() {
         return !(USERNAME.isEmpty() || PASSWORD.isEmpty());
     }
-    
     
     public static String getFormattedUserData() {
         return USERNAME + ":" + PASSWORD;
@@ -41,7 +40,6 @@ public class ClientData {
         ClientData.PID = PID;
     }
     
-
     public static String getUSERNAME() {
         return USERNAME;
     }
