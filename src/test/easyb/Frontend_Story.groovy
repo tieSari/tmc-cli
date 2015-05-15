@@ -19,8 +19,16 @@ scenario "user wants to see available commands", {
     then "cli returns list of commands", {
 
         ensure(output) {
-            contains("help");
+            contains("a very helpful message");
         }
     }
 
 }
+
+/*
+scenario "user wants to login to tmc server", {
+    given "command login to cli", {
+        helper = new Helper()
+        output = helper.startCommand("login")
+    }
+}*/
