@@ -69,5 +69,15 @@ public class ServerTest {
             fail("IOException was raised");
         }
     }
+    
+    @Test (expected = ProtocolException.class)
+    public void serverThrowsExceptionWhenMessageViolatesProtocol() {
+        try {
+            client.sendMessage("al2kjn238fh1o");
+        } catch (IOException ex) {
+            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("IOException was raised");
+        }
+    }
 
 }
