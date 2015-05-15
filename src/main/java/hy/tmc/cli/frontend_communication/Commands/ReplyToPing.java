@@ -6,13 +6,8 @@
 
 package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.logic.Logic;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

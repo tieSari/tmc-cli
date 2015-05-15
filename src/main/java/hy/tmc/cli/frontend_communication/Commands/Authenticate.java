@@ -8,11 +8,9 @@ package hy.tmc.cli.frontend_communication.Commands;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.Configuration.ServerData;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.*;
-import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
-import java.util.HashMap;
 
 /**
  *
@@ -20,11 +18,8 @@ import java.util.HashMap;
  */
 public class Authenticate extends Command {
 
-    HashMap<String, String> data;
-
     public Authenticate(FrontendListener front, Logic backend) {
         super(front, backend);
-        data = new HashMap<>();
     }
 
     private String returnResponse(int statusCode) {

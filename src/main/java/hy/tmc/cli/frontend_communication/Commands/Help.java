@@ -6,8 +6,6 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Result;
-import static hy.tmc.cli.frontend_communication.Result.*;
 import hy.tmc.cli.logic.Logic;
 
 /**
