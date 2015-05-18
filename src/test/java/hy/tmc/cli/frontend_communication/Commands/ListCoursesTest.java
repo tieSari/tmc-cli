@@ -6,24 +6,15 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import helpers.FrontendMock;
-import helpers.TestClient;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
-import hy.tmc.cli.frontend_communication.Server.Server;
-import hy.tmc.cli.frontend_communication.Server.ServerTest;
 import hy.tmc.cli.logic.Logic;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- *
- * @author chang
- */
 public class ListCoursesTest {
 
     private FrontendMock front;
