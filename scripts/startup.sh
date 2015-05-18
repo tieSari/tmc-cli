@@ -5,11 +5,20 @@
 #Needs tmc-client.jar in classpath or same directory
 #SERVER NEEDS TO BE NOT RUNNING
 
-if [ pgrep `cat config` &> /dev/null ]; then
-  eval "(nohup java -jar tmc-client.jar &> /dev/null) &"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+CONFIGPATH=$DIR
+CONFIGPATH+="/config"
+
+CLIENTPATH=$DIR
+CLIENTPATH+="/tmc-client.jar"
+
+if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
+  eval "(nohup java -jar $CLIENTPATH &> /dev/null) &"
   PID=$!
-  echo $PID > config
+  echo $PID > $CONFIGPATH
   echo "Server started"
+  sleep 1
 else
-  echo "Server is already running. Not doing anything."
+  echo "Server is already running."
 fi
