@@ -1,5 +1,5 @@
 
-package hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands;
+package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.frontend_communication.Commands.Authenticate;
 import hy.tmc.cli.frontend_communication.FrontendListener;
