@@ -49,11 +49,47 @@ public class Server implements FrontendListener, Runnable {
     
     @Override
     public void run() {
+        try {
+            clientSocket = serverSocket.accept();
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+
+            while (true) {
+                String inputLine = in.readLine();
+
+                if (inputLine == null) {
+                    break;
+                }
+
+                try {
+                    Command command = parser.getCommand(inputLine);
+                    command.execute();
+                    break;
+                } catch (ProtocolException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    printLine(Server.PROTOCOL_ERROR_MSG);
+                }
+
+
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                clientSocket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        /*clientSocket = serverSocket.accept();
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(clientSocket.getInputStream()));
         while (true) {
             try {
-                clientSocket = serverSocket.accept();
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream()));
+
+
 
                 String inputLine;
                 while (true) {
@@ -64,17 +100,19 @@ public class Server implements FrontendListener, Runnable {
                     try {
                         Command command = parser.getCommand(inputLine);
                         command.execute();
-                        clientSocket.close();
-                        break;
+
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                         printLine(Server.PROTOCOL_ERROR_MSG);
+                    } finally {
+                        clientSocket.close();
+
                     }
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }*/
     }
 
     /**
