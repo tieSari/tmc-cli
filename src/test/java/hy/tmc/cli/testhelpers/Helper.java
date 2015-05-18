@@ -1,6 +1,5 @@
 package hy.tmc.cli.testhelpers;
 
-import org.codehaus.groovy.runtime.powerassert.SourceText;
 
 import java.io.*;
 
