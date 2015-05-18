@@ -5,22 +5,13 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
-import helpers.FrontendMock;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
-import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.logic.Logic;
-import java.io.IOException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import hy.tmc.cli.testhelpers.FrontendMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.mockito.Mock;
-import org.mockito.*;
 import static org.mockito.Mockito.*;
-import org.powermock.api.mockito.PowerMockito;
 
 /**
  *

@@ -5,7 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
-import helpers.FrontendMock;
+import hy.tmc.cli.testhelpers.FrontendMock;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;

@@ -1,4 +1,4 @@
-package helpers;
+package hy.tmc.cli.testhelpers;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

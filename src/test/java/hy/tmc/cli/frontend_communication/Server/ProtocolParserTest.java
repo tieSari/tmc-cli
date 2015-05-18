@@ -5,18 +5,10 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
-import helpers.FrontendMock;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.logic.Logic;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
+import hy.tmc.cli.testhelpers.FrontendMock;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
