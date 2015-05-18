@@ -1,38 +1,36 @@
 package hy.tmc.cli.testhelpers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.codehaus.groovy.runtime.powerassert.SourceText;
 
-/**
- * Created by jani on 12.5.15.
- */
+import java.io.*;
+
 public class Helper {
-
-    public ProcessBuilder createProcessBuilder(String command, String cliPath) {
-
+    private ProcessBuilder createProcessBuilder(String command, String cliPath) {
         if (cliPath == null) {
             cliPath = "scripts/frontend.sh";
         }
-
         return new ProcessBuilder("bash", cliPath, command);
     }
-
-    public String printOutput(String command, String cliPath) {
-
+    private Process createProcess(String command, String cliPath, boolean waitUntilFinished) {
         Process p = null;
         try {
             p = createProcessBuilder(command, cliPath).start();
-            p.waitFor();
+            if (waitUntilFinished) {
+                p.waitFor();
+            }
         } catch (Exception e) {
             System.out.println("prosessin luonti feilas");
-            return "";
         }
+        return p;
+    }
+    public String printOutput(String command, String cliPath) throws InterruptedException {
+        Process p = createProcess(command, cliPath, true);
+        return readOutputFromProcess(p);
+    }
 
-
-        InputStream inputStream = p.getInputStream();
-
+    public String readOutputFromProcess(Process process) throws InterruptedException {
+        process.waitFor();
+        InputStream inputStream = process.getInputStream();
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line = null;
@@ -42,7 +40,36 @@ public class Helper {
         } catch (IOException e) {
             return "";
         }
-
         return sb.toString();
+    }
+    
+    public Process startDialogWithCommand(String command, String cliPath) {
+        Process process = createProcess(command, cliPath, false);
+        waitMilliseconds(100);
+        return process;
+    }
+    
+    private void waitMilliseconds(int s) {
+        try {
+            Thread.sleep(s);
+        }
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public Process writeInputToProcess(Process loginDialog, String input) throws IOException {
+        OutputStream outputStream = loginDialog.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+        try {
+            writer.write(input);
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Kirjoitus epäonnistui.");
+        } finally {
+            writer.flush();
+        }
+        waitMilliseconds(100);
+        return loginDialog;
     }
 }

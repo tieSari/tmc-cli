@@ -9,10 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author samutamm
- */
 public class AuthenticateTest {
     final private String testUsername = "test";
     final private String testPassword = "1234";
