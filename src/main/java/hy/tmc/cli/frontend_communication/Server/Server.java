@@ -21,13 +21,15 @@ import java.util.logging.Logger;
  *
  * @author kristianw
  */
-public class Server implements FrontendListener {
+public class Server implements FrontendListener, Runnable {
 
-    private int portNumber;
+    public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
+    private final int portNumber;
     private Socket clientSocket;
-    private ProtocolParser parser;
+    private final ProtocolParser parser;
     private ServerSocket serverSocket;
-
+    private Thread running;
+    
     /**
      * Server constructor
      *
@@ -44,20 +46,16 @@ public class Server implements FrontendListener {
         }
         this.parser = new ProtocolParser(this, logic);
     }
-
-    /**
-     * Start is general function to set up server listening for the frontend
-     */
+    
     @Override
-    public void start() {
-
+    public void run() {
         while (true) {
             try {
                 clientSocket = serverSocket.accept();
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
 
-                String inputLine = null;
+                String inputLine;
                 while (true) {
                     inputLine = in.readLine();
                     if (inputLine == null) {
@@ -70,20 +68,27 @@ public class Server implements FrontendListener {
                         break;
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                        printLine(Server.PROTOCOL_ERROR_MSG);
                     }
-
-                    if (inputLine.equals("q")) {
-                        break;
-                    }
-                    printLine("server says hi!");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
+
+    /**
+     * Start is general function to set up server listening for the frontend
+     */
+    @Override
+    public void start() {
+        running = new Thread(this);
+        running.start();
+        
+    }
     
-    public void close() throws IOException{
+    public void close() throws IOException {
+        running.interrupt();
         this.serverSocket.close();
     }
 
@@ -97,7 +102,7 @@ public class Server implements FrontendListener {
         if (clientSocket == null) {
             return;
         }
-
+        
         PrintWriter out;
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -105,10 +110,5 @@ public class Server implements FrontendListener {
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-    }
-
-    private void findFreePort() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
