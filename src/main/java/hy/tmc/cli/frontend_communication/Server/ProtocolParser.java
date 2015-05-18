@@ -38,8 +38,8 @@ public class ProtocolParser {
         commandsByName.put("ping", ReplyToPing(this.server, this.logic));
         commandsByName.put("echo", Echo(this.server, this.logic));
         commandsByName.put("listCourses", ListCourses(this.server, this.logic));
+        commandsByName.put("listExercises", ListExercises(this.server, this.logic));
 
-        //commandsByName.put("listcourses", null);
     }
 
     /**
