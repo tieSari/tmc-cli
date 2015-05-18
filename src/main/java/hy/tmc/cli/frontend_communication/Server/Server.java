@@ -46,12 +46,18 @@ public class Server implements FrontendListener, Runnable {
         }
         this.parser = new ProtocolParser(this, logic);
     }
+      /**
+     * Start is general function to set up server listening for the frontend
+     */
+    public void start() {
+        this.run();  
+    }
     
-    @Override
     public void run() {
         while (true) {
             try {
-                clientSocket = serverSocket.accept();
+                Socket clientSocket = serverSocket.accept();
+                this.clientSocket = clientSocket;
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
 
@@ -65,6 +71,7 @@ public class Server implements FrontendListener, Runnable {
                         Command command = parser.getCommand(inputLine);
                         command.execute();
                         clientSocket.close();
+                        in.close();
                         break;
                     } catch (ProtocolException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,23 +79,13 @@ public class Server implements FrontendListener, Runnable {
                     }
                 }
             } catch (IOException ex) {
+                System.out.println("Ei toimi");
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-
-    /**
-     * Start is general function to set up server listening for the frontend
-     */
-    @Override
-    public void start() {
-        running = new Thread(this);
-        running.start();
-        
-    }
     
     public void close() throws IOException {
-        running.interrupt();
         this.serverSocket.close();
     }
 
@@ -102,13 +99,14 @@ public class Server implements FrontendListener, Runnable {
         if (clientSocket == null) {
             return;
         }
-        
         PrintWriter out;
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(outputLine);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Printlinessa");
         }
+        System.out.println(outputLine);
     }
 }

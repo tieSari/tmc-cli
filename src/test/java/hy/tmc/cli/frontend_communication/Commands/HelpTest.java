@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
+import helpers.FrontendMock;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.frontend_communication.Server.Server;
@@ -29,22 +30,12 @@ import org.powermock.api.mockito.PowerMockito;
 
 public class HelpTest {
 
-    private Server server;
+    private FrontendMock frontendMock;
     private Logic logic;
-    @Mock
-    private Help mockFoo;
 
     public HelpTest() {
         this.logic = new Logic();
-    }
-
-    @Before
-    public void startServer() {
-        this.server = new Server(8034, logic);
-    }
-    
-    Help makeHelp(Server s, Logic l) {
-        return new Help(s, l);
+        this.frontendMock = new FrontendMock();
     }
 
     /**
@@ -52,7 +43,7 @@ public class HelpTest {
      */
     @Test
     public void createNewHelp() {
-        Help help = new Help(this.server, new Logic());
+        Help help = new Help(this.frontendMock, new Logic());
         assertNotNull(help);
     }
 
@@ -62,14 +53,5 @@ public class HelpTest {
         Help h = new Help(l, new Logic());
         h.functionality();
         verify(l, times(1)).printLine("Commands: login, help, ping");
-    }
-
-    @After
-    public void closeServer() {
-        try {
-            this.server.close();
-        } catch (IOException ex) {
-            fail("Closing server failed");
-        }
     }
 }
