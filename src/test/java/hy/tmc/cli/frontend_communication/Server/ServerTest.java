@@ -5,7 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
-import helpers.TestClient;
+import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

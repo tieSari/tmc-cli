@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package helpers;
+package hy.tmc.cli.testhelpers;
 
 import hy.tmc.cli.frontend_communication.FrontendListener;
 
