@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
+import helpers.TestClient;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ public class ServerTest {
 
     private Server server;
     private TestClient client;
+    private Thread serverThread;
 
     public ServerTest() {
     }
@@ -39,7 +41,9 @@ public class ServerTest {
     public void setUp() {
         int port = 4321;
         server = new Server(port, null);
-        server.start();
+        //server.start();
+        this.serverThread = new Thread(server);
+        this.serverThread.start();
         try {
             client = new TestClient(port);
         } catch (IOException ex) {
@@ -51,6 +55,7 @@ public class ServerTest {
     public void tearDown() {
         try {
             server.close();
+            serverThread.interrupt();
         } catch (IOException ex) {
             Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -71,7 +76,7 @@ public class ServerTest {
     }
     
     @Test
-    public void serverThrowsExceptionWhenMessageViolatesProtocol() {
+    public void messageViolatesProtocolTest() {
         try {
             client.sendMessage("al2kjn238fh1o");
             assertEquals(Server.PROTOCOL_ERROR_MSG, client.reply());

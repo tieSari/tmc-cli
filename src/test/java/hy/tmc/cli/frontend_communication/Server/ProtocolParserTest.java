@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
+import helpers.FrontendMock;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.logic.Logic;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 
 public class ProtocolParserTest {
     
-    private Server server;
+    private FrontendMock server;
     private Logic logic;
     
     public ProtocolParserTest() {
@@ -32,17 +33,8 @@ public class ProtocolParserTest {
     
     @Before
     public void startServer(){
-       this.server = new Server(43221, logic); 
+       this.server = new FrontendMock(); 
        this.server.start();
-    }
-    
-    @After
-    public void closeServer(){
-        try {
-            this.server.close();
-        } catch (IOException ex) {
-            Logger.getLogger(ProtocolParserTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
