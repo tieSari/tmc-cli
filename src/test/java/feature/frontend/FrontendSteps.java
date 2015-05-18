@@ -3,17 +3,27 @@ package feature.frontend;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import hy.tmc.cli.testhelpers.Helper;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import static org.junit.Assert.assertTrue;
 
 public class FrontendSteps {
+
+    private String output;
     
-    @Given(".+user writes help '(.+)'")
-    public void userCanSeeAvailableCommands() {
+    @Given("^a help command\\.$")
+    public void a_help_command() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
         Helper helper = new Helper();
-        String output = helper.printOutput("help", "scripts/frontend.sh");
+        output = helper.printOutput("help", "scripts/frontend.sh");
     }
-    @Then(".+ All commands are listed.")
-    public void commandAreListed(final String output) {
+
+    @Then("^output should contains commands\\.$")
+    public void output_should_contains_commands() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
         assertTrue(output.contains("Commands: "));
     }
 }

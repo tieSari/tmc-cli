@@ -1,3 +1,6 @@
 Feature: Help command
+    User can list available commands.
 
-    Scenario: something
+    Scenario: List commands
+        Given a help command.
+        Then output should contains commands.
