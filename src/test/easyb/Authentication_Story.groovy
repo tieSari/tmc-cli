@@ -9,8 +9,7 @@ description 'Authentication works.'
 scenario "User can log in.", {
 
     given "command login",{
-        helper = new Helper()
-        output = helper.printOutput("login", "scripts/frontend.sh")
+
     }
 
 
