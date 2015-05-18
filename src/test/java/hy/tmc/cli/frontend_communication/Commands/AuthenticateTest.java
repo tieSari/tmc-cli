@@ -1,7 +1,7 @@
 
-package hy.tmc.cli.frontend_communication.Commands.CommandLineClientCommands;
+package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.frontend_communication.Commands.Authenticate;
+import helpers.FrontendMock;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
@@ -17,12 +17,12 @@ public class AuthenticateTest {
     final private String testUsername = "test";
     final private String testPassword = "1234";
     private Authenticate auth;
-    private FrontendListener serverMock;
+    private FrontendMock serverMock;
    
     @Before
     public void setUp() {
         Logic logic = new Logic();
-        this.serverMock = new ServerMock();
+        this.serverMock = new FrontendMock();
         this.auth = new Authenticate(serverMock, logic);
     }
     
@@ -49,8 +49,8 @@ public class AuthenticateTest {
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
         auth.execute();
-        ServerMock mock = (ServerMock) serverMock;
-        String result = mock.getPrintedLine();
+        FrontendMock mock =  serverMock;
+        String result = mock.getMostRecentLine();
         return result;
     }
     

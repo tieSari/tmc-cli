@@ -8,6 +8,7 @@ import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 
 import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
+import hy.tmc.cli.frontend_communication.FrontendListener;
 
 /**
  *
@@ -15,7 +16,7 @@ import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
  */
 public class ProtocolParser {
 
-    private Server server;
+    private FrontendListener server;
     private Logic logic;
     private final HashMap<String, Command> commandsByName = new HashMap<>();
 
@@ -25,7 +26,7 @@ public class ProtocolParser {
      * @param server
      * @param logic
      */
-    public ProtocolParser(Server server, Logic logic) {
+    public ProtocolParser(FrontendListener server, Logic logic) {
         this.server = server;
         this.logic = logic;
         this.createCommandMap();
