@@ -1,3 +1,4 @@
+
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.stubs.FrontendStub;
@@ -33,5 +34,4 @@ public class HelpTest {
     public void cleanUpStreams(){
         System.setOut(null);
     }
-
 }

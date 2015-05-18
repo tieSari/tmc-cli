@@ -5,20 +5,18 @@
  */
 package hy.tmc.cli.frontend_communication.Commands;
 
+import helpers.FrontendMock;
+import helpers.TestClient;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.frontend_communication.Server.ServerTest;
-import hy.tmc.cli.frontend_communication.Server.TestClient;
 import hy.tmc.cli.logic.Logic;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,35 +26,25 @@ import org.junit.Test;
  */
 public class ListCoursesTest {
 
-    private Server server;
-    private Logic logic;
-    private TestClient client;
+    private FrontendMock front;
+    private Command list;
     
-    public ListCoursesTest() {
-        this.logic = new Logic();
-    }
 
     @Before
-    public void startServer() {
-        this.server = new Server(8035, logic);
-        this.server.start();
-        
-         try {
-            client = new TestClient(8035);
-        } catch (IOException ex) {
-             System.out.println("fail");
-        }
+    public void setUp() {
+        front = new FrontendMock();
+        list = new ListCourses(front, null);
     }
     
      @Test
     public void createNewEcho() {
-       ListCourses lc = new ListCourses(this.server, new Logic());
+       ListCourses lc = new ListCourses(front, new Logic());
        assertNotNull(lc);
     }
     
    @Test 
     public void testCheckDataSuccess() throws ProtocolException{
-        ListCourses ls = new ListCourses(this.server, new Logic());
+        ListCourses ls = new ListCourses(front, new Logic());
         ls.setParameter("", "juuh");
         try {
             ls.checkData();
@@ -66,50 +54,58 @@ public class ListCoursesTest {
     }
     
     @Test
-    public void testServerRepliesToPing() {
+    public void testNoAuthPrintsError() {
         ClientData.setUserData("", "");
-        
+
         try {
-            client.sendMessage("ping");
-            assertEquals("pong", client.reply());
-        } catch (IOException ex) {
-            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("IOException was raised");
+            list.execute();
+            assertTrue(front.getMostRecentLine().contains("authorize first"));
         }
+        catch (ProtocolException ex) {
+            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("unexpected exception");
+        }
+        
     }
     
-//    @Test
-//    public void testNoAuthPrintsError() {
-//        try {
-//            client.sendMessage("listCourses");
-//            assertTrue(client.reply().contains("authorize first"));
-//        }
-//        catch (IOException ex) {
-//            fail("Invalid response");
-//        }
-//    }
-//    
-//    @Test
-//    public void testWithAuthPrintsCourses() {
-//        ClientData.setUserData("test", "1234");
-//        
-//        try {
-//            client.sendMessage("listCourses");
-//            assertTrue(client.reply().contains("tira"));
-//        }
-//        catch (IOException ex) {
-//            fail("Invalid response");
-//        }
-//    }
-    
-
-    @After
-    public void closeServer() {
+    @Test
+    public void testWithAuthPrintsCourses() {
+        ClientData.setUserData("test", "1234");
         try {
-            this.server.close();
+            list.execute();
+            assertTrue(front.getMostRecentLine().contains("tira"));
         }
-        catch (IOException ex) {
-            fail("Closing server failed");
+        catch (ProtocolException ex) {
+            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("unexpected exception");
+        }   
+    }
+    
+    @Test
+    public void testWithAuthPrintsSeveralCourses(){
+        ClientData.setUserData("test", "1234");
+        try {
+            list.execute();
+            assertTrue(front.getMostRecentLine().contains("tmc-eclipse"));
+        }
+        catch (ProtocolException ex) {
+            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("unexpected exception");
+        }  
+    }
+    
+    @Test
+    public void setParameterTest(){
+        list.setParameter("asdf", "bsdf");
+    }
+    
+    @Test
+    public void checkDataTest(){
+        try {
+            list.checkData();
+        }
+        catch (ProtocolException ex) {
+            fail("listcourses should not throw exception from checkData");
         }
     }
 
