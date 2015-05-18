@@ -32,6 +32,22 @@
                 </configuration>
             </plugin>
 
+            <!--
+           <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                           <directory>${basedir}/scripts</directory>
+                           <includes>
+                               <include>*</include>
+                           </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            -->
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -49,8 +65,10 @@
                                     <mainClass>hy.tmc.cli.Main</mainClass>
                                 </transformer>
                             </transformers>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>launcher</shadedClassifierName>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <shadedClassifierName>original</shadedClassifierName> 
+                            <finalName>tmc-client</finalName>
+                            <outputDirectory>${basedir}/scripts</outputDirectory> <!--Defines the place of the jar-->
                         </configuration>
                     </execution>
                 </executions>
