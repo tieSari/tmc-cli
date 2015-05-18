@@ -46,8 +46,13 @@ public class Server implements FrontendListener, Runnable {
         }
         this.parser = new ProtocolParser(this, logic);
     }
+      /**
+     * Start is general function to set up server listening for the frontend
+     */
+    public void start() {
+        this.run();  
+    }
     
-    @Override
     public void run() {
         try {
             clientSocket = serverSocket.accept();
@@ -78,55 +83,15 @@ public class Server implements FrontendListener, Runnable {
         } finally {
             try {
                 clientSocket.close();
+
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        /*clientSocket = serverSocket.accept();
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
-        while (true) {
-            try {
-
-
-
-                String inputLine;
-                while (true) {
-                    inputLine = in.readLine();
-                    if (inputLine == null) {
-                        break;
-                    }
-                    try {
-                        Command command = parser.getCommand(inputLine);
-                        command.execute();
-
-                    } catch (ProtocolException ex) {
-                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                        printLine(Server.PROTOCOL_ERROR_MSG);
-                    } finally {
-                        clientSocket.close();
-
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
-    }
-
-    /**
-     * Start is general function to set up server listening for the frontend
-     */
-    @Override
-    public void start() {
-        running = new Thread(this);
-        running.start();
-        
     }
     
     public void close() throws IOException {
-        running.interrupt();
         this.serverSocket.close();
     }
 
@@ -140,13 +105,14 @@ public class Server implements FrontendListener, Runnable {
         if (clientSocket == null) {
             return;
         }
-        
         PrintWriter out;
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(outputLine);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Printlinessa");
         }
+        System.out.println(outputLine);
     }
 }
