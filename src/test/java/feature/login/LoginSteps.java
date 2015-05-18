@@ -1,33 +1,34 @@
 package feature.login;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.testhelpers.Helper;
+import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
-
+    private Helper helper;
+    private Process loginDialog;
+    
     @Given("^a login command\\.$")
     public void a_login_command() throws Throwable {
-        
-        throw new PendingException();
+        helper = new Helper();
+        loginDialog = helper.startDialogWithCommand("login", "scripts/frontend.sh");
     }
 
     @When("^user gives username \"(.*?)\"$")
-    public void user_gives_username(String arg1) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    public void user_gives_username(String username) throws Throwable {
+        loginDialog = helper.writeInputToProcess(loginDialog, username);
     }
 
     @When("^user gives password \"(.*?)\"$")
-    public void user_gives_password(String arg1) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    public void user_gives_password(String password) throws Throwable {
+        loginDialog = helper.writeInputToProcess(loginDialog, password);
     }
 
     @Then("^user should be able to login\\.$")
     public void user_should_be_able_to_login() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        String output = helper.readOutputFromProcess(loginDialog);
+        assertTrue(output.contains("Auth successful."));
     }
 }

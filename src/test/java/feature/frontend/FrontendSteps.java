@@ -3,10 +3,6 @@ package feature.frontend;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import hy.tmc.cli.testhelpers.Helper;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertTrue;
 
