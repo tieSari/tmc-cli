@@ -15,10 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author pihla
- */
 public class EchoTest {
     
     private final FrontendMock front;

@@ -11,10 +11,6 @@ import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 
-/**
- *
- * @author chang
- */
 public class ListCourses extends Command {
 
     public ListCourses(FrontendListener front, Logic backend) {

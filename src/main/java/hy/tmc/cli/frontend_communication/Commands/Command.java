@@ -11,10 +11,6 @@ import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author pihla
- */
 public abstract class Command implements Runnable {
 
     /**

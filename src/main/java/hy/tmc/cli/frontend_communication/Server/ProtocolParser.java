@@ -10,10 +10,6 @@ import java.util.HashMap;
 import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 
-/**
- *
- * @author pihla
- */
 public class ProtocolParser {
 
     private FrontendListener server;

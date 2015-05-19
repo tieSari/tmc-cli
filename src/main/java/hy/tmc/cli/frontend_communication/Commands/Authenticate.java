@@ -12,10 +12,6 @@ import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 
-/**
- *
- * @author chang
- */
 public class Authenticate extends Command {
 
     public Authenticate(FrontendListener front, Logic backend) {

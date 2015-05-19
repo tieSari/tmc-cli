@@ -8,10 +8,6 @@ package hy.tmc.cli.frontend_communication.Commands;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
-/**
- *
- * @author pihla
- */
 public class Help extends Command {
 
     public Help(FrontendListener front, Logic backend) {
