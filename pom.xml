@@ -103,10 +103,12 @@
                     <instrumentation>
                         <ignores>
                             <ignore>hy.tmc.cli.frontend_communication.Result*</ignore>
+                            <ignore>hy.tmc.cli.domain.Exercise*</ignore>
                         </ignores>
                         <excludes>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.enum</exclude>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.class</exclude>
+                            <exclude>hy/tmc/cli/domain/Exercise*.class</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->
