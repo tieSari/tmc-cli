@@ -15,6 +15,7 @@ public class FrontendSteps {
         // Write code here that turns the phrase above into concrete actions
         Helper helper = new Helper();
         output = helper.printOutput("help", "scripts/frontend.sh");
+
     }
 
     @Then("^output should contains commands\\.$")

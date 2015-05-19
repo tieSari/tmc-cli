@@ -8,13 +8,16 @@ import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
 
+    private final String scriptLocation = "scripts/frontend.sh";
+    private final String commandName = "login";
+    
     private Helper helper;
     private Process loginDialog;
 
     @Given("^a login command\\.$")
     public void a_login_command() throws Throwable {
         helper = new Helper();
-        loginDialog = helper.startDialogWithCommand("login", "scripts/frontend.sh");
+        loginDialog = helper.startDialogWithCommand(commandName, scriptLocation);
     }
 
     @When("^user gives username \"(.*?)\"$")
