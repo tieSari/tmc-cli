@@ -75,5 +75,10 @@ public class JSONParserTest {
         
         assertTrue(names.contains("week7-week7_08.Airport"));
     }
+    
+    @Test
+    public void canFetchOneCourse(){
+        // TODO: implement!
+    }
 
 }
