@@ -42,7 +42,7 @@ public class AuthenticateTest {
         assertTrue(result.contains("Auth unsuccessful."));
     }
 
-    @Test(expected = ProtocolException.class)
+    @Test(expected = Exception.class)
     public void failsWithWrongKeys() throws ProtocolException {
         executeWithParams("usernamee", testUsername, "passwordi", testPassword);
     }
