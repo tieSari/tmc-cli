@@ -52,13 +52,17 @@ public class AuthenticateTest {
         
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
+        
+        
         HTTPResult fakeResult = new HTTPResult("", 200, true);
         PowerMockito.mockStatic(URLCommunicator.class);
         PowerMockito
                 .when(URLCommunicator.makeGetRequest(URLCommunicator.createClient(),
                                                     Mockito.anyString(), 
                                                     Mockito.anyString()))
-                .thenReturn(new HTTPResult("Auth successful.", 200, true));
+                .thenReturn(fakeResult);
+        
+        
         auth.execute();
         FrontendMock mock = serverMock;
         String result = mock.getMostRecentLine();

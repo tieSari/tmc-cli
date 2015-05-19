@@ -33,12 +33,13 @@ public class URLCommunicatorTest {
 
     @Test
     public void createGetRequest() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Method createMethod = URLCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class);
+        HttpClient client = URLCommunicator.createClient();
+        Method createMethod = URLCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class, HttpClient.class);
         createMethod.setAccessible(true);
         Object instance = URLCommunicator.class.newInstance();
         HttpResponse result = (HttpResponse) createMethod.invoke(instance, "https://tmc.mooc.fi/hy", new String[]{
             "test"
-        });
+        }, client);
 
         HttpResponse httpResponse = (HttpResponse) result;
         assertEquals(httpResponse.getStatusLine().getStatusCode(), 200);
