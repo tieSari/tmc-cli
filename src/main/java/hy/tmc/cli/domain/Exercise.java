@@ -47,7 +47,10 @@ public class Exercise {
         this.run_tests_locally_action_enabled = run_tests_locally_action_enabled;
         this.exercise_submissions_url = exercise_submissions_url;
     }
-
+    
+    public Exercise() {
+        
+    }
     
     
     public int getId() {
