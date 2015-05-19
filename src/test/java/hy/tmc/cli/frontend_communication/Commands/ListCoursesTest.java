@@ -1,29 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.frontend_communication.Commands;
 
-import helpers.FrontendMock;
-import helpers.TestClient;
+import hy.tmc.cli.testhelpers.FrontendMock;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
-import hy.tmc.cli.frontend_communication.Server.Server;
-import hy.tmc.cli.frontend_communication.Server.ServerTest;
 import hy.tmc.cli.logic.Logic;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- *
- * @author chang
- */
 public class ListCoursesTest {
 
     private FrontendMock front;
