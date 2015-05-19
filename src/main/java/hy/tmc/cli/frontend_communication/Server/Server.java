@@ -54,13 +54,14 @@ public class Server implements FrontendListener, Runnable {
     }
     
     public void run() {
-        try {
-            clientSocket = serverSocket.accept();
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+        while (true) {
+            try {
+                clientSocket = serverSocket.accept();
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            while (true) {
+                //while (true) {
                 String inputLine = in.readLine();
 
                 if (inputLine == null) {
@@ -70,24 +71,29 @@ public class Server implements FrontendListener, Runnable {
                 try {
                     Command command = parser.getCommand(inputLine);
                     command.execute();
-                    break;
+
                 } catch (ProtocolException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     printLine(Server.PROTOCOL_ERROR_MSG);
                 }
 
-
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
                 clientSocket.close();
 
+
+
+                // }
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    clientSocket.close();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
+
 
     }
     
