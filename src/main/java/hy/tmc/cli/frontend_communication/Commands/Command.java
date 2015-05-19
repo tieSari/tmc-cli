@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.frontend_communication.FrontendListener;
@@ -11,19 +6,15 @@ import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author pihla
- */
-public abstract class Command implements Runnable {
+public abstract class Command {
 
     /**
-     *
+     * The frontend that this command responds to
      */
     protected final FrontendListener frontend;
 
     /**
-     *
+     * The backend logic this command calls 
      */
     protected final Logic backend;
 
@@ -32,7 +23,7 @@ public abstract class Command implements Runnable {
     
     
     /**
-     *
+     * Constructor sets frontend and backend
      * @param front
      * @param backend
      */
@@ -42,26 +33,27 @@ public abstract class Command implements Runnable {
         data = new HashMap();
     }
 
-    @Override
-    public void run() {
-        this.functionality();
-    }
-
+    /**
+     * First uses checkData() to verify that the command has been given sufficient information.
+     * Then runs functionality() to perform this command. This method should not be overriden,
+     * the functionality should be written in the functionality-method
+     * @throws ProtocolException if the command has insufficient data to run
+     */
     public void execute() throws ProtocolException {
         checkData();
         functionality();
     }
 
     /**
-     * General function to execute command
+     * The functionality of the command. This method defines what the command does.
      */
     protected abstract void functionality();
 
     /**
      * setParameter sets parameter data for command
      *
-     * @param key
-     * @param value
+     * @param key name of the datum
+     * @param value value of the datum
      */
     public abstract void setParameter(String key, String value);
 
@@ -69,8 +61,7 @@ public abstract class Command implements Runnable {
      * Command must have checkData method which throws ProtocolException if it
      * doesn't have all data needed
      *
-     * @throws ProtocolException
+     * @throws ProtocolException if the command lacks some necessary data
      */
     public abstract void checkData() throws ProtocolException;
-    // public Result getResult();
 }

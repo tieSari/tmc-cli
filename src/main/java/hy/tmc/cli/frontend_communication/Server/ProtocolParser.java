@@ -1,9 +1,6 @@
 package hy.tmc.cli.frontend_communication.Server;
 
-import hy.tmc.cli.frontend_communication.Commands.ReplyToPing;
-import hy.tmc.cli.frontend_communication.Commands.Authenticate;
 import hy.tmc.cli.frontend_communication.Commands.*;
-import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.Authenticate;
 import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 
@@ -18,7 +15,7 @@ public class ProtocolParser {
 
     private FrontendListener server;
     private Logic logic;
-    private final HashMap<String, Command> commandsByName = new HashMap<>();
+    private HashMap<String, Command> commandsByName = new HashMap<>();
 
     /**
      * Constructor for Protocol Parser
@@ -29,19 +26,10 @@ public class ProtocolParser {
     public ProtocolParser(FrontendListener server, Logic logic) {
         this.server = server;
         this.logic = logic;
-        this.createCommandMap();
+        this.commandsByName = createCommandMap(this.server, this.logic);
     }
 
-    public void createCommandMap() {
-        commandsByName.put("auth", Authenticate(this.server, this.logic));
-        commandsByName.put("help", Help(this.server, this.logic));
-        commandsByName.put("login", Login(this.server, this.logic));
-        commandsByName.put("ping", ReplyToPing(this.server, this.logic));
-        commandsByName.put("echo", Echo(this.server, this.logic));
-        commandsByName.put("listCourses", ListCourses(this.server, this.logic));
-        commandsByName.put("listExercises", ListExercises(this.server, this.logic));
 
-    }
 
     /**
      * Search for command by inputline
