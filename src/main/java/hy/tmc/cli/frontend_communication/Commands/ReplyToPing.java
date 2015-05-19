@@ -22,15 +22,6 @@ public class ReplyToPing extends Command {
 
     /**
      * Does nothing, this command requires no data
-     * @param key
-     * @param value 
-     */
-    @Override
-    public void setParameter(String key, String value) {
-    }
-    
-    /**
-     * Does nothing, this command requires no data
      */
     @Override
     public void checkData(){

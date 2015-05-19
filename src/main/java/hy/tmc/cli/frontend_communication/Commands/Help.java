@@ -27,16 +27,7 @@ public class Help extends Command {
         }
         this.frontend.printLine(builder.toString());
     }
-    
-    /**
-     * Does nothing, this command does not require data.
-     * @param key
-     * @param value 
-     */
-    @Override
-    public void setParameter(String key, String value) {
-    }
-    
+
     /**
      * Does nothing, this command does not require data.
      */
