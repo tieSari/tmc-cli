@@ -13,16 +13,18 @@ public class ListExercises extends Command {
         super(front, backend);
     }
 
+    /**
+     * use JSONParser to get a list of exercises names, and print it
+     */
     @Override
     protected void functionality() {
        this.frontend.printLine(JSONParser.getExerciseNames(data.get("courseUrl")));
     }
 
-    @Override
-    public void setParameter(String key, String value) {
-        data.put(key, value);
-    }
-
+    /**
+     * Check the courseUrl and ClientData
+     * @throws ProtocolException if some data not specified
+     */
     @Override
     public void checkData() throws ProtocolException {
         if (!data.containsKey("courseUrl")) {

@@ -20,12 +20,7 @@ public class Authenticate extends Command {
         }
         return "Auth unsuccessful. Check your connection and/or credentials";
     }
-
-    @Override
-    public void setParameter(String key, String value) {
-        data.put(key, value);
-    }
-
+    
     @Override
     public void checkData() throws ProtocolException {
         if (! this.data.containsKey("username")) {
