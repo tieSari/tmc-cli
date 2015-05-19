@@ -17,10 +17,6 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author kristianw
- */
 public class Server implements FrontendListener, Runnable {
 
     public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";

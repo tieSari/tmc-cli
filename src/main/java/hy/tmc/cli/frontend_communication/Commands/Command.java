@@ -6,7 +6,9 @@ import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public abstract class Command {
+
 
     /**
      * The frontend that this command responds to
