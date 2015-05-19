@@ -7,6 +7,7 @@ package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.Configuration.ServerData;
+import hy.tmc.cli.backendCommunication.URLCommunicator;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
@@ -33,7 +34,9 @@ public class Authenticate extends Command {
     @Override
     public void execute() {
        String auth = data.get("username") + ":" + data.get("password");
-       int code = makeGetRequest(ServerData.getAuthUrl(), auth).getStatusCode();
+       int code = URLCommunicator.makeGetRequest(
+               URLCommunicator.createClient(),
+               ServerData.getAuthUrl(), auth).getStatusCode();
        this.frontend.printLine(returnResponse(code));
     }
 

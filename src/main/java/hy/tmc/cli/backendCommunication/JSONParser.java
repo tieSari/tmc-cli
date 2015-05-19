@@ -6,12 +6,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.Configuration.ServerData;
+import org.apache.http.client.HttpClient;
 
 public class JSONParser {
 
     
     private static JsonObject getJSONFrom(String url) {
-        HTTPResult httpResult = URLCommunicator.makeGetRequest(url, ClientData.getFormattedUserData());
+        HTTPResult httpResult = URLCommunicator.makeGetRequest(
+                URLCommunicator.createClient(),
+                url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
         
         return new JsonParser().parse(data).getAsJsonObject();
