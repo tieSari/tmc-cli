@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.Configuration.ServerData;
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.domain.Exercise;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +46,7 @@ public class JSONParser {
      * @return List of Course-objects
      */
     public static List<Course> getCourses() {
-        JsonObject jObject = getJSONFrom(ServerData.getCoursesUrl());
+        JsonObject jObject = getJSONFrom(new ConfigHandler().readCoursesAddress());
         Gson mapper = new Gson();
         Course[] courses = mapper.fromJson(jObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
