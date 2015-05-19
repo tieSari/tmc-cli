@@ -5,10 +5,6 @@
  */
 package hy.tmc.cli.frontend_communication;
 
-/**
- *
- * @author pihla
- */
 public interface FrontendListener {
     public void start();
     public void printLine(String line);

@@ -1,13 +1,15 @@
-
 package hy.tmc.cli.frontend_communication.Commands;
+
 
 import hy.tmc.cli.stubs.FrontendStub;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import org.junit.Before;
+
+
 
 public class HelpTest {
 

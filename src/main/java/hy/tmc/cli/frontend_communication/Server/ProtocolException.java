@@ -5,10 +5,6 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
-/**
- *
- * @author pihla
- */
 public class ProtocolException extends Exception {
 
     /**

@@ -1,106 +1,93 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.frontend_communication.Commands;
 
-import helpers.FrontendMock;
-import helpers.TestClient;
+import hy.tmc.cli.testhelpers.FrontendMock;
 import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.backendCommunication.HTTPResult;
+import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
-import hy.tmc.cli.frontend_communication.Server.Server;
-import hy.tmc.cli.frontend_communication.Server.ServerTest;
 import hy.tmc.cli.logic.Logic;
-import java.io.IOException;
+import hy.tmc.cli.testhelpers.ExampleJSON;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-/**
- *
- * @author chang
- */
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(URLCommunicator.class)
 public class ListCoursesTest {
 
     private FrontendMock front;
     private Command list;
-    
 
     @Before
     public void setUp() {
         front = new FrontendMock();
-        list = new ListCourses(front, null);
+        list = new ListCourses(front, new Logic());
+        
+        
+        PowerMockito.mockStatic(URLCommunicator.class);
+
+        HTTPResult fakeResult = new HTTPResult(ExampleJSON.coursesExample, 200, true);
+
+        ClientData.setUserData("mockattu", "ei tarvi");
+        PowerMockito
+                .when(URLCommunicator.makeGetRequest(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(fakeResult);
+        
     }
-    
-     @Test
-    public void createNewEcho() {
-       ListCourses lc = new ListCourses(front, new Logic());
-       assertNotNull(lc);
-    }
-    
-   @Test 
-    public void testCheckDataSuccess() throws ProtocolException{
+
+    @Test
+    public void testCheckDataSuccess() throws ProtocolException {
         ListCourses ls = new ListCourses(front, new Logic());
-        ls.setParameter("", "juuh");
+        ClientData.setUserData("asdf", "bsdf");
         try {
             ls.checkData();
-        } catch(ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
     
-    @Test
-    public void testNoAuthPrintsError() {
+    @Test (expected=ProtocolException.class)
+    public void testNoAuthThrowsException() throws ProtocolException {
         ClientData.setUserData("", "");
-
-        try {
-            list.execute();
-            assertTrue(front.getMostRecentLine().contains("authorize first"));
-        }
-        catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("unexpected exception");
-        }
-        
+        list.execute();   
     }
-    
+
     @Test
     public void testWithAuthPrintsCourses() {
-        ClientData.setUserData("test", "1234");
         try {
             list.execute();
-            assertTrue(front.getMostRecentLine().contains("tira"));
+            assertTrue(front.getMostRecentLine().contains("WEPAMOOC-STAGE"));
         }
         catch (ProtocolException ex) {
             Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
-        }   
+        }
     }
-    
+
     @Test
-    public void testWithAuthPrintsSeveralCourses(){
-        ClientData.setUserData("test", "1234");
+    public void testWithAuthPrintsSeveralCourses() {
         try {
             list.execute();
-            assertTrue(front.getMostRecentLine().contains("tmc-eclipse"));
+            assertTrue(front.getMostRecentLine().contains("WEPATEST"));
         }
         catch (ProtocolException ex) {
             Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
-        }  
+        }
     }
-    
+
+
     @Test
-    public void setParameterTest(){
-        list.setParameter("asdf", "bsdf");
-    }
-    
-    @Test
-    public void checkDataTest(){
+    public void checkDataTest() {
         try {
             list.checkData();
         }
