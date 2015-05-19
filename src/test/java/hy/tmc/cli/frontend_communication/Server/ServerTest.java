@@ -17,16 +17,6 @@ public class ServerTest {
     private TestClient client;
     private Thread serverThread;
 
-    public ServerTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
 
     @Before
     public void setUp() {
@@ -40,6 +30,7 @@ public class ServerTest {
         } catch (IOException ex) {
             Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+         
     }
 
     @After
