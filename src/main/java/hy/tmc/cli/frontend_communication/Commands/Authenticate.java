@@ -21,6 +21,15 @@ public class Authenticate extends Command {
         }
         return "Auth unsuccessful. Check your connection and/or credentials";
     }
+    
+    @Override
+    public void execute() {
+       String auth = data.get("username") + ":" + data.get("password");
+       int code = URLCommunicator.makeGetRequest(
+               URLCommunicator.createClient(),
+               ServerData.getAuthUrl(), auth).getStatusCode();
+       this.frontend.printLine(returnResponse(code));
+    }
 
     @Override
     public void setParameter(String key, String value) {

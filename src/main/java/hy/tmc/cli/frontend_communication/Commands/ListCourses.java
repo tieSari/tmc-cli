@@ -21,15 +21,6 @@ public class ListCourses extends Command {
     }
     
     /**
-     * Does nothing. 
-     * @param key
-     * @param value 
-     */
-    @Override
-    public void setParameter(String key, String value) {
-    }
-
-    /**
      * Checks that the user has authenticated, by verifying ClientData
      * @throws ProtocolException if ClientData is empty
      */

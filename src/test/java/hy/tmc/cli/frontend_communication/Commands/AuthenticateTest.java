@@ -57,8 +57,7 @@ public class AuthenticateTest {
         powerMockWithCredentials("samu:salis", 400);
         
         auth.execute();
-        FrontendMock mock = serverMock;
-        String result = mock.getMostRecentLine();
+        String result = serverMock.getMostRecentLine();
         return result;
     }
 

@@ -6,7 +6,9 @@ import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public abstract class Command {
+
 
     /**
      * The frontend that this command responds to
@@ -55,7 +57,9 @@ public abstract class Command {
      * @param key name of the datum
      * @param value value of the datum
      */
-    public abstract void setParameter(String key, String value);
+    public void setParameter(String key, String value) {
+        data.put(key, value);
+    }
 
     /**
      * Command must have checkData method which throws ProtocolException if it

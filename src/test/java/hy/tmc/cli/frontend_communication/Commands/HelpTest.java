@@ -1,6 +1,4 @@
-
 package hy.tmc.cli.frontend_communication.Commands;
-
 
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendMock;
@@ -18,9 +16,9 @@ public class HelpTest {
         this.logic = new Logic();
         this.frontendMock = new FrontendMock();
     }
-    
+
     @Before
-    public void setup(){
+    public void setup() {
         this.help = new Help(this.frontendMock, this.logic);
     }
 

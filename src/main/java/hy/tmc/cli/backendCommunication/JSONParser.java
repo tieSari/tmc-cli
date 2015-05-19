@@ -10,7 +10,6 @@ import hy.tmc.cli.domain.Exercise;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class JSONParser {
 
     /**

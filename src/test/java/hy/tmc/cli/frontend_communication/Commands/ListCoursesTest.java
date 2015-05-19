@@ -18,6 +18,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(URLCommunicator.class)
 public class ListCoursesTest {
@@ -38,7 +39,7 @@ public class ListCoursesTest {
         ClientData.setUserData("mockattu", "ei tarvi");
         PowerMockito
                 .when(URLCommunicator.makeGetRequest(
-                            URLCommunicator.createClient(),
+                            Mockito.eq(URLCommunicator.createClient()),
                             Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
         
