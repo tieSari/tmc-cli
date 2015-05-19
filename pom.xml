@@ -172,7 +172,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -206,13 +206,13 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5</version>
+            <version>1.5.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
-            <version>1.5</version>
+            <version>1.5.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -220,6 +220,7 @@
             <artifactId>powermock-module-junit4</artifactId>
             <version>1.5</version>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
@@ -232,6 +233,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.15</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
