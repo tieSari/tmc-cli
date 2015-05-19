@@ -38,7 +38,9 @@ public class ListExercisesTest {
 
         ClientData.setUserData("chang", "paras");
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.anyString(), Mockito.anyString()))
+                .when(URLCommunicator.makeGetRequest(
+                        Mockito.eq(URLCommunicator.createClient()),
+                        Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
 

@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.Configuration.ServerData;
+import hy.tmc.cli.backendCommunication.URLCommunicator;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
@@ -22,6 +23,20 @@ public class Authenticate extends Command {
     }
     
     @Override
+    public void execute() {
+       String auth = data.get("username") + ":" + data.get("password");
+       int code = URLCommunicator.makeGetRequest(
+               URLCommunicator.createClient(),
+               ServerData.getAuthUrl(), auth).getStatusCode();
+       this.frontend.printLine(returnResponse(code));
+    }
+
+    @Override
+    public void setParameter(String key, String value) {
+        data.put(key, value);
+    }
+
+    @Override
     public void checkData() throws ProtocolException {
         if (! this.data.containsKey("username")) {
             throw new ProtocolException("username must be set!");
@@ -34,7 +49,8 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(ServerData.getAuthUrl(), auth).getStatusCode();
+        int code = makeGetRequest(URLCommunicator.createClient(),
+                                  ServerData.getAuthUrl(), auth).getStatusCode();
         this.frontend.printLine(returnResponse(code));
     }
 
