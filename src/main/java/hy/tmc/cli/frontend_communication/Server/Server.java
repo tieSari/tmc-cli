@@ -29,6 +29,7 @@ public class Server implements FrontendListener, Runnable {
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private Thread running;
+    private boolean isRunning;
     
     /**
      * Server constructor
@@ -54,7 +55,8 @@ public class Server implements FrontendListener, Runnable {
     }
     
     public void run() {
-        while (true) {
+        isRunning = true;
+        while (isRunning) {
             try {
                 clientSocket = serverSocket.accept();
                 BufferedReader in = new BufferedReader(
@@ -100,6 +102,7 @@ public class Server implements FrontendListener, Runnable {
     }
     
     public void close() throws IOException {
+        isRunning = false;
         this.serverSocket.close();
     }
 
