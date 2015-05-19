@@ -48,7 +48,7 @@ public class ConfigHandler {
     }
     
     public String readCoursesAddress() {
-        return readServerAddress() + "/courses";
+        return readServerAddress() + "/courses.json?api_version=7";
     }
     
     public String readAuthAddress() {
