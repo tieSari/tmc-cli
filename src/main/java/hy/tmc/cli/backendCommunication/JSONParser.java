@@ -12,7 +12,12 @@ import java.util.List;
 
 public class JSONParser {
 
-    
+    /**
+     * get JSON-data from url
+     * 
+     * @param url url from which the object data is fetched
+     * @return JSON-object containing JSON-data
+     */
     private static JsonObject getJSONFrom(String url) {
         HTTPResult httpResult = URLCommunicator.makeGetRequest(url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
@@ -20,6 +25,10 @@ public class JSONParser {
         return new JsonParser().parse(data).getAsJsonObject();
     }
     
+    /**
+     * Get the names of all courses on the server specified by ServerData
+     * @return String containing all course names separated by newlines 
+     */
     public static String getCourseNames() {
         List<Course> courses = getCourses();
         
@@ -32,6 +41,10 @@ public class JSONParser {
         return result.toString();
     }
     
+    /**
+     * Get list of all the courses on the server specified by ServerData
+     * @return List of Course-objects
+     */
     public static List<Course> getCourses() {
         JsonObject jObject = getJSONFrom(ServerData.getCoursesUrl());
         Gson mapper = new Gson();
@@ -39,6 +52,11 @@ public class JSONParser {
         return Arrays.asList(courses);
     }
     
+    /**
+     * Get all exercise names of a course specified by courseUrl
+     * @param courseUrl url of the course we are interested in
+     * @return String of all exercise names separated by newlines
+     */
     public static String getExerciseNames(String courseUrl) {
         List<Exercise> exercises = getExercises(courseUrl);
         
@@ -50,6 +68,12 @@ public class JSONParser {
         return asString.toString();
     }
     
+    /**
+    /**
+     * Get all exercises of a course specified by courseUrl
+     * @param courseUrl url of the course we are interested in
+     * @return List of all exercises as Exercise-objects
+     */
     public static List<Exercise> getExercises(String courseUrl) {
         
         JsonObject course = getJSONFrom(courseUrl);
