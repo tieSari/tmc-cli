@@ -77,7 +77,7 @@ public class Server implements FrontendListener, Runnable {
                     printLine(Server.PROTOCOL_ERROR_MSG);
                 }
 
-                clientSocket.close();
+                // clientSocket.close();
 
 
 
