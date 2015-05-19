@@ -2,9 +2,7 @@ package hy.tmc.cli.backendCommunication;
 
 import static hy.tmc.cli.backendCommunication.Authorization.Authorization.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
@@ -16,6 +14,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 public class URLCommunicator {
 
@@ -82,6 +81,20 @@ public class URLCommunicator {
         }
         catch (IOException e) {
             return new HTTPResult("", 400, false);
+        }
+    }
+
+    public static boolean downloadFile(HttpClient client, String url, File file, String... params) {
+        try {
+            HttpResponse response = createAndExecuteGet(url,params,client);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
+            fileOutputStream.close();
+
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 
