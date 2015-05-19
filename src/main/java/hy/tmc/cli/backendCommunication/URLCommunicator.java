@@ -23,13 +23,9 @@ public class URLCommunicator {
      *
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is
-<<<<<<< HEAD
      * always username:password
      * @param client HttpClient to execute HttpRequests. It will come as parameter to 
      * enable dependency injection.
-=======
-     * always username password
->>>>>>> ccc08df4bee1a3113ec84cfcf7087ce046d58b4f
      * @return A Result-object with some data and a state of success or fail
      */
     public static HTTPResult makePostRequest(HttpClient client, String url, String... params) {
