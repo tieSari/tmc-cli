@@ -15,6 +15,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(URLCommunicator.class)
 public class JSONParserTest {
@@ -24,11 +25,14 @@ public class JSONParserTest {
         PowerMockito.mockStatic(URLCommunicator.class);
 
         HTTPResult fakeResult = new HTTPResult(ExampleJSON.coursesExample, 200, true);
-
+        
         ClientData.setUserData("chang", "paras");
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.anyString(), Mockito.anyString()))
+                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                                                    Mockito.anyString(), 
+                                                    Mockito.anyString()))
                 .thenReturn(fakeResult);
+        
     }
 
     @Test
@@ -56,7 +60,9 @@ public class JSONParserTest {
     public void getsExercisesCorrectlyFromCourseJSON() {
         HTTPResult fakeResult = new HTTPResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.eq("ankka"), Mockito.anyString()))
+                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                                                    Mockito.eq("ankka"), 
+                                                    Mockito.anyString()))
                 .thenReturn(fakeResult);
         String names = JSONParser.getExerciseNames("ankka");
 
@@ -69,7 +75,9 @@ public class JSONParserTest {
     public void getsLastExerciseOfCourseJSON() {
         HTTPResult fakeResult = new HTTPResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.eq("ankka"), Mockito.anyString()))
+                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                                                    Mockito.eq("ankka"), 
+                                                    Mockito.anyString()))
                 .thenReturn(fakeResult);
         String names = JSONParser.getExerciseNames("ankka");
         

@@ -19,7 +19,9 @@ public class JSONParser {
      * @return JSON-object containing JSON-data
      */
     private static JsonObject getJSONFrom(String url) {
-        HTTPResult httpResult = URLCommunicator.makeGetRequest(url, ClientData.getFormattedUserData());
+        HTTPResult httpResult = URLCommunicator.makeGetRequest(
+                URLCommunicator.createClient(),
+                url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
         
         return new JsonParser().parse(data).getAsJsonObject();

@@ -5,10 +5,6 @@
  */
 package hy.tmc.cli.frontend_communication;
 
-/**
- *
- * @author pihla
- */
 public enum Result {
 
     SUCCESS,
