@@ -84,12 +84,14 @@ public class Server implements FrontendListener, Runnable {
                 // }
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                return;
             } finally {
                 try {
                     clientSocket.close();
 
                 } catch (IOException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    // Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    return;
                 }
             }
         }
