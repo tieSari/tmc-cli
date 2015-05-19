@@ -31,7 +31,7 @@ public class ListCoursesTest {
    @Test 
     public void testCheckDataSuccess() throws ProtocolException{
         ListCourses ls = new ListCourses(front, new Logic());
-        ls.setParameter("", "juuh");
+        ClientData.setUserData("asdf", "bsdf");
         try {
             ls.checkData();
         } catch(ProtocolException p) {
@@ -39,19 +39,10 @@ public class ListCoursesTest {
         }
     }
     
-    @Test
-    public void testNoAuthPrintsError() {
+    @Test (expected=ProtocolException.class)
+    public void testNoAuthThrowsException() throws ProtocolException {
         ClientData.setUserData("", "");
-
-        try {
-            list.execute();
-            assertTrue(front.getMostRecentLine().contains("authorize first"));
-        }
-        catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("unexpected exception");
-        }
-        
+        list.execute();   
     }
     
     @Test

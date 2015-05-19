@@ -51,13 +51,13 @@ public class ProtocolParserTest {
     
     @Test 
     public void testGiveData() throws ProtocolException {
-        String inputLine = "echo data testi";
+        String inputLine = "login username asdf password bsdf";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command echo = instance.getCommand(inputLine);
         try {
             echo.checkData();
         } catch(ProtocolException p){
-            fail("testCheckDataSuccess failed");
+            fail("an exception was thrown although data was provided");
         }     
     }
     

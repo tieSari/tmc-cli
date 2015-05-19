@@ -29,7 +29,6 @@ public class ListExercises extends Command {
             throw new ProtocolException("Specify course url");
         }
         if (!ClientData.userDataExists()) {
-            //print error message
             throw new ProtocolException("Please authorize first.");
         }
     }

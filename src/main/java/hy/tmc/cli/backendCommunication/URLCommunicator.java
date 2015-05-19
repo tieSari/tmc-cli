@@ -23,7 +23,7 @@ public class URLCommunicator {
      *
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is
-     * always username:password
+     * always username password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HTTPResult makePostRequest(String url, String... params) {
