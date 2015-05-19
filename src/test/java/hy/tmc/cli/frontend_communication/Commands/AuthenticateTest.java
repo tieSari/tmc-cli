@@ -52,21 +52,23 @@ public class AuthenticateTest {
         
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
-        
-        
-        HTTPResult fakeResult = new HTTPResult("", 200, true);
         PowerMockito.mockStatic(URLCommunicator.class);
-        PowerMockito
-                .when(URLCommunicator.makeGetRequest(URLCommunicator.createClient(),
-                                                    Mockito.anyString(), 
-                                                    Mockito.anyString()))
-                .thenReturn(fakeResult);
-        
+        powerMockWithCredentials("test:1234", 200);
+        powerMockWithCredentials("samu:salis", 400);
         
         auth.execute();
         FrontendMock mock = serverMock;
         String result = mock.getMostRecentLine();
         return result;
+    }
+
+    private void powerMockWithCredentials(String credentials, int status) {
+        HTTPResult fakeResult = new HTTPResult("", status, true);
+        PowerMockito
+                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                        Mockito.anyString(),
+                        Mockito.eq(credentials)))
+                .thenReturn(fakeResult);
     }
 
 }
