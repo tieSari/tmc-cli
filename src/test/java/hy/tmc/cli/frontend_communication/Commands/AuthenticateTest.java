@@ -57,7 +57,8 @@ public class AuthenticateTest {
         HTTPResult fakeResult = new HTTPResult("", 200, true);
         PowerMockito.mockStatic(URLCommunicator.class);
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(URLCommunicator.createClient(),
+                .when(URLCommunicator.makeGetRequest(
+                                                    URLCommunicator.createClient(),
                                                     Mockito.anyString(), 
                                                     Mockito.anyString()))
                 .thenReturn(fakeResult);
