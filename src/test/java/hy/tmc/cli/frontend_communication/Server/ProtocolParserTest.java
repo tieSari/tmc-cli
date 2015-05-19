@@ -1,22 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.frontend_communication.Server;
 
 import helpers.FrontendMock;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.logic.Logic;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -39,6 +26,7 @@ public class ProtocolParserTest {
 
     /**
      * Test of getCommand method, of class ProtocolParser.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetCommand() throws Exception {
