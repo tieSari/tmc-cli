@@ -12,6 +12,12 @@ public class ProtocolExceptionTest {
     public void setUp() {
         protoExc = new ProtocolException("test", new Throwable("asd"));
     }
+    
+    @Test
+    public void constructorsWork(){
+        ProtocolException a = new ProtocolException();
+        ProtocolException b = new ProtocolException(a);
+    }
 
     @Test(expected = Exception.class)
     public void canBeThrownAndCatched() throws ProtocolException {

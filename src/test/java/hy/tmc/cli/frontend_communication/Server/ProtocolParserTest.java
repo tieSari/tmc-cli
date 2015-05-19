@@ -1,8 +1,8 @@
 package hy.tmc.cli.frontend_communication.Server;
 
-import helpers.FrontendMock;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.logic.Logic;
+import hy.tmc.cli.testhelpers.FrontendMock;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
