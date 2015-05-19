@@ -52,4 +52,28 @@ public class JSONParserTest {
         assertFalse(courses.contains("Jani"));
     }
 
+    @Test
+    public void getsExercisesCorrectlyFromCourseJSON() {
+        HTTPResult fakeResult = new HTTPResult(ExampleJSON.courseExample, 200, true);
+        PowerMockito
+                .when(URLCommunicator.makeGetRequest(Mockito.eq("ankka"), Mockito.anyString()))
+                .thenReturn(fakeResult);
+        String names = JSONParser.getExerciseNames("ankka");
+
+        assertTrue(names.contains("week7-week7_01.Smileys"));
+        assertTrue(names.contains("week7-week7_02.CharacterStringChanger"));
+        assertTrue(names.contains("week7-week7_03.Calculator"));
+    }
+    
+    @Test
+    public void getsLastExerciseOfCourseJSON() {
+        HTTPResult fakeResult = new HTTPResult(ExampleJSON.courseExample, 200, true);
+        PowerMockito
+                .when(URLCommunicator.makeGetRequest(Mockito.eq("ankka"), Mockito.anyString()))
+                .thenReturn(fakeResult);
+        String names = JSONParser.getExerciseNames("ankka");
+        
+        assertTrue(names.contains("week7-week7_08.Airport"));
+    }
+
 }
