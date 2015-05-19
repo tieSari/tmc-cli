@@ -21,6 +21,6 @@ public class FrontendSteps {
     @Then("^output should contains commands\\.$")
     public void output_should_contains_commands() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(output.contains("Commands: "));
+        assertTrue(output.contains("Available commands: "));
     }
 }
