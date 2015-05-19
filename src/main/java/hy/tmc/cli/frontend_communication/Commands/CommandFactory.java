@@ -38,5 +38,8 @@ public class CommandFactory {
     public static Command ListCourses(FrontendListener front, Logic back) {
         return new ListCourses(front, back);
     }
+    public static Command ListExercises(FrontendListener front, Logic back) {
+        return new ListExercises(front, back);
+    }
 
 }

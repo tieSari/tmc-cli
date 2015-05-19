@@ -31,7 +31,7 @@ public class ListCourses extends Command {
             this.frontend.printLine("Please authorize first.");
             return;
         }
-        this.frontend.printLine(JSONParser.parseCourseNames());
+        this.frontend.printLine(JSONParser.getCourseNames());
     }
     
     @Override
