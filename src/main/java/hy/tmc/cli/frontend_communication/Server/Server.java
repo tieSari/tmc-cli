@@ -29,6 +29,7 @@ public class Server implements FrontendListener, Runnable {
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private Thread running;
+    private boolean isRunning;
     
     /**
      * Server constructor
@@ -54,38 +55,54 @@ public class Server implements FrontendListener, Runnable {
     }
     
     public void run() {
-        while (true) {
+        isRunning = true;
+        while (isRunning) {
             try {
-                Socket clientSocket = serverSocket.accept();
-                this.clientSocket = clientSocket;
+                clientSocket = serverSocket.accept();
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                String inputLine;
-                while (true) {
-                    inputLine = in.readLine();
-                    if (inputLine == null) {
-                        break;
-                    }
-                    try {
-                        Command command = parser.getCommand(inputLine);
-                        command.execute();
-                        clientSocket.close();
-                        in.close();
-                        break;
-                    } catch (ProtocolException ex) {
-                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                        printLine(Server.PROTOCOL_ERROR_MSG);
-                    }
+                //while (true) {
+                String inputLine = in.readLine();
+
+                if (inputLine == null) {
+                    break;
                 }
+
+                try {
+                    Command command = parser.getCommand(inputLine);
+                    command.execute();
+
+                } catch (ProtocolException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    printLine(Server.PROTOCOL_ERROR_MSG);
+                }
+
+                // clientSocket.close();
+
+
+
+                // }
             } catch (IOException ex) {
-                System.out.println("Ei toimi");
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                return;
+            } finally {
+                try {
+                    clientSocket.close();
+
+                } catch (IOException ex) {
+                    // Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    return;
+                }
             }
         }
+
+
     }
     
     public void close() throws IOException {
+        isRunning = false;
         this.serverSocket.close();
     }
 

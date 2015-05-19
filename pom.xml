@@ -31,7 +31,32 @@
 
                 </configuration>
             </plugin>
-
+            <!-- This ingores tests but still builds jar, comment out if you experience lots of problems-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+            
+            <!-- Removes the jar from scripts/ when cleaning-->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/scripts</directory>
+                            <includes>
+                                <include>*.jar</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -50,7 +75,9 @@
                                 </transformer>
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>launcher</shadedClassifierName>
+                            <shadedClassifierName>original</shadedClassifierName> 
+                            <finalName>tmc-client</finalName>
+                            <outputDirectory>${basedir}/scripts</outputDirectory> <!--Defines the place of the jar-->
                         </configuration>
                     </execution>
                 </executions>
@@ -145,7 +172,19 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

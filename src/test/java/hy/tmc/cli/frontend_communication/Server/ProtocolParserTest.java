@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.frontend_communication.Server;
 
 import hy.tmc.cli.frontend_communication.Commands.Command;
@@ -31,10 +26,11 @@ public class ProtocolParserTest {
 
     /**
      * Test of getCommand method, of class ProtocolParser.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetCommand() throws Exception {
-        System.out.println("getCommand");
+        // System.out.println("getCommand");
         String inputLine = "help";
         ProtocolParser instance = new ProtocolParser(this.server, this.logic);
         Command result = instance.getCommand(inputLine);

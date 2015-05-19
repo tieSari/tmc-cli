@@ -5,10 +5,7 @@ import static org.junit.Assert.*;
 import static hy.tmc.cli.Configuration.ClientData.*;
 import org.junit.Before;
 
-/**
- *
- * @author kristianw
- */
+
 public class ClientDataTest {
 
     
@@ -45,6 +42,12 @@ public class ClientDataTest {
     public void formatFormatsTheDataRight() {
         setUserData("ASD", "DSA");
         assertEquals("ASD:DSA", getFormattedUserData());
+    }
+    
+    @Test
+    public void userDataExistsAfterSet(){
+        setUserData("ASD", "DSA");
+        assertTrue(userDataExists());
     }
 
 }

@@ -1,39 +1,39 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.logic.Logic;
-import hy.tmc.cli.testhelpers.FrontendMock;
+
+import hy.tmc.cli.stubs.FrontendStub;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import static org.mockito.Mockito.*;
+
 
 
 public class HelpTest {
 
-    private Help help;
-    private FrontendMock frontendMock;
-    private Logic logic;
-
-    public HelpTest() {
-        this.logic = new Logic();
-        this.frontendMock = new FrontendMock();
-    }
+    private Help h;
+    private ByteArrayOutputStream outContent;
+    
     
     @Before
-    public void setup(){
-        this.help = new Help(this.frontendMock, this.logic);
+    public void setUp() {
+        h = new Help(new FrontendStub(), null);
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
     }
 
     @Test
-    public void createNewHelp() {
-        assertNotNull(help);
+    public void functionalityPrintsSomeContent() {
+        h.functionality();
+        h.setParameter(null, null);
+        h.checkData();
+        assertEquals(false, outContent.toString().isEmpty());
     }
-
-    @Test
-    public void testFunctionality() {
-        help.functionality();
-        String output = this.frontendMock.getMostRecentLine();
-        assertTrue(output.contains("help"));
-        assertTrue(output.contains("auth"));
+    
+    @After
+    public void cleanUpStreams(){
+        System.setOut(null);
     }
 }
