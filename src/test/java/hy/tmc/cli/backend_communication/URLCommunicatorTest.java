@@ -5,21 +5,29 @@ import hy.tmc.cli.backendCommunication.URLCommunicator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 
 public class URLCommunicatorTest {
 
+    private HttpClient client;
+    @Before
+    public void createClient() {
+        this.client = URLCommunicator.createClient();
+    }
+    
     @Test
     public void createGetMethodWorksWithValidParams() {
-        HTTPResult result = URLCommunicator.makeGetRequest("https://tmc.mooc.fi/hy", "test:1234");
+        HTTPResult result = URLCommunicator.makeGetRequest(client, "https://tmc.mooc.fi/hy", "test:1234");
         assertEquals(result.getStatusCode(), 200);
     }
 
     @Test
     public void createGetMethodDoNotWorkWithoutValidParams() {
-        HTTPResult result = URLCommunicator.makeGetRequest("https://tmc.mooc.fo", "test:1234");
+        HTTPResult result = URLCommunicator.makeGetRequest(client, "https://tmc.mooc.fo", "test:1234");
         assertEquals(result.getStatusCode(), 400);
     }
 

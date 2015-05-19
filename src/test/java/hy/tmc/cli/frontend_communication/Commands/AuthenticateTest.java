@@ -1,15 +1,21 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.backendCommunication.HTTPResult;
+import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.testhelpers.FrontendMock;
-import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(URLCommunicator.class)
 public class AuthenticateTest {
 
     final private String testUsername = "test";
@@ -43,8 +49,16 @@ public class AuthenticateTest {
 
     private String executeWithParams(String key1, String param1,
             String key2, String param2) throws ProtocolException {
+        
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
+        HTTPResult fakeResult = new HTTPResult("", 200, true);
+        PowerMockito.mockStatic(URLCommunicator.class);
+        PowerMockito
+                .when(URLCommunicator.makeGetRequest(URLCommunicator.createClient(),
+                                                    Mockito.anyString(), 
+                                                    Mockito.anyString()))
+                .thenReturn(new HTTPResult("Auth successful.", 200, true));
         auth.execute();
         String result = serverMock.getMostRecentLine();
         return result;

@@ -49,7 +49,8 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(ServerData.getAuthUrl(), auth).getStatusCode();
+        int code = makeGetRequest(URLCommunicator.createClient(),
+                                  ServerData.getAuthUrl(), auth).getStatusCode();
         this.frontend.printLine(returnResponse(code));
     }
 
