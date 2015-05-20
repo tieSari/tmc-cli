@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.backendCommunication.HTTPResult;
 import hy.tmc.cli.backendCommunication.URLCommunicator;
-import hy.tmc.cli.testhelpers.FrontendMock;
+import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import org.junit.Before;
@@ -21,12 +21,12 @@ public class AuthenticateTest {
     final private String testUsername = "test";
     final private String testPassword = "1234";
     private Authenticate auth;
-    private FrontendMock serverMock;
+    private FrontendStub serverMock;
 
     @Before
     public void setUp() {
         Logic logic = new Logic();
-        this.serverMock = new FrontendMock();
+        this.serverMock = new FrontendStub();
         this.auth = new Authenticate(serverMock, logic);
     }
 
