@@ -6,6 +6,7 @@
 package hy.tmc.cli.backend_communication;
 
 import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.backendCommunication.ExerciseDownloader;
 import hy.tmc.cli.backendCommunication.HTTPResult;
 import hy.tmc.cli.backendCommunication.JSONParser;
@@ -48,7 +49,10 @@ public class ExerciseDownloaderTest {
     
     @Test
     public void downloadExercise(){
-        List<Exercise> exercises = JSONParser.getExercises(1);
+        ConfigHandler confighandler = new ConfigHandler();
+        String courseUrl = confighandler.getCourseUrl(1);
+        System.out.println(courseUrl);
+        List<Exercise> exercises = JSONParser.getExercises(courseUrl);
         ExerciseDownloader.downloadFiles(exercises);
     }
     

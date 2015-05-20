@@ -85,7 +85,8 @@ public class JSONParser {
      * @return List of a all exercises as Exercise-objects
      */
     public static List<Exercise> getExercises(int id) {
-        return getExercises(ServerData.getCourseUrl(id));
+        ConfigHandler confighandler = new ConfigHandler();
+        return getExercises(confighandler.getCourseUrl(id));
     }
     
     /**
@@ -98,6 +99,7 @@ public class JSONParser {
         
         JsonObject course = getJSONFrom(courseUrl);
         Gson mapper = new Gson();
+        System.out.println(course);
         Exercise[] exercises = mapper.fromJson(course.getAsJsonObject("course").get("exercises"), Exercise[].class);
         return Arrays.asList(exercises);
         
