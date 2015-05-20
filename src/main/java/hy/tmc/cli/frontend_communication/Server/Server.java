@@ -50,6 +50,10 @@ public class Server implements FrontendListener, Runnable {
         this.run();  
     }
     
+    /**
+     * Run is loop that accepts new client connection and handles it
+     */
+    
     public void run() {
         isRunning = true;
         while (isRunning) {
@@ -74,12 +78,7 @@ public class Server implements FrontendListener, Runnable {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     printLine(Server.PROTOCOL_ERROR_MSG);
                 }
-
-                // clientSocket.close();
-
-
-
-                // }
+                
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 return;
@@ -96,6 +95,11 @@ public class Server implements FrontendListener, Runnable {
 
 
     }
+    
+    /**
+     * Closes serverSocket
+     * @throws IOException 
+     */
     
     public void close() throws IOException {
         isRunning = false;
