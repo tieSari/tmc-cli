@@ -23,13 +23,23 @@ public class URLCommunicator {
      *
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is
+<<<<<<< HEAD
+<<<<<<< HEAD
      * always username:password
+     * @param client HttpClient to execute HttpRequests. It will come as parameter to 
+     * enable dependency injection.
+=======
+     * always username password
+>>>>>>> devmaster
+=======
+     * always username:password
+     * @param client HttpClient to execute HttpRequests. It will come as parameter to 
+     * enable dependency injection.
+>>>>>>> 94548a7a1af4dcf90497c8b561b3eb1572ee425f
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HTTPResult makePostRequest(String url, String... params) {
+    public static HTTPResult makePostRequest(HttpClient client, String url, String... params) {
         try {
-
-            HttpClient client = HttpClientBuilder.create().build();
             HttpPost post = new HttpPost(url);
 
             String encoding = Base64.encodeBase64String((params[0]).getBytes());
@@ -56,12 +66,13 @@ public class URLCommunicator {
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is
      * always username:password
+     * @param client HttpClient to execute HttpRequests. It will come as parameter to 
+     * enable dependency injection.
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HTTPResult makeGetRequest(String url, String... params) {
+    public static HTTPResult makeGetRequest(HttpClient client, String url, String... params) {
         try {
-
-            HttpResponse response = createAndExecuteGet(url, params);
+            HttpResponse response = createAndExecuteGet(url, params, client);
             StringBuilder result = writeResponse(response);
 
             return new HTTPResult(
@@ -84,9 +95,12 @@ public class URLCommunicator {
         }
         return result;
     }
+    
+    public static HttpClient createClient() {
+        return HttpClientBuilder.create().build();
+    }
 
-    private static HttpResponse createAndExecuteGet(String url, String[] params) throws IOException {
-        HttpClient client = HttpClientBuilder.create().build();
+    private static HttpResponse createAndExecuteGet(String url, String[] params, HttpClient client) throws IOException {
         HttpGet request = new HttpGet(url);
         request.setHeader("Authorization", "Basic " + encode(params[0]));
         request.addHeader("User-Agent", USER_AGENT);
