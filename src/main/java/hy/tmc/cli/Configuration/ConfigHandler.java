@@ -9,8 +9,6 @@ import java.util.Properties;
 
 /**
  * Class is used to write to config file and read from it
- * 
- * 
  */
 public class ConfigHandler {
 
@@ -46,8 +44,7 @@ public class ConfigHandler {
             InputStream inputStream = new FileInputStream(new File(configFilePath));
             prop.load(inputStream);
         }
-        catch (IOException e) {
-            //TODO LOTS OF STUFF
+        catch (IOException e) { 
         }
         return prop;
     }
