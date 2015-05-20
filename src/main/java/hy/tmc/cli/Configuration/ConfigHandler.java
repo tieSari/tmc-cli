@@ -81,7 +81,11 @@ public class ConfigHandler {
      */
     
     public String readCoursesAddress() {
-        return readServerAddress() + coursesExtension;
+        String serverAddress = readServerAddress();
+        if (serverAddress.isEmpty()) {
+            return null;
+        }
+        return serverAddress + coursesExtension;
     }
     
     /**
@@ -90,6 +94,10 @@ public class ConfigHandler {
      */
     
     public String readAuthAddress() {
-        return readServerAddress() + authExtension;
+        String serverAddress = readServerAddress();
+        if (serverAddress.isEmpty()) {
+            return null;
+        }
+        return serverAddress + authExtension;
     }
 }
