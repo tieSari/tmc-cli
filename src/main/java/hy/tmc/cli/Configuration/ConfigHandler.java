@@ -10,9 +10,15 @@ import java.util.Properties;
 public class ConfigHandler {
 
     private String configFilePath;
+    public final String coursesExtension = "/courses.json?api_version=7";
+    public final String authExtension = "/user";
 
     public ConfigHandler() {
         this.configFilePath = "config.properties";
+    }
+    
+    public ConfigHandler(String path) {
+        this.configFilePath = path;
     }
 
     public String getConfigFilePath() {
@@ -36,7 +42,7 @@ public class ConfigHandler {
         return prop;
     }
 
-    public void writeServerAddresss(String address) throws IOException {
+    public void writeServerAddress(String address) throws IOException {
         Properties prop = getProperties();
         prop.setProperty("serverAddress", address);
         prop.store(new FileWriter(new File(configFilePath)), "Updated properties");
@@ -48,10 +54,10 @@ public class ConfigHandler {
     }
     
     public String readCoursesAddress() {
-        return readServerAddress() + "/courses.json?api_version=7";
+        return readServerAddress() + coursesExtension;
     }
     
     public String readAuthAddress() {
-        return readServerAddress() + "/user";
+        return readServerAddress() + authExtension;
     }
 }
