@@ -20,9 +20,7 @@ public class JarBuilder {
             }
 
             System.out.println("Building .jar for tests...");
-            ProcessBuilder builder = new ProcessBuilder(path);
-            builder.redirectErrorStream(true);
-            Process exec = builder.start();
+            Process exec = Runtime.getRuntime().exec("mvn package -Dmaven.test.skip=true");
             exec.waitFor();
             file = new File(path);
         }
