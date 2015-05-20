@@ -1,7 +1,10 @@
 package hy.tmc.cli.Configuration;
 
+import hy.tmc.cli.domain.Course;
+
 /**
- * This class will be initialized when Auth is successful. Use this to get data of user
+ * This class will be initialized when Auth is successful. Use this to get data
+ * of user
  */
 public class ClientData {
 
@@ -9,16 +12,25 @@ public class ClientData {
     private static final int PORT = 1234;
     private static String USERNAME = "";
     private static String PASSWORD = "";
+    private static Course currentCourse;
 
     public static void setUserData(String username, String password) {
         USERNAME = username;
         PASSWORD = password;
     }
 
+    public static Course getCurrentCourse() {
+        return currentCourse;
+    }
+
+    public static void setCurrentCourse(Course currentCourse) {
+        ClientData.currentCourse = currentCourse;
+    }
+
     public static boolean userDataExists() {
         return !(USERNAME.isEmpty() || PASSWORD.isEmpty());
     }
-    
+
     public static String getFormattedUserData() {
         return USERNAME + ":" + PASSWORD;
     }
@@ -39,7 +51,7 @@ public class ClientData {
     public static void setPID(int PID) {
         ClientData.PID = PID;
     }
-    
+
     public static String getUSERNAME() {
         return USERNAME;
     }
@@ -47,5 +59,4 @@ public class ClientData {
     public static String getPASSWORD() {
         return PASSWORD;
     }
-
 }
