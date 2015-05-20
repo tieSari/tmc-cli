@@ -73,7 +73,7 @@ public class ZipHandler {
 
         for (File f : files) {
             if (f.isDirectory()) {
-                makeDir(f.getAbsolutePath());
+                new File(getFullDestinationPath(f.getAbsolutePath())).mkdir();
                 moveDirectory(f.toPath());
             } else {
                 moveFileToDestination(f.getAbsolutePath());
@@ -85,15 +85,14 @@ public class ZipHandler {
         return !(path.contains("src") && new File(path).exists());
     }
     
-    private void makeDir(String path) {
-        String relativePath = path.substring(tmpPath.toString().length()); // remove /tmp/yadayada.../
-        String realPath = unzipDestination + relativePath;
-        new File(realPath).mkdir();
+    private String getFullDestinationPath(String filePath){
+        String relativePath = filePath.substring(tmpPath.toString().length()); // remove /tmp/yadayada.../
+        return unzipDestination + relativePath;
+        
     }
 
     private void moveFileToDestination(String filePath) {
-        String relativePath = filePath.substring(tmpPath.toString().length()); // remove /tmp/yadayada.../
-        String realPath = unzipDestination + relativePath;
+        String realPath = getFullDestinationPath(filePath);
         if (isOverwritable(realPath)) {
             writeFile(filePath, realPath);
         }
