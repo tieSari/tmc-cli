@@ -20,6 +20,7 @@ public class LoginSteps {
         File config = new File("scripts/config");
         config.delete();
         helper = new Helper();
+        helper.printOutput("", "scripts/shutdown.sh");
         loginDialog = helper.startDialogWithCommand(commandName, scriptLocation);
     }
 
