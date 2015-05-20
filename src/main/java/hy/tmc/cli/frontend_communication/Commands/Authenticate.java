@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.Configuration.ServerData;
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.backendCommunication.URLCommunicator;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
@@ -21,15 +21,6 @@ public class Authenticate extends Command {
         }
         return "Auth unsuccessful. Check your connection and/or credentials";
     }
-    
-    @Override
-    public void execute() {
-       String auth = data.get("username") + ":" + data.get("password");
-       int code = URLCommunicator.makeGetRequest(
-               URLCommunicator.createClient(),
-               ServerData.getAuthUrl(), auth).getStatusCode();
-       this.frontend.printLine(returnResponse(code));
-    }
 
     @Override
     public void setParameter(String key, String value) {
@@ -38,10 +29,10 @@ public class Authenticate extends Command {
 
     @Override
     public void checkData() throws ProtocolException {
-        if (! this.data.containsKey("username")) {
+        if (!this.data.containsKey("username")) {
             throw new ProtocolException("username must be set!");
         }
-        if (! this.data.containsKey("password")) {
+        if (!this.data.containsKey("password")) {
             throw new ProtocolException("password must be set!");
         }
     }
@@ -49,8 +40,7 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(URLCommunicator.createClient(),
-                                  ServerData.getAuthUrl(), auth).getStatusCode();
+        int code = makeGetRequest(createClient(), new ConfigHandler().readAuthAddress(), auth).getStatusCode();
         this.frontend.printLine(returnResponse(code));
     }
 
