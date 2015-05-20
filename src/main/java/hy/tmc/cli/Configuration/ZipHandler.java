@@ -10,12 +10,22 @@ import java.nio.file.attribute.FileAttribute;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
+/**
+ * Handles unpacking zip files downloaded from TMC.
+ * 
+ */
+
 public class ZipHandler {
 
     private String zipPath;
     private String unzipDestination;
     private Path tmpPath;
 
+    /**
+     * Creates ziphandler with specified zip path and unzip location
+     * @param path for zip to unpack
+     * @param unzipLocation place to unzip to
+     */
     public ZipHandler(String path, String unzipLocation) {
         this.zipPath = path;
         this.unzipDestination = unzipLocation;
@@ -36,6 +46,12 @@ public class ZipHandler {
     public void setZipPath(String zipPath) {
         this.zipPath = zipPath;
     }
+    
+    /**
+     * Unzips zip to specified location
+     * @throws IOException if cannot write to file
+     * @throws ZipException If specified zip is not found
+     */
 
     public void unzip() throws IOException, ZipException {
        
@@ -45,7 +61,7 @@ public class ZipHandler {
             moveDirectory(tmpPath);
         }
       
-    
+  
 
     private void moveDirectory(Path path) throws IOException {
         File directory = path.toFile();
@@ -80,7 +96,6 @@ public class ZipHandler {
         String realPath = unzipDestination + relativePath;
         if (isOverwritable(realPath)) {
             writeFile(filePath, realPath);
-            System.out.println("moving: " + relativePath);
         }
     }
 

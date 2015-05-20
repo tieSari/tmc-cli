@@ -138,8 +138,7 @@ public class ZipHandlerTest {
         }
         catch (net.lingala.zip4j.exception.ZipException ex) {
             //ok
-        }
-        
+        }        
     }
 
 }
