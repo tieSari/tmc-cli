@@ -1,5 +1,6 @@
 package hy.tmc.cli.Configuration;
 
+import java.io.File;
 import java.io.IOException;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -21,6 +22,7 @@ public class ConfigHandlerTest {
     @Test
     public void configPathIsSetCorrectly() {
         assertEquals("test.properties", handler.getConfigFilePath());
+        new File("test.properties").delete();
     }
     
     @After
@@ -49,9 +51,19 @@ public class ConfigHandlerTest {
     }
 
     @Test
+    public void readCoursesAddressGivesNull() {
+        assertEquals(null, handler.readCoursesAddress());
+    }
+
+    @Test
     public void readAuthAddressLooksGood() {
         writeServerAddress(address);
         assertEquals(address + handler.authExtension, handler.readAuthAddress());
+    }
+
+    @Test
+    public void readAuthAddressGivesNull() {
+        assertEquals(null, handler.readAuthAddress());
     }
 
     @Test
