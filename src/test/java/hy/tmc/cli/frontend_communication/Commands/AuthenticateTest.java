@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.backendCommunication.Authorization.Authorization;
 import hy.tmc.cli.backendCommunication.HTTPResult;
 import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.testhelpers.FrontendStub;
@@ -32,6 +33,7 @@ public class AuthenticateTest {
 
     @Test
     public void canAuthenticateWithTestCredentials() throws ProtocolException {
+        new Authorization(); // for code coverage
         String result = executeWithParams("username", testUsername, "password", testPassword);
         assertTrue(result.contains("Auth successful."));
     }
