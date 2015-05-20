@@ -3,27 +3,40 @@ package feature.frontend;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import hy.tmc.cli.testhelpers.Helper;
+import hy.tmc.cli.testhelpers.buildhelpers.JarBuilder;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import static org.junit.Assert.assertTrue;
 
 public class FrontendSteps {
 
-    private String output;
+    private final String port = "1234"; // change if necessary
     
+    private Process jarP;
+    private final Helper helper = new Helper();
+
     @Given("^a help command\\.$")
     public void a_help_command() throws Throwable {
-        File config = new File("scripts/config");
-        config.delete();
-        Helper helper = new Helper();
-        helper.printOutput("", "scripts/shutdown.sh");
-        output = helper.printOutput("help", "scripts/frontend.sh");
-
+        
+        assertTrue(new JarBuilder().jarExists("scripts/tmc-client.jar")); // builds test-jar
+        jarP = helper.createAndStartProcess("java", "-jar", "scripts/tmc-client.jar");
+        
     }
 
     @Then("^output should contains commands\\.$")
     public void output_should_contains_commands() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        assertTrue(output.contains("Available commands: "));
+        
+        Process nc = helper.createAndStartProcess("nc", "localhost", port);
+        nc = helper.writeInputToProcess(nc, "help");
+        String contents = helper.readOutputFromProcess(nc);
+        
+        nc.destroy();
+        jarP.destroy();
+        assertTrue(contents.contains("help"));
+        
     }
 }
