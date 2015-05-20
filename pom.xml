@@ -20,18 +20,32 @@
 
     <build>
         <plugins>
+            <!-- This ingores tests but still builds jar, comment out if you experience lots of problems
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.3</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
-
+            -->
+            <!-- Removes the jar from scripts/ when cleaning-->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/scripts</directory>
+                            <includes>
+                                <include>*.jar</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -50,7 +64,9 @@
                                 </transformer>
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>launcher</shadedClassifierName>
+                            <shadedClassifierName>original</shadedClassifierName> 
+                            <finalName>tmc-client</finalName>
+                            <outputDirectory>${basedir}/scripts</outputDirectory> <!--Defines the place of the jar-->
                         </configuration>
                     </execution>
                 </executions>
@@ -103,10 +119,12 @@
                     <instrumentation>
                         <ignores>
                             <ignore>hy.tmc.cli.frontend_communication.Result*</ignore>
+                            <ignore>hy.tmc.cli.domain.Exercise*</ignore>
                         </ignores>
                         <excludes>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.enum</exclude>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.class</exclude>
+                            <exclude>hy/tmc/cli/domain/Exercise*.class</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->
@@ -143,7 +161,19 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -165,13 +195,13 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5</version>
+            <version>1.5.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
-            <version>1.5</version>
+            <version>1.5.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -179,6 +209,7 @@
             <artifactId>powermock-module-junit4</artifactId>
             <version>1.5</version>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
@@ -191,6 +222,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.15</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>

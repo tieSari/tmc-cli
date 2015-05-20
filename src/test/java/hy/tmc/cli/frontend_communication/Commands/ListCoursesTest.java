@@ -1,115 +1,100 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.testhelpers.FrontendMock;
 import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.backendCommunication.HTTPResult;
+import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
-import hy.tmc.cli.frontend_communication.Server.Server;
-import hy.tmc.cli.frontend_communication.Server.ServerTest;
-import hy.tmc.cli.frontend_communication.Server.TestClient;
 import hy.tmc.cli.logic.Logic;
-import java.io.IOException;
+import hy.tmc.cli.testhelpers.ExampleJSON;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-/**
- *
- * @author chang
- */
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(URLCommunicator.class)
 public class ListCoursesTest {
 
-    private Server server;
-    private Logic logic;
-    private TestClient client;
-    
-    public ListCoursesTest() {
-        this.logic = new Logic();
-    }
+    private FrontendMock front;
+    private Command list;
 
     @Before
-    public void startServer() {
-        this.server = new Server(8035, logic);
-        this.server.start();
+    public void setUp() {
+        front = new FrontendMock();
+        list = new ListCourses(front, new Logic());
         
-         try {
-            client = new TestClient(8035);
-        } catch (IOException ex) {
-             System.out.println("fail");
-        }
+        
+        PowerMockito.mockStatic(URLCommunicator.class);
+
+        HTTPResult fakeResult = new HTTPResult(ExampleJSON.coursesExample, 200, true);
+
+        ClientData.setUserData("mockattu", "ei tarvi");
+        PowerMockito
+                .when(URLCommunicator.makeGetRequest(
+                            Mockito.eq(URLCommunicator.createClient()),
+                            Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(fakeResult);
+        
     }
-    
-     @Test
-    public void createNewEcho() {
-       ListCourses lc = new ListCourses(this.server, new Logic());
-       assertNotNull(lc);
-    }
-    
-   @Test 
-    public void testCheckDataSuccess() throws ProtocolException{
-        ListCourses ls = new ListCourses(this.server, new Logic());
-        ls.setParameter("", "juuh");
+
+    @Test
+    public void testCheckDataSuccess() throws ProtocolException {
+        ListCourses ls = new ListCourses(front, new Logic());
+        ClientData.setUserData("asdf", "bsdf");
         try {
             ls.checkData();
-        } catch(ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
     
-    @Test
-    public void testServerRepliesToPing() {
+    @Test (expected=ProtocolException.class)
+    public void testNoAuthThrowsException() throws ProtocolException {
         ClientData.setUserData("", "");
-        
+        list.execute();   
+    }
+
+    @Test
+    public void testWithAuthPrintsCourses() {
         try {
-            client.sendMessage("ping");
-            assertEquals("pong", client.reply());
-        } catch (IOException ex) {
-            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("IOException was raised");
+            list.execute();
+            assertTrue(front.getMostRecentLine().contains("WEPAMOOC-STAGE"));
+        }
+        catch (ProtocolException ex) {
+            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("unexpected exception");
         }
     }
-    
-//    @Test
-//    public void testNoAuthPrintsError() {
-//        try {
-//            client.sendMessage("listCourses");
-//            assertTrue(client.reply().contains("authorize first"));
-//        }
-//        catch (IOException ex) {
-//            fail("Invalid response");
-//        }
-//    }
-//    
-//    @Test
-//    public void testWithAuthPrintsCourses() {
-//        ClientData.setUserData("test", "1234");
-//        
-//        try {
-//            client.sendMessage("listCourses");
-//            assertTrue(client.reply().contains("tira"));
-//        }
-//        catch (IOException ex) {
-//            fail("Invalid response");
-//        }
-//    }
-    
 
-    @After
-    public void closeServer() {
+    @Test
+    public void testWithAuthPrintsSeveralCourses() {
         try {
-            this.server.close();
+            list.execute();
+            assertTrue(front.getMostRecentLine().contains("WEPATEST"));
         }
-        catch (IOException ex) {
-            fail("Closing server failed");
+        catch (ProtocolException ex) {
+            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("unexpected exception");
+        }
+    }
+
+
+    @Test
+    public void checkDataTest() {
+        try {
+            list.checkData();
+        }
+        catch (ProtocolException ex) {
+            fail("listcourses should not throw exception from checkData");
         }
     }
 
