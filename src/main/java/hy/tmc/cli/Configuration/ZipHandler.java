@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.attribute.FileAttribute;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
@@ -39,18 +37,15 @@ public class ZipHandler {
         this.zipPath = zipPath;
     }
 
-    public void unzip() {
-        try {
+    public void unzip() throws IOException, ZipException {
+       
             tmpPath = Files.createTempDirectory("tmc-temp", new FileAttribute[0]);
             ZipFile zipFile = new ZipFile(zipPath);
             zipFile.extractAll(tmpPath.toString());
             moveDirectory(tmpPath);
         }
-        catch (ZipException | IOException ex) {
-            Logger.getLogger(ZipHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
+      
+    
 
     private void moveDirectory(Path path) throws IOException {
         File directory = path.toFile();
