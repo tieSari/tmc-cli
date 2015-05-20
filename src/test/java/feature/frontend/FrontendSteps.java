@@ -16,6 +16,7 @@ public class FrontendSteps {
         File config = new File("scripts/config");
         config.delete();
         Helper helper = new Helper();
+        helper.printOutput("", "scripts/shutdown.sh");
         output = helper.printOutput("help", "scripts/frontend.sh");
 
     }
