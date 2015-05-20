@@ -6,9 +6,8 @@ public class Course {
     private String name;
     private String details_url;
 
-    public Course(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public Course() {
+
     }
 
     public int getId() {
