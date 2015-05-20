@@ -34,7 +34,7 @@ public class TestClient {
             this.input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
         } catch (IOException ex) {
-            Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
     }
 
