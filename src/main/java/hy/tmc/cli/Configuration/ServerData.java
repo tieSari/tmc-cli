@@ -1,23 +1,23 @@
 package hy.tmc.cli.Configuration;
 
 public class ServerData {
-    
-    private static String coursesUrl = "https://tmc.mooc.fi/staging/courses.json?api_version=7";
-    private static String authUrl = "https://tmc.mooc.fi/staging/user";
 
-    public static String getCoursesUrl() {
-        return coursesUrl;
+    private static String serverUrl = "https://tmc.mooc.fi/staging/";
+
+    public static String getServerUrl() {
+        return serverUrl;
     }
 
-    public static void setCoursesUrl(String coursesUrl) {
-        ServerData.coursesUrl = coursesUrl;
+    public static void setServerUrl(String serverUrl) {
+        ServerData.serverUrl = serverUrl;
+    }
+
+    public static String getCoursesUrl() {
+        return serverUrl + "courses.json?api_version=7";
     }
 
     public static String getAuthUrl() {
-        return authUrl;
+        return serverUrl + "user";
     }
 
-    public static void setAuthUrl(String authUrl) {
-        ServerData.authUrl = authUrl;
-    }
 }
