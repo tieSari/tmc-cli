@@ -69,6 +69,24 @@ public class JSONParser {
         }
         return asString.toString();
     }
+
+    /**
+     * Get all exercises of a course specified by Course
+     * @param course Course that we are interested in
+     * @return List of all exercises as Exercise-objects
+     */
+    public static List<Exercise> getExercises(Course course) {
+        return getExercises(course.getId());
+    }
+
+    /**
+     * Get all exercises of a course specified by Course id
+     * @param id id of the course we are interested in
+     * @return List of a all exercises as Exercise-objects
+     */
+    public static List<Exercise> getExercises(int id) {
+        return getExercises(ServerData.getCourseUrl(id));
+    }
     
     /**
     /**
