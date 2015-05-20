@@ -41,9 +41,8 @@ public class ConfigHandler {
     }
 
     private Properties getProperties() {
-        Properties prop = null;
+        Properties prop = new Properties();
         try {
-            prop = new Properties();
             InputStream inputStream = new FileInputStream(new File(configFilePath));
             prop.load(inputStream);
         }
@@ -82,7 +81,7 @@ public class ConfigHandler {
     
     public String readCoursesAddress() {
         String serverAddress = readServerAddress();
-        if (serverAddress.isEmpty()) {
+        if (serverAddress == null || serverAddress.isEmpty()) {
             return null;
         }
         return serverAddress + coursesExtension;
@@ -95,7 +94,7 @@ public class ConfigHandler {
     
     public String readAuthAddress() {
         String serverAddress = readServerAddress();
-        if (serverAddress.isEmpty()) {
+        if (serverAddress == null || serverAddress.isEmpty()) {
             return null;
         }
         return serverAddress + authExtension;

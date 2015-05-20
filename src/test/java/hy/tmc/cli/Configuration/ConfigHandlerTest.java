@@ -51,7 +51,8 @@ public class ConfigHandlerTest {
 
     @Test
     public void readCoursesAddressGivesNull() {
-        assertEquals(null, handler.readCoursesAddress());
+        assertNotNull(handler);
+        assertNull(handler.readCoursesAddress());
     }
 
     @Test
@@ -62,7 +63,7 @@ public class ConfigHandlerTest {
 
     @Test
     public void readAuthAddressGivesNull() {
-        assertEquals(null, handler.readAuthAddress());
+        assertNull(handler.readAuthAddress());
     }
 
     @Test
