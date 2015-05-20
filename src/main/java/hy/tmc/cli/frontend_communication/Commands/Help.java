@@ -19,7 +19,7 @@ public class Help extends Command {
         boolean first = true;
         for (String name : CommandFactory.allCommandNames()){
             if (!first){
-                builder.append(" ,");
+                builder.append(", ");
             }
             first = false;
             builder.append(name);
