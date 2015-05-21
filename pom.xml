@@ -128,7 +128,12 @@
 
 
 
-    <dependencies>
+    <dependencies>        
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.5</version>
+        </dependency>
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
