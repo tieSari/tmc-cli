@@ -13,7 +13,7 @@ import org.yaml.snakeyaml.Yaml;
 
 public class DefaultMoveDecider implements MoveDecider {
 
-    private List<String> unoverwritablePaths;
+    protected List<String> unoverwritablePaths;
     private ProjectRootFinder finder;
 
     public DefaultMoveDecider(ProjectRootDetector detector) {
