@@ -46,7 +46,6 @@ public class ListCoursesSteps {
     @Then("^output should contain more than one line$")
     public void output_should_contain_more_than_one_line() throws Throwable {
         String content = testClient.reply();
-        String[] asd = content.split("\n");
         assertTrue(content.length() > 10);
         serverThread.interrupt();
     }

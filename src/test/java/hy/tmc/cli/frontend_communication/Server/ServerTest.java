@@ -19,7 +19,7 @@ public class ServerTest {
 
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         int port = 4321;
         server = new Server(port, null);
         //server.start();
