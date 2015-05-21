@@ -1,23 +1,14 @@
 package hy.tmc.cli.zipping;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.attribute.FileAttribute;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import org.apache.commons.io.FileUtils;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * Handles unpacking zip files downloaded from TMC.

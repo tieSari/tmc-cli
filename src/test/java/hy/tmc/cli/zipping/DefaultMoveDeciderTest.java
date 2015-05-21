@@ -39,7 +39,7 @@ public class DefaultMoveDeciderTest {
     @Test
     public void testReadTmcprojectYml() {
         decider.readTmcprojectYml(Paths.get("testResources/mockProject"));
-        List<String> excludePaths = decider.unoverwritablePaths;
+        List<String> excludePaths = decider.additionalStudentFiles;
         if (excludePaths == null){
             fail("failed to read yml file");
         }
@@ -49,7 +49,7 @@ public class DefaultMoveDeciderTest {
     @Test
     public void emptyPathDoesNothing(){
         decider.readTmcprojectYml(Paths.get(""));
-        assertTrue(decider.unoverwritablePaths.isEmpty());
+        assertTrue(decider.additionalStudentFiles.isEmpty());
     }
     
     @Test
@@ -60,7 +60,7 @@ public class DefaultMoveDeciderTest {
     @Test
     public void doesNotReadWrongTmcprojectFile() {
         decider.readTmcprojectYml(Paths.get("testResources/mockProject"));
-        List<String> excludePaths = decider.unoverwritablePaths;
+        List<String> excludePaths = decider.additionalStudentFiles;
         if (excludePaths == null){
             fail("failed to read yml file");
         }
