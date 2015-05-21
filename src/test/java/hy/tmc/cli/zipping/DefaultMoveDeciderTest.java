@@ -54,7 +54,7 @@ public class DefaultMoveDeciderTest {
     
     @Test
     public void ifTmcprojectFileDoesntExistDoesNothing() {
-        decider.readTmcprojectYml(Paths.get("testResources/mockProject/rootWithoutYml"));
+        decider.readTmcprojectYml(Paths.get("testResources/noyml/rootWithoutYml"));
     }
     
     @Test
