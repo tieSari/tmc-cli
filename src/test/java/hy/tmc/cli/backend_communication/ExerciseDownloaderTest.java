@@ -34,7 +34,7 @@ public class ExerciseDownloaderTest {
     private ArrayList<Exercise> exercises;
 
     private ExerciseDownloader exDl;
-    private FrontendListener front;
+    private FrontendStub front;
 
     public ExerciseDownloaderTest() {
     }
@@ -74,8 +74,8 @@ public class ExerciseDownloaderTest {
 
     @After
     public void remove() {
-        new File("Exercise1").delete();
-        new File("Exercise2").delete();
+        new File("Exercise1.zip").delete();
+        new File("Exercise2.zip").delete();
     }
     
 
@@ -100,14 +100,21 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
+    public void downloadingGivesOutput() {
+        exDl.downloadFiles(exercises);
+
+        assertTrue(front.getMostRecentLine().endsWith(" exercises downloaded."));
+    }
+
+    @Test
     public void downloadedExercisesExists(){
 
 
         exDl.downloadFiles(exercises);
 
-        File exercise1 = new File("Exercise1");
+        File exercise1 = new File("Exercise1.zip");
         assertTrue("File Exercise1 was not downloaded to the fs", exercise1.exists());
-        File exercise2 = new File("Exercise2");
+        File exercise2 = new File("Exercise2.zip");
         assertTrue("File Exercise2 was not downloaded to the fs", exercise2.exists());
     }
 
@@ -119,15 +126,17 @@ public class ExerciseDownloaderTest {
 
         String ex1content;
         try {
-            ex1content = new String(Files.readAllBytes(Paths.get("Exercise1")));
+            ex1content = new String(Files.readAllBytes(Paths.get("Exercise1.zip")));
         } catch (IOException e) {
+            e.printStackTrace();
             ex1content = "";
         }
 
         String ex2content;
         try {
-            ex2content = new String(Files.readAllBytes(Paths.get("Exercise2")));
+            ex2content = new String(Files.readAllBytes(Paths.get("Exercise2.zip")));
         } catch (IOException e) {
+            e.printStackTrace();
             ex2content = "";
         }
 
