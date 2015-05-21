@@ -20,7 +20,7 @@ public class TestClient {
     private String reply;
     private PrintWriter output;
     private BufferedReader input;
-    private int portnumber;
+    private final int portnumber;
 
     public TestClient(int portnumber) throws IOException {
         this.portnumber = portnumber;
@@ -46,7 +46,7 @@ public class TestClient {
         try {
             return input.readLine();
         } catch (IOException ex) {
-            Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
             return "fail";
         }
     }
