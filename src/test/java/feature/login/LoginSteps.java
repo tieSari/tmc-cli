@@ -1,43 +1,48 @@
 package feature.login;
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.testhelpers.Helper;
-import java.io.File;
+import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.frontend_communication.Server.Server;
+import hy.tmc.cli.testhelpers.TestClient;
+import java.io.IOException;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
 
-    private final String scriptLocation = "scripts/frontend.sh";
-    private final String commandName = "login";
-    
-    private Helper helper;
-    private Process loginDialog;
+    private final int port = ClientData.getPORT();
 
-    @Given("^a login command\\.$")
-    public void a_login_command() throws Throwable {
-        File config = new File("scripts/config");
-        config.delete();
-        helper = new Helper();
-        loginDialog = helper.startDialogWithCommand(commandName, scriptLocation);
+    private Thread serverThread;
+    private TestClient testClient;
+    private Server server;
+
+    @Before
+    public void initializeServer() throws IOException {
+        server = new Server(port, null);
+        serverThread = new Thread(server);
+        serverThread.start();
+        testClient = new TestClient(port);
+
     }
 
-    @When("^user gives username \"(.*?)\"$")
-    public void user_gives_username(String username) throws Throwable {
-        loginDialog = helper.writeInputToProcess(loginDialog, username);
-    }
 
-    @When("^user gives password \"(.*?)\"$")
-    public void user_gives_password(String password) throws Throwable {
-        loginDialog = helper.writeInputToProcess(loginDialog, password);
+    @When("^user gives username \"(.*?)\" and password \"(.*?)\"$")
+    public void user_gives_username_and_password(String username, String password) throws Throwable {
+        testClient.sendMessage("login username " + username + " password " + password);
     }
 
     @Then("^user should see result\\.$")
-    public void user_should_see_result() throws Throwable {
-        String output = helper.readOutputFromProcess(loginDialog);
-        //assertTrue(output.contains("Auth successful."));
-        System.out.println(output);
-        assertTrue(output.contains("successful"));
+    public void user_should_see_result() {
+        assertTrue(!testClient.reply().isEmpty());
+    }
+
+    @After
+    public void closeAll() throws IOException {
+        server.close();
+        serverThread.interrupt();
     }
 }

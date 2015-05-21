@@ -22,12 +22,19 @@ public class Helper {
         }
         return p;
     }
-    public String printOutput(String command, String cliPath) throws InterruptedException {
+    
+    
+    
+    public Process createAndStartProcess(String...params) throws IOException{
+        return new ProcessBuilder(params).start();
+    }
+    
+    public String printOutput(String command, String cliPath) throws InterruptedException, IOException {
         Process p = createProcess(command, cliPath, true);
         return readOutputFromProcess(p);
     }
 
-    public String readOutputFromProcess(Process process) throws InterruptedException {
+    public String readOutputFromProcess(Process process) throws InterruptedException, IOException {
         process.waitFor();
         InputStream inputStream = process.getInputStream();
         StringBuilder sb = new StringBuilder();
@@ -38,6 +45,8 @@ public class Helper {
             }
         } catch (IOException e) {
             return "";
+        }finally{
+            inputStream.close();
         }
         return sb.toString();
     }
@@ -67,6 +76,7 @@ public class Helper {
             System.out.println("Kirjoitus epäonnistui.");
         } finally {
             writer.flush();
+            writer.close(); // this could cause IOException BEWARE
         }
         waitMilliseconds(100);
         return loginDialog;
