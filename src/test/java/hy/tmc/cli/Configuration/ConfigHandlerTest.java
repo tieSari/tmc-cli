@@ -1,10 +1,9 @@
 package hy.tmc.cli.Configuration;
 
+import java.io.File;
 import java.io.IOException;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,12 +20,14 @@ public class ConfigHandlerTest {
     @Test
     public void configPathIsSetCorrectly() {
         assertEquals("test.properties", handler.getConfigFilePath());
+        new File("test.properties").delete();
     }
     
     @After
     public void tearstuff() {
         try {
             handler.writeServerAddress("");
+            new File("test.properties").delete();
         }
         catch (IOException ex) {
             fail("something went wrong");
@@ -49,9 +50,20 @@ public class ConfigHandlerTest {
     }
 
     @Test
+    public void readCoursesAddressGivesNull() {
+        assertNotNull(handler);
+        assertNull(handler.readCoursesAddress());
+    }
+
+    @Test
     public void readAuthAddressLooksGood() {
         writeServerAddress(address);
         assertEquals(address + handler.authExtension, handler.readAuthAddress());
+    }
+
+    @Test
+    public void readAuthAddressGivesNull() {
+        assertNull(handler.readAuthAddress());
     }
 
     @Test
@@ -62,9 +74,9 @@ public class ConfigHandlerTest {
         assertEquals(handler.readServerAddress(), "http://einiinboss.fi");
     }
 
-    @Test
+    @Test 
     public void addressIsCleanOnInit() {
-        assertTrue(handler.readServerAddress().isEmpty());
+        assertNull(handler.readServerAddress());
     }
 
     @Test

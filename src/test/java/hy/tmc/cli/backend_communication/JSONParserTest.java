@@ -37,6 +37,7 @@ public class JSONParserTest {
 
     @Test
     public void parsesCourseNamesCorrectly() {
+        new JSONParser();
         String courses = JSONParser.getCourseNames();
         assertTrue(courses.contains("s2014-tira"));
         assertTrue(courses.contains("k2015-ohpe"));

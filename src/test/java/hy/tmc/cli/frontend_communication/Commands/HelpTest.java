@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.logic.Logic;
-import hy.tmc.cli.testhelpers.FrontendMock;
+import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -9,12 +9,12 @@ import org.junit.Before;
 public class HelpTest {
 
     private Help help;
-    private FrontendMock frontendMock;
+    private FrontendStub frontendMock;
     private Logic logic;
 
     public HelpTest() {
         this.logic = new Logic();
-        this.frontendMock = new FrontendMock();
+        this.frontendMock = new FrontendStub();
     }
 
     @Before

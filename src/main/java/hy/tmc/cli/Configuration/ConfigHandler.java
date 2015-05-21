@@ -9,8 +9,6 @@ import java.util.Properties;
 
 /**
  * Class is used to write to config file and read from it
- * 
- * 
  */
 public class ConfigHandler {
 
@@ -41,14 +39,12 @@ public class ConfigHandler {
     }
 
     private Properties getProperties() {
-        Properties prop = null;
+        Properties prop = new Properties();
         try {
-            prop = new Properties();
             InputStream inputStream = new FileInputStream(new File(configFilePath));
             prop.load(inputStream);
         }
-        catch (IOException e) {
-            //TODO LOTS OF STUFF
+        catch (IOException e) { 
         }
         return prop;
     }
@@ -81,7 +77,11 @@ public class ConfigHandler {
      */
     
     public String readCoursesAddress() {
-        return readServerAddress() + coursesExtension;
+        String serverAddress = readServerAddress();
+        if (serverAddress == null || serverAddress.isEmpty()) {
+            return null;
+        }
+        return serverAddress + coursesExtension;
     }
     
     /**
@@ -90,7 +90,11 @@ public class ConfigHandler {
      */
     
     public String readAuthAddress() {
-        return readServerAddress() + authExtension;
+        String serverAddress = readServerAddress();
+        if (serverAddress == null || serverAddress.isEmpty()) {
+            return null;
+        }
+        return serverAddress + authExtension;
     }
     
     public String getCourseUrl(int id) {
