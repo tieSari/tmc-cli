@@ -8,3 +8,4 @@
 .idea/**
 tmc-cli.iml
 /scripts/config
+/scripts/*.jar
