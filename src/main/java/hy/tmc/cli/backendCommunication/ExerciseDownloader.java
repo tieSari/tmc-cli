@@ -10,15 +10,27 @@ import hy.tmc.cli.domain.Exercise;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
+
+import hy.tmc.cli.frontend_communication.FrontendListener;
 import org.apache.http.client.HttpClient;
 
 public class ExerciseDownloader {
+
+    private FrontendListener front;
+
+    public ExerciseDownloader() {
+        this.front = null;
+    }
+
+    public ExerciseDownloader(FrontendListener front) {
+        this.front = front;
+    }
     
     /**
      *
      * @param courseUrl
      */
-    public static void downloadExercises(String courseUrl){
+    public void downloadExercises(String courseUrl){
         List<Exercise> exercises = JSONParser.getExercises(courseUrl);
         downloadFiles(exercises);
     }
@@ -27,16 +39,21 @@ public class ExerciseDownloader {
      * 
      * @param exercises
      */
-    public static void downloadFiles(List<Exercise> exercises){
+    public void downloadFiles(List<Exercise> exercises){
         downloadFiles(exercises,"");
     }
 
-    public static void downloadFiles(List<Exercise> exercises, String path) {
+    public void downloadFiles(List<Exercise> exercises, String path) {
         if (path == null) {
             path = "";
+        } else if (!path.endsWith("/")) {
+            path += "/";
         }
         for(Exercise e : exercises) {
-            String filePath = path + e.getName();
+            if (this.front != null) {
+                this.front.printLine("Downloading exercise " + e.getName());
+            }
+            String filePath = path + e.getName() + ".zip";
             downloadFile(e.getZip_url(), filePath);
         }
     }

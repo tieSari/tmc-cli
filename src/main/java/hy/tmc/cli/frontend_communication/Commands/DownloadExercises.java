@@ -6,21 +6,29 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.Configuration.ConfigHandler;
+import hy.tmc.cli.backendCommunication.ExerciseDownloader;
 import hy.tmc.cli.backendCommunication.JSONParser;
+import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 
+import java.util.List;
+
 public class DownloadExercises extends Command {
+
+    private ExerciseDownloader exDl;
 
     public DownloadExercises(FrontendListener front, Logic backend) {
         super(front, backend);
+        this.exDl = new ExerciseDownloader(front);
         
     }
 
     @Override
     protected void functionality() {
-        JSONParser.getExercises(Integer.parseInt(this.data.get("courseID")));
+        List<Exercise> exercises = JSONParser.getExercises(Integer.parseInt(this.data.get("courseID")));
+        exDl.downloadFiles(exercises,this.data.get("pwd"));
     }
 
     @Override
