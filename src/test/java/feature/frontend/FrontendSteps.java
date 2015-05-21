@@ -19,14 +19,15 @@ public class FrontendSteps {
 
     private final int port = 1234; // change if necessary
     
-    private Server server;
+    private Thread server;
     private final Helper helper = new Helper();
 
 
     @Given("^a help command\\.$")
     public void a_help_command() throws Throwable {
         
-        server = new Server(1234, null);
+        Server s = new Server(1234, null);
+        server = new Thread(s);
         server.start();
     }
 
@@ -37,8 +38,7 @@ public class FrontendSteps {
         testClient.sendMessage("help");
         String contents = testClient.reply();
         
-        System.out.println("OUTPUT: " + contents);
-        server.close();
+        server.interrupt();
         assertTrue(contents.contains("help"));
     }
 }
