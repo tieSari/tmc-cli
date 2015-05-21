@@ -63,7 +63,7 @@ public class ServerTest {
             client.sendMessage("al2kjn238fh1o");
             assertEquals(Server.PROTOCOL_ERROR_MSG, client.reply());
         } catch (IOException ex) {
-            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
             fail("IOException was raised");
         }
     }

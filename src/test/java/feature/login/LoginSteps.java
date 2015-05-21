@@ -16,15 +16,15 @@ public class LoginSteps {
 
     private final int port = ClientData.getPORT();
 
-    private Thread server;
+    private Thread serverThread;
     private TestClient testClient;
-    private Server s;
+    private Server server;
 
     @Before
     public void initializeServer() throws IOException {
-        s = new Server(port, null);
-        server = new Thread(s);
-        server.start();
+        server = new Server(port, null);
+        serverThread = new Thread(server);
+        serverThread.start();
         testClient = new TestClient(port);
 
     }
@@ -42,7 +42,7 @@ public class LoginSteps {
 
     @After
     public void closeAll() throws IOException {
-        s.close();
-        server.interrupt();
+        server.close();
+        serverThread.interrupt();
     }
 }

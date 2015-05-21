@@ -46,6 +46,7 @@ public class Server implements FrontendListener, Runnable {
       /**
      * Start is general function to set up server listening for the frontend
      */
+    @Override
     public void start() {
         this.run();  
     }
@@ -54,6 +55,7 @@ public class Server implements FrontendListener, Runnable {
      * Run is loop that accepts new client connection and handles it
      */
     
+    @Override
     public void run() {
         isRunning = true;
         while (isRunning) {
@@ -69,18 +71,18 @@ public class Server implements FrontendListener, Runnable {
                 if (inputLine == null) {
                     break;
                 }
-
+  
                 try {
                     Command command = parser.getCommand(inputLine);
                     command.execute();
 
                 } catch (ProtocolException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex.getMessage());
                     printLine(Server.PROTOCOL_ERROR_MSG);
                 }
                 
             } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
                 return;
             } finally {
                 try {

@@ -15,15 +15,15 @@ public class FrontendSteps {
 
     private final int port = ClientData.getPORT(); // change if necessary
 
-    private Thread server;
-    private Server s;
+    private Thread serverThread;
+    private Server server;
     private TestClient testClient;
 
     @Before
     public void setUpServer() throws IOException {
-        s = new Server(port, null);
-        server = new Thread(s);
-        server.start();
+        server = new Server(port, null);
+        serverThread = new Thread(server);
+        serverThread.start();
         testClient = new TestClient(port);
     }
 
@@ -34,14 +34,15 @@ public class FrontendSteps {
 
     @Then("^output should contains commands\\.$")
     public void output_should_contains_commands() throws Throwable {
-
+        
         String contents = testClient.reply();
         assertTrue(contents.contains("help"));
+    
     }
 
     @After
     public void closeServer() throws IOException {
-        s.close();
-        server.interrupt();
+        server.close();
+        serverThread.interrupt();
     }
 }
