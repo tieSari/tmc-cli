@@ -5,6 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.Server;
 
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.frontend_communication.Commands.Command;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
@@ -36,7 +37,8 @@ public class Server implements FrontendListener, Runnable {
     public Server(int portNumber, Logic logic) {
         this.portNumber = portNumber;
         try {
-            serverSocket = new ServerSocket(portNumber);
+            serverSocket = new ServerSocket(0);
+            new ConfigHandler().writePort(serverSocket.getLocalPort());
         } catch (IOException ex) {
             System.out.println("Server creation failed");
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
