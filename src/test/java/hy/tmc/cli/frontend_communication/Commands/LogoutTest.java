@@ -3,7 +3,7 @@ package hy.tmc.cli.frontend_communication.Commands;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
-import hy.tmc.cli.testhelpers.FrontendMock;
+import hy.tmc.cli.testhelpers.FrontendStub;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -12,12 +12,12 @@ import org.junit.Test;
 
 public class LogoutTest {
 
-    private FrontendMock front;
+    private FrontendStub front;
     private Command logout;
 
     @Before
     public void setup() {
-        front = new FrontendMock();
+        front = new FrontendStub();
         logout = new Logout(front, new Logic());
     }
 
