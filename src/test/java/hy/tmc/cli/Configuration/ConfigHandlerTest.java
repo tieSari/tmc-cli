@@ -2,6 +2,8 @@ package hy.tmc.cli.Configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -100,4 +102,27 @@ public class ConfigHandlerTest {
         String readAddress = handler.readServerAddress();
         assertEquals(readAddress, address);
     }
+    
+    @Test
+    public void canWritePortAddress() {
+        try {
+            handler.writePort(1234);
+        }
+        catch (IOException ex) {
+            fail("failed to write port");
+        }
+    }
+    
+    
+    @Test
+    public void correctPortGetsWritten() {
+        try {
+            handler.writePort(12355);
+            assertEquals(12355, handler.readPort());
+        }
+        catch (IOException ex) {
+            fail("Failed to read or write port");
+        }
+    }
+    
 }
