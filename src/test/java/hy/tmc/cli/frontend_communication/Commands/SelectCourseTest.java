@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.testhelpers.FrontendMock;
+import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Before;
 
 

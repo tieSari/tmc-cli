@@ -21,6 +21,7 @@ public class CommandFactory {
         commandsByName.put("ping", ReplyToPing(frontend, logic));
         commandsByName.put("listCourses", ListCourses(frontend, logic));
         commandsByName.put("listExercises", ListExercises(frontend, logic));
+        commandsByName.put("logout", Logout(frontend, logic));
         return commandsByName;
     }
 
@@ -90,6 +91,17 @@ public class CommandFactory {
         return new ListExercises(front, back);
     }
 
+    /**
+     * Create a Logout Command object
+     * 
+     * @param front frontend that the command will use
+     * @param back logic that the command will use
+     * @return a Logout object
+     */
+    public static Command Logout(FrontendListener front, Logic back) {
+        return new Logout(front, back);
+    }
+    
     /**
      *
      * @return a set of all available command names
