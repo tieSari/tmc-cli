@@ -23,6 +23,7 @@ public class LogoutSteps {
 
     @Before
     public void initializeServer() throws IOException {
+        ClientData.clearUserData();
         server = new Server(null);
         port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
