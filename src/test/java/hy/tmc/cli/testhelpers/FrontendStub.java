@@ -3,7 +3,7 @@ package hy.tmc.cli.testhelpers;
 
 import hy.tmc.cli.frontend_communication.FrontendListener;
 
-public class FrontendMock implements FrontendListener {
+public class FrontendStub implements FrontendListener {
     
     String line;
 
