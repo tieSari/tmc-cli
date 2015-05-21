@@ -9,6 +9,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.backendCommunication.ExerciseDownloader;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend_communication.FrontendListener;
+import hy.tmc.cli.testhelpers.FrontendStub;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
@@ -31,12 +33,17 @@ public class ExerciseDownloaderTest {
 
     private ArrayList<Exercise> exercises;
 
+    private ExerciseDownloader exDl;
+    private FrontendListener front;
+
     public ExerciseDownloaderTest() {
     }
     
     @Before
     public void setup() {
 
+        front = new FrontendStub();
+        exDl = new ExerciseDownloader(front);
         exercises = new ArrayList<>();
 
         Exercise e1 = new Exercise();
@@ -75,7 +82,7 @@ public class ExerciseDownloaderTest {
 
     @Test
     public void downloadExercisesDoesRequests() {
-        ExerciseDownloader.downloadFiles(exercises);
+        exDl.downloadFiles(exercises);
 
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip")));
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip")));
@@ -83,10 +90,10 @@ public class ExerciseDownloaderTest {
 
     @Test
     public void requestsHaveAuth() {
-        ExerciseDownloader.downloadFiles(exercises);
+        exDl.downloadFiles(exercises);
 
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip"))
-                .withHeader("Authorization",equalTo("Basic cGlobGE6anV1aA==")));
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
 
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip"))
                 .withHeader("Authorization",equalTo("Basic cGlobGE6anV1aA==")));
@@ -96,7 +103,7 @@ public class ExerciseDownloaderTest {
     public void downloadedExercisesExists(){
 
 
-        ExerciseDownloader.downloadFiles(exercises);
+        exDl.downloadFiles(exercises);
 
         File exercise1 = new File("Exercise1");
         assertTrue("File Exercise1 was not downloaded to the fs", exercise1.exists());
@@ -108,7 +115,7 @@ public class ExerciseDownloaderTest {
     public void downloadedExercisesHasContent(){
 
 
-        ExerciseDownloader.downloadFiles(exercises);
+        exDl.downloadFiles(exercises);
 
         String ex1content;
         try {
