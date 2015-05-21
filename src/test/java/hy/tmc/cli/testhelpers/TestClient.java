@@ -9,10 +9,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class TestClient {
 
@@ -20,21 +18,21 @@ public class TestClient {
     private String reply;
     private PrintWriter output;
     private BufferedReader input;
-    private int portnumber;
+    private final int portnumber;
 
     public TestClient(int portnumber) throws IOException {
         this.portnumber = portnumber;
         this.init();
     }
 
-    private void init() {
+    public void init() {
         try {
             this.socket = new Socket("localhost", portnumber);
             this.output = new PrintWriter(socket.getOutputStream(), true);
             this.input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
         } catch (IOException ex) {
-            Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -46,7 +44,7 @@ public class TestClient {
         try {
             return input.readLine();
         } catch (IOException ex) {
-            Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
             return "fail";
         }
     }
