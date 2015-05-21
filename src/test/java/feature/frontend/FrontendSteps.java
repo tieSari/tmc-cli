@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FrontendSteps {
 
-    private final int port = new ConfigHandler().readPort();
+    private int port;
 
     private Thread serverThread;
     private Server server;
@@ -21,7 +21,8 @@ public class FrontendSteps {
 
     @Before
     public void setUpServer() throws IOException {
-        server = new Server(port, null);
+        server = new Server(null);
+        port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);

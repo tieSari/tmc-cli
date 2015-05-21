@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class LogoutSteps {
 
-    private final int port = new ConfigHandler().readPort();
+    private int port;
 
     private Thread serverThread;
     private TestClient testClient;
@@ -23,7 +23,8 @@ public class LogoutSteps {
 
     @Before
     public void initializeServer() throws IOException {
-        server = new Server(port, null);
+        server = new Server(null);
+        port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
@@ -43,8 +44,13 @@ public class LogoutSteps {
     @Then("^user sees message\\.$")
     public void user_sees_message() throws Throwable {
         String output = testClient.reply();
+        System.out.println("OUTPUT: " + output);
         assertTrue(output.contains("cleared"));
     }
+    
+    
+    //Skenaario vaihtuu!
+    
 
     @Given("^a logout command without being logged in\\.$")
     public void a_logout_command_without_being_logged_in() throws Throwable {

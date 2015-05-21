@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 public class Server implements FrontendListener, Runnable {
 
     public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
-    private final int portNumber;
     private Socket clientSocket;
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
@@ -30,8 +29,7 @@ public class Server implements FrontendListener, Runnable {
      * @param logic
      * @throws java.io.IOException if server opening fails
      */
-    public Server(int portNumber, Logic logic) throws IOException {
-        this.portNumber = portNumber;
+    public Server(Logic logic) throws IOException {
         try {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());

@@ -18,8 +18,9 @@ public class ServerTest {
 
     @Before
     public void setUp() throws IOException {
+        server = new Server(null);
         int port = new ConfigHandler().readPort();
-        server = new Server(port, null);
+
         //server.start();
         this.serverThread = new Thread(server);
         this.serverThread.start();
