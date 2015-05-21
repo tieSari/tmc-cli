@@ -47,6 +47,17 @@ public class DefaultMoveDeciderTest {
     }
     
     @Test
+    public void emptyPathDoesNothing(){
+        decider.readTmcprojectYml(Paths.get(""));
+        assertTrue(decider.unoverwritablePaths.isEmpty());
+    }
+    
+    @Test
+    public void ifTmcprojectFileDoesntExistDoesNothing() {
+        decider.readTmcprojectYml(Paths.get("testResources/mockProject/rootWithoutYml"));
+    }
+    
+    @Test
     public void doesNotReadWrongTmcprojectFile() {
         decider.readTmcprojectYml(Paths.get("testResources/mockProject"));
         List<String> excludePaths = decider.unoverwritablePaths;
