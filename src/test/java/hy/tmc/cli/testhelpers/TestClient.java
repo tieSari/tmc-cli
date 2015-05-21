@@ -27,7 +27,7 @@ public class TestClient {
         this.init();
     }
 
-    private void init() {
+    public void init() {
         try {
             this.socket = new Socket("localhost", portnumber);
             this.output = new PrintWriter(socket.getOutputStream(), true);
