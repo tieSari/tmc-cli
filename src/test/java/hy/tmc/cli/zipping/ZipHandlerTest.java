@@ -1,4 +1,4 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.zipping;
 
 import hy.tmc.cli.testhelpers.FileWriterHelper;
 import java.io.File;
@@ -22,11 +22,17 @@ public class ZipHandlerTest {
     FileWriterHelper helper = new FileWriterHelper();
     String testZipPath = "testResources/test.zip";
     String unzipPath = "testResources/unzips";
-    String javaFile = unzipPath + "/viikko1/viikko1/Viikko1_001.Nimi/src/Nimi.java";
+    String projectPath = unzipPath + "/viikko1/Viikko1_001.Nimi";
+    String javaFile = projectPath + "/src/Nimi.java";
+    MoveDecider decider;
 
+    public ZipHandlerTest() {
+        decider = new DefaultMoveDecider(new DefaultRootDetector());
+    }
+    
     @Before
     public void setup() {
-        handler = new ZipHandler(testZipPath, unzipPath);
+        handler = new ZipHandler(testZipPath, unzipPath, decider);
     }
 
     @After
@@ -99,7 +105,7 @@ public class ZipHandlerTest {
     public void otherStuffIsOverwritten() {
         try {
             handler.unzip();
-            File file = new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src/build.xml");
+            File file = new File(unzipPath + "/viikko1/Viikko1_001.Nimi/build.xml");
             assertTrue(file.exists());
             helper.writeStuffToFile(file.getAbsolutePath());
             long modified = file.lastModified();
@@ -140,5 +146,18 @@ public class ZipHandlerTest {
             //ok
         }        
     }
+    
+   /* @Test
+    public void doesntOverwriteSomethingInTmcprojectYml() {
+        try {
+            handler.unzip();
+        }
+        catch (IOException | net.lingala.zip4j.exception.ZipException ex) {
+            Logger.getLogger(ZipHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Exception thrown by unzip");
+        }
+        
+        helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
+    }*/
 
 }
