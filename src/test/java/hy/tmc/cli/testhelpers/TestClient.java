@@ -9,10 +9,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class TestClient {
 
@@ -27,7 +25,7 @@ public class TestClient {
         this.init();
     }
 
-    private void init() {
+    public void init() {
         try {
             this.socket = new Socket("localhost", portnumber);
             this.output = new PrintWriter(socket.getOutputStream(), true);

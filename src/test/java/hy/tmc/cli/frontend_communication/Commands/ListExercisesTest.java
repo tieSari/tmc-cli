@@ -39,8 +39,8 @@ public class ListExercisesTest {
         ClientData.setUserData("chang", "paras");
         PowerMockito
                 .when(URLCommunicator.makeGetRequest(
-                        Mockito.eq(URLCommunicator.createClient()),
-                        Mockito.anyString(), Mockito.anyString()))
+                                Mockito.eq(URLCommunicator.createClient()),
+                                Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
 
@@ -55,7 +55,7 @@ public class ListExercisesTest {
             fail("testCheckDataSuccess failed");
         }
     }
-    
+
     @Test
     public void getsExerciseName() {
         list.setParameter("courseUrl", "any");
@@ -64,26 +64,22 @@ public class ListExercisesTest {
             assertTrue(front.getMostRecentLine().contains("Dictionary"));
         }
         catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
         }
-        
+
     }
-    
+
     @Test
     public void doesntContainWeirdName() {
         list.setParameter("courseUrl", "any");
         try {
             list.execute();
-            System.err.println(front.getMostRecentLine());
             assertFalse(front.getMostRecentLine().contains("Ilari"));
         }
         catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
         }
-        
+
     }
-    
 
 }
