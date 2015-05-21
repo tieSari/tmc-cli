@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
 
-    private final int port = new ConfigHandler().readPort();
+    private int port;
 
     private Thread serverThread;
     private TestClient testClient;
@@ -25,7 +25,8 @@ public class LoginSteps {
 
     @Before
     public void initializeServer() throws IOException {
-        server = new Server(port, null);
+        server = new Server(null);
+        port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);

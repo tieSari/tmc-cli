@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         Logic backend = new Logic();
-        FrontendListener frontendListener = new Server(1234, backend);
+        FrontendListener frontendListener = new Server(backend);
         frontendListener.start();
 
     }
