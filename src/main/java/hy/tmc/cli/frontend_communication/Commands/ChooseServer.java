@@ -12,14 +12,22 @@ import java.util.regex.Pattern;
 
 public class ChooseServer extends Command {
 
+    private ConfigHandler handler;
+    
     public ChooseServer(FrontendListener front, Logic backend) {
         super(front, backend);
+        this.handler = new ConfigHandler();
+    }
+    
+    public ChooseServer(ConfigHandler handler, FrontendListener front, Logic backend) {
+        super(front, backend);
+        this.handler = handler;
     }
 
     @Override
     protected void functionality() {
         try {
-            new ConfigHandler().writeServerAddress(data.get("tmc-server"));
+            handler.writeServerAddress(data.get("tmc-server"));
         }
         catch (IOException ex) {
             Logger.getLogger(ChooseServer.class.getName()).log(Level.SEVERE, null, ex);

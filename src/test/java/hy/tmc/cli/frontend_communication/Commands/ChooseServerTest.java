@@ -32,6 +32,7 @@ public class ChooseServerTest {
 
     @Test
     public void testFunctionality() {
+        chooser.setParameter("tmc-server", null);
         chooser.functionality();
         String output = this.frontendMock.getMostRecentLine();
         assertTrue(output.contains("help"));
