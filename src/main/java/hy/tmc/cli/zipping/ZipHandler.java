@@ -1,4 +1,4 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.zipping;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,18 +28,19 @@ public class ZipHandler {
     private String zipPath;
     private String unzipDestination;
     private Path tmpPath;
-    private List<String> unoverwritablePaths;
+    private MoveDecider movedecider;
 
     /**
      * Creates ziphandler with specified zip path and unzip location
      *
      * @param zipSourcePath for zip to unpack
      * @param unzipLocation place to unzip to
+     * @param movedecider a class which helps decide which files may be overwritten
      */
-    public ZipHandler(String zipSourcePath, String unzipLocation) {
+    public ZipHandler(String zipSourcePath, String unzipLocation, MoveDecider movedecider) {
         this.zipPath = zipSourcePath;
         this.unzipDestination = unzipLocation;
-        this.unoverwritablePaths = new ArrayList<>();
+        this.movedecider = movedecider;
     }
 
     public String getUnzipLocation() {
@@ -57,27 +58,7 @@ public class ZipHandler {
     public void setZipPath(String zipPath) {
         this.zipPath = zipPath;
     }
-    
-    private void setUnoverwritablePaths(){
-        if (tmpPath.toString().isEmpty()){
-            return;
-        }
-        File specFile = findTmcprojectYmlFile(tmpPath);
-        if (specFile == null) {
-            return;
-        }
-        String contents;
-        try {
-            contents = FileUtils.readFileToString(specFile);
-        }
-        catch (IOException ex) {
-            Logger.getLogger(ZipHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        Yaml yaml = new Yaml();
-        Map<String, List<String>> map = (Map<String, List<String>>) yaml.load(contents);
-        this.unoverwritablePaths = map.get("extra_student_files");
-    }
+
 
     /**
      * Unzips zip to specified location
@@ -89,35 +70,16 @@ public class ZipHandler {
         tmpPath = Files.createTempDirectory("tmc-temp", new FileAttribute[0]);
         ZipFile zipFile = new ZipFile(zipPath);
         zipFile.extractAll(tmpPath.toString());
-        this.setUnoverwritablePaths();
+        this.movedecider.readTmcprojectYml(tmpPath);
         moveDirectory(tmpPath);
     }
-    
-    private File findTmcprojectYmlFile(Path path) {
-        File file = path.toFile();
-        
-        if (! file.isDirectory()) {
-            if (file.getName().equals(".tmcproject.yml")){
-                return file;
-            }
-            return null;
-        }
-        
-        File tmcproject = null;
-        
-        for (File f : file.listFiles()) {
-            if (tmcproject != null){
-                break;
-            }
-            tmcproject = findTmcprojectYmlFile(f.toPath());
-        }
-        return tmcproject;
-    }
+
+
 
     private void moveDirectory(Path path) throws IOException {
         File directory = path.toFile();
         File[] files = directory.listFiles();
-        
+
         if (files == null) {
             return;
         }
@@ -132,23 +94,16 @@ public class ZipHandler {
         }
     }
 
-    private boolean isOverwritable(String path) {
-        for (String unOverwritable : this.unoverwritablePaths){
-            if (path.endsWith(unOverwritable)){
-                return false;
-            }
-        }
-        return !(path.contains("src") && new File(path).exists());
-    }
+
 
     private String getFullDestinationPath(String filePath) {
-        String relativePath = filePath.substring(tmpPath.toString().length()); 
+        String relativePath = filePath.substring(tmpPath.toString().length());
         return unzipDestination + relativePath;
     }
 
     private void moveFileToDestination(String filePath) {
         String realPath = getFullDestinationPath(filePath);
-        if (isOverwritable(realPath)) {
+        if (this.movedecider.shouldMove(realPath)) {
             writeFile(filePath, realPath);
         }
     }
