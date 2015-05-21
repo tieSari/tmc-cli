@@ -12,19 +12,10 @@ import net.lingala.zip4j.exception.ZipException;
 public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-          
-        ZipHandler zh = new ZipHandler("testzip/testzip.zip",".");
-        try {
-            zh.unzip();
-            
-            //Logic backend = new Logic();
-            //frontendListener.start();
-            //frontendListener.start();
-        }
-        catch (ZipException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("shiiit");
-        }
+
+        Logic backend = new Logic();
+        FrontendListener frontendListener = new Server(1234, backend);
+        frontendListener.start();
 
     }
 
