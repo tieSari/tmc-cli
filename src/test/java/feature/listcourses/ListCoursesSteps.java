@@ -1,56 +1,81 @@
 package feature.listcourses;
 
-import cucumber.api.PendingException;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.testhelpers.Helper;
-import java.io.File;
-import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
+
+import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.frontend_communication.Server.Server;
+import hy.tmc.cli.testhelpers.TestClient;
+import java.io.IOException;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ListCoursesSteps {
 
-    private final String scriptLocation = "scripts/frontend.sh";
-    private final String commandName = "listCourses";
+    private final int port = ClientData.getPORT();
 
-    private Helper helper;
-    private Process loginDialog;
-    private String output;
+    private Thread serverThread;
+    private Server server;
+    private TestClient testClient;
+    private boolean testThrown;
 
-    @Given("^user has run shutdown script\\.$")
-    public void user_has_run_shutdown_script() throws Throwable {
-        helper = new Helper();
-        helper.printOutput("", "scripts/shutdown.sh"); //to ensure that user is not logged in.
-    }
-
-    @When("^user gives command listCourses\\.$")
-    public void user_gives_command_listCourses() throws Throwable {
-        output = helper.printOutput(commandName, scriptLocation);
-    }
-
-    @Then("^output should contain only one line\\.$")
-    public void output_should_contain_only_one_line() throws Throwable {
-        //please be free to feractor this!
-       // System.out.println(output);
-       // assertTrue(output.length() < 80);
+    @Before
+    public void setUpServer() throws IOException {
+        server = new Server(port, null);
+        serverThread = new Thread(server);
+        serverThread.start();
+        testClient = new TestClient(port);
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
-        File config = new File("scripts/config");
-        config.delete();
-        helper = new Helper();
-        loginDialog = helper.startDialogWithCommand("login", "scripts/frontend.sh");
-        loginDialog = helper.writeInputToProcess(loginDialog, username);
-        loginDialog = helper.writeInputToProcess(loginDialog, password);
-        loginDialog.waitFor();
+        testClient.sendMessage("login username " + username + " password " + password);
+        testClient.init();
+
+    }
+
+    @When("^user gives command listCourses\\.$")
+    public void user_gives_command_listCourses() throws Throwable {
+        testClient.sendMessage("listCourses");
+
     }
 
     @Then("^output should contain more than one line$")
     public void output_should_contain_more_than_one_line() throws Throwable {
-        assertTrue(output.contains("\n"));
+        String content = testClient.reply();
+        assertTrue(content.length() > 10);
+        serverThread.interrupt();
+    }
+
+    @Given("^user has not logged in$")
+    public void user_has_not_logged_in() throws Throwable {
+        testClient = new TestClient(port);
+    }
+
+    @When("^user writes listCourses\\.$")
+    public void user_writes_listCourses() throws Throwable {
+        testThrown = false;
+        try {
+            testClient.sendMessage("listCourses");
+        }
+        catch (Exception e) {
+            testThrown = true;
+        }
+    }
+
+    @Then("^exception should be thrown$")
+    public void exception_should_be_thrown() throws Throwable {
+        assertFalse(testThrown);
+        serverThread.interrupt();
+    }
+
+    @After
+    public void closeServer() throws IOException {
+        server.close();
+        serverThread.interrupt();
     }
 
 }
