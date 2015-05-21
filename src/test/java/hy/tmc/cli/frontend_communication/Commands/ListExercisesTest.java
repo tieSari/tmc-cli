@@ -6,7 +6,7 @@ import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.ExampleJSON;
-import hy.tmc.cli.testhelpers.FrontendMock;
+import hy.tmc.cli.testhelpers.FrontendStub;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.assertFalse;
@@ -24,12 +24,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(URLCommunicator.class)
 public class ListExercisesTest {
 
-    private FrontendMock front;
+    private FrontendStub front;
     private Command list;
 
     @Before
     public void setup() {
-        front = new FrontendMock();
+        front = new FrontendStub();
         list = new ListExercises(front, new Logic());
 
         PowerMockito.mockStatic(URLCommunicator.class);
@@ -39,8 +39,8 @@ public class ListExercisesTest {
         ClientData.setUserData("chang", "paras");
         PowerMockito
                 .when(URLCommunicator.makeGetRequest(
-                        Mockito.eq(URLCommunicator.createClient()),
-                        Mockito.anyString(), Mockito.anyString()))
+                                Mockito.eq(URLCommunicator.createClient()),
+                                Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
 
@@ -55,7 +55,7 @@ public class ListExercisesTest {
             fail("testCheckDataSuccess failed");
         }
     }
-    
+
     @Test
     public void getsExerciseName() {
         list.setParameter("courseUrl", "any");
@@ -64,26 +64,22 @@ public class ListExercisesTest {
             assertTrue(front.getMostRecentLine().contains("Dictionary"));
         }
         catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
         }
-        
+
     }
-    
+
     @Test
     public void doesntContainWeirdName() {
         list.setParameter("courseUrl", "any");
         try {
             list.execute();
-            System.err.println(front.getMostRecentLine());
             assertFalse(front.getMostRecentLine().contains("Ilari"));
         }
         catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
         }
-        
+
     }
-    
 
 }

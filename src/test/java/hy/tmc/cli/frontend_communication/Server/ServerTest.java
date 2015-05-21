@@ -16,9 +16,8 @@ public class ServerTest {
     private TestClient client;
     private Thread serverThread;
 
-
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         int port = new ConfigHandler().readPort();
         server = new Server(port, null);
         //server.start();
@@ -26,10 +25,11 @@ public class ServerTest {
         this.serverThread.start();
         try {
             client = new TestClient(port);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
+
     }
 
     @After
@@ -37,7 +37,8 @@ public class ServerTest {
         try {
             server.close();
             serverThread.interrupt();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -50,22 +51,23 @@ public class ServerTest {
         try {
             client.sendMessage("ping");
             assertEquals("pong", client.reply());
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("IOException was raised");
         }
     }
-    
+
     @Test
     public void messageViolatesProtocolTest() {
         try {
             client.sendMessage("al2kjn238fh1o");
             assertEquals(Server.PROTOCOL_ERROR_MSG, client.reply());
-        } catch (IOException ex) {
-            Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex) {
+            System.err.println(ex.getMessage());
             fail("IOException was raised");
         }
     }
 
 }
-

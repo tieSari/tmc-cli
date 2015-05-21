@@ -97,11 +97,13 @@
                         <ignores>
                             <ignore>hy.tmc.cli.frontend_communication.Result*</ignore>
                             <ignore>hy.tmc.cli.domain.Exercise*</ignore>
+                            <ignore>hy.tmc.cli.Main*</ignore>
                         </ignores>
                         <excludes>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.enum</exclude>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.class</exclude>
                             <exclude>hy/tmc/cli/domain/Exercise*.class</exclude>
+                            <exclude>hy/tmc/cli/Main*.class</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->
@@ -119,7 +121,12 @@
 
 
 
-    <dependencies>
+    <dependencies>        
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.5</version>
+        </dependency>
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
@@ -139,6 +146,12 @@
             <groupId>org.apache.httpcomponents</groupId> 
             <artifactId>httpclient</artifactId> 
             <version>4.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -197,6 +210,13 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>maven-surefire-common</artifactId>
+            <version>2.18.1</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <reporting>
