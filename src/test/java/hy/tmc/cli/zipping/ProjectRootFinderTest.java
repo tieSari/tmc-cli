@@ -38,9 +38,16 @@ public class ProjectRootFinderTest {
 
     @Test
     public void testGetRootDirectory() {
-        Path root = finder.getRootDirectory(Paths.get("testResources"));
+        Path root = finder.getRootDirectory(Paths.get("testResources/mockProject"));
         System.out.println(root);
         assertEquals("testResources/mockProject/root",root.toString());
+    }
+    
+    @Test
+    public void testGetRootDirectory2(){
+        Path root = finder.getRootDirectory(Paths.get("testResources/noyml"));
+        System.out.println(root);
+        assertEquals("testResources/noyml/rootWithoutYml",root.toString());
     }
     
 }
