@@ -1,10 +1,15 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -12,8 +17,9 @@ import org.junit.Before;
 public class ChooseServerTest {
 
     private ChooseServer chooser;
-    private FrontendStub frontendMock;
-    private Logic logic;
+    private final FrontendStub frontendMock;
+    private final Logic logic;
+    private final String path = "testResources/test.properties";
 
     public ChooseServerTest() {
         this.logic = new Logic();
@@ -22,7 +28,13 @@ public class ChooseServerTest {
 
     @Before
     public void setup() {
-        this.chooser = new ChooseServer(this.frontendMock, this.logic);
+        this.chooser = new ChooseServer(new ConfigHandler(path), 
+                this.frontendMock, this.logic);
+    }
+    
+    @After
+    public void teardown(){
+        new File(path).delete();
     }
 
     @Test
@@ -32,11 +44,20 @@ public class ChooseServerTest {
 
     @Test
     public void testFunctionality() {
-        chooser.setParameter("tmc-server", null);
+        chooser.setParameter("tmc-server", "http://tmc.ebin.fi");
         chooser.functionality();
-        String output = this.frontendMock.getMostRecentLine();
-        assertTrue(output.contains("help"));
-        assertTrue(output.contains("auth"));
+        try {
+            String propFile = FileUtils.readFileToString(new File(path));
+            assertTrue(propFile.contains("tmc.ebin.fi"));
+        }
+        catch (IOException ex) {
+            fail("unable to read propertiesfile");
+        }
+    }
+    
+    @Test (expected = ProtocolException.class)
+    public void throwsExceptionWithoutData() throws ProtocolException{
+        chooser.checkData();
     }
     
     @Test
@@ -46,7 +67,6 @@ public class ChooseServerTest {
             chooser.checkData();
         }
         catch (ProtocolException ex) {
-            Logger.getLogger(ChooseServerTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("checkData threw exception");
         }
     }

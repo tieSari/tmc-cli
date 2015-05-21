@@ -9,16 +9,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-
 public class ChooseServer extends Command {
 
     private ConfigHandler handler;
-    
+
     public ChooseServer(FrontendListener front, Logic backend) {
         super(front, backend);
         this.handler = new ConfigHandler();
     }
-    
+
     public ChooseServer(ConfigHandler handler, FrontendListener front, Logic backend) {
         super(front, backend);
         this.handler = handler;
@@ -36,16 +35,19 @@ public class ChooseServer extends Command {
 
     @Override
     public void checkData() throws ProtocolException {
-        if (!this.data.containsKey("tmc-server")){
+        if (!this.data.containsKey("tmc-server")) {
             throw new ProtocolException("must specify new server");
         }
-        if (notValidURL(this.data.get("tms-server"))) {
+        if (!isValidTmcURL(this.data.get("tmc-server"))) {
             throw new ProtocolException("given URL is not valid");
         }
     }
-    
-    private boolean notValidURL(String url) {
+
+    private boolean isValidTmcURL(String url) {
         Pattern tmcServerAddress = Pattern.compile("http://.*");
+        if (url == null) {
+            return false;
+        }
         return tmcServerAddress.matcher(url).matches();
     }
 
