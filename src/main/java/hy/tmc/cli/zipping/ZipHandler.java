@@ -1,4 +1,4 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.zipping;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,23 +12,26 @@ import net.lingala.zip4j.exception.ZipException;
 
 /**
  * Handles unpacking zip files downloaded from TMC.
- * 
+ *
  */
-
 public class ZipHandler {
 
     private String zipPath;
     private String unzipDestination;
     private Path tmpPath;
+    private MoveDecider movedecider;
 
     /**
      * Creates ziphandler with specified zip path and unzip location
-     * @param path for zip to unpack
+     *
+     * @param zipSourcePath for zip to unpack
      * @param unzipLocation place to unzip to
+     * @param movedecider a class which helps decide which files may be overwritten
      */
-    public ZipHandler(String path, String unzipLocation) {
-        this.zipPath = path;
+    public ZipHandler(String zipSourcePath, String unzipLocation, MoveDecider movedecider) {
+        this.zipPath = zipSourcePath;
         this.unzipDestination = unzipLocation;
+        this.movedecider = movedecider;
     }
 
     public String getUnzipLocation() {
@@ -46,22 +49,23 @@ public class ZipHandler {
     public void setZipPath(String zipPath) {
         this.zipPath = zipPath;
     }
-    
+
+
     /**
      * Unzips zip to specified location
+     *
      * @throws IOException if cannot write to file
      * @throws ZipException If specified zip is not found
      */
-
     public void unzip() throws IOException, ZipException {
-       
-            tmpPath = Files.createTempDirectory("tmc-temp", new FileAttribute[0]);
-            ZipFile zipFile = new ZipFile(zipPath);
-            zipFile.extractAll(tmpPath.toString());
-            moveDirectory(tmpPath);
-        }
-      
-  
+        tmpPath = Files.createTempDirectory("tmc-temp", new FileAttribute[0]);
+        ZipFile zipFile = new ZipFile(zipPath);
+        zipFile.extractAll(tmpPath.toString());
+        this.movedecider.readTmcprojectYml(tmpPath);
+        moveDirectory(tmpPath);
+    }
+
+
 
     private void moveDirectory(Path path) throws IOException {
         File directory = path.toFile();
@@ -73,7 +77,7 @@ public class ZipHandler {
 
         for (File f : files) {
             if (f.isDirectory()) {
-                makeDir(f.getAbsolutePath());
+                new File(getFullDestinationPath(f.getAbsolutePath())).mkdir();
                 moveDirectory(f.toPath());
             } else {
                 moveFileToDestination(f.getAbsolutePath());
@@ -81,20 +85,16 @@ public class ZipHandler {
         }
     }
 
-    private boolean isOverwritable(String path) {
-        return !(path.contains("src") && new File(path).exists());
-    }
-    
-    private void makeDir(String path) {
-        String relativePath = path.substring(tmpPath.toString().length()); // remove /tmp/yadayada.../
-        String realPath = unzipDestination + relativePath;
-        new File(realPath).mkdir();
+
+
+    private String getFullDestinationPath(String filePath) {
+        String relativePath = filePath.substring(tmpPath.toString().length());
+        return unzipDestination + relativePath;
     }
 
     private void moveFileToDestination(String filePath) {
-        String relativePath = filePath.substring(tmpPath.toString().length()); // remove /tmp/yadayada.../
-        String realPath = unzipDestination + relativePath;
-        if (isOverwritable(realPath)) {
+        String realPath = getFullDestinationPath(filePath);
+        if (this.movedecider.shouldMove(realPath)) {
             writeFile(filePath, realPath);
         }
     }
