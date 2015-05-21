@@ -28,8 +28,16 @@ public class ExerciseDownloader {
      * @param exercises
      */
     public static void downloadFiles(List<Exercise> exercises){
+        downloadFiles(exercises,"");
+    }
+
+    public static void downloadFiles(List<Exercise> exercises, String path) {
+        if (path == null) {
+            path = "";
+        }
         for(Exercise e : exercises) {
-            downloadFile(e.getZip_url(), e.getName());
+            String filePath = path + e.getName();
+            downloadFile(e.getZip_url(), filePath);
         }
     }
 
