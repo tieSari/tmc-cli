@@ -22,7 +22,7 @@ public class ZipHandlerTest {
     FileWriterHelper helper = new FileWriterHelper();
     String testZipPath = "testResources/test.zip";
     String unzipPath = "testResources/unzips";
-    String javaFile = unzipPath + "/viikko1/Viikko1_004.Muuttujat/src/Muuttujat.java";
+    String javaFile = unzipPath + "/viikko1/viikko1/Viikko1_001.Nimi/src/Nimi.java";
 
     @Before
     public void setup() {
@@ -50,8 +50,8 @@ public class ZipHandlerTest {
         try {
             handler.unzip();
             assertTrue(new File(unzipPath + "/viikko1").exists());
-            assertTrue(new File(unzipPath + "/viikko1/Viikko1_004.Muuttujat").exists());
-            assertTrue(new File(unzipPath + "/viikko1/Viikko1_004.Muuttujat/lib").exists());
+            assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src").exists());
+            assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/lib").exists());
         }
         catch (IOException ex) {
             fail("failed to unzip");
@@ -99,7 +99,7 @@ public class ZipHandlerTest {
     public void otherStuffIsOverwritten() {
         try {
             handler.unzip();
-            File file = new File(unzipPath + "/viikko1/Viikko1_004.Muuttujat/build.xml");
+            File file = new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src/build.xml");
             assertTrue(file.exists());
             helper.writeStuffToFile(file.getAbsolutePath());
             long modified = file.lastModified();
