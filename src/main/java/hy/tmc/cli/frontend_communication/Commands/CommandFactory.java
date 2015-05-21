@@ -22,6 +22,7 @@ public class CommandFactory {
         commandsByName.put("listCourses", ListCourses(frontend, logic));
         commandsByName.put("listExercises", ListExercises(frontend, logic));
         commandsByName.put("logout", Logout(frontend, logic));
+        commandsByName.put("setServer", ChooseServer(frontend, logic));
         return commandsByName;
     }
 
@@ -100,6 +101,17 @@ public class CommandFactory {
      */
     public static Command Logout(FrontendListener front, Logic back) {
         return new Logout(front, back);
+    }
+    
+    /**
+     * Create a ChooseServer Command object
+     * 
+     * @param front frontend that the command will use
+     * @param back logic that the command will use
+     * @return a ChooseServer object
+     */
+    public static Command ChooseServer(FrontendListener front, Logic back) {
+        return new ChooseServer(front, back);
     }
     
     /**
