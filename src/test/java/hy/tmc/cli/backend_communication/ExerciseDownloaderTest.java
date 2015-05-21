@@ -7,35 +7,29 @@ package hy.tmc.cli.backend_communication;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.backendCommunication.ExerciseDownloader;
-import hy.tmc.cli.backendCommunication.HTTPResult;
-import hy.tmc.cli.backendCommunication.JSONParser;
-import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.testhelpers.ExampleJSON;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.*;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import static org.junit.Assert.*;
 
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.net.ssl.*")
-@PrepareForTest(JSONParser.class)
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 public class ExerciseDownloaderTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
+
+    private ArrayList<Exercise> exercises;
 
     public ExerciseDownloaderTest() {
     }
@@ -43,63 +37,95 @@ public class ExerciseDownloaderTest {
     @Before
     public void setup() {
 
+        exercises = new ArrayList<>();
 
-        HTTPResult fakeResult = new HTTPResult(ExampleJSON.courseExample, 200, true);
-        
-        ArrayList<Exercise> exercises = new ArrayList<>();
-        
         Exercise e1 = new Exercise();
         e1.setZip_url("http://127.0.0.1:8080/ex1.zip");
         e1.setName("Exercise1");
         exercises.add(e1);
-
-        wireMockRule.start();
-
-        wireMockRule.stubFor(get(urlEqualTo("/ex1.zip"))
-                .withHeader("Accept", equalTo("text/xml"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/xml")
-                        .withBody("<response>Exercise 1</response>")));
 
         Exercise e2 = new Exercise();
         e2.setZip_url("http://127.0.0.1:8080/ex2.zip");
         e2.setName("Exercise2");
         exercises.add(e2);
 
+        stubFor(get(urlEqualTo("/ex1.zip"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBody("<response>Exercise 1</response>")));
+
         wireMockRule.stubFor(get(urlEqualTo("/ex2.zip"))
-                .withHeader("Accept", equalTo("text/xml"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/xml")
                         .withBody("<response>Exercise 2</response>")));
         
         ClientData.setUserData("pihla", "juuh");
-        PowerMockito.mockStatic(JSONParser.class);
-        PowerMockito
-                .when(JSONParser.getExercises(Mockito.anyString()))
-                .thenReturn(exercises);
         
     }
 
     @After
-    public void after() {
-        wireMockRule.stop();
-        // hammertime
+    public void remove() {
+        new File("Exercise1").delete();
+        new File("Exercise2").delete();
     }
     
+
+
     @Test
-    public void downloadExercise(){
-        ConfigHandler confighandler = new ConfigHandler();
-        String courseUrl = confighandler.getCourseUrl(1);
-        System.out.println(courseUrl);
-        List<Exercise> exercises = JSONParser.getExercises(courseUrl);
-        System.out.println(exercises);
-        System.out.println(exercises.get(0));
+    public void downloadExercisesDoesRequests() {
         ExerciseDownloader.downloadFiles(exercises);
 
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip")));
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip")));
+    }
+
+    @Test
+    public void requestsHaveAuth() {
+        ExerciseDownloader.downloadFiles(exercises);
+
+        wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip"))
+                .withHeader("Authorization",equalTo("Basic cGlobGE6anV1aA==")));
+
+        wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip"))
+                .withHeader("Authorization",equalTo("Basic cGlobGE6anV1aA==")));
+    }
+
+    @Test
+    public void downloadedExercisesExists(){
+
+
+        ExerciseDownloader.downloadFiles(exercises);
+
+        File exercise1 = new File("Exercise1");
+        assertTrue("File Exercise1 was not downloaded to the fs", exercise1.exists());
+        File exercise2 = new File("Exercise2");
+        assertTrue("File Exercise2 was not downloaded to the fs", exercise2.exists());
+    }
+
+    @Test
+    public void downloadedExercisesHasContent(){
+
+
+        ExerciseDownloader.downloadFiles(exercises);
+
+        String ex1content;
+        try {
+            ex1content = new String(Files.readAllBytes(Paths.get("Exercise1")));
+        } catch (IOException e) {
+            ex1content = "";
+        }
+
+        String ex2content;
+        try {
+            ex2content = new String(Files.readAllBytes(Paths.get("Exercise2")));
+        } catch (IOException e) {
+            ex2content = "";
+        }
+
+        assertEquals("<response>Exercise 1</response>", ex1content);
+        assertEquals("<response>Exercise 2</response>", ex2content);
     }
     
 }
