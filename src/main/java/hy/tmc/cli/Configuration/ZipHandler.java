@@ -33,11 +33,11 @@ public class ZipHandler {
     /**
      * Creates ziphandler with specified zip path and unzip location
      *
-     * @param path for zip to unpack
+     * @param zipSourcePath for zip to unpack
      * @param unzipLocation place to unzip to
      */
-    public ZipHandler(String path, String unzipLocation) {
-        this.zipPath = path;
+    public ZipHandler(String zipSourcePath, String unzipLocation) {
+        this.zipPath = zipSourcePath;
         this.unzipDestination = unzipLocation;
         this.unoverwritablePaths = new ArrayList<>();
     }
@@ -134,6 +134,11 @@ public class ZipHandler {
     }
 
     private boolean isOverwritable(String path) {
+        for (String unOverwritable : this.unoverwritablePaths){
+            if (path.endsWith(unOverwritable)){
+                return false;
+            }
+        }
         return !(path.contains("src") && new File(path).exists());
     }
 
