@@ -77,7 +77,6 @@ public class ZipHandler {
         Yaml yaml = new Yaml();
         Map<String, List<String>> map = (Map<String, List<String>>) yaml.load(contents);
         this.unoverwritablePaths = map.get("extra_student_files");
-        System.out.println(this.unoverwritablePaths);
     }
 
     /**
@@ -144,9 +143,7 @@ public class ZipHandler {
 
     private String getFullDestinationPath(String filePath) {
         String relativePath = filePath.substring(tmpPath.toString().length()); 
-        // remove /tmp/yadayada.../
         return unzipDestination + relativePath;
-
     }
 
     private void moveFileToDestination(String filePath) {
