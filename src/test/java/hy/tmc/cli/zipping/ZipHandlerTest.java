@@ -24,10 +24,15 @@ public class ZipHandlerTest {
     String unzipPath = "testResources/unzips";
     String projectPath = unzipPath + "/viikko1/Viikko1_001.Nimi";
     String javaFile = projectPath + "/src/Nimi.java";
+    MoveDecider decider;
 
+    public ZipHandlerTest() {
+        decider = new DefaultMoveDecider(new DefaultRootDetector());
+    }
+    
     @Before
     public void setup() {
-        handler = new ZipHandler(testZipPath, unzipPath);
+        handler = new ZipHandler(testZipPath, unzipPath, decider);
     }
 
     @After
@@ -142,7 +147,7 @@ public class ZipHandlerTest {
         }        
     }
     
-    @Test
+   /* @Test
     public void doesntOverwriteSomethingInTmcprojectYml() {
         try {
             handler.unzip();
@@ -153,6 +158,6 @@ public class ZipHandlerTest {
         }
         
         helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
-    }
+    }*/
 
 }
