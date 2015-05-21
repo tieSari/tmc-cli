@@ -28,7 +28,7 @@ public class DownloadExercises extends Command {
     @Override
     protected void functionality() {
         List<Exercise> exercises = JSONParser.getExercises(Integer.parseInt(this.data.get("courseID")));
-        exDl.downloadFiles(exercises,this.data.get("pwd"));
+        exDl.downloadFiles(exercises, this.data.get("pwd"));
     }
 
     @Override

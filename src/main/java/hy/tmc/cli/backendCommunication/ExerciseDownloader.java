@@ -44,18 +44,21 @@ public class ExerciseDownloader {
     }
 
     public void downloadFiles(List<Exercise> exercises, String path) {
+        int exCount = 0;
         if (path == null) {
             path = "";
-        } else if (!path.endsWith("/")) {
+        } else if (!path.isEmpty() && !path.endsWith("/")) {
             path += "/";
         }
         for(Exercise e : exercises) {
             if (this.front != null) {
-                this.front.printLine("Downloading exercise " + e.getName());
+                this.front.printLine("Downloading exercise " + e.getName() + " " + (Math.round(1.0*exCount/exercises.size()*100)) + "%");
             }
             String filePath = path + e.getName() + ".zip";
             downloadFile(e.getZip_url(), filePath);
+            exCount++;
         }
+        front.printLine(exercises.size() + " exercises downloaded.");
     }
 
     private static void downloadFile(String zip_url, String path) {
