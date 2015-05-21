@@ -9,7 +9,6 @@ import hy.tmc.cli.domain.Course;
 public class ClientData {
 
     private static int PID;
-    private static final int PORT = 1234;
     private static String USERNAME = "";
     private static String PASSWORD = "";
     private static Course currentCourse;
@@ -42,10 +41,6 @@ public class ClientData {
 
     public static int getPID() {
         return PID;
-    }
-
-    public static int getPORT() {
-        return PORT;
     }
 
     public static void setPID(int PID) {

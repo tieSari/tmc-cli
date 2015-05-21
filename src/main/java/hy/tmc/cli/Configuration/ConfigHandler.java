@@ -15,6 +15,8 @@ import java.util.Properties;
 public class ConfigHandler {
 
     private String configFilePath;
+    private String portFieldName = "serverPort";
+    private String serverAddressFieldName = "serverAddress";
     public final String coursesExtension = "/courses.json?api_version=7";
     public final String authExtension = "/user";
 
@@ -48,11 +50,17 @@ public class ConfigHandler {
             prop.load(inputStream);
         }
         catch (IOException e) {
-            //TODO LOTS OF STUFF
         }
         return prop;
     }
 
+    private void writeData(String property, String data) throws IOException {
+        Properties prop = getProperties();
+        prop.setProperty(property, data);
+        prop.store(new FileWriter(new File(configFilePath)), "Updated properties");
+    }
+    
+    
     /**
      * Writes server address to config file, ex. "https://tmc.mooc.fi/hy"
      * @param address for tmc server
@@ -60,9 +68,7 @@ public class ConfigHandler {
      */
     
     public void writeServerAddress(String address) throws IOException {
-        Properties prop = getProperties();
-        prop.setProperty("serverAddress", address);
-        prop.store(new FileWriter(new File(configFilePath)), "Updated properties");
+        writeData(serverAddressFieldName, address);
     }
 
     /**
@@ -72,7 +78,7 @@ public class ConfigHandler {
     
     public String readServerAddress() {
         Properties prop = getProperties();
-        return prop.getProperty("serverAddress");
+        return prop.getProperty(serverAddressFieldName);
     }
     
     /**
@@ -91,5 +97,22 @@ public class ConfigHandler {
     
     public String readAuthAddress() {
         return readServerAddress() + authExtension;
+    }
+    
+    /**
+     * Reads port from config file
+     */
+    
+    public int readPort() {
+        Properties prop = getProperties();
+        return Integer.parseInt(prop.getProperty(portFieldName));
+    }
+    
+    /**
+     * Writes port to config file
+     * @param port to write in config
+     */
+    public void writePort(int port) throws IOException {
+       writeData(portFieldName, Integer.toString(port));
     }
 }

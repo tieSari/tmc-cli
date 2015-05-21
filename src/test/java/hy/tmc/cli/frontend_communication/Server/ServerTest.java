@@ -1,13 +1,12 @@
 package hy.tmc.cli.frontend_communication.Server;
 
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,7 +19,7 @@ public class ServerTest {
 
     @Before
     public void setUp() {
-        int port = 4321;
+        int port = new ConfigHandler().readPort();
         server = new Server(port, null);
         //server.start();
         this.serverThread = new Thread(server);
