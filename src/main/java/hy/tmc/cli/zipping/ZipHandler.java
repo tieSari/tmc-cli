@@ -1,4 +1,4 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.zipping;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,9 +57,9 @@ public class ZipHandler {
     public void setZipPath(String zipPath) {
         this.zipPath = zipPath;
     }
-    
-    private void setUnoverwritablePaths(){
-        if (tmpPath.toString().isEmpty()){
+
+    private void setUnoverwritablePaths() {
+        if (tmpPath.toString().isEmpty()) {
             return;
         }
         File specFile = findTmcprojectYmlFile(tmpPath);
@@ -92,32 +92,42 @@ public class ZipHandler {
         this.setUnoverwritablePaths();
         moveDirectory(tmpPath);
     }
-    
+
+    private boolean isProjectRoot(Path path) {
+        File dir = path.toFile();
+        if (!dir.isDirectory()) {
+            return false;
+        }
+        for (File file : dir.listFiles()) {
+            if (file.getName().equals("pom.xml")) {
+                return true;
+            }
+            if (file.getName().equals("build.xml")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private File getProjectRoot() {
+        return null;
+    }
+
     private File findTmcprojectYmlFile(Path path) {
-        File file = path.toFile();
-        
-        if (! file.isDirectory()) {
-            if (file.getName().equals(".tmcproject.yml")){
+        File dir = path.toFile();
+
+        for (File file : dir.listFiles()) {
+            if (file.getName().equals(".tmcproject.yml")) {
                 return file;
             }
-            return null;
         }
-        
-        File tmcproject = null;
-        
-        for (File f : file.listFiles()) {
-            if (tmcproject != null){
-                break;
-            }
-            tmcproject = findTmcprojectYmlFile(f.toPath());
-        }
-        return tmcproject;
+        return null;
     }
 
     private void moveDirectory(Path path) throws IOException {
         File directory = path.toFile();
         File[] files = directory.listFiles();
-        
+
         if (files == null) {
             return;
         }
@@ -133,8 +143,8 @@ public class ZipHandler {
     }
 
     private boolean isOverwritable(String path) {
-        for (String unOverwritable : this.unoverwritablePaths){
-            if (path.endsWith(unOverwritable)){
+        for (String unOverwritable : this.unoverwritablePaths) {
+            if (path.endsWith(unOverwritable)) {
                 return false;
             }
         }
@@ -142,7 +152,7 @@ public class ZipHandler {
     }
 
     private String getFullDestinationPath(String filePath) {
-        String relativePath = filePath.substring(tmpPath.toString().length()); 
+        String relativePath = filePath.substring(tmpPath.toString().length());
         return unzipDestination + relativePath;
     }
 
