@@ -5,6 +5,7 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
@@ -34,7 +35,7 @@ public class LogoutSteps {
         testClient.sendMessage("logout");
     }
 
-    @Then("^user data should be cleared\\.$")
+    @When("^user data should be cleared\\.$")
     public void user_data_should_be_cleared() throws Throwable {
         assertFalse(ClientData.userDataExists());
     }
@@ -50,7 +51,7 @@ public class LogoutSteps {
         testClient.sendMessage("logout");
     }
 
-    @Then("^nothing should happen\\.$")
+    @When("^nothing should happen\\.$")
     public void nothing_should_happen() throws Throwable {
         assertFalse(ClientData.userDataExists());
     }
