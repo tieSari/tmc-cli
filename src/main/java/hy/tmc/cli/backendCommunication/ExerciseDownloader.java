@@ -54,6 +54,7 @@ public class ExerciseDownloader {
         path = getCorrectPath(path);
         for (Exercise e : exercises) {
             handleSingleExercise(e, exCount, exercises, path);
+            exCount++;
         }
         if (this.front != null)  {
             front.printLine(exercises.size() + " exercises downloaded.");
@@ -65,7 +66,6 @@ public class ExerciseDownloader {
         tellStateForUser(e, exCount, exercises);
         String filePath = path + e.getName() + ".zip";
         downloadFile(e.getZip_url(), filePath);
-        exCount++;
         try {
             unzipFile(filePath, path);
         } catch (IOException | ZipException ex) {
