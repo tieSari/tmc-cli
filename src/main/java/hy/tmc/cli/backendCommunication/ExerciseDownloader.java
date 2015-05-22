@@ -94,7 +94,7 @@ public class ExerciseDownloader {
     }
     
     /**
-     * Unzips single file afteer downloading. 
+     * Unzips a zip file
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path 
      * @throws IOException
@@ -107,7 +107,7 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Tells which exercise is in downloading 
+     * Tells which exercise is currently being downloaded
      * @param e exercise
      * @param exCount order number of which exercise is in downloading
      * @param exercises 
