@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package hy.tmc.cli.backendCommunication;
 
 import hy.tmc.cli.Configuration.ClientData;
@@ -14,10 +10,7 @@ import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
@@ -55,14 +48,14 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined
-     * @param exercises
-     * @param path
+     * @param exercises list of exercises which will be downloaded, list is parsed from json
+     * @param path server path to exercises.
      */
     public void downloadFiles(List<Exercise> exercises, String path) {
         int exCount = 0;
         path = getCorrectPath(path);
-        for (Exercise e : exercises) {
-            handleSingleExercise(e, exCount, exercises, path);
+        for (Exercise exercise : exercises) {
+            handleSingleExercise(exercise, exCount, exercises, path);
             exCount++;
         }
         if (this.front != null)  {
@@ -107,8 +100,8 @@ public class ExerciseDownloader {
      * @param e exercise
      * @param exCount order number of which exercise is in downloading
      */
-    private void tellStateForUser(Exercise e, int exCount, List<Exercise> exercises) {
-        this.front.printLine("Downloading exercise " + e.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
+    private void tellStateForUser(Exercise exercise, int exCount, List<Exercise> exercises) {
+        this.front.printLine("Downloading exercise " + exercise.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
     }
 
     /**
