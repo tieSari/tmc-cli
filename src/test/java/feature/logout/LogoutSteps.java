@@ -37,22 +37,18 @@ public class LogoutSteps {
         testClient.sendMessage("logout");
     }
 
+    @Then("^user sees message\\.$")
+    public void user_sees_message() throws Throwable {
+        String output = testClient.reply();
+        assertTrue(output.contains("cleared"));
+    }
+
     @When("^user data should be cleared\\.$")
     public void user_data_should_be_cleared() throws Throwable {
         assertFalse(ClientData.userDataExists());
     }
 
-    @Then("^user sees message\\.$")
-    public void user_sees_message() throws Throwable {
-        String output = testClient.reply();
-        System.out.println("OUTPUT: " + output);
-        assertTrue(output.contains("cleared"));
-    }
-    
-    
-    //Skenaario vaihtuu!
-    
-
+    //Skenaario vaihtuu
     @Given("^a logout command without being logged in\\.$")
     public void a_logout_command_without_being_logged_in() throws Throwable {
         testClient.sendMessage("logout");
@@ -70,6 +66,7 @@ public class LogoutSteps {
 
     @After
     public void closeAll() throws IOException {
+        ClientData.clearUserData();
         server.close();
         serverThread.interrupt();
     }
