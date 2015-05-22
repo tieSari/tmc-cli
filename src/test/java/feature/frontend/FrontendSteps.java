@@ -4,7 +4,7 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FrontendSteps {
 
-    private final int port = ClientData.getPORT(); // change if necessary
+    private int port;
 
     private Thread serverThread;
     private Server server;
@@ -21,7 +21,8 @@ public class FrontendSteps {
 
     @Before
     public void setUpServer() throws IOException {
-        server = new Server(port, null);
+        server = new Server(null);
+        port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);

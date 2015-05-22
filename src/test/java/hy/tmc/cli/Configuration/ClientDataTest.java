@@ -20,10 +20,6 @@ public class ClientDataTest {
         assertTrue(s.isEmpty());
     }
 
-    @Test
-    public void initiallyPortIsInitialPort() {
-        assertEquals(1234, getPORT());
-    }
 
     @Test
     public void afterLoginInNewDataIsSet() {
