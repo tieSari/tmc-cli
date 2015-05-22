@@ -35,6 +35,21 @@ public class TestClient {
             System.err.println(ex.getMessage());
         }
     }
+    
+    public boolean isClosedFromServer() {
+        try{
+            input.read();
+        } catch (IOException ex){
+            return false;
+        }
+        return true;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+    
+    
 
     public void sendMessage(String message) throws IOException {
         output.println(message);
