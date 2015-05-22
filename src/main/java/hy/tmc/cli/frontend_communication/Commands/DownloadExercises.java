@@ -17,6 +17,9 @@ import java.util.List;
 
 public class DownloadExercises extends Command {
 
+    /**
+     * ExerciseDownloader that is used for downloading
+     */
     private ExerciseDownloader exDl;
 
     public DownloadExercises(FrontendListener front, Logic backend) {
@@ -25,12 +28,20 @@ public class DownloadExercises extends Command {
         
     }
 
+    /**
+     * Parses the course JSON and executes downloading of the course exercises
+     */
     @Override
     protected void functionality() {
         List<Exercise> exercises = JSONParser.getExercises(Integer.parseInt(this.data.get("courseID")));
         exDl.downloadFiles(exercises, this.data.get("pwd"));
     }
 
+    /**
+     * Checks that command has required parameters
+     * courseID is the id of the course and pwd is the path of where files are downloaded and extracted.
+     * @throws ProtocolException
+     */
     @Override
     public void checkData() throws ProtocolException {
         checkCourseId();
