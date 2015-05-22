@@ -21,10 +21,18 @@ import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
+/**
+ *
+ * @author xtoxtox
+ */
 public class ExerciseDownloader {
 
     private FrontendListener front;
 
+    /**
+     * Constructor for ExerciseDownloader
+     * @param front component which implements frontend interface
+     */
     public ExerciseDownloader(FrontendListener front) {
         if (front == null) {
             return;
@@ -33,8 +41,8 @@ public class ExerciseDownloader {
     }
 
     /**
-     *
-     * @param courseUrl
+     * Download exercises by course url
+     * @param courseUrl course url
      */
     public void downloadExercises(String courseUrl) {
         List<Exercise> exercises = JSONParser.getExercises(courseUrl);
@@ -42,13 +50,18 @@ public class ExerciseDownloader {
     }
 
     /**
-     *
-     * @param exercises
+     * Method for downloading files if path is not defined
+     * @param exercises list of exercises which will be downloaded, list is parsed from json
      */
     public void downloadFiles(List<Exercise> exercises) {
         downloadFiles(exercises, "");
     }
 
+    /**
+     * Method for downloading files if path where to download is defined
+     * @param exercises
+     * @param path
+     */
     public void downloadFiles(List<Exercise> exercises, String path) {
         int exCount = 0;
         path = getCorrectPath(path);
@@ -62,6 +75,13 @@ public class ExerciseDownloader {
 
     }
 
+    /**
+     * Handles downloading, unzipping & telling user information, for single exercise
+     * @param e Exercise which will be downloaded
+     * @param exCount order number of exercise in downloading
+     * @param exercises list of exercises which will be downloaded
+     * @param path path where single exercise will be downloaded
+     */
     private void handleSingleExercise(Exercise e, int exCount, List<Exercise> exercises, String path) {
         tellStateForUser(e, exCount, exercises);
         String filePath = path + e.getName() + ".zip";
@@ -73,17 +93,34 @@ public class ExerciseDownloader {
         }
     }
     
-
+    /**
+     * Unzips single file afteer downloading. 
+     * @param unzipPath path of file which will be unzipped
+     * @param destinationPath destination path 
+     * @throws IOException
+     * @throws ZipException
+     */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
         MoveDecider md = new DefaultMoveDecider(new DefaultRootDetector());
         ZipHandler zipHandler = new ZipHandler(unzipPath, destinationPath, md);
         zipHandler.unzip();
     }
 
+    /**
+     * Tells which exercise is in downloading 
+     * @param e exercise
+     * @param exCount order number of which exercise is in downloading
+     * @param exercises 
+     */
     private void tellStateForUser(Exercise e, int exCount, List<Exercise> exercises) {
         this.front.printLine("Downloading exercise " + e.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
     }
 
+    /**
+     * Modify path to correct
+     * @param path
+     * @return
+     */
     public String getCorrectPath(String path) {
         if (path == null) {
             path = "";
@@ -93,10 +130,21 @@ public class ExerciseDownloader {
         return path;
     }
 
+    /**
+     * Get advantage percent in downloading single exercise
+     * @param exCount order number of exercise in downloading 
+     * @param exercisesSize total amount of exercises that will be downloaded
+     * @return percents
+     */
     public double getPercents(int exCount, int exercisesSize) {
         return Math.round(1.0 * exCount / exercisesSize * 100);
     }
 
+    /**
+     * Downloads single .zip file by using URLCommunicator
+     * @param zip_url url which will be downloaded
+     * @param path where to download
+     */
     private static void downloadFile(String zip_url, String path) {
         HttpClient client = URLCommunicator.createClient();
         File f = new File(path);
