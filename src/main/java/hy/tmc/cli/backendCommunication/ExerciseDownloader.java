@@ -55,7 +55,10 @@ public class ExerciseDownloader {
         for (Exercise e : exercises) {
             handleSingleExercise(e, exCount, exercises, path);
         }
-        front.printLine(exercises.size() + " exercises downloaded.");
+        if (this.front != null)  {
+            front.printLine(exercises.size() + " exercises downloaded.");
+        }
+
     }
 
     private void handleSingleExercise(Exercise e, int exCount, List<Exercise> exercises, String path) {
