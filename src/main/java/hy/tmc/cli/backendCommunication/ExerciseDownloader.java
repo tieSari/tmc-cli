@@ -97,7 +97,7 @@ public class ExerciseDownloader {
 
     /**
      * Tells which exercise is currently being downloaded
-     * @param e exercise
+     * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
      */
     private void tellStateForUser(Exercise exercise, int exCount, List<Exercise> exercises) {
