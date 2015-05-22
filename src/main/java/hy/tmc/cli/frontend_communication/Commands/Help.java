@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
+import com.google.common.base.Joiner;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
@@ -14,18 +15,9 @@ public class Help extends Command {
      */
     @Override
     protected void functionality() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Available commands: ");
-        boolean first = true;
-        for (String name : CommandFactory.allCommandNames()){
-            if (!first){
-                builder.append(", ");
-            }
-            first = false;
-            builder.append(name);
-            
-        }
-        this.frontend.printLine(builder.toString());
+        String commands  = "Available commands: \n";
+        commands += Joiner.on(", ").join(CommandFactory.allCommandNames());
+        this.frontend.printLine(commands);
     }
 
     /**
