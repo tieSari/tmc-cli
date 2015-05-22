@@ -37,6 +37,7 @@ public class LogoutSteps {
         testClient.sendMessage("logout");
     }
 
+
     @Then("^user sees message\\.$")
     public void user_sees_message() throws Throwable {
         String output = testClient.reply();
