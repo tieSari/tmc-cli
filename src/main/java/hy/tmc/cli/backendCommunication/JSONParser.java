@@ -23,7 +23,6 @@ public class JSONParser {
                 URLCommunicator.createClient(),
                 url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
-        
         return new JsonParser().parse(data).getAsJsonObject();
     }
     
@@ -69,6 +68,25 @@ public class JSONParser {
         }
         return asString.toString();
     }
+
+    /**
+     * Get all exercises of a course specified by Course
+     * @param course Course that we are interested in
+     * @return List of all exercises as Exercise-objects
+     */
+    public static List<Exercise> getExercises(Course course) {
+        return getExercises(course.getId());
+    }
+
+    /**
+     * Get all exercises of a course specified by Course id
+     * @param id id of the course we are interested in
+     * @return List of a all exercises as Exercise-objects
+     */
+    public static List<Exercise> getExercises(int id) {
+        ConfigHandler confighandler = new ConfigHandler();
+        return getExercises(confighandler.getCourseUrl(id));
+    }
     
     /**
     /**
@@ -80,6 +98,7 @@ public class JSONParser {
         
         JsonObject course = getJSONFrom(courseUrl);
         Gson mapper = new Gson();
+        System.out.println(course);
         Exercise[] exercises = mapper.fromJson(course.getAsJsonObject("course").get("exercises"), Exercise[].class);
         return Arrays.asList(exercises);
         
