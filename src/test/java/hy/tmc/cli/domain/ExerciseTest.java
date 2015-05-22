@@ -40,7 +40,7 @@ public class ExerciseTest {
 
     @Test
     public void testDeadline() {
-        Date dateNow = new Date();
+        String dateNow = new Date().toString();
         exercise.setDeadline(dateNow);
         assertEquals(dateNow, exercise.getDeadline());
     }

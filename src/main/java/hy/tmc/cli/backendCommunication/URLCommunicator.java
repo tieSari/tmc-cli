@@ -2,10 +2,9 @@ package hy.tmc.cli.backendCommunication;
 
 import static hy.tmc.cli.backendCommunication.Authorization.Authorization.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import static org.apache.http.HttpHeaders.USER_AGENT;
@@ -16,13 +15,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 public class URLCommunicator {
 
     /**
      *
-     * @param client HttpClient to execute HttpRequests. It will come as parameter to 
-     * enable dependency injection.
+     * @param client HttpClient to execute HttpRequests. It will come as
+     * parameter to enable dependency injection.
      * @return A Result-object with some data and a state of success or fail
      */
     public static HTTPResult makePostRequest(HttpClient client, String url, String... params) {
@@ -53,15 +53,15 @@ public class URLCommunicator {
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is
      * always username:password
-     * @param client HttpClient to execute HttpRequests. It will come as parameter to 
-     * enable dependency injection.
+     * @param client HttpClient to execute HttpRequests. It will come as
+     * parameter to enable dependency injection.
      * @return A Result-object with some data and a state of success or fail
      */
     public static HTTPResult makeGetRequest(HttpClient client, String url, String... params) {
+        
         try {
             HttpResponse response = createAndExecuteGet(url, params, client);
             StringBuilder result = writeResponse(response);
-
             return new HTTPResult(
                     result.toString(),
                     response.getStatusLine().getStatusCode(),
@@ -69,6 +69,21 @@ public class URLCommunicator {
         }
         catch (IOException e) {
             return new HTTPResult("", 400, false);
+        }
+    }
+
+    public static boolean downloadFile(HttpClient client, String url, File file, String... params) {
+        try {
+            HttpResponse response = createAndExecuteGet(url, params, client);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
+            fileOutputStream.close();
+
+            return true;
+        }
+        catch (IOException e) {
+            return false;
         }
     }
 
@@ -82,7 +97,7 @@ public class URLCommunicator {
         }
         return result;
     }
-    
+
     public static HttpClient createClient() {
         return HttpClientBuilder.create().build();
     }
@@ -91,8 +106,11 @@ public class URLCommunicator {
         HttpGet request = new HttpGet(url);
         request.setHeader("Authorization", "Basic " + encode(params[0]));
         request.addHeader("User-Agent", USER_AGENT);
-        HttpResponse response = client.execute(request);
-        return response;
+        return executeGETRequest(request, client);
+    }
+    
+    private static HttpResponse executeGETRequest(HttpGet request, HttpClient client) throws IOException{
+        return client.execute(request);
     }
 
 }

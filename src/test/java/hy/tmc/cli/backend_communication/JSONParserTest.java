@@ -67,9 +67,9 @@ public class JSONParserTest {
                 .thenReturn(fakeResult);
         String names = JSONParser.getExerciseNames("ankka");
 
-        assertTrue(names.contains("week7-week7_01.Smileys"));
-        assertTrue(names.contains("week7-week7_02.CharacterStringChanger"));
-        assertTrue(names.contains("week7-week7_03.Calculator"));
+        assertTrue(names.contains("viikko01-Viikko01_000.Hiekkalaatikko"));
+        assertTrue(names.contains("viikko01-Viikko01_002.HeiMaailma"));
+        assertTrue(names.contains("viikko01-Viikko01_003.Kuusi"));
     }
     
     @Test
@@ -82,7 +82,7 @@ public class JSONParserTest {
                 .thenReturn(fakeResult);
         String names = JSONParser.getExerciseNames("ankka");
         
-        assertTrue(names.contains("week7-week7_08.Airport"));
+        assertTrue(names.contains("viikko01-Viikko01_004.RobottiOhjain"));
     }
     
     @Test
