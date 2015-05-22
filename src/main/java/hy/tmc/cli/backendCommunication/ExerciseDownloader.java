@@ -45,20 +45,34 @@ public class ExerciseDownloader {
 
     public void downloadFiles(List<Exercise> exercises, String path) {
         int exCount = 0;
-        if (path == null) {
-            path = "";
-        } else if (!path.isEmpty() && !path.endsWith("/")) {
-            path += "/";
-        }
+        path = getCorrectPath(path);
         for(Exercise e : exercises) {
-            if (this.front != null) {
-                this.front.printLine("Downloading exercise " + e.getName() + " " + (Math.round(1.0*exCount/exercises.size()*100)) + "%");
-            }
+            tellStateForUser(e, exCount, exercises);
             String filePath = path + e.getName() + ".zip";
             downloadFile(e.getZip_url(), filePath);
             exCount++;
         }
         front.printLine(exercises.size() + " exercises downloaded.");
+    }
+
+    private void tellStateForUser(Exercise e, int exCount, List<Exercise> exercises) {
+        if (this.front != null) {
+            this.front.printLine("Downloading exercise " + e.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
+        }
+    }
+    
+    
+    public String getCorrectPath(String path){
+        if (path == null) {
+            path = "";
+        } else if (!path.isEmpty() && !path.endsWith("/")) {
+            path += "/";
+        }
+        return path;
+    }
+    
+    public double getPercents(int exCount, int exercisesSize){
+        return Math.round(1.0*exCount/exercisesSize*100);
     }
 
     private static void downloadFile(String zip_url, String path) {
