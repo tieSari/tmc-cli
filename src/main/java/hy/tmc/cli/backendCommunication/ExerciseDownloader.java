@@ -58,7 +58,10 @@ public class ExerciseDownloader {
             downloadFile(e.getZip_url(), filePath);
             exCount++;
         }
-        front.printLine(exercises.size() + " exercises downloaded.");
+        if (this.front != null)  {
+            front.printLine(exercises.size() + " exercises downloaded.");
+        }
+
     }
 
     private static void downloadFile(String zip_url, String path) {
