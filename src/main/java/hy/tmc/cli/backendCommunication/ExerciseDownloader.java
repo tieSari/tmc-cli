@@ -73,15 +73,15 @@ public class ExerciseDownloader {
 
     /**
      * Handles downloading, unzipping & telling user information, for single exercise
-     * @param e Exercise which will be downloaded
+     * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
      * @param exercises list of exercises which will be downloaded
      * @param path path where single exercise will be downloaded
      */
-    private void handleSingleExercise(Exercise e, int exCount, List<Exercise> exercises, String path) {
-        tellStateForUser(e, exCount, exercises);
-        String filePath = path + e.getName() + ".zip";
-        downloadFile(e.getZip_url(), filePath);
+    private void handleSingleExercise(Exercise exercise, int exCount, List<Exercise> exercises, String path) {
+        tellStateForUser(exercise, exCount, exercises);
+        String filePath = path + exercise.getName() + ".zip";
+        downloadFile(exercise.getZip_url(), filePath);
         try {
             unzipFile(filePath, path);
         } catch (IOException | ZipException ex) {
@@ -106,7 +106,6 @@ public class ExerciseDownloader {
      * Tells which exercise is currently being downloaded
      * @param e exercise
      * @param exCount order number of which exercise is in downloading
-     * @param exercises 
      */
     private void tellStateForUser(Exercise e, int exCount, List<Exercise> exercises) {
         this.front.printLine("Downloading exercise " + e.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
@@ -114,8 +113,7 @@ public class ExerciseDownloader {
 
     /**
      * Modify path to correct
-     * @param path
-     * @return
+     * @return corrected path
      */
     public String getCorrectPath(String path) {
         if (path == null) {
