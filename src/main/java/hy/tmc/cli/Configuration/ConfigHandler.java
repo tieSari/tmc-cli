@@ -114,7 +114,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Reads port from config file
+     * Reads port local server from config file
      */
     public int readPort() {
         Properties prop = getProperties();
