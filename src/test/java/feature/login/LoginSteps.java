@@ -1,17 +1,13 @@
 package feature.login;
 
-import com.sun.corba.se.impl.orb.ORBConfiguratorImpl;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.frontend_communication.Server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
