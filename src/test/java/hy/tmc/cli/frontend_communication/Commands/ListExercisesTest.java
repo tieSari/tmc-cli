@@ -61,7 +61,8 @@ public class ListExercisesTest {
         list.setParameter("courseUrl", "any");
         try {
             list.execute();
-            assertTrue(front.getMostRecentLine().contains("Dictionary"));
+            System.out.println(front.getMostRecentLine());
+            assertTrue(front.getMostRecentLine().contains("RobottiOhjain"));
         }
         catch (ProtocolException ex) {
             fail("unexpected exception");
