@@ -23,7 +23,6 @@ public class JSONParser {
                 URLCommunicator.createClient(),
                 url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
-        
         return new JsonParser().parse(data).getAsJsonObject();
     }
     
