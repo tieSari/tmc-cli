@@ -52,7 +52,9 @@ function login () {
 function send_command () {
 #    OUTPUT=$(echo $@ | nc localhost 1234)
 #    echo $OUTPUT
-    echo $@ | nc localhost 1234
+    CONFIGPATH='config.properties'
+    CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
+    echo $@ | nc localhost $CONFIGPORT
 
     return 0;
 
