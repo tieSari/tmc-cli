@@ -21,10 +21,6 @@ import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
-/**
- *
- * @author xtoxtox
- */
 public class ExerciseDownloader {
 
     private FrontendListener front;
