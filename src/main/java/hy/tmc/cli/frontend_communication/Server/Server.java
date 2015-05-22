@@ -1,6 +1,8 @@
 
 package hy.tmc.cli.frontend_communication.Server;
 
+
+import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 import java.io.BufferedReader;
@@ -15,7 +17,6 @@ import java.util.logging.Logger;
 public class Server implements FrontendListener, Runnable {
 
     public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
-    private final int portNumber;
     private Socket clientSocket;
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
@@ -28,9 +29,14 @@ public class Server implements FrontendListener, Runnable {
      * @param logic
      * @throws java.io.IOException if server opening fails
      */
-    public Server(int portNumber, Logic logic) throws IOException {
-        this.portNumber = portNumber;
-        serverSocket = new ServerSocket(portNumber);
+    public Server(Logic logic) throws IOException {
+        try {
+            serverSocket = new ServerSocket(0);
+            new ConfigHandler().writePort(serverSocket.getLocalPort());
+        } catch (IOException ex) {
+            System.out.println("Server creation failed");
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.parser = new ProtocolParser(this, logic);
     }
 
