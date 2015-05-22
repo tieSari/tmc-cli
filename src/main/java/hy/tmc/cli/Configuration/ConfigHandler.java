@@ -107,7 +107,6 @@ public class ConfigHandler {
         }
         return serverAddress + authExtension;
     }
-
     
     public String getCourseUrl(int id) {
         return this.readServerAddress() + "/courses/" + id + ".json" + "?api_version=7";
