@@ -37,13 +37,16 @@ public class ZipHandlerTest {
 
     @After
     public void teardown() {
+        final File file = new File(unzipPath);
+        System.out.println(file.getAbsolutePath());
         try {
-            FileUtils.deleteDirectory(new File(unzipPath));
+            FileUtils.deleteDirectory(file);
         }
         catch (IOException ex) {
+            ex.printStackTrace();
             fail("Failed to clear test directory");
         }
-        new File(unzipPath).mkdir();
+        file.mkdir();
     }
 
     @Test

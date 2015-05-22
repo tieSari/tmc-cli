@@ -13,17 +13,22 @@ import java.util.Properties;
 public class ConfigHandler {
 
     private String configFilePath;
+    private String portFieldName = "serverPort";
+    private String serverAddressFieldName = "serverAddress";
     public final String coursesExtension = "/courses.json?api_version=7";
     public final String authExtension = "/user";
 
     /**
-     * Creates new config handler with default filename and path in current directory
+     * Creates new config handler with default filename and path in current
+     * directory
      */
     public ConfigHandler() {
         this.configFilePath = "config.properties";
     }
+
     /**
      * Creates new config handler with specified path and name
+     *
      * @param path for config file
      */
     public ConfigHandler(String path) {
@@ -44,38 +49,44 @@ public class ConfigHandler {
             InputStream inputStream = new FileInputStream(new File(configFilePath));
             prop.load(inputStream);
         }
-        catch (IOException e) { 
+        catch (IOException e) {
         }
         return prop;
     }
 
-    /**
-     * Writes server address to config file, ex. "https://tmc.mooc.fi/hy"
-     * @param address for tmc server
-     * @throws IOException if unable to write address
-     */
-    
-    public void writeServerAddress(String address) throws IOException {
+    private void writeData(String property, String data) throws IOException {
         Properties prop = getProperties();
-        prop.setProperty("serverAddress", address);
-        prop.store(new FileWriter(new File(configFilePath)), "Updated properties");
+        prop.setProperty(property, data);
+        FileWriter writer = new FileWriter(new File(configFilePath));
+        prop.store(writer, "Updated properties");
+        writer.close();
     }
 
     /**
-     * Reads server address from config 
+     * Writes server address to config file, ex. "https://tmc.mooc.fi/hy"
+     *
+     * @param address for tmc server
+     * @throws IOException if unable to write address
+     */
+    public void writeServerAddress(String address) throws IOException {
+        writeData(serverAddressFieldName, address);
+    }
+
+    /**
+     * Reads server address from config
+     *
      * @return address of tmc server
      */
-    
     public String readServerAddress() {
         Properties prop = getProperties();
-        return prop.getProperty("serverAddress");
+        return prop.getProperty(serverAddressFieldName);
     }
-    
+
     /**
      * Reads address from which to list courses
+     *
      * @return String with tmc server address + courses path
      */
-    
     public String readCoursesAddress() {
         String serverAddress = readServerAddress();
         if (serverAddress == null || serverAddress.isEmpty()) {
@@ -83,12 +94,12 @@ public class ConfigHandler {
         }
         return serverAddress + coursesExtension;
     }
-    
+
     /**
      * Reads address to which auth GET can be sent
+     *
      * @return String with tmc server address + user path
      */
-    
     public String readAuthAddress() {
         String serverAddress = readServerAddress();
         if (serverAddress == null || serverAddress.isEmpty()) {
@@ -99,5 +110,21 @@ public class ConfigHandler {
     
     public String getCourseUrl(int id) {
         return this.readServerAddress() + "/courses/" + id + ".json" + "?api_version=7";
+    }
+    /**
+     * Reads port from config file
+     */
+    public int readPort() {
+        Properties prop = getProperties();
+        return Integer.parseInt(prop.getProperty(portFieldName));
+    }
+
+    /**
+     * Writes port to config file
+     *
+     * @param port to write in config
+     */
+    public void writePort(int port) throws IOException {
+        writeData(portFieldName, Integer.toString(port));
     }
 }

@@ -27,7 +27,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
-                </configuration>
+                </configuration>f
             </plugin>
             -->
             <!-- Removes the jar from scripts/ when cleaning-->
@@ -313,7 +313,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>maven-surefire-common</artifactId>
