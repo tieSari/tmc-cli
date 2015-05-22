@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.commons.io.FileUtils;
+import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 public class DefaultMoveDecider implements MoveDecider {
