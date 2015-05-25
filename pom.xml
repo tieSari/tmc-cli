@@ -117,7 +117,7 @@
                     <aggregate>true</aggregate>
                     <instrumentation>
                         <ignores>
-                            <ignore>hy.tmc.cli.frontend_communication.Result*</ignore>
+                            <ignore>hy.tmc.cli.frontend.Result*</ignore>
                             <ignore>hy.tmc.cli.domain.Exercise*</ignore>
                             <ignore>hy.tmc.cli.Main*</ignore>
                         </ignores>

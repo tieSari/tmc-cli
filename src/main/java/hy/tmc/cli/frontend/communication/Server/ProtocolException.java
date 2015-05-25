@@ -1,5 +1,5 @@
 
-package hy.tmc.cli.frontend_communication.Server;
+package hy.tmc.cli.frontend.communication.server;
 
 public class ProtocolException extends Exception {
 

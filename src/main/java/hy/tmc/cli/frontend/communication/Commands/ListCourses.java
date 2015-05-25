@@ -1,9 +1,9 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.backendCommunication.JSONParser;
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.frontend.communication.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 
 public class ListCourses extends Command {
@@ -13,7 +13,7 @@ public class ListCourses extends Command {
     }
 
     /**
-     * use JSONParser to get a list of course names, and print it
+     * use JSONParser to get a list of course names, and print it.
      */
     @Override
     protected void functionality() {
@@ -21,7 +21,7 @@ public class ListCourses extends Command {
     }
     
     /**
-     * Checks that the user has authenticated, by verifying ClientData
+     * Checks that the user has authenticated, by verifying ClientData.
      * @throws ProtocolException if ClientData is empty
      */
     @Override

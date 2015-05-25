@@ -1,7 +1,4 @@
-package hy.tmc.cli.frontend_communication.Commands;
-
-import hy.tmc.cli.testhelpers.FrontendStub;
-import org.junit.Before;
+package hy.tmc.cli.frontend.communication.commands;
 
 
 public class SelectCourseTest {
