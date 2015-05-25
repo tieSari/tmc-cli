@@ -1,5 +1,6 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend_communication.commands.Help;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Test;

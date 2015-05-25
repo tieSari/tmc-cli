@@ -1,11 +1,11 @@
 package hy.tmc.cli.frontend_communication.Server;
 
-import hy.tmc.cli.frontend_communication.Commands.*;
+import hy.tmc.cli.frontend_communication.commands.Command;
 import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 
-import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
+import static hy.tmc.cli.frontend_communication.commands.CommandFactory.createCommandMap;
 
 public class ProtocolParser {
 
@@ -25,13 +25,11 @@ public class ProtocolParser {
         this.commandsByName = createCommandMap(this.server, this.logic);
     }
 
-
-
     /**
      * Search for command by inputline
      *
      * @param inputLine
-     * @return
+     * @return Command
      * @throws ProtocolException
      */
     public Command getCommand(String inputLine) throws ProtocolException {
