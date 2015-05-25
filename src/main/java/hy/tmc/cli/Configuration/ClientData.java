@@ -16,7 +16,11 @@ public final class ClientData {
 
     private ClientData() {
     }
-    
+    /**
+     * Sets the data for current user.
+     * @param username Username of the current user
+     * @param password Password of the current user
+     */
     public static void setUserData(String username, String password) {
         USERNAME = username;
         PASSWORD = password;
