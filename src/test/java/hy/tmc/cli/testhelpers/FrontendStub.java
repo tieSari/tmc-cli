@@ -1,7 +1,7 @@
 package hy.tmc.cli.testhelpers;
 
+import hy.tmc.cli.frontend.FrontendListener;
 
-import hy.tmc.cli.frontend.communication.FrontendListener;
 
 public class FrontendStub implements FrontendListener {
     

@@ -1,5 +1,7 @@
-package hy.tmc.cli.frontend.communication.commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend.communication.commands.ListExercises;
+import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.backendCommunication.HTTPResult;
 import hy.tmc.cli.backendCommunication.URLCommunicator;
@@ -7,7 +9,6 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import hy.tmc.cli.testhelpers.FrontendStub;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
