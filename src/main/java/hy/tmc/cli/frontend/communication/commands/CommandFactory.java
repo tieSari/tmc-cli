@@ -1,6 +1,8 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend.communication.FrontendListener;
+import static hy.tmc.cli.frontend.communication.commands.CommandFactory.downloadExercises;
+
+import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
 import java.util.HashMap;
@@ -9,13 +11,14 @@ import java.util.Set;
 public class CommandFactory {
 
     /**
-     *
+     * Maps command strings to objects.
      * @param frontend that the commands will use
      * @param logic that the commands will use
      * @return A map of names to corresponding commands
      */
-    public static HashMap<String, Command> createCommandMap(FrontendListener frontend,
-                                                            Logic logic) {
+    public static HashMap<String, Command> createCommandMap(
+            FrontendListener frontend,
+            Logic logic) {
         HashMap<String, Command> commandsByName = new HashMap<>();
         commandsByName.put("auth", authenticate(frontend, logic));
         commandsByName.put("help", help(frontend, logic));
@@ -29,41 +32,41 @@ public class CommandFactory {
     }
 
     /**
-     * Create Help Command object
+     * Create help Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return a Help object
+     * @return a help object
      */
     public static Command help(FrontendListener front, Logic back) {
         return new Help(front, back);
     }
 
-
     /**
-     * Create ReplyToPing Command object
+     * Create replyToPing Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return a ReplyToPing object
+     * @return a replyToPing object
      */
     public static Command replyToPing(FrontendListener front, Logic back) {
         return new ReplyToPing(front, back);
     }
 
     /**
-     * Create an Authenticate Command object
+     * Create an authenticate Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return an Authenticate object
+     * @return an authenticate object
      */
     public static Command authenticate(FrontendListener front, Logic back) {
         return new Authenticate(front, back);
     }
 
     /**
-     * Same as authenticate
+     * Same as authenticate.
+     *
      * @param front frontend to use
      * @param back backend to use
      * @return an authenticate bject
@@ -73,52 +76,52 @@ public class CommandFactory {
     }
 
     /**
-     * Create a ListCourses Command object
+     * Create a listCourses Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return a ListCourses object
+     * @return a listCourses object
      */
     public static Command listCourses(FrontendListener front, Logic back) {
         return new ListCourses(front, back);
     }
 
     /**
-     * Create a ListExercises Command object
+     * Create a listExercises Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return a ListExercises object
+     * @return a listExercises object
      */
     public static Command listExercises(FrontendListener front, Logic back) {
         return new ListExercises(front, back);
     }
-    
+
     /**
-     * Create a DownloadExercises Command object
+     * Create a downloadExercises Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return a DownloadExercises object
+     * @return a downloadExercises object
      */
     public static Command downloadExercises(FrontendListener front, Logic back) {
         return new DownloadExercises(front, back);
     }
 
     /**
-     * Create a Logout Command object
-     * 
+     * Create a logout Command object.
+     *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return a Logout object
+     * @return a logout object
      */
     public static Command logout(FrontendListener front, Logic back) {
         return new Logout(front, back);
     }
-    
+
     /**
      *
-     * @return a set of all available command names
+     * @return a set of all available command names.
      */
     static Set<String> allCommandNames() {
         return createCommandMap(null, null).keySet();

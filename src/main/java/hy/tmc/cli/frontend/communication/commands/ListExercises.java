@@ -2,10 +2,9 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backendCommunication.JSONParser;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.FrontendListener;
+import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
-
 
 public class ListExercises extends Command {
 
@@ -23,6 +22,7 @@ public class ListExercises extends Command {
 
     /**
      * Check the courseUrl and ClientData.
+     *
      * @throws ProtocolException if some data not specified
      */
     @Override
@@ -34,8 +34,4 @@ public class ListExercises extends Command {
             throw new ProtocolException("Please authorize first.");
         }
     }
-    
-    
-    
-    
 }

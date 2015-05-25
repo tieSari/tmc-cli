@@ -1,5 +1,7 @@
-package hy.tmc.cli.frontend.communication.commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend.communication.commands.Help;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Test;
@@ -29,7 +31,12 @@ public class HelpTest {
 
     @Test
     public void testFunctionality() {
-        help.functionality();
+        try {
+            help.execute();
+        }
+        catch (ProtocolException ex) {
+            fail("Something went wrong");
+        }
         String output = this.frontendMock.getMostRecentLine();
         assertTrue(output.contains("help"));
         assertTrue(output.contains("auth"));
