@@ -3,6 +3,7 @@ package hy.tmc.cli.backendcommunication;
 import static hy.tmc.cli.backendcommunication.authorization.Authorization.encode;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -15,22 +16,20 @@ import org.apache.http.util.EntityUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.codec.binary.Base64;
 
 public class UrlCommunicator {
     
     public static final int BAD_REQUEST = 400;
 
     /**
-     *
      * Make a post request.
      * 
-     * @param client HttpClient to execute HttpRequests. It will come as
-     * parameter to enable dependency injection.
+     * @param client HttpClient to execute HttpRequests. It will come as parameter to enable 
+    dependency injection.
      * @param url the url of the request
      * @param params parameters of the post request
      * @return A Result-object with some data and a state of success or fail
@@ -60,10 +59,9 @@ public class UrlCommunicator {
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is
-     * always username:password
-     * @param client HttpClient to execute HttpRequests. It will come as
-     * parameter to enable dependency injection.
+     * @param params Any amount of parameters for the request. params[0] is always username:password
+     * @param client HttpClient to execute HttpRequests. It will come as parameter to enable 
+    dependency injection.
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(HttpClient client, 
@@ -80,6 +78,14 @@ public class UrlCommunicator {
         }
     }
 
+    /**
+     * Download a file from the internet.
+     * @param client httpclient to be used
+     * @param url url of the get request
+     * @param file file to write the results into
+     * @param params params of the get request
+     * @return true if succesful
+     */
     public static boolean downloadFile(HttpClient client, String url, File file, String... params) {
         try {
             HttpResponse response = createAndExecuteGet(url, params, client);
