@@ -22,13 +22,6 @@ public class Server implements FrontendListener, Runnable {
     private ServerSocket serverSocket;
     private boolean isRunning;
 
-    /**
-     * Server constructor
-     *
-     * @param portNumber
-     * @param logic
-     * @throws java.io.IOException if server opening fails
-     */
     public Server(Logic logic) throws IOException {
         try {
             serverSocket = new ServerSocket(0);

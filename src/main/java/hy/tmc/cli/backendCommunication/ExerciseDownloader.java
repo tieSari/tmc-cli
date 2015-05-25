@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package hy.tmc.cli.backendCommunication;
 
 import hy.tmc.cli.Configuration.ClientData;
@@ -14,10 +10,7 @@ import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
@@ -59,12 +52,14 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined
+     * @param exercises list of exercises which will be downloaded, list is parsed from json
+     * @param path server path to exercises.
      */
     public void downloadFiles(List<Exercise> exercises, String path) {
         int exCount = 0;
         path = getCorrectPath(path);
-        for (Exercise e : exercises) {
-            handleSingleExercise(e, exCount, exercises, path);
+        for (Exercise exercise : exercises) {
+            handleSingleExercise(exercise, exCount, exercises, path);
             exCount++;
         }
         if (this.front != null)  {
@@ -75,15 +70,15 @@ public class ExerciseDownloader {
 
     /**
      * Handles downloading, unzipping & telling user information, for single exercise
-     * @param e Exercise which will be downloaded
+     * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
      * @param exercises list of exercises which will be downloaded
      * @param path path where single exercise will be downloaded
      */
-    private void handleSingleExercise(Exercise e, int exCount, List<Exercise> exercises, String path) {
-        tellStateForUser(e, exCount, exercises);
-        String filePath = path + e.getName() + ".zip";
-        downloadFile(e.getZip_url(), filePath);
+    private void handleSingleExercise(Exercise exercise, int exCount, List<Exercise> exercises, String path) {
+        tellStateForUser(exercise, exCount, exercises);
+        String filePath = path + exercise.getName() + ".zip";
+        downloadFile(exercise.getZip_url(), filePath);
         try {
             unzipFile(filePath, path);
         } catch (IOException | ZipException ex) {
@@ -105,19 +100,17 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Tells which exercise is in downloading 
-     * @param e exercise
+     * Tells which exercise is currently being downloaded
+     * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
-     * @param exercises 
      */
-    private void tellStateForUser(Exercise e, int exCount, List<Exercise> exercises) {
-        this.front.printLine("Downloading exercise " + e.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
+    private void tellStateForUser(Exercise exercise, int exCount, List<Exercise> exercises) {
+        this.front.printLine("Downloading exercise " + exercise.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
     }
 
     /**
      * Modify path to correct
-     * @param path
-     * @return
+     * @return corrected path
      */
     public String getCorrectPath(String path) {
         if (path == null) {

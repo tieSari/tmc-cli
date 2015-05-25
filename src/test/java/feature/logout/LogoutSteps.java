@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 public class LogoutSteps {
 
     private int port;
-
     private Thread serverThread;
     private TestClient testClient;
     private Server server;
@@ -48,8 +47,6 @@ public class LogoutSteps {
         assertFalse(ClientData.userDataExists());
     }
 
-    
-    
     @Given("^a logout command without being logged in\\.$")
     public void a_logout_command_without_being_logged_in() throws Throwable {
         testClient.sendMessage("logout");
@@ -71,5 +68,4 @@ public class LogoutSteps {
         server.close();
         serverThread.interrupt();
     }
-
 }
