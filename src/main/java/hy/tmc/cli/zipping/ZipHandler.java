@@ -1,14 +1,16 @@
 package hy.tmc.cli.zipping;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.attribute.FileAttribute;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 
 /**
  * Handles unpacking zip files downloaded from TMC.
@@ -21,7 +23,7 @@ public class ZipHandler {
     private MoveDecider movedecider;
 
     /**
-     * Creates ziphandler with specified zip path and unzip location
+     * Creates ziphandler with specified zip path and unzip location.
      * @param zipSourcePath for zip to unpack
      * @param unzipLocation place to unzip to
      * @param movedecider a class which helps decide which files may be overwritten
@@ -35,18 +37,21 @@ public class ZipHandler {
     public String getUnzipLocation() {
         return unzipDestination;
     }
+    
     public void setUnzipLocation(String unzipDestination) {
         this.unzipDestination = unzipDestination;
     }
+    
     public String getZipPath() {
         return zipPath;
     }
+    
     public void setZipPath(String zipPath) {
         this.zipPath = zipPath;
     }
 
     /**
-     * Unzips zip to specified location
+     * Unzips zip to specified location.
      *
      * @throws IOException if cannot write to file
      * @throws ZipException If specified zip is not found
@@ -91,8 +96,7 @@ public class ZipHandler {
     private void writeFile(String src, String dest) {
         try {
             Files.move(Paths.get(src), Paths.get(dest), REPLACE_EXISTING);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println();
         }
     }
