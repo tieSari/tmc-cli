@@ -1,27 +1,33 @@
 
-package hy.tmc.cli.frontend_communication.Server;
+package hy.tmc.cli.frontend.communication.server;
 
-
-import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.logic.Logic;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.PrintWriter;
+
+import hy.tmc.cli.logic.Logic;
+import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.frontend.communication.FrontendListener;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class Server implements FrontendListener, Runnable {
 
-    public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
     private Socket clientSocket;
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private boolean isRunning;
+    public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
 
+    /**
+     * Initializes the server.
+     * @throws IOException if port is already in use for example
+     */
     public Server(Logic logic) throws IOException {
         try {
             serverSocket = new ServerSocket(0);

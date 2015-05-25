@@ -1,8 +1,9 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.frontend.communication.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,12 +12,12 @@ public abstract class Command {
 
 
     /**
-     * The frontend that this command responds to
+     * The frontend that this command responds to.
      */
     protected final FrontendListener frontend;
 
     /**
-     * The backend logic this command calls 
+     * The backend logic this command calls.
      */
     protected final Logic backend;
 
@@ -25,9 +26,7 @@ public abstract class Command {
     
     
     /**
-     * Constructor sets frontend and backend
-     * @param front
-     * @param backend
+     * Constructor sets frontend and backend.
      */
     public Command(FrontendListener front, Logic backend) {
         this.frontend = front;
@@ -38,7 +37,7 @@ public abstract class Command {
     /**
      * First uses checkData() to verify that the command has been given sufficient information.
      * Then runs functionality() to perform this command. This method should not be overriden,
-     * the functionality should be written in the functionality-method
+     * the functionality should be written in the functionality-method.
      * @throws ProtocolException if the command has insufficient data to run
      */
     public void execute() throws ProtocolException {
@@ -52,7 +51,7 @@ public abstract class Command {
     protected abstract void functionality();
 
     /**
-     * setParameter sets parameter data for command
+     * setParameter sets parameter data for command.
      *
      * @param key name of the datum
      * @param value value of the datum
@@ -63,7 +62,7 @@ public abstract class Command {
 
     /**
      * Command must have checkData method which throws ProtocolException if it
-     * doesn't have all data needed
+     * doesn't have all data needed.
      *
      * @throws ProtocolException if the command lacks some necessary data
      */

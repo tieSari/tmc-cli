@@ -1,11 +1,11 @@
-package hy.tmc.cli.frontend_communication.Server;
+package hy.tmc.cli.frontend.communication.server;
 
-import hy.tmc.cli.frontend_communication.Commands.*;
+import hy.tmc.cli.frontend.communication.commands.*;
 import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 
-import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
-import hy.tmc.cli.frontend_communication.FrontendListener;
+import static hy.tmc.cli.frontend.communication.commands.CommandFactory.*;
+import hy.tmc.cli.frontend.communication.FrontendListener;
 
 public class ProtocolParser {
 

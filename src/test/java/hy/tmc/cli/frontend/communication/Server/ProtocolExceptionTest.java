@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.Server;
+package hy.tmc.cli.frontend.communication.server;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
