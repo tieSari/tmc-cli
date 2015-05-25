@@ -360,6 +360,7 @@
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.3</version>
             </plugin>
+
         </plugins>
     </reporting>
 </project>
