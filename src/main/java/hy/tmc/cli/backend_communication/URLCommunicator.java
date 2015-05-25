@@ -1,11 +1,16 @@
-package hy.tmc.cli.backendCommunication;
+package hy.tmc.cli.backend_communication;
 
-import static hy.tmc.cli.backendCommunication.Authorization.Authorization.*;
 
-import java.io.*;
+import static hy.tmc.cli.backendCommunication.Authorization.Authorization.encode;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
 import org.apache.commons.codec.binary.Base64;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import org.apache.http.HttpResponse;
@@ -18,14 +23,19 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 public class URLCommunicator {
+    
+    public static final int BAD_REQUEST = 400;
 
     /**
      *
      * @param client HttpClient to execute HttpRequests. It will come as
      * parameter to enable dependency injection.
+     * @param url the url of the request
+     * @param params parameters of the post request
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HTTPResult makePostRequest(HttpClient client, String url, String... params) {
+    public static HTTPResult makePostRequest(HttpClient client, String url,
+            String... params) {
         try {
             HttpPost post = new HttpPost(url);
 
@@ -40,15 +50,14 @@ public class URLCommunicator {
             StringBuilder result = writeResponse(response);
             int status = response.getStatusLine().getStatusCode();
             return new HTTPResult(result.toString(), status, true);
-        }
-        catch (IOException e) {
-            return new HTTPResult("", 400, false);
+        } catch (IOException e) {
+            return new HTTPResult("", BAD_REQUEST, false);
         }
     }
 
     /**
      *
-     * Tries to make GET-request to specific url
+     * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is
@@ -57,8 +66,8 @@ public class URLCommunicator {
      * parameter to enable dependency injection.
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HTTPResult makeGetRequest(HttpClient client, String url, String... params) {
-        
+    public static HTTPResult makeGetRequest(HttpClient client, 
+            String url, String... params) {
         try {
             HttpResponse response = createAndExecuteGet(url, params, client);
             StringBuilder result = writeResponse(response);
@@ -66,9 +75,8 @@ public class URLCommunicator {
                     result.toString(),
                     response.getStatusLine().getStatusCode(),
                     true);
-        }
-        catch (IOException e) {
-            return new HTTPResult("", 400, false);
+        } catch (IOException e) {
+            return new HTTPResult("", BAD_REQUEST, false);
         }
     }
 
