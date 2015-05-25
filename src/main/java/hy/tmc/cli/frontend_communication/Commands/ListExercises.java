@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.backend_communication.JSONParser;
+import hy.tmc.cli.backendcommunication.TmcJsonParser;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
@@ -18,7 +18,7 @@ public class ListExercises extends Command {
      */
     @Override
     protected void functionality() {
-       this.frontend.printLine(JSONParser.getExerciseNames(data.get("courseUrl")));
+       this.frontend.printLine(TmcJsonParser.getExerciseNames(data.get("courseUrl")));
     }
 
     /**

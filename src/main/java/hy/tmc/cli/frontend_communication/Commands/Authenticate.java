@@ -3,8 +3,8 @@ package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.backend_communication.URLCommunicator;
-import static hy.tmc.cli.backend_communication.URLCommunicator.*;
+import hy.tmc.cli.backendcommunication.UrlCommunicator;
+import static hy.tmc.cli.backendcommunication.UrlCommunicator.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
