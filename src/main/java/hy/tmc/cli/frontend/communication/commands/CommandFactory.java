@@ -32,7 +32,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create help Command object.
+     * Create Help Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -43,7 +43,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create replyToPing Command object.
+     * Create ReplyToPing Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -54,7 +54,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create an authenticate Command object.
+     * Create an Authenticate Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -76,7 +76,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create a listCourses Command object.
+     * Create a ListCourses Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -87,7 +87,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create a listExercises Command object.
+     * Create a ListExercises Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -98,7 +98,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create a downloadExercises Command object.
+     * Create a DownloadExercises Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -109,7 +109,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create a logout Command object.
+     * Create a Logout Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -120,7 +120,8 @@ public class CommandFactory {
     }
 
     /**
-     *
+     * Takes the command map and returns a set of command names.
+     * 
      * @return a set of all available command names.
      */
     static Set<String> allCommandNames() {
