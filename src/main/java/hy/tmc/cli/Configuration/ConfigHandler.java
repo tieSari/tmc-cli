@@ -1,5 +1,6 @@
 package hy.tmc.cli.Configuration;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -89,7 +90,7 @@ public class ConfigHandler {
      */
     public String readCoursesAddress() {
         String serverAddress = readServerAddress();
-        if (serverAddress == null || serverAddress.isEmpty()) {
+        if (isNullOrEmpty(serverAddress)) {
             return null;
         }
         return serverAddress + coursesExtension;
@@ -102,7 +103,7 @@ public class ConfigHandler {
      */
     public String readAuthAddress() {
         String serverAddress = readServerAddress();
-        if (serverAddress == null || serverAddress.isEmpty()) {
+        if (isNullOrEmpty(serverAddress)) {
             return null;
         }
         return serverAddress + authExtension;
@@ -113,7 +114,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Reads port from config file
+     * Reads port local server from config file
      */
     public int readPort() {
         Properties prop = getProperties();
