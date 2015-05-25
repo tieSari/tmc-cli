@@ -1,10 +1,7 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.configuration;
 
-import hy.tmc.cli.configuration.ConfigHandler;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -114,8 +111,7 @@ public class ConfigHandlerTest {
         }
     }
     
-    
-    @Test
+  @Test
     public void correctPortGetsWritten() {
         try {
             handler.writePort(12355);
@@ -125,5 +121,4 @@ public class ConfigHandlerTest {
             fail("Failed to read or write port");
         }
     }
-    
 }
