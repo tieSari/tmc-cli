@@ -1,7 +1,7 @@
 
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend_communication.FrontendListener;
+import hy.tmc.cli.frontend.communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
 public class ReplyToPing extends Command {
@@ -13,7 +13,7 @@ public class ReplyToPing extends Command {
     }
 
     /** 
-     * print pong to the frontend
+     * Print pong to the frontend.
      */
     @Override
     protected void functionality() {
@@ -21,7 +21,7 @@ public class ReplyToPing extends Command {
     }
 
     /**
-     * Does nothing, this command requires no data
+     * Does nothing, this command requires no data.
      */
     @Override
     public void checkData(){

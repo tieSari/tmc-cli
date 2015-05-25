@@ -5,7 +5,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import hy.tmc.cli.Configuration.ConfigHandler;
-import hy.tmc.cli.frontend_communication.Server.Server;
+import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 

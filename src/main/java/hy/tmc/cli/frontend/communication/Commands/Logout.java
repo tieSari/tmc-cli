@@ -1,11 +1,11 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.frontend.communication.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 /**
- * Allows the user to log out
+ * Allows the user to log out.
  */
 public class Logout extends Command {
     
