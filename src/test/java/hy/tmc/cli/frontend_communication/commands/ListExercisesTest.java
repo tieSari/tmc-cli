@@ -1,9 +1,11 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend.communication.commands.ListExercises;
+import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.backendcommunication.HttpResult;
 import hy.tmc.cli.backendcommunication.UrlCommunicator;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import hy.tmc.cli.testhelpers.FrontendStub;
