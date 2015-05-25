@@ -1,5 +1,7 @@
 package hy.tmc.cli.backend_communication;
 
+import hy.tmc.cli.backendcommunication.HttpResult;
+import hy.tmc.cli.backendcommunication.UrlCommunicator;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -22,7 +24,7 @@ public class URLCommunicatorTest {
     public WireMockRule wireMockRule = new WireMockRule();
     @Before
     public void createClient() {      
-        this.client = URLCommunicator.createClient();
+        this.client = UrlCommunicator.createClient();
     }
     
     @Test
@@ -34,7 +36,7 @@ public class URLCommunicatorTest {
                         .withStatus(200)
                 )
         );
-        HTTPResult result = URLCommunicator.makeGetRequest(client, "http://127.0.0.1:8080", "test:1234");
+        HttpResult result = UrlCommunicator.makeGetRequest(client, "http://127.0.0.1:8080", "test:1234");
         assertEquals(200, result.getStatusCode());
     }
 
@@ -48,14 +50,14 @@ public class URLCommunicatorTest {
                 )
         );
         
-        HTTPResult result = URLCommunicator.makeGetRequest(client, "http://127.0.0.1:8080/vaaraurl", "test:1234");
+        HttpResult result = UrlCommunicator.makeGetRequest(client, "http://127.0.0.1:8080/vaaraurl", "test:1234");
         assertEquals(400, result.getStatusCode());
     }
     
     @Test
     public void notFoundWithoutValidParams() {
         // next will fail, becouse wiremock does not accept headers like that.
-        HTTPResult result = URLCommunicator.makeGetRequest(client, "http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
+        HttpResult result = UrlCommunicator.makeGetRequest(client, "http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
         assertEquals(404, result.getStatusCode());
     }
 
@@ -69,9 +71,9 @@ public class URLCommunicatorTest {
                 )
         );
         
-        Method createMethod = URLCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class, HttpClient.class);
+        Method createMethod = UrlCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class, HttpClient.class);
         createMethod.setAccessible(true);
-        Object instance = URLCommunicator.class.newInstance();
+        Object instance = UrlCommunicator.class.newInstance();
         HttpResponse result = (HttpResponse) createMethod.invoke(instance, "http://127.0.0.1:8080/", new String[]{
             "test:1234"
         }, client);

@@ -1,4 +1,8 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
+
+import org.apache.http.client.HttpClient;
+
+import net.lingala.zip4j.exception.ZipException;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
@@ -12,8 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.http.client.HttpClient;
-import net.lingala.zip4j.exception.ZipException;
+
 
 public class ExerciseDownloader {
 
@@ -37,15 +40,15 @@ public class ExerciseDownloader {
      * @param courseUrl course url
      */
     public void downloadExercises(String courseUrl) {
-        List<Exercise> exercises = JSONParser.getExercises(courseUrl);
+        List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
         downloadFiles(exercises);
     }
 
     /**
      * Method for downloading files if path is not defined.
      *
-     * @param exercises list of exercises which will be downloaded,
-     * list is parsed from json.
+     * @param exercises list of exercises which will be downloaded, list is
+     * parsed from json.
      */
     public void downloadFiles(List<Exercise> exercises) {
         downloadFiles(exercises, "");
@@ -97,8 +100,6 @@ public class ExerciseDownloader {
      *
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
-     * @throws IOException
-     * @throws ZipException
      */
     public void unzipFile(String unzipPath, String destinationPath)
             throws IOException, ZipException {
@@ -121,9 +122,9 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Modify path to correct.
+     * Modify path to correct. Adds a trailing '/' if necessary.
      *
-     * @param path
+     * @param path the pathname to be corrected
      * @return corrected path
      */
     public String getCorrectPath(String path) {
@@ -149,13 +150,13 @@ public class ExerciseDownloader {
     /**
      * Downloads single .zip file by using URLCommunicator.
      *
-     * @param zip_url url which will be downloaded
+     * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private static void downloadFile(String zip_url, String path) {
-        HttpClient client = URLCommunicator.createClient();
+    private static void downloadFile(String zipUrl, String path) {
+        HttpClient client = UrlCommunicator.createClient();
         File file = new File(path);
-        URLCommunicator.downloadFile(client, zip_url, file,
+        UrlCommunicator.downloadFile(client, zipUrl, file,
                 ClientData.getFormattedUserData());
     }
 }

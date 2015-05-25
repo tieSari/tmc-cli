@@ -1,18 +1,19 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
 
-public class HTTPResult {
+public class HttpResult {
 
     private String data;
     private int statusCode;
     private boolean success;
     
     /**
-     *
-     * @param data
-     * @param statusCode
-     * @param success
+     * Creates a new HttpResult object to model the result of some request.
+     * 
+     * @param data data returned by the server
+     * @param statusCode statuscode of the request e.g. 200
+     * @param success was the request succesful
      */
-    public HTTPResult(String data, int statusCode, boolean success) {
+    public HttpResult(String data, int statusCode, boolean success) {
         this.data = data;
         this.statusCode = statusCode;
         this.success = success;

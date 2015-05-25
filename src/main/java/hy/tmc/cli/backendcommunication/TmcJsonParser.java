@@ -1,4 +1,4 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A Utility class for handling JSONs downloaded from the TMC-server.
  */
-public class JSONParser {
+public class TmcJsonParser {
 
     /**
      * get JSON-data from url.
@@ -22,8 +22,8 @@ public class JSONParser {
      * @return JSON-object containing JSON-data
      */
     private static JsonObject getJSONFrom(String url) {
-        HTTPResult httpResult = URLCommunicator.makeGetRequest(
-                URLCommunicator.createClient(),
+        HttpResult httpResult = UrlCommunicator.makeGetRequest(
+                UrlCommunicator.createClient(),
                 url, ClientData.getFormattedUserData());
         String data = httpResult.getData();
         return new JsonParser().parse(data).getAsJsonObject();
@@ -51,11 +51,11 @@ public class JSONParser {
      * @return List of Course-objects
      */
     public static List<Course> getCourses() {
-        JsonObject jObject = getJSONFrom(new ConfigHandler()
+        JsonObject jsonObject = getJSONFrom(new ConfigHandler()
                 .readCoursesAddress());
         Gson mapper = new Gson();
         Course[] courses = mapper
-                .fromJson(jObject.getAsJsonArray("courses"), Course[].class);
+                .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
     }
 

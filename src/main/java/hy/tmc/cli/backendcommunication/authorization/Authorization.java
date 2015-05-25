@@ -1,4 +1,4 @@
-package hy.tmc.cli.backendCommunication.Authorization;
+package hy.tmc.cli.backendcommunication.authorization;
 
 import org.apache.commons.codec.binary.Base64;
 
