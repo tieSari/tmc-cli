@@ -1,5 +1,7 @@
-package hy.tmc.cli.frontend.communication.commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend.communication.commands.Logout;
+import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
@@ -53,7 +55,8 @@ public class LogoutTest {
             logout.execute();
             String response = front.getMostRecentLine();
             assertTrue(response.contains("Nobody"));
-        } catch (ProtocolException e) {
+        }
+        catch (ProtocolException e) {
             fail("Something went wrong");
         }
     }
