@@ -1,11 +1,9 @@
-
 package hy.tmc.cli.backendCommunication;
 
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.zipping.DefaultMoveDecider;
-import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
 import java.io.File;
@@ -20,6 +18,7 @@ public class ExerciseDownloader {
 
     /**
      * Constructor for ExerciseDownloader
+     *
      * @param front component which implements frontend interface
      */
     public ExerciseDownloader(FrontendListener front) {
@@ -31,6 +30,7 @@ public class ExerciseDownloader {
 
     /**
      * Download exercises by course url
+     *
      * @param courseUrl course url
      */
     public void downloadExercises(String courseUrl) {
@@ -40,6 +40,7 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path is not defined
+     *
      * @param exercises list of exercises which will be downloaded, list is parsed from json
      */
     public void downloadFiles(List<Exercise> exercises) {
@@ -48,6 +49,7 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined
+     *
      * @param exercises list of exercises which will be downloaded, list is parsed from json
      * @param path server path to exercises.
      */
@@ -58,7 +60,7 @@ public class ExerciseDownloader {
             handleSingleExercise(exercise, exCount, exercises, path);
             exCount++;
         }
-        if (this.front != null)  {
+        if (this.front != null) {
             front.printLine(exercises.size() + " exercises downloaded.");
         }
 
@@ -66,6 +68,7 @@ public class ExerciseDownloader {
 
     /**
      * Handles downloading, unzipping & telling user information, for single exercise
+     *
      * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
      * @param exercises list of exercises which will be downloaded
@@ -77,26 +80,29 @@ public class ExerciseDownloader {
         downloadFile(exercise.getZip_url(), filePath);
         try {
             unzipFile(filePath, path);
-        } catch (IOException | ZipException ex) {
+        }
+        catch (IOException | ZipException ex) {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
-    
+
     /**
      * Unzips a zip file
+     *
      * @param unzipPath path of file which will be unzipped
-     * @param destinationPath destination path 
+     * @param destinationPath destination path
      * @throws IOException
      * @throws ZipException
      */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        MoveDecider md = new DefaultMoveDecider(new DefaultRootDetector());
+        MoveDecider md = new DefaultMoveDecider();
         ZipHandler zipHandler = new ZipHandler(unzipPath, destinationPath, md);
         zipHandler.unzip();
     }
 
     /**
      * Tells which exercise is currently being downloaded
+     *
      * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
      */
@@ -106,6 +112,7 @@ public class ExerciseDownloader {
 
     /**
      * Modify path to correct
+     *
      * @return corrected path
      */
     public String getCorrectPath(String path) {
@@ -119,7 +126,8 @@ public class ExerciseDownloader {
 
     /**
      * Get advantage percent in downloading single exercise
-     * @param exCount order number of exercise in downloading 
+     *
+     * @param exCount order number of exercise in downloading
      * @param exercisesSize total amount of exercises that will be downloaded
      * @return percents
      */
@@ -129,6 +137,7 @@ public class ExerciseDownloader {
 
     /**
      * Downloads single .zip file by using URLCommunicator
+     *
      * @param zip_url url which will be downloaded
      * @param path where to download
      */
