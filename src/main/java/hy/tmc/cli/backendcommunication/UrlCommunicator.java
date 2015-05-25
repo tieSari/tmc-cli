@@ -1,16 +1,8 @@
 package hy.tmc.cli.backendcommunication;
 
-
 import static hy.tmc.cli.backendcommunication.authorization.Authorization.encode;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.codec.binary.Base64;
 import static org.apache.http.HttpHeaders.USER_AGENT;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -20,6 +12,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.codec.binary.Base64;
 
 public class UrlCommunicator {
     
@@ -115,10 +115,10 @@ public class UrlCommunicator {
         HttpGet request = new HttpGet(url);
         request.setHeader("Authorization", "Basic " + encode(params[0]));
         request.addHeader("User-Agent", USER_AGENT);
-        return executeGETRequest(request, client);
+        return executeGetRequest(request, client);
     }
     
-    private static HttpResponse executeGETRequest(HttpGet request, HttpClient client) 
+    private static HttpResponse executeGetRequest(HttpGet request, HttpClient client) 
             throws IOException {
         return client.execute(request);
     }

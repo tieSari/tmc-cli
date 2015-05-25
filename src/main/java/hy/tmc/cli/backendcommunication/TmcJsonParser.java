@@ -3,10 +3,12 @@ package hy.tmc.cli.backendcommunication;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Exercise;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class TmcJsonParser {
      * @param url url from which the object data is fetched
      * @return JSON-object containing JSON-data
      */
-    private static JsonObject getJSONFrom(String url) {
+    private static JsonObject getJsomFrom(String url) {
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
                 UrlCommunicator.createClient(),
                 url, ClientData.getFormattedUserData());
@@ -51,7 +53,7 @@ public class TmcJsonParser {
      * @return List of Course-objects
      */
     public static List<Course> getCourses() {
-        JsonObject jsonObject = getJSONFrom(new ConfigHandler()
+        JsonObject jsonObject = getJsomFrom(new ConfigHandler()
                 .readCoursesAddress());
         Gson mapper = new Gson();
         Course[] courses = mapper
@@ -100,7 +102,7 @@ public class TmcJsonParser {
      * @return List of all exercises as Exercise-objects
      */
     public static List<Exercise> getExercises(String courseUrl) {
-        JsonObject course = getJSONFrom(courseUrl);
+        JsonObject course = getJsomFrom(courseUrl);
         Gson mapper = new Gson();
         System.out.println(course);
         Exercise[] exercises = mapper
