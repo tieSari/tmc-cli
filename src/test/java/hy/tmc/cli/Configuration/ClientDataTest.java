@@ -1,8 +1,9 @@
 package hy.tmc.cli.Configuration;
 
+import hy.tmc.cli.configuration.ClientData;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static hy.tmc.cli.Configuration.ClientData.*;
+import static hy.tmc.cli.configuration.ClientData.*;
 import hy.tmc.cli.domain.Course;
 import org.junit.Before;
 
