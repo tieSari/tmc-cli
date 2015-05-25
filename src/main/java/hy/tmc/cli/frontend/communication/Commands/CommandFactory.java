@@ -9,7 +9,7 @@ import java.util.Set;
 public class CommandFactory {
 
     /**
-     *
+     * Creates HashMap for the commands used in frontend.
      * @param frontend that the commands will use
      * @param logic that the commands will use
      * @return A map of names to corresponding commands
@@ -29,7 +29,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create Help Command object
+     * Create Help Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -41,7 +41,7 @@ public class CommandFactory {
 
 
     /**
-     * Create ReplyToPing Command object
+     * Create ReplyToPing Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -52,7 +52,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create an Authenticate Command object
+     * Create an Authenticate Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -63,7 +63,7 @@ public class CommandFactory {
     }
 
     /**
-     * Same as authenticate
+     * Same as authenticate.
      * @param front frontend to use
      * @param back backend to use
      * @return an authenticate bject
@@ -73,7 +73,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create a ListCourses Command object
+     * Create a ListCourses Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -84,7 +84,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create a ListExercises Command object
+     * Create a ListExercises Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -95,7 +95,7 @@ public class CommandFactory {
     }
     
     /**
-     * Create a DownloadExercises Command object
+     * Create a DownloadExercises Command object.
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -106,7 +106,7 @@ public class CommandFactory {
     }
 
     /**
-     * Create a Logout Command object
+     * Create a Logout Command object.
      * 
      * @param front frontend that the command will use
      * @param back logic that the command will use
@@ -117,7 +117,7 @@ public class CommandFactory {
     }
     
     /**
-     *
+     * Takes the command map and returns a set of command names.
      * @return a set of all available command names
      */
     static Set<String> allCommandNames() {
