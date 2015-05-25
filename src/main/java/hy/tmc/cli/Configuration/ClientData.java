@@ -6,13 +6,17 @@ import hy.tmc.cli.domain.Course;
  * This class will be initialized when Auth is successful. Use this to get data
  * of user
  */
-public class ClientData {
+public final class ClientData {
 
     private static int PID;
     private static String USERNAME = "";
     private static String PASSWORD = "";
     private static Course currentCourse;
 
+
+    private ClientData() {
+    }
+    
     public static void setUserData(String username, String password) {
         USERNAME = username;
         PASSWORD = password;
