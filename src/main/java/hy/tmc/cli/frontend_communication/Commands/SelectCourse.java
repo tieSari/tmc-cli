@@ -17,7 +17,6 @@ public class SelectCourse extends Command {
         int id = Integer.parseInt(data.get("id"));
         
         
-        
     }
 
     @Override

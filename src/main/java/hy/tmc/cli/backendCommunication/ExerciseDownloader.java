@@ -55,8 +55,6 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined
-     * @param exercises
-     * @param path
      */
     public void downloadFiles(List<Exercise> exercises, String path) {
         int exCount = 0;
@@ -90,7 +88,7 @@ public class ExerciseDownloader {
     }
     
     /**
-     * Unzips single file afteer downloading. 
+     * Unzips single file after downloading. 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path 
      * @throws IOException
