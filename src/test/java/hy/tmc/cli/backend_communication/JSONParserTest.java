@@ -1,6 +1,6 @@
 package hy.tmc.cli.backend_communication;
 
-import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.backendCommunication.HTTPResult;
 import hy.tmc.cli.backendCommunication.JSONParser;
 import hy.tmc.cli.backendCommunication.URLCommunicator;

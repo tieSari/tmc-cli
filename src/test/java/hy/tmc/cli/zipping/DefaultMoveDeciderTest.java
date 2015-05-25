@@ -2,9 +2,7 @@ package hy.tmc.cli.zipping;
 
 import java.nio.file.Paths;
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import static org.junit.Assert.*;
 
 public class DefaultMoveDeciderTest {
@@ -14,10 +12,6 @@ public class DefaultMoveDeciderTest {
     @Before
     public void setUp() {
         decider = new DefaultMoveDecider(new DefaultRootDetector());
-    }
-    
-    @After
-    public void tearDown() {
     }
 
     /**

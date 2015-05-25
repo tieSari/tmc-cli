@@ -1,4 +1,4 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.configuration;
 
 import hy.tmc.cli.domain.Course;
 

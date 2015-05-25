@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
-import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.Configuration.ConfigHandler;
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.backendCommunication.URLCommunicator;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.*;
 import hy.tmc.cli.frontend_communication.FrontendListener;
