@@ -7,7 +7,6 @@ import hy.tmc.cli.domain.Course;
  * of user
  */
 public final class ClientData {
-
     private static int PID;
     private static String USERNAME = "";
     private static String PASSWORD = "";
@@ -37,7 +36,7 @@ public final class ClientData {
     public static boolean userDataExists() {
         return !(USERNAME.isEmpty() || PASSWORD.isEmpty());
     }
-    
+   
     public static void clearUserData() {
         USERNAME = "";
         PASSWORD = "";

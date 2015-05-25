@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+
 import hy.tmc.cli.backendCommunication.ExerciseDownloader;
 import hy.tmc.cli.backendCommunication.JSONParser;
 import hy.tmc.cli.domain.Exercise;

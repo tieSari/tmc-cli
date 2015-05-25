@@ -1,5 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import static hy.tmc.cli.frontend.communication.commands.CommandFactory.downloadExercises;
+
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
