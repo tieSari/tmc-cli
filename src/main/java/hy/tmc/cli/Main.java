@@ -1,6 +1,6 @@
 package hy.tmc.cli;
 
-import hy.tmc.cli.frontend.communication.FrontendListener;
+import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.logic.Logic;
 

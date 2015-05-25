@@ -1,5 +1,7 @@
-package hy.tmc.cli.frontend.communication.commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.ListCourses;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.backendCommunication.HTTPResult;

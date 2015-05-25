@@ -1,33 +1,36 @@
-
 package hy.tmc.cli.frontend.communication.server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.FrontendListener;
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.logic.Logic;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+
 public class Server implements FrontendListener, Runnable {
 
+    public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
     private Socket clientSocket;
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private boolean isRunning;
-    public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
 
     /**
-     * Initializes the server.
-     * @throws IOException if port is already in use for example
+     * Constructor for server.
+     * @param logic backend logic
+     * @throws IOException if failed to write port to config file
      */
+    
     public Server(Logic logic) throws IOException {
         try {
             serverSocket = new ServerSocket(0);
@@ -40,7 +43,7 @@ public class Server implements FrontendListener, Runnable {
     }
 
     /**
-     * Start is general function to set up server listening for the frontend
+     * Start is general function to set up server listening for the frontend.
      */
     @Override
     public void start() {
@@ -48,17 +51,16 @@ public class Server implements FrontendListener, Runnable {
     }
 
     /**
-     * Run is loop that accepts new client connection and handles it
+     * Run is loop that accepts new client connection and handles it.
      */
     @Override
-    public void run() {
+    public final void run() {
         isRunning = true;
         while (isRunning) {
             if (!startClientProcess()) {
                 break;
             }
         }
-
     }
 
     private boolean startClientProcess() {
@@ -66,8 +68,7 @@ public class Server implements FrontendListener, Runnable {
             if (!introduceClientSuccessful(cs)) {
                 return false;
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
             isRunning = false;
         }
@@ -88,8 +89,7 @@ public class Server implements FrontendListener, Runnable {
 
         try {
             parseAndExecuteCommand(inputLine);
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             System.out.println(ex.getMessage());
             printLine(Server.PROTOCOL_ERROR_MSG);
         }
@@ -97,7 +97,8 @@ public class Server implements FrontendListener, Runnable {
     }
 
     private String readCommandFromClient(Socket clientSocket) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(clientSocket.getInputStream()));
         return in.readLine();
     }
 
@@ -106,9 +107,9 @@ public class Server implements FrontendListener, Runnable {
     }
 
     /**
-     * Closes serverSocket
+     * Closes serverSocket.
      *
-     * @throws IOException
+     * @throws IOException if failed to close socket
      */
     public void close() throws IOException {
         isRunning = false;
@@ -116,9 +117,9 @@ public class Server implements FrontendListener, Runnable {
     }
 
     /**
-     * Prints line to server output
+     * Prints line to server output.
      *
-     * @param outputLine
+     * @param outputLine string to print in server out
      */
     @Override
     public void printLine(String outputLine) {
@@ -129,8 +130,7 @@ public class Server implements FrontendListener, Runnable {
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(outputLine);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Printlinessa");
         }

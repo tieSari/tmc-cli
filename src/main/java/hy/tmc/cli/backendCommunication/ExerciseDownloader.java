@@ -3,13 +3,15 @@ package hy.tmc.cli.backendCommunication;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.communication.FrontendListener;
+import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.zipping.DefaultMoveDecider;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.util.List;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;

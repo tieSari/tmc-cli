@@ -1,5 +1,6 @@
-package hy.tmc.cli.frontend.communication.commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend.communication.commands.Authenticate;
 import hy.tmc.cli.backendCommunication.Authorization.Authorization;
 import hy.tmc.cli.backendCommunication.HTTPResult;
 import hy.tmc.cli.backendCommunication.URLCommunicator;
