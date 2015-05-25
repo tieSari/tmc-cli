@@ -14,9 +14,7 @@ public class SelectCourse extends Command {
 
     @Override
     protected void functionality() {
-        int id = Integer.parseInt(data.get("id"));
-        
-        
+        int id = Integer.parseInt(data.get("id")); 
     }
 
     @Override
