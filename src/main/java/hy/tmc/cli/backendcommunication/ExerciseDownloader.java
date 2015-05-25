@@ -2,7 +2,7 @@ package hy.tmc.cli.backendcommunication;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend_communication.FrontendListener;
+import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.zipping.DefaultMoveDecider;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.MoveDecider;
@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.util.List;
 
 public class ExerciseDownloader {

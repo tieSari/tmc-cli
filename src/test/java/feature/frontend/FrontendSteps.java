@@ -4,9 +4,11 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend_communication.Server.Server;
+import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
+
 import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
@@ -34,10 +36,10 @@ public class FrontendSteps {
     }
 
     @Then("^output should contains commands\\.$")
-    public void output_should_contains_commands() throws Throwable {    
+    public void output_should_contains_commands() throws Throwable {
         String contents = testClient.reply();
         assertTrue(contents.contains("Available commands: "));
-    
+
     }
 
     @After

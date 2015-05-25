@@ -1,7 +1,8 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Joiner;
-import hy.tmc.cli.frontend_communication.FrontendListener;
+
+import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
 public class Help extends Command {
@@ -11,11 +12,11 @@ public class Help extends Command {
     }
 
     /**
-     * List all available commands
+     * List all available commands.
      */
     @Override
     protected void functionality() {
-        String commands  = "Available commands: \n";
+        String commands = "Available commands: \n";
         commands += Joiner.on(", ").join(CommandFactory.allCommandNames());
         this.frontend.printLine(commands);
     }
@@ -24,10 +25,8 @@ public class Help extends Command {
      * Does nothing, this command does not require data.
      */
     @Override
-    public void checkData(){
-        
+    public void checkData() {
+
     }
-    
-    
-    
+
 }

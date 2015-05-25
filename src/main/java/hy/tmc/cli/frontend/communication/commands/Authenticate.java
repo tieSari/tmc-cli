@@ -1,21 +1,27 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import static hy.tmc.cli.backendcommunication.UrlCommunicator.createClient;
 import static hy.tmc.cli.backendcommunication.UrlCommunicator.makeGetRequest;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 
 public class Authenticate extends Command {
+
+    /**
+     * Regex for HTTP OK codes.
+     */
+    private final String httpOk = "2..";
 
     public Authenticate(FrontendListener front, Logic backend) {
         super(front, backend);
     }
 
     private String returnResponse(int statusCode) {
-        if (statusCode >= 200 && statusCode < 300) {
+        if (Integer.toString(statusCode).matches(httpOk)) {
             ClientData.setUserData(data.get("username"), data.get("password"));
             return "Auth successful. Saved userdata in session";
         }
@@ -23,7 +29,7 @@ public class Authenticate extends Command {
     }
 
     @Override
-    public void setParameter(String key, String value) {
+    public final void setParameter(String key, String value) {
         data.put(key, value);
     }
 
@@ -40,7 +46,9 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(createClient(), new ConfigHandler().readAuthAddress(), auth).getStatusCode();
+        int code = makeGetRequest(createClient(),
+                new ConfigHandler().readAuthAddress(),
+                auth).getStatusCode();
         this.frontend.printLine(returnResponse(code));
     }
 
