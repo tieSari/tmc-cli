@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package feature.downloadexercises;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -25,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 public class DownloadExercisesSteps {
     
     private int port;
-
     private Thread serverThread;
     private Server server;
     private TestClient testClient;
@@ -46,7 +39,6 @@ public class DownloadExercisesSteps {
     private void createTestClient() throws IOException {
         testClient = new TestClient(port);
     }
-
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
@@ -73,7 +65,6 @@ public class DownloadExercisesSteps {
         assertTrue(new File(tempDir.toAbsolutePath() + "/viikko01").exists());
         assertTrue(new File(tempDir.toAbsolutePath() + "/viikko02").exists());
         assertTrue(new File(tempDir.toAbsolutePath() + "/viikko03").exists());
-
     }
 
     @Then("^information about download progress\\.$")
@@ -82,8 +73,6 @@ public class DownloadExercisesSteps {
         assertEquals("Downloading exercise viikko02-tira2.4 53.0%", output.get(8));
         assertEquals("Downloading exercise viikko03-tira3.5 93.0%", output.get(14));
         assertEquals("15 exercises downloaded.", output.get(15));
-        
-        
     }
     
     @After

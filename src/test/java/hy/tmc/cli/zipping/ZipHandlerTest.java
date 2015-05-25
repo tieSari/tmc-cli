@@ -3,9 +3,6 @@ package hy.tmc.cli.zipping;
 import hy.tmc.cli.testhelpers.FileWriterHelper;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -62,10 +59,7 @@ public class ZipHandlerTest {
             assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src").exists());
             assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/lib").exists());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -77,10 +71,7 @@ public class ZipHandlerTest {
             handler.unzip();
             assertTrue(new File(javaFile).exists());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -96,10 +87,7 @@ public class ZipHandlerTest {
             handler.unzip();
             assertEquals(modified, file.lastModified());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -115,10 +103,7 @@ public class ZipHandlerTest {
             handler.unzip();
             assertNotEquals(modified, file.lastModified());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -148,8 +133,7 @@ public class ZipHandlerTest {
         catch (net.lingala.zip4j.exception.ZipException ex) {
             //ok
         }        
-    }
-    
+    }    
    /* @Test
     public void doesntOverwriteSomethingInTmcprojectYml() {
         try {
@@ -162,5 +146,4 @@ public class ZipHandlerTest {
         
         helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
     }*/
-
 }

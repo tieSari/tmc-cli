@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package hy.tmc.cli.zipping;
 
 import java.nio.file.Paths;
@@ -13,16 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author ilari
- */
 public class DefaultMoveDeciderTest {
     
     private DefaultMoveDecider decider;
-    
-    public DefaultMoveDeciderTest() {
-    }
     
     @Before
     public void setUp() {
@@ -66,5 +53,4 @@ public class DefaultMoveDeciderTest {
         }
         assertFalse(excludePaths.contains("duck.py"));
     }
-    
 }
