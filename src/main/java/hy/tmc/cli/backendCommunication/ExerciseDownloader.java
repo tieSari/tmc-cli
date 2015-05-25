@@ -35,7 +35,7 @@ public class ExerciseDownloader {
      */
     public void downloadExercises(String courseUrl) {
         List<Exercise> exercises = JSONParser.getExercises(courseUrl);
-        if(exercises.size() == 0){
+        if(exercises.isEmpty()){
             this.front.printLine("No exercises to download.");
             return;
         }
