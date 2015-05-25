@@ -1,7 +1,7 @@
 package hy.tmc.cli;
 
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.Server;
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.logic.Logic;
 import java.io.IOException;
 

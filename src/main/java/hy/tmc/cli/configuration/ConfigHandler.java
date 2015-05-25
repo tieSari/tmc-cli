@@ -1,4 +1,4 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.configuration;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import java.io.File;

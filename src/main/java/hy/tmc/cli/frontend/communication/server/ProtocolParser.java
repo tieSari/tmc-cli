@@ -1,11 +1,12 @@
-package hy.tmc.cli.frontend_communication.Server;
+package hy.tmc.cli.frontend.communication.server;
 
-import hy.tmc.cli.frontend_communication.commands.Command;
+import static hy.tmc.cli.frontend.communication.commands.CommandFactory.createCommandMap;
+
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.logic.Logic;
-import java.util.HashMap;
 
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import static hy.tmc.cli.frontend_communication.commands.CommandFactory.createCommandMap;
+import java.util.HashMap;
 
 public class ProtocolParser {
 
@@ -14,10 +15,10 @@ public class ProtocolParser {
     private HashMap<String, Command> commandsByName = new HashMap<>();
 
     /**
-     * Constructor for Protocol Parser
+     * Constructor for Protocol Parser.
      *
-     * @param server
-     * @param logic
+     * @param server frontend server
+     * @param logic backend logic
      */
     public ProtocolParser(FrontendListener server, Logic logic) {
         this.server = server;
@@ -26,11 +27,11 @@ public class ProtocolParser {
     }
 
     /**
-     * Search for command by inputline
+     * Search for command by inputline.
      *
-     * @param inputLine
-     * @return Command
-     * @throws ProtocolException
+     * @param inputLine input String
+     * @return Command that matches input
+     * @throws ProtocolException if bad command name
      */
     public Command getCommand(String inputLine) throws ProtocolException {
         String[] elements = inputLine.split(" ");

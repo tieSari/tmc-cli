@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend_communication.Server;
 
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;

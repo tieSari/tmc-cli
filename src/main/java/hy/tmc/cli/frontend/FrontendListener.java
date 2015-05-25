@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication;
+package hy.tmc.cli.frontend;
 
 public interface FrontendListener {
     /**
