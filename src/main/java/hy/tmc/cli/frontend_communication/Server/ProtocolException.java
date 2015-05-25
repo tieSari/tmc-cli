@@ -1,37 +1,40 @@
 
 package hy.tmc.cli.frontend_communication.Server;
 
+/**
+ * ProtocolException is thrown when something goes wrong with protocol rules.
+ */
 public class ProtocolException extends Exception {
 
     /**
-     * ProtocolException is thrown when system gets invalid protocol 
+     * ProtocolException is thrown when system gets invalid protocol.
      */
     public ProtocolException() {
         super();
     }
 
     /**
-     * ProtocolException can give message
-     * @param message
+     * ProtocolException can give a message.
+     * @param message is a final string.
      */
-    public ProtocolException(String message) {
+    public ProtocolException(final String message) {
         super(message);
     }
 
     /**
-     *
-     * @param message
-     * @param cause
+     * ProtocolException can have cause as parameter.
+     * @param message final string message
+     * @param cause cause why exception is thrown
      */
-    public ProtocolException(String message, Throwable cause) {
+    public ProtocolException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
-     *
-     * @param cause
+     * ProtocolException can only have a cause.
+     * @param cause why exception is thrown
      */
-    public ProtocolException(Throwable cause) {
+    public ProtocolException(final Throwable cause) {
         super(cause);
     }
 }

@@ -1,12 +1,13 @@
 package hy.tmc.cli.frontend_communication.Server;
-
-import hy.tmc.cli.frontend_communication.Commands.*;
+import hy.tmc.cli.frontend_communication.Commands.Command;
+import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.createCommandMap;
+import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 import java.util.HashMap;
 
-import static hy.tmc.cli.frontend_communication.Commands.CommandFactory.*;
-import hy.tmc.cli.frontend_communication.FrontendListener;
-
+/**
+ * ProtocolParser parses user input to executable command.
+ */
 public class ProtocolParser {
 
     private FrontendListener server;
