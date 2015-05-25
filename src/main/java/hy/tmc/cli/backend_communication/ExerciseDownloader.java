@@ -1,6 +1,6 @@
 package hy.tmc.cli.backend_communication;
 
-import hy.tmc.cli.Configuration.ClientData;
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.zipping.DefaultMoveDecider;

@@ -2,7 +2,7 @@
 package hy.tmc.cli.frontend_communication.Server;
 
 
-import hy.tmc.cli.Configuration.ConfigHandler;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 import java.io.BufferedReader;
