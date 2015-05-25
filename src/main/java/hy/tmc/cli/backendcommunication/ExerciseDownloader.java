@@ -1,8 +1,7 @@
 package hy.tmc.cli.backendcommunication;
 
-import org.apache.http.client.HttpClient;
-
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.client.HttpClient;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
