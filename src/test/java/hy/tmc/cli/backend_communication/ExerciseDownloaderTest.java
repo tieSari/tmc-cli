@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hy.tmc.cli.backend_communication;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -15,31 +10,23 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class ExerciseDownloaderTest {
-
+    
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
-
     private ArrayList<Exercise> exercises;
-
     private ExerciseDownloader exDl;
     private FrontendStub front;
-
-    public ExerciseDownloaderTest() {
-    }
     
     @Before
     public void setup() {
-
         front = new FrontendStub();
         exDl = new ExerciseDownloader(front);
         exercises = new ArrayList<>();
@@ -67,7 +54,6 @@ public class ExerciseDownloaderTest {
                         .withBody("<response>Exercise 2</response>")));
         
         ClientData.setUserData("pihla", "juuh");
-        
     }
 
     @After
@@ -76,12 +62,9 @@ public class ExerciseDownloaderTest {
         new File("Exercise2.zip").delete();
     }
     
-
-
     @Test
     public void downloadExercisesDoesRequests() {
         exDl.downloadFiles(exercises);
-
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip")));
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip")));
     }
@@ -100,16 +83,12 @@ public class ExerciseDownloaderTest {
     @Test
     public void downloadingGivesOutput() {
         exDl.downloadFiles(exercises);
-
         assertTrue(front.getMostRecentLine().endsWith(" exercises downloaded."));
     }
 
     @Test
     public void downloadedExercisesExists(){
-
-
         exDl.downloadFiles(exercises);
-
         File exercise1 = new File("Exercise1.zip");
         assertTrue("File Exercise1 was not downloaded to the fs", exercise1.exists());
         File exercise2 = new File("Exercise2.zip");
@@ -118,10 +97,8 @@ public class ExerciseDownloaderTest {
 
     @Test
     public void downloadedExercisesHasContent(){
-
-
         exDl.downloadFiles(exercises);
-
+        
         String ex1content;
         try {
             ex1content = new String(Files.readAllBytes(Paths.get("Exercise1.zip")));
@@ -129,7 +106,6 @@ public class ExerciseDownloaderTest {
             e.printStackTrace();
             ex1content = "";
         }
-
         String ex2content;
         try {
             ex2content = new String(Files.readAllBytes(Paths.get("Exercise2.zip")));
@@ -137,9 +113,7 @@ public class ExerciseDownloaderTest {
             e.printStackTrace();
             ex2content = "";
         }
-
         assertEquals("<response>Exercise 1</response>", ex1content);
         assertEquals("<response>Exercise 2</response>", ex2content);
-    }
-    
+    }  
 }

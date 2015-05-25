@@ -45,7 +45,6 @@ public class DefaultMoveDecider implements MoveDecider {
         return !(path.contains("src") && new File(path).exists());
     }
     
-    
     /**
      * Find and read .tmcproject.yml. The ziphandler will invoke this method
      * 
@@ -82,7 +81,6 @@ public class DefaultMoveDecider implements MoveDecider {
      */
     private File findTmcprojectYmlFile(Path path) {
         File dir = path.toFile();
-
         for (File file : dir.listFiles()) {
             if (file.getName().equals(".tmcproject.yml")) {
                 return file;
@@ -90,5 +88,4 @@ public class DefaultMoveDecider implements MoveDecider {
         }
         return null;
     }
-
 }

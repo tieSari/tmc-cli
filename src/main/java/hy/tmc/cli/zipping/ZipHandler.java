@@ -12,7 +12,6 @@ import net.lingala.zip4j.exception.ZipException;
 
 /**
  * Handles unpacking zip files downloaded from TMC.
- *
  */
 public class ZipHandler {
 
@@ -23,7 +22,6 @@ public class ZipHandler {
 
     /**
      * Creates ziphandler with specified zip path and unzip location
-     *
      * @param zipSourcePath for zip to unpack
      * @param unzipLocation place to unzip to
      * @param movedecider a class which helps decide which files may be overwritten
@@ -37,19 +35,15 @@ public class ZipHandler {
     public String getUnzipLocation() {
         return unzipDestination;
     }
-
     public void setUnzipLocation(String unzipDestination) {
         this.unzipDestination = unzipDestination;
     }
-
     public String getZipPath() {
         return zipPath;
     }
-
     public void setZipPath(String zipPath) {
         this.zipPath = zipPath;
     }
-
 
     /**
      * Unzips zip to specified location
@@ -65,8 +59,6 @@ public class ZipHandler {
         moveDirectory(tmpPath);
     }
 
-
-
     private void moveDirectory(Path path) throws IOException {
         File directory = path.toFile();
         File[] files = directory.listFiles();
@@ -74,7 +66,6 @@ public class ZipHandler {
         if (files == null) {
             return;
         }
-
         for (File f : files) {
             if (f.isDirectory()) {
                 new File(getFullDestinationPath(f.getAbsolutePath())).mkdir();
@@ -84,8 +75,6 @@ public class ZipHandler {
             }
         }
     }
-
-
 
     private String getFullDestinationPath(String filePath) {
         String relativePath = filePath.substring(tmpPath.toString().length());
@@ -107,5 +96,4 @@ public class ZipHandler {
             System.out.println();
         }
     }
-
 }
