@@ -1,7 +1,7 @@
-package hy.tmc.cli.backendCommunication;
+package hy.tmc.cli.backend_communication;
 
 public class HTTPResult {
-     
+
     private String data;
     private int statusCode;
     private boolean success;

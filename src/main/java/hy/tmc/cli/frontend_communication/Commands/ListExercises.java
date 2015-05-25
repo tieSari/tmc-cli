@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend_communication.Commands;
 
 import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.backendCommunication.JSONParser;
+import hy.tmc.cli.backend_communication.JSONParser;
 import hy.tmc.cli.frontend_communication.FrontendListener;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
