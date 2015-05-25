@@ -1,17 +1,17 @@
-
 package hy.tmc.cli.frontend_communication.Server;
 
 public class ProtocolException extends Exception {
 
     /**
-     * ProtocolException is thrown when system gets invalid protocol 
+     * ProtocolException is thrown when system gets invalid protocol.
      */
     public ProtocolException() {
         super();
     }
 
     /**
-     * ProtocolException can give message
+     * ProtocolException can give message.
+     *
      * @param message
      */
     public ProtocolException(String message) {

@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend_communication.commands;
 
 import com.google.common.base.Joiner;
 import hy.tmc.cli.frontend_communication.FrontendListener;

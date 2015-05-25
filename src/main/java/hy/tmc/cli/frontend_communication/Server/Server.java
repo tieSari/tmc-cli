@@ -1,6 +1,4 @@
-
 package hy.tmc.cli.frontend_communication.Server;
-
 
 import hy.tmc.cli.Configuration.ConfigHandler;
 import hy.tmc.cli.frontend_communication.FrontendListener;
@@ -26,7 +24,8 @@ public class Server implements FrontendListener, Runnable {
         try {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.out.println("Server creation failed");
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -45,7 +44,7 @@ public class Server implements FrontendListener, Runnable {
      * Run is loop that accepts new client connection and handles it
      */
     @Override
-    public void run() {
+    public final void run() {
         isRunning = true;
         while (isRunning) {
             if (!startClientProcess()) {

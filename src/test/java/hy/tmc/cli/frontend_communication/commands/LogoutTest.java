@@ -1,5 +1,7 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.frontend_communication.commands.Logout;
+import hy.tmc.cli.frontend_communication.commands.Command;
 import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.frontend_communication.Server.ProtocolException;
 import hy.tmc.cli.logic.Logic;

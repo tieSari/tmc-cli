@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend_communication.commands;
 
 import hy.tmc.cli.backendCommunication.ExerciseDownloader;
 import hy.tmc.cli.backendCommunication.JSONParser;
