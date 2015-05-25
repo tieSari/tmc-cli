@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 
 import java.util.Arrays;

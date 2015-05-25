@@ -1,8 +1,5 @@
 package hy.tmc.cli.backendcommunication;
 
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.http.client.HttpClient;
-
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend_communication.FrontendListener;
@@ -11,11 +8,12 @@ import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
 
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.client.HttpClient;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-
 
 public class ExerciseDownloader {
 
@@ -46,8 +44,7 @@ public class ExerciseDownloader {
     /**
      * Method for downloading files if path is not defined.
      *
-     * @param exercises list of exercises which will be downloaded, list is
-     * parsed from json.
+     * @param exercises list of exercises which will be downloaded, list is parsed from json.
      */
     public void downloadFiles(List<Exercise> exercises) {
         downloadFiles(exercises, "");
@@ -56,8 +53,7 @@ public class ExerciseDownloader {
     /**
      * Method for downloading files if path where to download is defined.
      *
-     * @param exercises list of exercises which will be downloaded,
-     * list is parsed from json.
+     * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
      */
     public void downloadFiles(List<Exercise> exercises, String path) {
