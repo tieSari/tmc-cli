@@ -2,6 +2,7 @@ package hy.tmc.cli.zipping;
 
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -17,9 +18,9 @@ public class DefaultMoveDecider implements MoveDecider {
     private final ProjectRootFinder finder;
 
     /**
-     * Default movedecider, which decides whether something can be overwritten
-     * in a Maven or an Ant project
-     * @param detector 
+     * Decides Maven or an Ant project.
+     * 
+     * @param detector  Determine whether a directory is a project root directory
      */
     public DefaultMoveDecider(ProjectRootDetector detector) {
         this.finder = new ProjectRootFinder(detector);
@@ -63,8 +64,7 @@ public class DefaultMoveDecider implements MoveDecider {
         String contents;
         try {
             contents = FileUtils.readFileToString(specFile);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(ZipHandler.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
