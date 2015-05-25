@@ -1,7 +1,8 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend_communication.FrontendListener;
+import hy.tmc.cli.frontend.communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
+
 import java.util.HashMap;
 import java.util.Set;
 
@@ -13,16 +14,17 @@ public class CommandFactory {
      * @param logic that the commands will use
      * @return A map of names to corresponding commands
      */
-    public static HashMap<String, Command> createCommandMap(FrontendListener frontend, Logic logic) {
+    public static HashMap<String, Command> createCommandMap(FrontendListener frontend,
+                                                            Logic logic) {
         HashMap<String, Command> commandsByName = new HashMap<>();
-        commandsByName.put("auth", Authenticate(frontend, logic));
-        commandsByName.put("help", Help(frontend, logic));
-        commandsByName.put("login", Login(frontend, logic));
-        commandsByName.put("ping", ReplyToPing(frontend, logic));
-        commandsByName.put("listCourses", ListCourses(frontend, logic));
-        commandsByName.put("listExercises", ListExercises(frontend, logic));
-        commandsByName.put("downloadExercises", DownloadExercises(frontend, logic));
-        commandsByName.put("logout", Logout(frontend, logic));
+        commandsByName.put("auth", authenticate(frontend, logic));
+        commandsByName.put("help", help(frontend, logic));
+        commandsByName.put("login", login(frontend, logic));
+        commandsByName.put("ping", replyToPing(frontend, logic));
+        commandsByName.put("listCourses", listCourses(frontend, logic));
+        commandsByName.put("listExercises", listExercises(frontend, logic));
+        commandsByName.put("downloadExercises", downloadExercises(frontend, logic));
+        commandsByName.put("logout", logout(frontend, logic));
         return commandsByName;
     }
 
@@ -33,7 +35,7 @@ public class CommandFactory {
      * @param back logic that the command will use
      * @return a Help object
      */
-    public static Command Help(FrontendListener front, Logic back) {
+    public static Command help(FrontendListener front, Logic back) {
         return new Help(front, back);
     }
 
@@ -45,7 +47,7 @@ public class CommandFactory {
      * @param back logic that the command will use
      * @return a ReplyToPing object
      */
-    public static Command ReplyToPing(FrontendListener front, Logic back) {
+    public static Command replyToPing(FrontendListener front, Logic back) {
         return new ReplyToPing(front, back);
     }
 
@@ -56,18 +58,18 @@ public class CommandFactory {
      * @param back logic that the command will use
      * @return an Authenticate object
      */
-    public static Command Authenticate(FrontendListener front, Logic back) {
+    public static Command authenticate(FrontendListener front, Logic back) {
         return new Authenticate(front, back);
     }
 
     /**
-     * Same as Authenticate
+     * Same as authenticate
      * @param front frontend to use
      * @param back backend to use
-     * @return an Authenticate bject
+     * @return an authenticate bject
      */
-    public static Command Login(FrontendListener front, Logic back) {
-        return new Authenticate(front, back); // NOTE: login == Authenticate
+    public static Command login(FrontendListener front, Logic back) {
+        return new Authenticate(front, back); // NOTE: login == authenticate
     }
 
     /**
@@ -77,7 +79,7 @@ public class CommandFactory {
      * @param back logic that the command will use
      * @return a ListCourses object
      */
-    public static Command ListCourses(FrontendListener front, Logic back) {
+    public static Command listCourses(FrontendListener front, Logic back) {
         return new ListCourses(front, back);
     }
 
@@ -88,7 +90,7 @@ public class CommandFactory {
      * @param back logic that the command will use
      * @return a ListExercises object
      */
-    public static Command ListExercises(FrontendListener front, Logic back) {
+    public static Command listExercises(FrontendListener front, Logic back) {
         return new ListExercises(front, back);
     }
     
@@ -99,7 +101,7 @@ public class CommandFactory {
      * @param back logic that the command will use
      * @return a DownloadExercises object
      */
-    public static Command DownloadExercises(FrontendListener front, Logic back) {
+    public static Command downloadExercises(FrontendListener front, Logic back) {
         return new DownloadExercises(front, back);
     }
 
@@ -110,7 +112,7 @@ public class CommandFactory {
      * @param back logic that the command will use
      * @return a Logout object
      */
-    public static Command Logout(FrontendListener front, Logic back) {
+    public static Command logout(FrontendListener front, Logic back) {
         return new Logout(front, back);
     }
     

@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
