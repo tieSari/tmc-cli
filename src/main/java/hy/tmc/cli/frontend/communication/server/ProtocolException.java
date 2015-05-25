@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.Server;
+package hy.tmc.cli.frontend.communication.server;
 
 public class ProtocolException extends Exception {
 
@@ -12,24 +12,26 @@ public class ProtocolException extends Exception {
     /**
      * ProtocolException can give message.
      *
-     * @param message
+     * @param message of error
      */
     public ProtocolException(String message) {
         super(message);
     }
 
     /**
+     * Constructor with message.
      *
-     * @param message
-     * @param cause
+     * @param message of error
+     * @param cause of error
      */
     public ProtocolException(String message, Throwable cause) {
         super(message, cause);
     }
 
     /**
+     * Constructor for exception.
      *
-     * @param cause
+     * @param cause of error
      */
     public ProtocolException(Throwable cause) {
         super(cause);

@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication;
+package hy.tmc.cli.frontend;
 
 public enum Result {
 
@@ -8,16 +8,16 @@ public enum Result {
 
     private String data;
 
-    /**
-     *
+    /*
+     *Data with result
      * @return String of data
      */
     public String getData() {
         return this.data;
     }
 
-    /**
-     *
+    /*
+     *Set resultdata
      */
     public void setData() {
 

@@ -1,11 +1,10 @@
-package hy.tmc.cli.frontend_communication.commands;
+package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.Configuration.ClientData;
 import hy.tmc.cli.backendCommunication.JSONParser;
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
-
 
 public class ListExercises extends Command {
 
@@ -14,15 +13,16 @@ public class ListExercises extends Command {
     }
 
     /**
-     * use JSONParser to get a list of exercises names, and print it
+     * use JSONParser to get a list of exercises names, and print it.
      */
     @Override
     protected void functionality() {
-       this.frontend.printLine(JSONParser.getExerciseNames(data.get("courseUrl")));
+        this.frontend.printLine(JSONParser.getExerciseNames(data.get("courseUrl")));
     }
 
     /**
-     * Check the courseUrl and ClientData
+     * Check the courseUrl and ClientData.
+     *
      * @throws ProtocolException if some data not specified
      */
     @Override
@@ -34,8 +34,4 @@ public class ListExercises extends Command {
             throw new ProtocolException("Please authorize first.");
         }
     }
-    
-    
-    
-    
 }

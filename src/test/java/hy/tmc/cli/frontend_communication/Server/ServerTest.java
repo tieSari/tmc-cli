@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend_communication.Server;
 
-import hy.tmc.cli.Configuration.ConfigHandler;
+import hy.tmc.cli.frontend.communication.server.Server;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import org.junit.After;

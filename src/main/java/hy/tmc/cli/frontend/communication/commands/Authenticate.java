@@ -1,14 +1,16 @@
-package hy.tmc.cli.frontend_communication.commands;
+package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.Configuration.ConfigHandler;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.createClient;
 import static hy.tmc.cli.backendCommunication.URLCommunicator.makeGetRequest;
-import hy.tmc.cli.frontend_communication.FrontendListener;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 
 public class Authenticate extends Command {
+
     /**
      * Regex for HTTP OK codes.
      */
@@ -44,7 +46,9 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(createClient(), new ConfigHandler().readAuthAddress(), auth).getStatusCode();
+        int code = makeGetRequest(createClient(),
+                new ConfigHandler().readAuthAddress(),
+                auth).getStatusCode();
         this.frontend.printLine(returnResponse(code));
     }
 

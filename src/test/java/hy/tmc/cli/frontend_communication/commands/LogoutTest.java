@@ -1,9 +1,9 @@
 package hy.tmc.cli.frontend_communication.commands;
 
-import hy.tmc.cli.frontend_communication.commands.Logout;
-import hy.tmc.cli.frontend_communication.commands.Command;
-import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.frontend.communication.commands.Logout;
+import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import static org.junit.Assert.assertFalse;
@@ -55,7 +55,8 @@ public class LogoutTest {
             logout.execute();
             String response = front.getMostRecentLine();
             assertTrue(response.contains("Nobody"));
-        } catch (ProtocolException e) {
+        }
+        catch (ProtocolException e) {
             fail("Something went wrong");
         }
     }

@@ -5,7 +5,7 @@
  */
 package hy.tmc.cli.frontend_communication.commands;
 
-import hy.tmc.cli.frontend_communication.FrontendListener;
+import hy.tmc.cli.frontend.FrontendListener;
 
 /**
  *

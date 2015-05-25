@@ -1,6 +1,8 @@
 package hy.tmc.cli.frontend_communication.Server;
 
-import hy.tmc.cli.frontend_communication.commands.Command;
+import hy.tmc.cli.frontend.communication.server.ProtocolParser;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Before;
