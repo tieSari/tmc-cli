@@ -1,7 +1,8 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Joiner;
-import hy.tmc.cli.frontend_communication.FrontendListener;
+
+import hy.tmc.cli.frontend.communication.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
 public class Help extends Command {
@@ -11,7 +12,7 @@ public class Help extends Command {
     }
 
     /**
-     * List all available commands
+     * List all available commands.
      */
     @Override
     protected void functionality() {

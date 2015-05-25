@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.Server;
+package hy.tmc.cli.frontend.communication.server;
 
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;

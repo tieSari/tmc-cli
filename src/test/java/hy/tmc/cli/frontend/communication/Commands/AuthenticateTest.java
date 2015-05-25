@@ -1,10 +1,10 @@
-package hy.tmc.cli.frontend_communication.Commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backendCommunication.Authorization.Authorization;
 import hy.tmc.cli.backendCommunication.HTTPResult;
 import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.testhelpers.FrontendStub;
-import hy.tmc.cli.frontend_communication.Server.ProtocolException;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import org.junit.Before;
 import org.junit.Test;
