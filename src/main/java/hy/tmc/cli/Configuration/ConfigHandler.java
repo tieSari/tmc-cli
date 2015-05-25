@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Class is used to write to config file and read from it
+ * Writes data to config file and reads from it
  */
 public class ConfigHandler {
 
