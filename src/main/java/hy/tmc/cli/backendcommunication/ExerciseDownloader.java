@@ -87,7 +87,7 @@ public class ExerciseDownloader {
             List<Exercise> exercises, String path) {
         tellStateForUser(exercise, exCount, exercises);
         String filePath = path + exercise.getName() + ".zip";
-        downloadFile(exercise.getZip_url(), filePath);
+        downloadFile(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
         } catch (IOException | ZipException ex) {
