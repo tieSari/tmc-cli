@@ -32,56 +32,39 @@ public class ZipperTest {
         new File(mockUnzipPath).delete();
     }
 
-    /**
-     * Test of zip method, of class Zipper.
-     */
     @Test
-    public void zipsFolder() {
-        try {
-            zipper.zip(mockPath, mockUnzipPath);
-            ZipFile file = new ZipFile(mockUnzipPath);
-            List<FileHeader> filesInZip = file.getFileHeaders();
-            List<String> names = new ArrayList();
+    public void zipsFolder() throws ZipException {
+        zipper.zip(mockPath, mockUnzipPath);
+        ZipFile file = new ZipFile(mockUnzipPath);
+        List<FileHeader> filesInZip = file.getFileHeaders();
+        List<String> names = new ArrayList();
 
-            for (FileHeader header : filesInZip) {
-                names.add(header.getFileName());
-            }
-            assertEquals(5, names.size());
-            assertTrue(names.contains("mockProject/root/.tmcproject.yml"));
-            assertTrue(names.contains("mockProject/root/"));
-
+        for (FileHeader header : filesInZip) {
+            names.add(header.getFileName());
         }
-        catch (ZipException ex) {
-            fail("Couldn't zip");
-        }
+        assertEquals(5, names.size());
+        assertTrue(names.contains("mockProject/root/.tmcproject.yml"));
+        assertTrue(names.contains("mockProject/root/"));
     }
 
     @Test
-    public void overridesPreviousExistingZip() throws IOException {
+    public void overridesPreviousExistingZip() throws IOException, ZipException {
         String newFileName = "best.txt";
-        try {
-            zipper.zip(mockPath, mockUnzipPath);
 
-            ZipFile zip = new ZipFile(mockUnzipPath);
-            File newFile = new File(newFileName);
-            newFile.createNewFile();
-            zip.addFile(newFile, new ZipParameters());
+        zipper.zip(mockPath, mockUnzipPath);
 
-            assertEquals(newFileName, zip.getFileHeader(newFileName).getFileName());
-            assertTrue(new File(mockUnzipPath).exists());
+        ZipFile zip = new ZipFile(mockUnzipPath);
+        File newFile = new File(newFileName);
+        newFile.createNewFile();
+        zip.addFile(newFile, new ZipParameters());
 
-            zipper.zip(mockPath, mockUnzipPath);
-            zip = new ZipFile(mockUnzipPath);
-            FileHeader header = zip.getFileHeader(newFileName);
-            assertEquals(newFileName, header.getFileName());
+        assertEquals(newFileName, zip.getFileHeader(newFileName).getFileName());
+        assertTrue(new File(mockUnzipPath).exists());
 
-        }
-        catch (ZipException ex) {
-            for (Path file : Files.newDirectoryStream(Paths.get("testResources/"))) {
-                System.out.println(file.getFileName());
-            }
-            fail(ex.getMessage());
-        }
-
+        zipper.zip(mockPath, mockUnzipPath);
+        zip = new ZipFile(mockUnzipPath);
+        FileHeader header = zip.getFileHeader(newFileName);
+        assertEquals(newFileName, header.getFileName());
     }
+
 }

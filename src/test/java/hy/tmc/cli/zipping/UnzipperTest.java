@@ -3,13 +3,7 @@ package hy.tmc.cli.zipping;
 import hy.tmc.cli.testhelpers.FileWriterHelper;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.FileHeader;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -40,16 +34,10 @@ public class UnzipperTest {
     }
 
     @After
-    public void teardown() {
+    public void teardown() throws IOException {
         final File file = new File(unzipPath);
         System.out.println(file.getAbsolutePath());
-        try {
-            FileUtils.deleteDirectory(file);
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-            fail("Failed to clear test directory");
-        }
+        FileUtils.deleteDirectory(file);
         file.mkdir();
     }
 
@@ -59,60 +47,40 @@ public class UnzipperTest {
     }
 
     @Test
-    public void oneFileUnzips() {
-        try {
-            handler.unzip();
-            assertTrue(new File(unzipPath + "/viikko1").exists());
-            assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src").exists());
-            assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/lib").exists());
-        }
-        catch (Exception ex) {
-            fail("failed to unzip");
-        }
+    public void oneFileUnzips() throws IOException, ZipException {
+        handler.unzip();
+        assertTrue(new File(unzipPath + "/viikko1").exists());
+        assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src").exists());
+        assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/lib").exists());
     }
 
     @Test
-    public void sourceFolderUnzips() {
-        try {
-            assertFalse(new File(javaFile).exists());
-            handler.unzip();
-            assertTrue(new File(javaFile).exists());
-        }
-        catch (Exception ex) {
-            fail("failed to unzip");
-        }
+    public void sourceFolderUnzips() throws IOException, ZipException {
+        assertFalse(new File(javaFile).exists());
+        handler.unzip();
+        assertTrue(new File(javaFile).exists());
     }
 
     @Test
-    public void sourceFolderDoesntOverride() {
-        try {
-            handler.unzip();
-            File file = new File(javaFile);
-            assertTrue(file.exists());
-            helper.writeStuffToFile(javaFile);
-            long modified = file.lastModified();
-            handler.unzip();
-            assertEquals(modified, file.lastModified());
-        }
-        catch (Exception ex) {
-            fail("failed to unzip");
-        }
+    public void sourceFolderDoesntOverride() throws ZipException, IOException {
+        handler.unzip();
+        File file = new File(javaFile);
+        assertTrue(file.exists());
+        helper.writeStuffToFile(javaFile);
+        long modified = file.lastModified();
+        handler.unzip();
+        assertEquals(modified, file.lastModified());
     }
 
     @Test
-    public void otherStuffIsOverwritten() {
-        try {
-            handler.unzip();
-            File file = new File(unzipPath + "/viikko1/Viikko1_001.Nimi/build.xml");
-            assertTrue(file.exists());
-            helper.writeStuffToFile(file.getAbsolutePath());
-            long modified = file.lastModified();
-            handler.unzip();
-            assertNotEquals(modified, file.lastModified());
-        }
-        catch (Exception ex) {
-            fail("failed to unzip");
-        }
+    public void otherStuffIsOverwritten() throws IOException, ZipException {
+        handler.unzip();
+        File file = new File(unzipPath + "/viikko1/Viikko1_001.Nimi/build.xml");
+        assertTrue(file.exists());
+        helper.writeStuffToFile(file.getAbsolutePath());
+        long modified = file.lastModified();
+        handler.unzip();
+        assertNotEquals(modified, file.lastModified());
     }
 
     @Test
@@ -143,29 +111,17 @@ public class UnzipperTest {
     }
 
     @Test
-    public void doesntOverwriteSomethingInTmcprojectYml() {
+    public void doesntOverwriteSomethingInTmcprojectYml() throws IOException, ZipException {
         String studentTestFile = projectPath + "/test/StudentTest.java";
-        try {
-            handler.unzip();
-        }
-        catch (IOException | ZipException ex) {
-            fail("Exception thrown by unzip");
-        }
-        
+
+        handler.unzip();
+
         helper.writeStuffToFile(studentTestFile);
         long lastMod = new File(studentTestFile).lastModified();
-        
-        try {
-            handler.unzip();
-        }
-        catch (IOException | ZipException ex) {
-            fail("Exception thrown by unzip");
-        }
-        
-        assertEquals(lastMod, new File(studentTestFile).lastModified());
-        
-    }
+        handler.unzip();
 
-   
+        assertEquals(lastMod, new File(studentTestFile).lastModified());
+
+    }
 
 }
