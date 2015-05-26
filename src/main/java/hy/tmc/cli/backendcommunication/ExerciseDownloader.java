@@ -5,10 +5,10 @@ import static hy.tmc.cli.Main.main;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.zipping.DefaultMoveDecider;
+import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.DefaultRootDetector;
-import hy.tmc.cli.zipping.MoveDecider;
-import hy.tmc.cli.zipping.ZipHandler;
+import hy.tmc.cli.zipping.UnzipDecider;
+import hy.tmc.cli.zipping.Unzipper;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
@@ -107,8 +107,8 @@ public class ExerciseDownloader {
      * @param destinationPath destination path
      */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        MoveDecider md = new DefaultMoveDecider();
-        ZipHandler zipHandler = new ZipHandler(unzipPath, destinationPath, md);
+        UnzipDecider md = new DefaultUnzipDecider();
+        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
         zipHandler.unzip();
     }
 
