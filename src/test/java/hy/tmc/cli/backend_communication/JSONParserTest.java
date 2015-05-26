@@ -1,9 +1,9 @@
 package hy.tmc.cli.backend_communication;
 
+import hy.tmc.cli.backendcommunication.HttpResult;
+import hy.tmc.cli.backendcommunication.UrlCommunicator;
+import hy.tmc.cli.backendcommunication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.backendCommunication.HTTPResult;
-import hy.tmc.cli.backendCommunication.JSONParser;
-import hy.tmc.cli.backendCommunication.URLCommunicator;
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,18 +17,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(URLCommunicator.class)
+@PrepareForTest(UrlCommunicator.class)
 public class JSONParserTest {
 
     @Before
     public void setup() {
-        PowerMockito.mockStatic(URLCommunicator.class);
+        PowerMockito.mockStatic(UrlCommunicator.class);
 
-        HTTPResult fakeResult = new HTTPResult(ExampleJSON.coursesExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJSON.coursesExample, 200, true);
         
         ClientData.setUserData("chang", "paras");
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
                                                     Mockito.anyString(), 
                                                     Mockito.anyString()))
                 .thenReturn(fakeResult);
@@ -37,8 +37,8 @@ public class JSONParserTest {
 
     @Test
     public void parsesCourseNamesCorrectly() {
-        new JSONParser();
-        String courses = JSONParser.getCourseNames();
+        new TmcJsonParser();
+        String courses = TmcJsonParser.getCourseNames();
         assertTrue(courses.contains("s2014-tira"));
         assertTrue(courses.contains("k2015-ohpe"));
         assertTrue(courses.contains("checkstyle-demo"));
@@ -48,7 +48,7 @@ public class JSONParserTest {
 
     @Test
     public void coursesDontContainWeirdNames() {
-        String courses = JSONParser.getCourseNames();
+        String courses = TmcJsonParser.getCourseNames();
         assertFalse(courses.contains("Chang"));
         assertFalse(courses.contains("Ilari"));
         assertFalse(courses.contains("Pihla"));
@@ -59,13 +59,13 @@ public class JSONParserTest {
 
     @Test
     public void getsExercisesCorrectlyFromCourseJSON() {
-        HTTPResult fakeResult = new HTTPResult(ExampleJSON.courseExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
                                                     Mockito.eq("ankka"), 
                                                     Mockito.anyString()))
                 .thenReturn(fakeResult);
-        String names = JSONParser.getExerciseNames("ankka");
+        String names = TmcJsonParser.getExerciseNames("ankka");
 
         assertTrue(names.contains("viikko01-Viikko01_000.Hiekkalaatikko"));
         assertTrue(names.contains("viikko01-Viikko01_002.HeiMaailma"));
@@ -74,13 +74,13 @@ public class JSONParserTest {
     
     @Test
     public void getsLastExerciseOfCourseJSON() {
-        HTTPResult fakeResult = new HTTPResult(ExampleJSON.courseExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
                                                     Mockito.eq("ankka"), 
                                                     Mockito.anyString()))
                 .thenReturn(fakeResult);
-        String names = JSONParser.getExerciseNames("ankka");
+        String names = TmcJsonParser.getExerciseNames("ankka");
         
         assertTrue(names.contains("viikko01-Viikko01_004.RobottiOhjain"));
     }
