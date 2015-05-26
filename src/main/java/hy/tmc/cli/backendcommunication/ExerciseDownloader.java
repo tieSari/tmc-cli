@@ -39,6 +39,10 @@ public class ExerciseDownloader {
      */
     public void downloadExercises(String courseUrl) {
         List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
+        if(exercises.isEmpty()){
+            this.front.printLine("No exercises to download.");
+            return;
+        }
         downloadFiles(exercises);
     }
 
@@ -92,8 +96,7 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Unzips a zip file.
-     *
+     * Unzips single file after downloading. 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
