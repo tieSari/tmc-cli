@@ -10,7 +10,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
-public class DefaultMoveDecider implements MoveDecider {
+public class DefaultUnzipDecider implements UnzipDecider {
 
     protected List<String> additionalStudentFiles;
 
@@ -18,7 +18,7 @@ public class DefaultMoveDecider implements MoveDecider {
      * Default movedecider, which decides whether something can be overwritten in a Maven or an Ant
      * project
      */
-    public DefaultMoveDecider() {
+    public DefaultUnzipDecider() {
         this.additionalStudentFiles = new ArrayList();
     }
 

@@ -7,11 +7,11 @@ import static org.junit.Assert.*;
 
 public class DefaultMoveDeciderTest {
 
-    private DefaultMoveDecider decider;
+    private DefaultUnzipDecider decider;
 
     @Before
     public void setUp() {
-        decider = new DefaultMoveDecider();
+        decider = new DefaultUnzipDecider();
     }
 
     @After
@@ -19,7 +19,7 @@ public class DefaultMoveDeciderTest {
     }
 
     /**
-     * Test of readTmcprojectYml method, of class DefaultMoveDecider.
+     * Test of readTmcprojectYml method, of class DefaultUnzipDecider.
      */
     @Test
     public void testReadTmcprojectYml() {

@@ -1,23 +1,22 @@
 package hy.tmc.cli.backendcommunication;
 
 
-import static hy.tmc.cli.Main.main;
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.zipping.DefaultMoveDecider;
-import hy.tmc.cli.zipping.DefaultRootDetector;
-import hy.tmc.cli.zipping.MoveDecider;
-import hy.tmc.cli.zipping.ZipHandler;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.zipping.DefaultUnzipDecider;
+import hy.tmc.cli.zipping.UnzipDecider;
+import hy.tmc.cli.zipping.Unzipper;
+
 import java.io.File;
 import java.io.IOException;
-
 import java.util.List;
-import net.lingala.zip4j.exception.ZipException;
 
 public class ExerciseDownloader {
 
@@ -29,10 +28,7 @@ public class ExerciseDownloader {
      * @param front component which implements frontend interface
      */
     public ExerciseDownloader(FrontendListener front) {
-        if (front == null) {
-            return;
-        }
-        this.front = front;
+        this.front = checkNotNull(front);
     }
 
     /**
@@ -107,8 +103,8 @@ public class ExerciseDownloader {
      * @param destinationPath destination path
      */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        MoveDecider md = new DefaultMoveDecider();
-        ZipHandler zipHandler = new ZipHandler(unzipPath, destinationPath, md);
+        UnzipDecider md = new DefaultUnzipDecider();
+        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
         zipHandler.unzip();
     }
 
