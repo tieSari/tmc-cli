@@ -39,7 +39,7 @@ public class ExerciseDownloader {
      */
     public void downloadExercises(String courseUrl) {
         List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
-        if(exercises.isEmpty()){
+        if (exercises.isEmpty()) {
             this.front.printLine("No exercises to download.");
             return;
         }
