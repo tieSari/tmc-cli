@@ -61,7 +61,8 @@ public class ListExercisesTest {
         try {
             list.execute();
             System.out.println(front.getMostRecentLine());
-            assertTrue(front.getMostRecentLine().contains("RobottiOhjain"));
+            assertTrue(front.getMostRecentLine().contains("viikko1-Viikko1_000.Hiekkalaatikko"));
+            assertTrue(front.getMostRecentLine().contains("viikko3-Viikko3_046.LukujenKeskiarvo"));
         }
         catch (ProtocolException ex) {
             fail("unexpected exception");
