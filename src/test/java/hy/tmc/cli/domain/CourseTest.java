@@ -32,7 +32,9 @@ public class CourseTest {
     
     @Before
     public void setUp() {
-        course = new Course(id, name);
+        course = new Course();
+        course.setId(id);
+        course.setName(name);
     }
     
     @After
