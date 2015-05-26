@@ -80,8 +80,8 @@ public class DownloadExercisesSteps {
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
-        verify(getRequestedFor(urlEqualTo("/user"))
-                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
+        verify(getRequestedFor(urlEqualTo("/user")));
+                // .withHeader("Authorization", containing("Basic cGlobGE6anV1aA==")));
     }
 
     @When("^user gives a download exercises command and course id\\.$")
