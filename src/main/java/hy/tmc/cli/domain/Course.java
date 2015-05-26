@@ -1,15 +1,14 @@
 package hy.tmc.cli.domain;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Course {
     
     private int id;
     private String name;
-    private String details_url;
 
-    public Course(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    @SerializedName("details_url")
+    private String detailsUrl;
 
     public Course() {
 
@@ -31,11 +30,11 @@ public class Course {
         this.name = name;
     }
 
-    public String getDetails_url() {
-        return details_url;
+    public String getDetailsUrl() {
+        return detailsUrl;
     }
 
-    public void setDetails_url(String details_url) {
-        this.details_url = details_url;
+    public void setDetailsUrl(String detailsUrl) {
+        this.detailsUrl = detailsUrl;
     }
 }

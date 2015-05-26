@@ -42,7 +42,7 @@ public class ExerciseDownloader {
      */
     public void downloadExercises(String courseUrl) {
         List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
-        if(exercises.isEmpty()){
+        if (exercises.isEmpty()) {
             this.front.printLine("No exercises to download.");
             return;
         }
@@ -90,7 +90,7 @@ public class ExerciseDownloader {
             List<Exercise> exercises, String path) {
         tellStateForUser(exercise, exCount, exercises);
         String filePath = path + exercise.getName() + ".zip";
-        downloadFile(exercise.getZip_url(), filePath);
+        downloadFile(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
         }

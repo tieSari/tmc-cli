@@ -17,7 +17,7 @@ public class ListExercises extends Command {
      */
     @Override
     protected void functionality() {
-       this.frontend.printLine(TmcJsonParser.getExerciseNames(data.get("courseUrl")));
+        this.frontend.printLine(TmcJsonParser.getExerciseNames(data.get("courseUrl")));
     }
 
     /**
