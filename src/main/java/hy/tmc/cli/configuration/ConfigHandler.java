@@ -74,7 +74,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Reads server address from config
+     * Reads and returns the server address of the TMC-server.
      *
      * @return address of tmc server
      */
@@ -84,7 +84,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Reads address from which to list courses
+     * Reads address from which to list courses.
      *
      * @return String with tmc server address + courses path
      */
@@ -97,7 +97,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Reads address to which auth GET can be sent
+     * Reads address to which auth GET can be sent.
      *
      * @return String with tmc server address + user path
      */
