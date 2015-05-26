@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class ChooseServer extends Command {
     @Override
     protected void functionality() {
         try {
-            handler.writeServerAddress(data.get("tmc-server"));
+            handler.writeServerAddress(data.get("tmc-server"));            
         }
         catch (IOException ex) {
             Logger.getLogger(ChooseServer.class.getName()).log(Level.SEVERE, null, ex);

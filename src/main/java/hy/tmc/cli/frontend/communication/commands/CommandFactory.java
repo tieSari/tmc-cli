@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.frontend.communication.commands.CommandFactory.downloadExercises;
 
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
@@ -28,6 +27,7 @@ public class CommandFactory {
         commandsByName.put("listExercises", listExercises(frontend, logic));
         commandsByName.put("downloadExercises", downloadExercises(frontend, logic));
         commandsByName.put("logout", logout(frontend, logic));
+        commandsByName.put("setServer", chooseServer(frontend, logic));
         return commandsByName;
     }
 
@@ -118,6 +118,10 @@ public class CommandFactory {
     public static Command logout(FrontendListener front, Logic back) {
         return new Logout(front, back);
     }
+    
+    public static Command chooseServer(FrontendListener front, Logic back) {
+        return new ChooseServer(front, back);
+    } 
 
     /**
      * Takes the command map and returns a set of command names.
@@ -127,5 +131,5 @@ public class CommandFactory {
     static Set<String> allCommandNames() {
         return createCommandMap(null, null).keySet();
     }
-
+    
 }
