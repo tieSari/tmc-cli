@@ -136,15 +136,15 @@ public class CommandFactory {
      * @return a set of all available command names.
      */
     static Set<String> allCommandNames() {
-        FrontendListener stub = new FrontendListener () {
+        FrontendListener stub = new FrontendListener() {
             @Override
             public void start() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
             public void printLine(String line) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("Not supported yet.");
             }
         };
 
