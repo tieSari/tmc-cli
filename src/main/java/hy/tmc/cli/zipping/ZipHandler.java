@@ -1,5 +1,6 @@
 package hy.tmc.cli.zipping;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -18,7 +19,7 @@ public class ZipHandler {
 
     private String zipPath;
     private String unzipDestination;
-    private MoveDecider movedecider;
+    private UnzipDecider movedecider;
     private String specFileName = ".tmcproject.yml";
 
     /**
@@ -28,7 +29,7 @@ public class ZipHandler {
      * @param unzipLocation place to unzip to
      * @param movedecider a class which helps decide which files may be overwritten
      */
-    public ZipHandler(String zipSourcePath, String unzipLocation, MoveDecider movedecider) {
+    public ZipHandler(String zipSourcePath, String unzipLocation, UnzipDecider movedecider) {
         this.zipPath = zipSourcePath;
         this.unzipDestination = unzipLocation;
         this.movedecider = movedecider;
@@ -82,4 +83,15 @@ public class ZipHandler {
             }
         }
     }
+    
+    /**
+     * Zips a single file to destination
+     * @param file File to unzip
+     * @param outDestination path to unzip to
+     * @throws ZipException if failed to create zip
+    */
+    public void zip(File file, String outDestination) throws ZipException {
+        
+    }
+    
 }

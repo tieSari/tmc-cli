@@ -21,10 +21,10 @@ public class ZipHandlerTest {
     String unzipPath = "testResources/unzips";
     String projectPath = unzipPath + "/viikko1/Viikko1_001.Nimi";
     String javaFile = projectPath + "/src/Nimi.java";
-    MoveDecider decider;
+    UnzipDecider decider;
 
     public ZipHandlerTest() {
-        decider = new DefaultMoveDecider();
+        decider = new DefaultUnzipDecider();
     }
 
     @Before
