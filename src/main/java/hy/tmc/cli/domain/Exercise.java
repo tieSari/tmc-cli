@@ -38,10 +38,10 @@ public class Exercise {
     private String memoryLimit; //": null,
 
     @SerializedName("runtime_params")
-    private String[] runtimeParams; //": [ ],
+    private String[] runtimeParams; //[ "-Xss8M" ]
 
     @SerializedName("valgrind_strategy")
-    private String valgrindStrategy; //": null,
+    private String valgrindStrategy; // "fail",
 
     @SerializedName("code_review_requests_enabled")
     private boolean codeReviewRequestsEnabled; //": true,
@@ -50,7 +50,7 @@ public class Exercise {
     private boolean runTestsLocallyActionEnabled; //": true,
 
     @SerializedName("exercise_submissions_url")
-    private String exerciseSubmissionsUrl; //": "https://tmc.mooc.fi/staging/exercises/284.json?api_version=7
+    private String exerciseSubmissionsUrl; // https://tmc.mooc.fi/staging/exercises/284.json?api_version=7
     
     public int getId() {
         return id;
