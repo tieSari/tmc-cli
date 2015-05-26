@@ -1,6 +1,5 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.configuration;
 
-import hy.tmc.cli.configuration.ClientData;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static hy.tmc.cli.configuration.ClientData.*;
@@ -16,21 +15,21 @@ public class ClientDataTest {
 
     @Test
     public void initiallyUserDataIsInitialData() {
-        String s = getUSERNAME() + getPASSWORD();
+        String s = getUsername() + getPassword();
         assertTrue(s.isEmpty());
     }
 
     @Test
     public void afterLoginInNewDataIsSet() {
         setUserData("ASD", "DSA");
-        assertEquals("ASD", getUSERNAME());
+        assertEquals("ASD", getUsername());
     }
 
     @Test
     public void logOutResetsUserData() {
         setUserData("ASD", "DSA");
         logOutCurrentUser();
-        assertEquals("", getUSERNAME());
+        assertEquals("", getUsername());
     }
 
     @Test
@@ -53,7 +52,7 @@ public class ClientDataTest {
         String username = "";
         String password = "";
         ClientData.setUserData(username, password);
-        assertEquals("", ClientData.getUSERNAME());
+        assertEquals("", ClientData.getUsername());
     }
 
     /**
@@ -121,7 +120,7 @@ public class ClientDataTest {
     @Test
     public void testGetPID() {
         int expResult = 0;
-        int result = ClientData.getPID();
+        int result = ClientData.getPid();
         assertEquals(expResult, result);
     }
 
@@ -131,8 +130,8 @@ public class ClientDataTest {
     @Test
     public void testSetPID() {
         int PID = 123;
-        ClientData.setPID(PID);
-        assertEquals(PID, ClientData.getPID());
+        ClientData.setPid(PID);
+        assertEquals(PID, ClientData.getPid());
     }
 
     /**
@@ -141,7 +140,7 @@ public class ClientDataTest {
     @Test
     public void testGetUSERNAME() {
         String expResult = "";
-        String result = ClientData.getUSERNAME();
+        String result = ClientData.getUsername();
         assertEquals(expResult, result);
     }
 
@@ -151,7 +150,7 @@ public class ClientDataTest {
     @Test
     public void testGetPASSWORD() {
         String expResult = "";
-        String result = ClientData.getPASSWORD();
+        String result = ClientData.getPassword();
         assertEquals(expResult, result);
     }
 

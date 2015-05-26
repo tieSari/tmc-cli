@@ -1,15 +1,18 @@
 package hy.tmc.cli.configuration;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Class is used to write to config file and read from it
+ * Class is used to write to config file and read from it.
  */
 public class ConfigHandler {
 
@@ -21,14 +24,14 @@ public class ConfigHandler {
 
     /**
      * Creates new config handler with default filename and path in current
-     * directory
+     * directory.
      */
     public ConfigHandler() {
         this.configFilePath = "config.properties";
     }
 
     /**
-     * Creates new config handler with specified path and name
+     * Creates new config handler with specified path and name.
      *
      * @param path for config file
      */
@@ -49,8 +52,8 @@ public class ConfigHandler {
         try {
             InputStream inputStream = new FileInputStream(new File(configFilePath));
             prop.load(inputStream);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
+            Logger.getLogger(ConfigHandler.class.getName()).log(Level.SEVERE, null, e);
         }
         return prop;
     }
@@ -64,8 +67,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Writes server address to config file, ex. "https://tmc.mooc.fi/hy"
-     *
+     * Writes server address to config file, ex. "https://tmc.mooc.fi/hy".
      * @param address for tmc server
      * @throws IOException if unable to write address
      */
@@ -75,7 +77,6 @@ public class ConfigHandler {
 
     /**
      * Reads and returns the server address of the TMC-server.
-     *
      * @return address of tmc server
      */
     public String readServerAddress() {
@@ -114,7 +115,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Reads port local server from config file
+     * Reads port local server from config file.
      */
     public int readPort() {
         Properties prop = getProperties();
@@ -122,7 +123,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Writes port to config file
+     * Writes port to config file.
      *
      * @param port to write in config
      */

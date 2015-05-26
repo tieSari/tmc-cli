@@ -25,8 +25,8 @@ public class TmcJsonParser {
      */
     private static JsonObject getJsomFrom(String url) {
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
-                UrlCommunicator.createClient(),
-                url, ClientData.getFormattedUserData());
+                url, ClientData.getFormattedUserData()
+        );
         String data = httpResult.getData();
         return new JsonParser().parse(data).getAsJsonObject();
     }

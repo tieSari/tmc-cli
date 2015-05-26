@@ -16,8 +16,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,14 +60,11 @@ public class UrlCommunicator {
      *
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is always username:password
-     * @param client HttpClient to execute HttpRequests. It will come as parameter to enable 
-    dependency injection.
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HttpResult makeGetRequest(HttpClient client, 
-            String url, String... params) {
+    public static HttpResult makeGetRequest(String url, String... params) {
         try {
-            HttpResponse response = createAndExecuteGet(url, params, client);
+            HttpResponse response = createAndExecuteGet(url, params);
             StringBuilder result = writeResponse(response);
             return new HttpResult(
                     result.toString(),
@@ -86,9 +83,12 @@ public class UrlCommunicator {
      * @param params params of the get request
      * @return true if succesful
      */
-    public static boolean downloadFile(HttpClient client, String url, File file, String... params) {
+    public static boolean downloadFile(HttpClient client, 
+                                       String url, 
+                                       File file, 
+                                       String... params) {
         try {
-            HttpResponse response = createAndExecuteGet(url, params, client);
+            HttpResponse response = createAndExecuteGet(url, params);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
@@ -116,17 +116,17 @@ public class UrlCommunicator {
         return HttpClientBuilder.create().build();
     }
 
-    private static HttpResponse createAndExecuteGet(String url, String[] params,
-            HttpClient client) throws IOException {
+    private static HttpResponse createAndExecuteGet(String url, String[] params)
+            throws IOException {
         HttpGet request = new HttpGet(url);
         request.setHeader("Authorization", "Basic " + encode(params[0]));
         request.addHeader("User-Agent", USER_AGENT);
-        return executeGetRequest(request, client);
+        return executeGetRequest(request);
     }
     
-    private static HttpResponse executeGetRequest(HttpGet request, HttpClient client) 
+    private static HttpResponse executeGetRequest(HttpGet request) 
             throws IOException {
-        return client.execute(request);
+        return createClient().execute(request);
     }
 
 }
