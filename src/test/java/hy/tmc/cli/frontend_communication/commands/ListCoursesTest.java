@@ -4,8 +4,8 @@ import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.ListCourses;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.backendCommunication.HTTPResult;
-import hy.tmc.cli.backendCommunication.URLCommunicator;
+import hy.tmc.cli.backendcommunication.HttpResult;
+import hy.tmc.cli.backendcommunication.UrlCommunicator;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.ExampleJSON;
@@ -22,7 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(URLCommunicator.class)
+@PrepareForTest(UrlCommunicator.class)
 public class ListCoursesTest {
 
     private FrontendStub front;
@@ -34,14 +34,14 @@ public class ListCoursesTest {
         list = new ListCourses(front, new Logic());
         
         
-        PowerMockito.mockStatic(URLCommunicator.class);
+        PowerMockito.mockStatic(UrlCommunicator.class);
 
-        HTTPResult fakeResult = new HTTPResult(ExampleJSON.coursesExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJSON.coursesExample, 200, true);
 
         ClientData.setUserData("mockattu", "ei tarvi");
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(
-                            Mockito.eq(URLCommunicator.createClient()),
+                .when(UrlCommunicator.makeGetRequest(
+                            Mockito.eq(UrlCommunicator.createClient()),
                             Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
         

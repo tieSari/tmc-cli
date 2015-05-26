@@ -1,9 +1,10 @@
 package hy.tmc.cli.frontend_communication.commands;
 
+import hy.tmc.cli.backendcommunication.authorization.Authorization;
+import hy.tmc.cli.backendcommunication.HttpResult;
+import hy.tmc.cli.backendcommunication.UrlCommunicator;
 import hy.tmc.cli.frontend.communication.commands.Authenticate;
-import hy.tmc.cli.backendCommunication.Authorization.Authorization;
-import hy.tmc.cli.backendCommunication.HTTPResult;
-import hy.tmc.cli.backendCommunication.URLCommunicator;
+
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
@@ -17,7 +18,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(URLCommunicator.class)
+@PrepareForTest(UrlCommunicator.class)
 public class AuthenticateTest {
 
     final private String testUsername = "test";
@@ -55,7 +56,7 @@ public class AuthenticateTest {
         
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
-        PowerMockito.mockStatic(URLCommunicator.class);
+        PowerMockito.mockStatic(UrlCommunicator.class);
         powerMockWithCredentials("test:1234", 200);
         powerMockWithCredentials("samu:salis", 400);
         
@@ -65,9 +66,9 @@ public class AuthenticateTest {
     }
 
     private void powerMockWithCredentials(String credentials, int status) {
-        HTTPResult fakeResult = new HTTPResult("", status, true);
+        HttpResult fakeResult = new HttpResult("", status, true);
         PowerMockito
-                .when(URLCommunicator.makeGetRequest(Mockito.eq(URLCommunicator.createClient()),
+                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
                         Mockito.anyString(),
                         Mockito.eq(credentials)))
                 .thenReturn(fakeResult);

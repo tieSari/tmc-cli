@@ -2,8 +2,8 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 
-import hy.tmc.cli.backendCommunication.ExerciseDownloader;
-import hy.tmc.cli.backendCommunication.JSONParser;
+import hy.tmc.cli.backendcommunication.ExerciseDownloader;
+import hy.tmc.cli.backendcommunication.TmcJsonParser;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -28,7 +28,7 @@ public class DownloadExercises extends Command {
      */
     @Override
     protected void functionality() {
-        List<Exercise> exercises = JSONParser.getExercises(
+        List<Exercise> exercises = TmcJsonParser.getExercises(
                 Integer.parseInt(this.data.get("courseID")));
         exDl.downloadFiles(exercises, this.data.get("pwd"));
     }

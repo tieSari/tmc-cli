@@ -1,5 +1,4 @@
-
-package hy.tmc.cli.backendCommunication;
+package hy.tmc.cli.backendcommunication;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
@@ -9,19 +8,21 @@ import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
 
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.client.HttpClient;
+
 import java.io.File;
 import java.io.IOException;
 
 import java.util.List;
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.http.client.HttpClient;
 
 public class ExerciseDownloader {
 
     private FrontendListener front;
 
     /**
-     * Constructor for ExerciseDownloader
+     * Constructor for ExerciseDownloader.
+     *
      * @param front component which implements frontend interface
      */
     public ExerciseDownloader(FrontendListener front) {
@@ -32,25 +33,28 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Download exercises by course url
+     * Download exercises by course url.
+     *
      * @param courseUrl course url
      */
     public void downloadExercises(String courseUrl) {
-        List<Exercise> exercises = JSONParser.getExercises(courseUrl);
+        List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
         downloadFiles(exercises);
     }
 
     /**
-     * Method for downloading files if path is not defined
-     * @param exercises list of exercises which will be downloaded, list is parsed from json
+     * Method for downloading files if path is not defined.
+     *
+     * @param exercises list of exercises which will be downloaded, list is parsed from json.
      */
     public void downloadFiles(List<Exercise> exercises) {
         downloadFiles(exercises, "");
     }
 
     /**
-     * Method for downloading files if path where to download is defined
-     * @param exercises list of exercises which will be downloaded, list is parsed from json
+     * Method for downloading files if path where to download is defined.
+     *
+     * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
      */
     public void downloadFiles(List<Exercise> exercises, String path) {
@@ -60,20 +64,23 @@ public class ExerciseDownloader {
             handleSingleExercise(exercise, exCount, exercises, path);
             exCount++;
         }
-        if (this.front != null)  {
+        if (this.front != null) {
             front.printLine(exercises.size() + " exercises downloaded.");
         }
 
     }
 
     /**
-     * Handles downloading, unzipping & telling user information, for single exercise
+     * Handles downloading, unzipping & telling user information,
+     * for single exercise.
+     *
      * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
      * @param exercises list of exercises which will be downloaded
      * @param path path where single exercise will be downloaded
      */
-    private void handleSingleExercise(Exercise exercise, int exCount, List<Exercise> exercises, String path) {
+    private void handleSingleExercise(Exercise exercise, int exCount,
+            List<Exercise> exercises, String path) {
         tellStateForUser(exercise, exCount, exercises);
         String filePath = path + exercise.getName() + ".zip";
         downloadFile(exercise.getZip_url(), filePath);
@@ -83,31 +90,37 @@ public class ExerciseDownloader {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
-    
+
     /**
-     * Unzips a zip file
+     * Unzips a zip file.
+     *
      * @param unzipPath path of file which will be unzipped
-     * @param destinationPath destination path 
-     * @throws IOException
-     * @throws ZipException
+     * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
+    public void unzipFile(String unzipPath, String destinationPath)
+            throws IOException, ZipException {
         MoveDecider md = new DefaultMoveDecider(new DefaultRootDetector());
         ZipHandler zipHandler = new ZipHandler(unzipPath, destinationPath, md);
         zipHandler.unzip();
     }
 
     /**
-     * Tells which exercise is currently being downloaded
+     * Tells which exercise is currently being downloaded.
+     *
      * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
      */
-    private void tellStateForUser(Exercise exercise, int exCount, List<Exercise> exercises) {
-        this.front.printLine("Downloading exercise " + exercise.getName() + " " + (getPercents(exCount, exercises.size())) + "%");
+    private void tellStateForUser(Exercise exercise, int exCount,
+            List<Exercise> exercises) {
+        String output = "Downloading exercise " + exercise.getName()
+                + " " + (getPercents(exCount, exercises.size())) + "%";
+        this.front.printLine(output);
     }
 
     /**
-     * Modify path to correct
+     * Modify path to correct. Adds a trailing '/' if necessary.
+     *
+     * @param path the pathname to be corrected
      * @return corrected path
      */
     public String getCorrectPath(String path) {
@@ -120,8 +133,9 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Get advantage percent in downloading single exercise
-     * @param exCount order number of exercise in downloading 
+     * Get advantage percent in downloading single exercise.
+     *
+     * @param exCount order number of exercise in downloading
      * @param exercisesSize total amount of exercises that will be downloaded
      * @return percents
      */
@@ -130,13 +144,15 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Downloads single .zip file by using URLCommunicator
-     * @param zip_url url which will be downloaded
+     * Downloads single .zip file by using URLCommunicator.
+     *
+     * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private static void downloadFile(String zip_url, String path) {
-        HttpClient client = URLCommunicator.createClient();
-        File f = new File(path);
-        URLCommunicator.downloadFile(client, zip_url, f, ClientData.getFormattedUserData());
+    private static void downloadFile(String zipUrl, String path) {
+        HttpClient client = UrlCommunicator.createClient();
+        File file = new File(path);
+        UrlCommunicator.downloadFile(client, zipUrl, file,
+                ClientData.getFormattedUserData());
     }
 }
