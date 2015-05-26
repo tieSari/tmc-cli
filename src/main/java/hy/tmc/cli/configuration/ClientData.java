@@ -51,19 +51,19 @@ public final class ClientData {
         PASSWORD = "";
     }
 
-    public static int getPID() {
+    public static int getPid() {
         return PID;
     }
 
-    public static void setPID(int PID) {
-        ClientData.PID = PID;
+    public static void setPid(int pid) {
+        ClientData.PID = pid;
     }
 
-    public static String getUSERNAME() {
+    public static String getUsername() {
         return USERNAME;
     }
 
-    public static String getPASSWORD() {
+    public static String getPassword() {
         return PASSWORD;
     }
 }

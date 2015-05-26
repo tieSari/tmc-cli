@@ -11,21 +11,14 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class URLCommunicatorTest {
 
-    private HttpClient client;
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
-    @Before
-    public void createClient() {      
-        this.client = UrlCommunicator.createClient();
-    }
     
     @Test
     public void okWithValidParams() {
@@ -36,7 +29,7 @@ public class URLCommunicatorTest {
                         .withStatus(200)
                 )
         );
-        HttpResult result = UrlCommunicator.makeGetRequest(client, "http://127.0.0.1:8080", "test:1234");
+        HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080", "test:1234");
         assertEquals(200, result.getStatusCode());
     }
 
@@ -50,14 +43,14 @@ public class URLCommunicatorTest {
                 )
         );
         
-        HttpResult result = UrlCommunicator.makeGetRequest(client, "http://127.0.0.1:8080/vaaraurl", "test:1234");
+        HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/vaaraurl", "test:1234");
         assertEquals(400, result.getStatusCode());
     }
     
     @Test
     public void notFoundWithoutValidParams() {
         // next will fail, becouse wiremock does not accept headers like that.
-        HttpResult result = UrlCommunicator.makeGetRequest(client, "http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
+        HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
         assertEquals(404, result.getStatusCode());
     }
 
@@ -71,12 +64,12 @@ public class URLCommunicatorTest {
                 )
         );
         
-        Method createMethod = UrlCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class, HttpClient.class);
+        Method createMethod = UrlCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class);
         createMethod.setAccessible(true);
         Object instance = UrlCommunicator.class.newInstance();
         HttpResponse result = (HttpResponse) createMethod.invoke(instance, "http://127.0.0.1:8080/", new String[]{
             "test:1234"
-        }, client);
+        });
 
         HttpResponse httpResponse = (HttpResponse) result;
         assertEquals(200, httpResponse.getStatusLine().getStatusCode());
