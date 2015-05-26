@@ -1,7 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import net.lingala.zip4j.exception.ZipException;
@@ -99,13 +98,16 @@ public class ExerciseDownloader {
 
     /**
      * Unzips single file after downloading. 
+     * 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath) 
-            throws IOException, ZipException {
+
+    public void unzipFile(String unzipPath,
+                          String destinationPath) throws IOException, ZipException {
         UnzipDecider md = new DefaultUnzipDecider();
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
+
         zipHandler.unzip();
     }
 
@@ -155,6 +157,7 @@ public class ExerciseDownloader {
      * @param path where to download
      */
     private static void downloadFile(String zipUrl, String path) {
+        System.out.println(zipUrl);
         HttpClient client = UrlCommunicator.createClient();
         File file = new File(path);
         UrlCommunicator.downloadFile(client, zipUrl, file,
