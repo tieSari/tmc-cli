@@ -1,15 +1,14 @@
 package hy.tmc.cli.backendcommunication;
 
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.FrontendListener;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
 import hy.tmc.cli.zipping.Unzipper;
@@ -102,10 +101,11 @@ public class ExerciseDownloader {
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath) 
-            throws IOException, ZipException {
-        UnzipDecider md = new DefaultUnzipDecider();
-        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
+    public void unzipFile(String unzipPath, String destinationPath) throws IOException, 
+            ZipException {
+        UnzipDecider decider = new DefaultUnzipDecider();
+        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
+
         zipHandler.unzip();
     }
 
@@ -155,6 +155,7 @@ public class ExerciseDownloader {
      * @param path where to download
      */
     private static void downloadFile(String zipUrl, String path) {
+        System.out.println(zipUrl);
         HttpClient client = UrlCommunicator.createClient();
         File file = new File(path);
         UrlCommunicator.downloadFile(client, zipUrl, file,
