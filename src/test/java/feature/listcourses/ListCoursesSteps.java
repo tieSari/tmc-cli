@@ -68,7 +68,7 @@ public class ListCoursesSteps {
                         aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(ExampleJSON.coursesExample)
+                        .withBody(ExampleJSON.allCoursesExample)
                 )
         );
         
