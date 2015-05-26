@@ -68,7 +68,7 @@ public class AuthenticateTest {
     private void powerMockWithCredentials(String credentials, int status) {
         HttpResult fakeResult = new HttpResult("", status, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
+                .when(UrlCommunicator.makeGetRequest(
                         Mockito.anyString(),
                         Mockito.eq(credentials)))
                 .thenReturn(fakeResult);

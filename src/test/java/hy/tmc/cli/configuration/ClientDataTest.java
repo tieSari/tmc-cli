@@ -1,6 +1,5 @@
-package hy.tmc.cli.Configuration;
+package hy.tmc.cli.configuration;
 
-import hy.tmc.cli.configuration.ClientData;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static hy.tmc.cli.configuration.ClientData.*;

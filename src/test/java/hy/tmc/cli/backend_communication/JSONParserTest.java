@@ -28,8 +28,7 @@ public class JSONParserTest {
         
         ClientData.setUserData("chang", "paras");
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
-                                                    Mockito.anyString(), 
+                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(), 
                                                     Mockito.anyString()))
                 .thenReturn(fakeResult);
         
@@ -61,8 +60,7 @@ public class JSONParserTest {
     public void getsExercisesCorrectlyFromCourseJSON() {
         HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
-                                                    Mockito.eq("ankka"), 
+                .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
                                                     Mockito.anyString()))
                 .thenReturn(fakeResult);
         String names = TmcJsonParser.getExerciseNames("ankka");
@@ -76,8 +74,7 @@ public class JSONParserTest {
     public void getsLastExerciseOfCourseJSON() {
         HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.eq(UrlCommunicator.createClient()),
-                                                    Mockito.eq("ankka"), 
+                .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
                                                     Mockito.anyString()))
                 .thenReturn(fakeResult);
         String names = TmcJsonParser.getExerciseNames("ankka");
