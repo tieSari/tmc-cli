@@ -36,7 +36,7 @@ public class ListCoursesTest {
         
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        HttpResult fakeResult = new HttpResult(ExampleJSON.coursesExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJSON.allCoursesExample, 200, true);
 
         ClientData.setUserData("mockattu", "ei tarvi");
         PowerMockito
