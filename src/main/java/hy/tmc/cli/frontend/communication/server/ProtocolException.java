@@ -1,5 +1,8 @@
 package hy.tmc.cli.frontend.communication.server;
 
+/**
+ * ProtocolException is thrown when something goes wrong with protocol rules.
+ */
 public class ProtocolException extends Exception {
 
     /**
@@ -13,18 +16,20 @@ public class ProtocolException extends Exception {
      * ProtocolException can give message.
      *
      * @param message of error
+     * ProtocolException can give a message.
      */
-    public ProtocolException(String message) {
+    public ProtocolException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message.
-     *
-     * @param message of error
-     * @param cause of error
+     * 
+     * ProtocolException can have cause as parameter.
+     * @param message final string message
+     * @param cause cause why exception is thrown
      */
-    public ProtocolException(String message, Throwable cause) {
+    public ProtocolException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -32,8 +37,9 @@ public class ProtocolException extends Exception {
      * Constructor for exception.
      *
      * @param cause of error
+     * ProtocolException can only have a cause.
      */
-    public ProtocolException(Throwable cause) {
+    public ProtocolException(final Throwable cause) {
         super(cause);
     }
 }

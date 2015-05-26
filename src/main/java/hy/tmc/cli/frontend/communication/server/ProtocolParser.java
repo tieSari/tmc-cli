@@ -8,6 +8,10 @@ import hy.tmc.cli.logic.Logic;
 
 import java.util.HashMap;
 
+
+/**
+ * ProtocolParser parses user input to executable command.
+ */
 public class ProtocolParser {
 
     private FrontendListener server;
