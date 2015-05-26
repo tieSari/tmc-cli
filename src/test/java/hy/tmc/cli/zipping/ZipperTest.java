@@ -57,24 +57,19 @@ public class ZipperTest {
     }
 
     @Test
-    public void doesntZipBadPath() {
-
-    }
-
-    @Test
     public void overridesPreviousExistingZip() throws IOException {
         String newFileName = "best.txt";
         try {
             zipper.zip(mockPath, mockUnzipPath);
-            
+
             ZipFile zip = new ZipFile(mockUnzipPath);
             File newFile = new File(newFileName);
             newFile.createNewFile();
             zip.addFile(newFile, new ZipParameters());
-            
+
             assertEquals(newFileName, zip.getFileHeader(newFileName).getFileName());
             assertTrue(new File(mockUnzipPath).exists());
-            
+
             zipper.zip(mockPath, mockUnzipPath);
             zip = new ZipFile(mockUnzipPath);
             FileHeader header = zip.getFileHeader(newFileName);
