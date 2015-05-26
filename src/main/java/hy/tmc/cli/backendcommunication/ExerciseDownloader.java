@@ -96,8 +96,6 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Unzips a zip file.
-     *
      * Unzips single file after downloading. 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path

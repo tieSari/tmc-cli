@@ -14,9 +14,9 @@ public class ProtocolException extends Exception {
 
     /**
      * ProtocolException can give message.
-     *
-     * @param message of error
+     * 
      * ProtocolException can give a message.
+     * @param message is a final string.
      */
     public ProtocolException(final String message) {
         super(message);
@@ -36,8 +36,8 @@ public class ProtocolException extends Exception {
     /**
      * Constructor for exception.
      *
-     * @param cause of error
      * ProtocolException can only have a cause.
+     * @param cause why exception is thrown
      */
     public ProtocolException(final Throwable cause) {
         super(cause);
