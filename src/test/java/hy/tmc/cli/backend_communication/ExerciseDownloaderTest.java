@@ -32,12 +32,12 @@ public class ExerciseDownloaderTest {
         exercises = new ArrayList<>();
 
         Exercise e1 = new Exercise();
-        e1.setZip_url("http://127.0.0.1:8080/ex1.zip");
+        e1.setZipUrl("http://127.0.0.1:8080/ex1.zip");
         e1.setName("Exercise1");
         exercises.add(e1);
 
         Exercise e2 = new Exercise();
-        e2.setZip_url("http://127.0.0.1:8080/ex2.zip");
+        e2.setZipUrl("http://127.0.0.1:8080/ex2.zip");
         e2.setName("Exercise2");
         exercises.add(e2);
 

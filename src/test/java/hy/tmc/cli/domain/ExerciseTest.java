@@ -34,8 +34,8 @@ public class ExerciseTest {
 
     @Test
     public void testDeadline_description() {
-        exercise.setDeadline_description("asd");
-        assertEquals("asd", exercise.getDeadline_description());
+        exercise.setDeadlineDescription("asd");
+        assertEquals("asd", exercise.getDeadlineDescription());
     }
 
     @Test
