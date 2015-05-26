@@ -3,6 +3,13 @@ package hy.tmc.cli.zipping;
 import hy.tmc.cli.testhelpers.FileWriterHelper;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -13,9 +20,9 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ZipHandlerTest {
+public class UnzipperTest {
 
-    ZipHandler handler;
+    Unzipper handler;
     FileWriterHelper helper = new FileWriterHelper();
     String testZipPath = "testResources/test.zip";
     String unzipPath = "testResources/unzips";
@@ -23,13 +30,13 @@ public class ZipHandlerTest {
     String javaFile = projectPath + "/src/Nimi.java";
     UnzipDecider decider;
 
-    public ZipHandlerTest() {
+    public UnzipperTest() {
         decider = new DefaultUnzipDecider();
     }
 
     @Before
     public void setup() {
-        handler = new ZipHandler(testZipPath, unzipPath, decider);
+        handler = new Unzipper(testZipPath, unzipPath, decider);
     }
 
     @After
@@ -134,16 +141,31 @@ public class ZipHandlerTest {
             //ok
         }
     }
-    /* @Test
-     public void doesntOverwriteSomethingInTmcprojectYml() {
-     try {
-     handler.unzip();
-     }
-     catch (IOException | net.lingala.zip4j.exception.ZipException ex) {
-     Logger.getLogger(ZipHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
-     fail("Exception thrown by unzip");
-     }
+
+    @Test
+    public void doesntOverwriteSomethingInTmcprojectYml() {
+        String studentTestFile = projectPath + "/test/StudentTest.java";
+        try {
+            handler.unzip();
+        }
+        catch (IOException | ZipException ex) {
+            fail("Exception thrown by unzip");
+        }
         
-     helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
-     }*/
+        helper.writeStuffToFile(studentTestFile);
+        long lastMod = new File(studentTestFile).lastModified();
+        
+        try {
+            handler.unzip();
+        }
+        catch (IOException | ZipException ex) {
+            fail("Exception thrown by unzip");
+        }
+        
+        assertEquals(lastMod, new File(studentTestFile).lastModified());
+        
+    }
+
+   
+
 }
