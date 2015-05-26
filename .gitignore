@@ -10,3 +10,4 @@ tmc-cli.iml
 /scripts/config
 /scripts/*.jar
 config.properties
+/scripts/config.properties

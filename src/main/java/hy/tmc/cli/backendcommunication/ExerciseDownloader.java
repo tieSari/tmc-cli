@@ -1,16 +1,15 @@
 package hy.tmc.cli.backendcommunication;
 
 
-import static hy.tmc.cli.Main.main;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.zipping.DefaultMoveDecider;
-import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
 
-import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
 import java.io.File;
@@ -29,10 +28,7 @@ public class ExerciseDownloader {
      * @param front component which implements frontend interface
      */
     public ExerciseDownloader(FrontendListener front) {
-        if (front == null) {
-            return;
-        }
-        this.front = front;
+        this.front = checkNotNull(front);
     }
 
     /**
