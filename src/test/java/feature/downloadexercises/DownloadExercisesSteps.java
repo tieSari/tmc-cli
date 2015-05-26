@@ -96,9 +96,9 @@ public class DownloadExercisesSteps {
                 break;
             }
         }
-        wireMockServer.verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
+        verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
-        wireMockServer.verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
+        verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
 
