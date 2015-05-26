@@ -8,6 +8,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
+import java.io.File;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,7 +61,8 @@ public class TmcJsonParser {
                 .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
     }
-
+    
+   
     /**
      * Get all exercise names of a course specified by courseUrl.
      * @param courseUrl url of the course we are interested in

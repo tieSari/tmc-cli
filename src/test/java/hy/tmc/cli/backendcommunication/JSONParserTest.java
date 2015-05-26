@@ -1,4 +1,4 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
 
 import hy.tmc.cli.backendcommunication.HttpResult;
 import hy.tmc.cli.backendcommunication.UrlCommunicator;

@@ -18,35 +18,28 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UrlCommunicator {
-    
+
     public static final int BAD_REQUEST = 400;
 
     /**
      * Make a post request.
-     * 
-     * @param client HttpClient to execute HttpRequests. It will come as parameter to enable 
-    dependency injection.
+     *
      * @param url the url of the request
      * @param params parameters of the post request
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HttpResult makePostRequest(HttpClient client, String url,
+    public static HttpResult makePostRequest(String url,
             String... params) {
         try {
             HttpPost post = new HttpPost(url);
+            post = addHeaders(params, post);
 
-            String encoding = Base64.encodeBase64String((params[0]).getBytes());
-            post.setHeader("Authorization", "Basic " + encoding);
-            post.setHeader("User-Agent", USER_AGENT);
-
-            List<NameValuePair> urlParameters = new ArrayList();
-            post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-            HttpResponse response = client.execute(post);
+            HttpResponse response = execute(post);
             StringBuilder result = writeResponse(response);
             int status = response.getStatusLine().getStatusCode();
             return new HttpResult(result.toString(), status, true);
@@ -55,11 +48,25 @@ public class UrlCommunicator {
         }
     }
 
+    private static HttpResponse execute(HttpPost post) throws IOException {
+        return createClient().execute(post);
+    }
+
+    private static HttpPost addHeaders(String[] params, HttpPost post) throws UnsupportedEncodingException {
+        String encoding = Base64.encodeBase64String((params[0]).getBytes());
+        post.setHeader("Authorization", "Basic " + encoding);
+        post.setHeader("User-Agent", USER_AGENT);
+        List<NameValuePair> urlParameters = new ArrayList();
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return post;
+    }
+
     /**
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is always username:password
+     * @param params Any amount of parameters for the request. params[0] is
+     * always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
@@ -77,16 +84,17 @@ public class UrlCommunicator {
 
     /**
      * Download a file from the internet.
+     *
      * @param client httpclient to be used
      * @param url url of the get request
      * @param file file to write the results into
      * @param params params of the get request
      * @return true if succesful
      */
-    public static boolean downloadFile(HttpClient client, 
-                                       String url, 
-                                       File file, 
-                                       String... params) {
+    public static boolean downloadFile(HttpClient client,
+            String url,
+            File file,
+            String... params) {
         try {
             HttpResponse response = createAndExecuteGet(url, params);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -100,7 +108,7 @@ public class UrlCommunicator {
         }
     }
 
-    private static StringBuilder writeResponse(HttpResponse response) 
+    private static StringBuilder writeResponse(HttpResponse response)
             throws UnsupportedOperationException, IOException {
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
@@ -123,8 +131,8 @@ public class UrlCommunicator {
         request.addHeader("User-Agent", USER_AGENT);
         return executeGetRequest(request);
     }
-    
-    private static HttpResponse executeGetRequest(HttpGet request) 
+
+    private static HttpResponse executeGetRequest(HttpGet request)
             throws IOException {
         return createClient().execute(request);
     }
