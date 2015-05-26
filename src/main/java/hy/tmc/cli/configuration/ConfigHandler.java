@@ -12,14 +12,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+<<<<<<< HEAD:src/main/java/hy/tmc/cli/configuration/ConfigHandler.java
  * Class is used to write to config file and read from it.
+=======
+ * Writes data to config file and reads from it
+>>>>>>> 778cd82da093bea3cf04f2cb897d7739f7a723cc:src/main/java/hy/tmc/cli/Configuration/ConfigHandler.java
  */
 public class ConfigHandler {
 
     private String configFilePath;
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
-    public final String coursesExtension = "/courses.json?api_version=7";
+    public final String api_version = "7";
+    public final String coursesExtension = "/courses.json?api_version=" + api_version;
     public final String authExtension = "/user";
 
     /**
@@ -113,7 +118,7 @@ public class ConfigHandler {
     }
     
     public String getCourseUrl(int id) {
-        return this.readServerAddress() + "/courses/" + id + ".json" + "?api_version=7";
+        return this.readServerAddress() + "/courses/" + id + ".json" + "?api_version=" + api_version;
     }
 
     /**
