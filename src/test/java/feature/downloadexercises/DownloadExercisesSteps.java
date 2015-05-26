@@ -21,12 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 
@@ -43,15 +37,16 @@ public class DownloadExercisesSteps {
 
     @Before
     public void setUpServer() throws IOException {
-        wireMockServer = new WireMockServer(wireMockConfig().port(8080));
+        wireMockServer = new WireMockServer(wireMockConfig().port(5055));
         config = new ConfigHandler();
-        config.writeServerAddress("http://127.0.0.1:8080");
+        config.writeServerAddress("http://127.0.0.1:5055");
         server = new Server(null);
         ClientData.setUserData("pihla", "juuh");
         port = config.readPort();
         System.out.println(port);
         serverThread = new Thread(server);
         output = new ArrayList<>();
+        WireMock.configureFor("localhost", 5055);
         wireMockServer.start();
         serverThread.start();
 
@@ -67,7 +62,7 @@ public class DownloadExercisesSteps {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJSON.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:8080"))));
+                        .withBody(ExampleJSON.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
         
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
