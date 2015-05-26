@@ -1,7 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
