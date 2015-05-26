@@ -10,7 +10,7 @@ public class CommandFactory {
 
     /**
      * Maps command strings to objects.
-     *
+     * 
      * @param frontend that the commands will use
      * @param logic that the commands will use
      * @return A map of names to corresponding commands
@@ -119,6 +119,13 @@ public class CommandFactory {
         return new Logout(front, back);
     }
 
+    /**
+     * Create a chooseServer Command object.
+     *
+     * @param front frontend that the command will use
+     * @param back logic that the command will use
+     * @return a lchooseServer object
+     */
     public static Command chooseServer(FrontendListener front, Logic back) {
         return new ChooseServer(front, back);
     }
