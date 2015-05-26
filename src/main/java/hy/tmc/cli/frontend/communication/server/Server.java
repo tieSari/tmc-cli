@@ -5,8 +5,8 @@ import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.net.ServerSocket;
