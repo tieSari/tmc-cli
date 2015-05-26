@@ -24,9 +24,9 @@ public class ZipHandlerTest {
     MoveDecider decider;
 
     public ZipHandlerTest() {
-        decider = new DefaultMoveDecider(new DefaultRootDetector());
+        decider = new DefaultMoveDecider();
     }
-    
+
     @Before
     public void setup() {
         handler = new ZipHandler(testZipPath, unzipPath, decider);
@@ -34,13 +34,16 @@ public class ZipHandlerTest {
 
     @After
     public void teardown() {
+        final File file = new File(unzipPath);
+        System.out.println(file.getAbsolutePath());
         try {
-            FileUtils.deleteDirectory(new File(unzipPath));
+            FileUtils.deleteDirectory(file);
         }
         catch (IOException ex) {
+            ex.printStackTrace();
             fail("Failed to clear test directory");
         }
-        new File(unzipPath).mkdir();
+        file.mkdir();
     }
 
     @Test
@@ -56,10 +59,7 @@ public class ZipHandlerTest {
             assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src").exists());
             assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/lib").exists());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -71,10 +71,7 @@ public class ZipHandlerTest {
             handler.unzip();
             assertTrue(new File(javaFile).exists());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -90,10 +87,7 @@ public class ZipHandlerTest {
             handler.unzip();
             assertEquals(modified, file.lastModified());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -109,10 +103,7 @@ public class ZipHandlerTest {
             handler.unzip();
             assertNotEquals(modified, file.lastModified());
         }
-        catch (IOException ex) {
-            fail("failed to unzip");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        catch (Exception ex) {
             fail("failed to unzip");
         }
     }
@@ -128,7 +119,7 @@ public class ZipHandlerTest {
         handler.setUnzipLocation("best");
         assertEquals("best", handler.getUnzipLocation());
     }
-    
+
     @Test
     public void doesntUnzipBadPath() {
         try {
@@ -141,20 +132,18 @@ public class ZipHandlerTest {
         }
         catch (net.lingala.zip4j.exception.ZipException ex) {
             //ok
-        }        
+        }
     }
-    
-   /* @Test
-    public void doesntOverwriteSomethingInTmcprojectYml() {
-        try {
-            handler.unzip();
-        }
-        catch (IOException | net.lingala.zip4j.exception.ZipException ex) {
-            Logger.getLogger(ZipHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("Exception thrown by unzip");
-        }
+    /* @Test
+     public void doesntOverwriteSomethingInTmcprojectYml() {
+     try {
+     handler.unzip();
+     }
+     catch (IOException | net.lingala.zip4j.exception.ZipException ex) {
+     Logger.getLogger(ZipHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+     fail("Exception thrown by unzip");
+     }
         
-        helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
-    }*/
-
+     helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
+     }*/
 }

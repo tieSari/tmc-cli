@@ -25,27 +25,24 @@ public class ProjectRootFinder {
      * @return path of the root, of null if no root was found
      */
     public Path getRootDirectory(Path zipRoot) {
-        return BreadthFirstSearch(zipRoot);
+        return breadthFirstSearch(zipRoot);
     }
 
-    private Path BreadthFirstSearch(Path zipRoot) {
+    private Path breadthFirstSearch(Path zipRoot) {
         ArrayDeque<Path> queue = new ArrayDeque<>();
         queue.add(zipRoot);
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             Path path = queue.removeFirst();
-            if (!path.toFile().isDirectory()){
+            if (!path.toFile().isDirectory()) {
                 continue;
             }
-            if (this.detector.isRootDirectory(path)){
+            if (this.detector.isRootDirectory(path)) {
                 return path;
             }
-            for (File file : path.toFile().listFiles()){
+            for (File file : path.toFile().listFiles()) {
                 queue.addLast(file.toPath());
             }
         }
         return null;
     }
-
-
-
 }
