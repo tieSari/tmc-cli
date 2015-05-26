@@ -109,7 +109,7 @@ public class DownloadExercisesSteps {
 
     @Then("^output should contain zip files and folders containing unzipped files$")
     public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
-        assertTrue(new File(tempDir.toAbsolutePath() + "/viikko1").exists());
+        assertTrue(new File(tempDir.toAbsolutePath() + File.pathSeparator + "viikko1").exists());
     }
 
     @Then("^information about download progress\\.$")
