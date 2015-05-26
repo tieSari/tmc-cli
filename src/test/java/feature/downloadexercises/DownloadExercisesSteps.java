@@ -67,7 +67,7 @@ public class DownloadExercisesSteps {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJSON.courseExample.replace("https://tmc.mooc.fi/hy", "http://127.0.0.1:8080"))));
+                        .withBody(ExampleJSON.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:8080"))));
         
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
@@ -115,7 +115,7 @@ public class DownloadExercisesSteps {
     @Then("^information about download progress\\.$")
     public void information_about_download_progress() throws Throwable {
         System.out.println(output);
-        assertEquals("Downloading exercise viikko01-Viikko01_000.Hiekkalaatikko 0.0%", output.get(0));
+        assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
     }
 
     @After
