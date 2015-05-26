@@ -106,7 +106,6 @@ public class TmcJsonParser {
     public static List<Exercise> getExercises(String courseUrl) {
         JsonObject course = getJsomFrom(courseUrl);
         Gson mapper = new Gson();
-        System.out.println(course);
         Exercise[] exercises = mapper
                 .fromJson(course.getAsJsonObject("course").get("exercises"), 
                         Exercise[].class);
