@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+
+
+
 public class ExerciseDownloader {
 
     private FrontendListener front;
@@ -89,20 +92,18 @@ public class ExerciseDownloader {
         downloadFile(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
-        }
-        catch (IOException | ZipException ex) {
+        } catch (IOException | ZipException ex) {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
 
     /**
-     * Unzips a zip file
-     *
      * Unzips single file after downloading. 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
+    public void unzipFile(String unzipPath, String destinationPath) 
+            throws IOException, ZipException {
         UnzipDecider md = new DefaultUnzipDecider();
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
         zipHandler.unzip();
