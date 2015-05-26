@@ -147,6 +147,7 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>3.1.0</version>
             </plugin>
+            
         </plugins>
     </build>
 
@@ -158,6 +159,13 @@
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
             <version>6.6</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-ant</artifactId>
+            <scope>system</scope>
+            <version>1.0-SNAPSHOT</version>
+            <systemPath>${basedir}/lib/tmc-langs-ant-1.0-SNAPSHOT.jar</systemPath>
         </dependency>      
         <dependency>
             <groupId>org.yaml</groupId>
