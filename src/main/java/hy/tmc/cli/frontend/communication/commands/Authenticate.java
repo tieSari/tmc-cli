@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.backendcommunication.UrlCommunicator.createClient;
 import static hy.tmc.cli.backendcommunication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
@@ -46,9 +45,10 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(createClient(),
+        int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),
-                auth).getStatusCode();
+                auth
+        ).getStatusCode();
         this.frontend.printLine(returnResponse(code));
     }
 

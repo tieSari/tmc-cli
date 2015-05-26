@@ -41,7 +41,6 @@ public class ListCoursesTest {
         ClientData.setUserData("mockattu", "ei tarvi");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(
-                            Mockito.eq(UrlCommunicator.createClient()),
                             Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
         
