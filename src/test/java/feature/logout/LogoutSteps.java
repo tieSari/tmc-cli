@@ -1,12 +1,13 @@
 package feature.logout;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import hy.tmc.cli.Configuration.ClientData;
-import hy.tmc.cli.frontend_communication.Server.Server;
+import cucumber.api.java.en.When;
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import static org.junit.Assert.assertFalse;
@@ -14,15 +15,16 @@ import static org.junit.Assert.assertTrue;
 
 public class LogoutSteps {
 
-    private final int port = ClientData.getPORT();
-
+    private int port;
     private Thread serverThread;
     private TestClient testClient;
     private Server server;
 
     @Before
     public void initializeServer() throws IOException {
-        server = new Server(port, null);
+        ClientData.clearUserData();
+        server = new Server(null);
+        port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
@@ -34,15 +36,15 @@ public class LogoutSteps {
         testClient.sendMessage("logout");
     }
 
-    @Then("^user data should be cleared\\.$")
-    public void user_data_should_be_cleared() throws Throwable {
-        assertFalse(ClientData.userDataExists());
-    }
-
-    @Then("^user sees message\\.$")
+    @When("^user sees message\\.$")
     public void user_sees_message() throws Throwable {
         String output = testClient.reply();
         assertTrue(output.contains("cleared"));
+    }
+
+    @Then("^user data should be cleared\\.$")
+    public void user_data_should_be_cleared() throws Throwable {
+        assertFalse(ClientData.userDataExists());
     }
 
     @Given("^a logout command without being logged in\\.$")
@@ -50,7 +52,7 @@ public class LogoutSteps {
         testClient.sendMessage("logout");
     }
 
-    @Then("^nothing should happen\\.$")
+    @When("^nothing should happen\\.$")
     public void nothing_should_happen() throws Throwable {
         assertFalse(ClientData.userDataExists());
     }
@@ -62,8 +64,8 @@ public class LogoutSteps {
 
     @After
     public void closeAll() throws IOException {
+        ClientData.clearUserData();
         server.close();
         serverThread.interrupt();
     }
-
 }

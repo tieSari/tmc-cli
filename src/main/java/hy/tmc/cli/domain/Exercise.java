@@ -8,7 +8,10 @@ public class Exercise {
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",
     private boolean locked; // false,
     private String deadline_description; //: null,
-    private Date deadline; //: null,
+
+    // todo make this Date?
+    private String deadline; //: null,
+
     private String checksum; //: "406f2f0690550c6dea94f319b2b1580c",
     private String return_url; //: "https://tmc.mooc.fi/staging/exercises/284/submissions.json",
     private String zip_url; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
@@ -25,7 +28,7 @@ public class Exercise {
     private boolean run_tests_locally_action_enabled; //": true,
     private String exercise_submissions_url; //": "https://tmc.mooc.fi/staging/exercises/284.json?api_version=7
 
-    public Exercise(int id, String name, boolean locked, String deadline_description, Date deadline, String checksum, String return_url, String zip_url, boolean returnable, boolean requires_review, boolean attempted, boolean completed, boolean reviewed, boolean all_review_points_given, String memory_limit, String[] runtime_params, String valgrind_strategy, boolean code_review_requests_enabled, boolean run_tests_locally_action_enabled, String exercise_submissions_url) {
+    public Exercise(int id, String name, boolean locked, String deadline_description, String deadline, String checksum, String return_url, String zip_url, boolean returnable, boolean requires_review, boolean attempted, boolean completed, boolean reviewed, boolean all_review_points_given, String memory_limit, String[] runtime_params, String valgrind_strategy, boolean code_review_requests_enabled, boolean run_tests_locally_action_enabled, String exercise_submissions_url) {
         this.id = id;
         this.name = name;
         this.locked = locked;
@@ -85,11 +88,11 @@ public class Exercise {
         this.deadline_description = deadline_description;
     }
 
-    public Date getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 

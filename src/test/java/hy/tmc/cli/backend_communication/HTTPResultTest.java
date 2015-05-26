@@ -1,18 +1,18 @@
 package hy.tmc.cli.backend_communication;
 
-import hy.tmc.cli.backendCommunication.HTTPResult;
+import hy.tmc.cli.backendcommunication.HttpResult;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 
 public class HTTPResultTest {
     
-    private HTTPResult r;
+    private HttpResult r;
     
     
     @Before
     public void setUp(){
-        r = new HTTPResult("asd", 200, true);
+        r = new HttpResult("asd", 200, true);
     }
     
     

@@ -2,225 +2,130 @@ package hy.tmc.cli.testhelpers;
 
 public class ExampleJSON {
 
-    public static String courseExample = "{\n"
-            + "\n"
-            + "    \"api_version\": 7,\n"
-            + "    \"course\": \n"
-            + "\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 4,\n"
-            + "    \"name\": \"mooc-part2-english\",\n"
-            + "    \"details_url\": \"https://tmc.mooc.fi/staging/courses/4.json\",\n"
-            + "    \"unlock_url\": \"https://tmc.mooc.fi/staging/courses/4/unlock.json\",\n"
-            + "    \"reviews_url\": \"https://tmc.mooc.fi/staging/courses/4/reviews.json\",\n"
-            + "    \"comet_url\": \"https://tmc.mooc.fi:8443/comet\",\n"
-            + "    \"spyware_urls\": \n"
-            + "\n"
-            + "[\n"
-            + "\n"
-            + "    \"http://staging.spyware.testmycode.net/\"\n"
-            + "\n"
-            + "],\n"
-            + "\"unlockables\": [ ],\n"
-            + "\"exercises\": \n"
-            + "[\n"
-            + "\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 642,\n"
-            + "    \"name\": \"week7-week7_01.Smileys\",\n"
-            + "    \"locked\": false,\n"
-            + "    \"deadline_description\": null,\n"
-            + "    \"deadline\": null,\n"
-            + "    \"checksum\": \"5faf0a5654d2a92e7701d76a94c36148\",\n"
-            + "    \"return_url\": \"https://tmc.mooc.fi/staging/exercises/642/submissions.json\",\n"
-            + "    \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/642.zip\",\n"
-            + "    \"returnable\": true,\n"
-            + "    \"requires_review\": false,\n"
-            + "    \"attempted\": false,\n"
-            + "    \"completed\": false,\n"
-            + "    \"reviewed\": false,\n"
-            + "    \"all_review_points_given\": true,\n"
-            + "    \"memory_limit\": null,\n"
-            + "    \"runtime_params\": [ ],\n"
-            + "    \"valgrind_strategy\": null,\n"
-            + "    \"code_review_requests_enabled\": true,\n"
-            + "    \"run_tests_locally_action_enabled\": true,\n"
-            + "    \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/642.json?api_version=7\"\n"
-            + "\n"
-            + "},\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 643,\n"
-            + "    \"name\": \"week7-week7_02.CharacterStringChanger\",\n"
-            + "    \"locked\": false,\n"
-            + "    \"deadline_description\": null,\n"
-            + "    \"deadline\": null,\n"
-            + "    \"checksum\": \"cd26e60472c58d55938ee0defce6caaa\",\n"
-            + "    \"return_url\": \"https://tmc.mooc.fi/staging/exercises/643/submissions.json\",\n"
-            + "    \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/643.zip\",\n"
-            + "    \"returnable\": true,\n"
-            + "    \"requires_review\": false,\n"
-            + "    \"attempted\": false,\n"
-            + "    \"completed\": false,\n"
-            + "    \"reviewed\": false,\n"
-            + "    \"all_review_points_given\": true,\n"
-            + "    \"memory_limit\": null,\n"
-            + "    \"runtime_params\": [ ],\n"
-            + "    \"valgrind_strategy\": null,\n"
-            + "    \"code_review_requests_enabled\": true,\n"
-            + "    \"run_tests_locally_action_enabled\": true,\n"
-            + "    \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/643.json?api_version=7\"\n"
-            + "\n"
-            + "},\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 644,\n"
-            + "    \"name\": \"week7-week7_03.Calculator\",\n"
-            + "    \"locked\": false,\n"
-            + "    \"deadline_description\": null,\n"
-            + "    \"deadline\": null,\n"
-            + "    \"checksum\": \"01fea281b9bb0f7b62442711129d6efe\",\n"
-            + "    \"return_url\": \"https://tmc.mooc.fi/staging/exercises/644/submissions.json\",\n"
-            + "    \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/644.zip\",\n"
-            + "    \"returnable\": true,\n"
-            + "    \"requires_review\": false,\n"
-            + "    \"attempted\": false,\n"
-            + "    \"completed\": false,\n"
-            + "    \"reviewed\": false,\n"
-            + "    \"all_review_points_given\": true,\n"
-            + "    \"memory_limit\": null,\n"
-            + "    \"runtime_params\": [ ],\n"
-            + "    \"valgrind_strategy\": null,\n"
-            + "    \"code_review_requests_enabled\": true,\n"
-            + "    \"run_tests_locally_action_enabled\": true,\n"
-            + "    \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/644.json?api_version=7\"\n"
-            + "\n"
-            + "},\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 645,\n"
-            + "    \"name\": \"week7-week7_04.ThingSuitcaseAndContainer\",\n"
-            + "    \"locked\": false,\n"
-            + "    \"deadline_description\": null,\n"
-            + "    \"deadline\": null,\n"
-            + "    \"checksum\": \"f624492ad33751936205a45ae967754c\",\n"
-            + "    \"return_url\": \"https://tmc.mooc.fi/staging/exercises/645/submissions.json\",\n"
-            + "    \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/645.zip\",\n"
-            + "    \"returnable\": true,\n"
-            + "    \"requires_review\": false,\n"
-            + "    \"attempted\": false,\n"
-            + "    \"completed\": false,\n"
-            + "    \"reviewed\": false,\n"
-            + "    \"all_review_points_given\": true,\n"
-            + "    \"memory_limit\": null,\n"
-            + "    \"runtime_params\": [ ],\n"
-            + "    \"valgrind_strategy\": null,\n"
-            + "    \"code_review_requests_enabled\": true,\n"
-            + "    \"run_tests_locally_action_enabled\": true,\n"
-            + "    \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/645.json?api_version=7\"\n"
-            + "\n"
-            + "},\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 646,\n"
-            + "    \"name\": \"week7-week7_05.Nicknames\",\n"
-            + "    \"locked\": false,\n"
-            + "    \"deadline_description\": null,\n"
-            + "    \"deadline\": null,\n"
-            + "    \"checksum\": \"40df65f029797aacc02fddb64fc68048\",\n"
-            + "    \"return_url\": \"https://tmc.mooc.fi/staging/exercises/646/submissions.json\",\n"
-            + "    \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/646.zip\",\n"
-            + "    \"returnable\": true,\n"
-            + "    \"requires_review\": false,\n"
-            + "    \"attempted\": false,\n"
-            + "    \"completed\": false,\n"
-            + "    \"reviewed\": false,\n"
-            + "    \"all_review_points_given\": true,\n"
-            + "    \"memory_limit\": null,\n"
-            + "    \"runtime_params\": [ ],\n"
-            + "    \"valgrind_strategy\": null,\n"
-            + "    \"code_review_requests_enabled\": true,\n"
-            + "    \"run_tests_locally_action_enabled\": true,\n"
-            + "    \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/646.json?api_version=7\"\n"
-            + "\n"
-            + "},\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 647,\n"
-            + "    \"name\": \"week7-week7_06.PromissoryNote\",\n"
-            + "    \"locked\": false,\n"
-            + "    \"deadline_description\": null,\n"
-            + "    \"deadline\": null,\n"
-            + "    \"checksum\": \"726505ae5025291490cf1fa6a251e53c\",\n"
-            + "    \"return_url\": \"https://tmc.mooc.fi/staging/exercises/647/submissions.json\",\n"
-            + "    \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/647.zip\",\n"
-            + "    \"returnable\": true,\n"
-            + "    \"requires_review\": false,\n"
-            + "    \"attempted\": false,\n"
-            + "    \"completed\": false,\n"
-            + "    \"reviewed\": false,\n"
-            + "    \"all_review_points_given\": true,\n"
-            + "    \"memory_limit\": null,\n"
-            + "    \"runtime_params\": [ ],\n"
-            + "    \"valgrind_strategy\": null,\n"
-            + "    \"code_review_requests_enabled\": true,\n"
-            + "    \"run_tests_locally_action_enabled\": true,\n"
-            + "    \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/647.json?api_version=7\"\n"
-            + "\n"
-            + "},\n"
-            + "{\n"
-            + "\n"
-            + "    \"id\": 648,\n"
-            + "    \"name\": \"week7-week7_07.Dictionary\",\n"
-            + "    \"locked\": false,\n"
-            + "    \"deadline_description\": null,\n"
-            + "    \"deadline\": null,\n"
-            + "    \"checksum\": \"434aaa0bca6d0d510d456b4c5e5c8a37\",\n"
-            + "    \"return_url\": \"https://tmc.mooc.fi/staging/exercises/648/submissions.json\",\n"
-            + "    \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/648.zip\",\n"
-            + "    \"returnable\": true,\n"
-            + "    \"requires_review\": false,\n"
-            + "    \"attempted\": false,\n"
-            + "    \"completed\": false,\n"
-            + "    \"reviewed\": false,\n"
-            + "    \"all_review_points_given\": true,\n"
-            + "    \"memory_limit\": null,\n"
-            + "    \"runtime_params\": [ ],\n"
-            + "    \"valgrind_strategy\": null,\n"
-            + "    \"code_review_requests_enabled\": true,\n"
-            + "    \"run_tests_locally_action_enabled\": true,\n"
-            + "    \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/648.json?api_version=7\"\n"
-            + "\n"
-            + "},\n"
-            + "\n"
-            + "            {\n"
-            + "                \"id\": 649,\n"
-            + "                \"name\": \"week7-week7_08.Airport\",\n"
-            + "                \"locked\": false,\n"
-            + "                \"deadline_description\": null,\n"
-            + "                \"deadline\": null,\n"
-            + "                \"checksum\": \"fafe732367388d42a252a26cb5e81f06\",\n"
-            + "                \"return_url\": \"https://tmc.mooc.fi/staging/exercises/649/submissions.json\",\n"
-            + "                \"zip_url\": \"https://tmc.mooc.fi/staging/exercises/649.zip\",\n"
-            + "                \"returnable\": true,\n"
-            + "                \"requires_review\": false,\n"
-            + "                \"attempted\": false,\n"
-            + "                \"completed\": false,\n"
-            + "                \"reviewed\": false,\n"
-            + "                \"all_review_points_given\": true,\n"
-            + "                \"memory_limit\": null,\n"
-            + "                \"runtime_params\": [ ],\n"
-            + "                \"valgrind_strategy\": null,\n"
-            + "                \"code_review_requests_enabled\": true,\n"
-            + "                \"run_tests_locally_action_enabled\": true,\n"
-            + "                \"exercise_submissions_url\": \"https://tmc.mooc.fi/staging/exercises/649.json?api_version=7\"\n"
-            + "            }\n"
-            + "        ]\n"
-            + "    }\n"
-            + "\n"
-            + "}";
+    public static String courseExample = "{\n" +
+            "    \"api_version\": 7,\n" +
+            "    \"course\": {\n" +
+            "        \"id\": 39,\n" +
+            "        \"name\": \"k2015-ohpe\",\n" +
+            "        \"details_url\": \"https://tmc.mooc.fi/hy/courses/39.json\",\n" +
+            "        \"unlock_url\": \"https://tmc.mooc.fi/hy/courses/39/unlock.json\",\n" +
+            "        \"reviews_url\": \"https://tmc.mooc.fi/hy/courses/39/reviews.json\",\n" +
+            "        \"comet_url\": \"https://tmc.mooc.fi:8443/comet\",\n" +
+            "        \"spyware_urls\": [\"http://hy.spyware.testmycode.net/\"],\n" +
+            "        \"unlockables\": [],\n" +
+            "        \"exercises\": [{\n" +
+            "            \"id\": 3186,\n" +
+            "            \"name\": \"viikko01-Viikko01_000.Hiekkalaatikko\",\n" +
+            "            \"locked\": false,\n" +
+            "            \"deadline_description\": \"2015-01-22 19:30:00 +0200\",\n" +
+            "            \"deadline\": \"2015-01-22T19:30:00.000+02:00\",\n" +
+            "            \"checksum\": \"bd8b3275d9c4f7cc1c8ffb34323cf26c\",\n" +
+            "            \"return_url\": \"https://tmc.mooc.fi/hy/exercises/3186/submissions.json\",\n" +
+            "            \"zip_url\": \"https://tmc.mooc.fi/hy/exercises/3186.zip\",\n" +
+            "            \"returnable\": true,\n" +
+            "            \"requires_review\": false,\n" +
+            "            \"attempted\": false,\n" +
+            "            \"completed\": false,\n" +
+            "            \"reviewed\": false,\n" +
+            "            \"all_review_points_given\": true,\n" +
+            "            \"memory_limit\": null,\n" +
+            "            \"runtime_params\": [],\n" +
+            "            \"valgrind_strategy\": \"fail\",\n" +
+            "            \"code_review_requests_enabled\": false,\n" +
+            "            \"run_tests_locally_action_enabled\": true,\n" +
+            "            \"solution_zip_url\": \"https://tmc.mooc.fi/hy/exercises/3186/solution.zip\",\n" +
+            "            \"exercise_submissions_url\": \"https://tmc.mooc.fi/hy/exercises/3186.json?api_version=7\"\n" +
+            "        }, {\n" +
+            "            \"id\": 3187,\n" +
+            "            \"name\": \"viikko01-Viikko01_001.Nimi\",\n" +
+            "            \"locked\": false,\n" +
+            "            \"deadline_description\": \"2015-01-22 19:30:00 +0200\",\n" +
+            "            \"deadline\": \"2015-01-22T19:30:00.000+02:00\",\n" +
+            "            \"checksum\": \"ccfc2e4b5ec5c06763a3b7459952fc4b\",\n" +
+            "            \"return_url\": \"https://tmc.mooc.fi/hy/exercises/3187/submissions.json\",\n" +
+            "            \"zip_url\": \"https://tmc.mooc.fi/hy/exercises/3187.zip\",\n" +
+            "            \"returnable\": true,\n" +
+            "            \"requires_review\": false,\n" +
+            "            \"attempted\": false,\n" +
+            "            \"completed\": false,\n" +
+            "            \"reviewed\": false,\n" +
+            "            \"all_review_points_given\": true,\n" +
+            "            \"memory_limit\": null,\n" +
+            "            \"runtime_params\": [],\n" +
+            "            \"valgrind_strategy\": \"fail\",\n" +
+            "            \"code_review_requests_enabled\": false,\n" +
+            "            \"run_tests_locally_action_enabled\": true,\n" +
+            "            \"solution_zip_url\": \"https://tmc.mooc.fi/hy/exercises/3187/solution.zip\",\n" +
+            "            \"exercise_submissions_url\": \"https://tmc.mooc.fi/hy/exercises/3187.json?api_version=7\"\n" +
+            "        }, {\n" +
+            "            \"id\": 3188,\n" +
+            "            \"name\": \"viikko01-Viikko01_002.HeiMaailma\",\n" +
+            "            \"locked\": false,\n" +
+            "            \"deadline_description\": \"2015-01-22 19:30:00 +0200\",\n" +
+            "            \"deadline\": \"2015-01-22T19:30:00.000+02:00\",\n" +
+            "            \"checksum\": \"4c24efc50fb9084b47ec1d9de9d0aefd\",\n" +
+            "            \"return_url\": \"https://tmc.mooc.fi/hy/exercises/3188/submissions.json\",\n" +
+            "            \"zip_url\": \"https://tmc.mooc.fi/hy/exercises/3188.zip\",\n" +
+            "            \"returnable\": true,\n" +
+            "            \"requires_review\": false,\n" +
+            "            \"attempted\": false,\n" +
+            "            \"completed\": false,\n" +
+            "            \"reviewed\": false,\n" +
+            "            \"all_review_points_given\": true,\n" +
+            "            \"memory_limit\": null,\n" +
+            "            \"runtime_params\": [],\n" +
+            "            \"valgrind_strategy\": \"fail\",\n" +
+            "            \"code_review_requests_enabled\": false,\n" +
+            "            \"run_tests_locally_action_enabled\": true,\n" +
+            "            \"solution_zip_url\": \"https://tmc.mooc.fi/hy/exercises/3188/solution.zip\",\n" +
+            "            \"exercise_submissions_url\": \"https://tmc.mooc.fi/hy/exercises/3188.json?api_version=7\"\n" +
+            "        }, {\n" +
+            "            \"id\": 3189,\n" +
+            "            \"name\": \"viikko01-Viikko01_003.Kuusi\",\n" +
+            "            \"locked\": false,\n" +
+            "            \"deadline_description\": \"2015-01-22 19:30:00 +0200\",\n" +
+            "            \"deadline\": \"2015-01-22T19:30:00.000+02:00\",\n" +
+            "            \"checksum\": \"08be486417543b68a681f50990cbd348\",\n" +
+            "            \"return_url\": \"https://tmc.mooc.fi/hy/exercises/3189/submissions.json\",\n" +
+            "            \"zip_url\": \"https://tmc.mooc.fi/hy/exercises/3189.zip\",\n" +
+            "            \"returnable\": true,\n" +
+            "            \"requires_review\": false,\n" +
+            "            \"attempted\": false,\n" +
+            "            \"completed\": false,\n" +
+            "            \"reviewed\": false,\n" +
+            "            \"all_review_points_given\": true,\n" +
+            "            \"memory_limit\": null,\n" +
+            "            \"runtime_params\": [],\n" +
+            "            \"valgrind_strategy\": \"fail\",\n" +
+            "            \"code_review_requests_enabled\": false,\n" +
+            "            \"run_tests_locally_action_enabled\": true,\n" +
+            "            \"solution_zip_url\": \"https://tmc.mooc.fi/hy/exercises/3189/solution.zip\",\n" +
+            "            \"exercise_submissions_url\": \"https://tmc.mooc.fi/hy/exercises/3189.json?api_version=7\"\n" +
+            "        }, {\n" +
+            "            \"id\": 3422,\n" +
+            "            \"name\": \"viikko01-Viikko01_004.RobottiOhjain\",\n" +
+            "            \"locked\": false,\n" +
+            "            \"deadline_description\": \"2015-01-22 19:30:00 +0200\",\n" +
+            "            \"deadline\": \"2015-01-22T19:30:00.000+02:00\",\n" +
+            "            \"checksum\": \"7db5ecc1c9c5a63405528c1031273f11\",\n" +
+            "            \"return_url\": \"https://tmc.mooc.fi/hy/exercises/3422/submissions.json\",\n" +
+            "            \"zip_url\": \"https://tmc.mooc.fi/hy/exercises/3422.zip\",\n" +
+            "            \"returnable\": true,\n" +
+            "            \"requires_review\": false,\n" +
+            "            \"attempted\": false,\n" +
+            "            \"completed\": false,\n" +
+            "            \"reviewed\": false,\n" +
+            "            \"all_review_points_given\": true,\n" +
+            "            \"memory_limit\": null,\n" +
+            "            \"runtime_params\": [],\n" +
+            "            \"valgrind_strategy\": \"fail\",\n" +
+            "            \"code_review_requests_enabled\": false,\n" +
+            "            \"run_tests_locally_action_enabled\": true,\n" +
+            "            \"solution_zip_url\": \"https://tmc.mooc.fi/hy/exercises/3422/solution.zip\",\n" +
+            "            \"exercise_submissions_url\": \"https://tmc.mooc.fi/hy/exercises/3422.json?api_version=7\"\n" +
+            "        }]\n" +
+            "    }\n" +
+            "}";
     public static String coursesExample = "{\n"
             + "\n"
             + "    \"api_version\": 7,\n"

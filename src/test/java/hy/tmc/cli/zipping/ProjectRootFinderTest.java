@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package hy.tmc.cli.zipping;
 
 import java.nio.file.Path;
@@ -15,17 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author ilari
- */
 public class ProjectRootFinderTest {
     
     ProjectRootFinder finder;
-    
-    public ProjectRootFinderTest() {
-    }
-    
     
     @Before
     public void setUp() {
@@ -49,5 +35,4 @@ public class ProjectRootFinderTest {
         System.out.println(root);
         assertEquals("testResources/noyml/rootWithoutYml",root.toString());
     }
-    
 }

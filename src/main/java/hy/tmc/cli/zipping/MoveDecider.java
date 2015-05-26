@@ -13,8 +13,8 @@ public interface MoveDecider {
      * @param path path of the file
      * @return true iff this file should be overwritten
      */
-    public boolean shouldMove(String path);
-
+    public boolean canBeOverwritten(String path);
+    
     /**
      * Find and read .tmcproject.yml. The ziphandler will invoke this method
      *
