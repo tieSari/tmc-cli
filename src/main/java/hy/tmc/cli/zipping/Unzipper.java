@@ -5,6 +5,7 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.List;
@@ -55,7 +56,8 @@ public class Unzipper {
         for (FileHeader fileHeader : fileHeaders) {
             if (fileHeader.getFileName().endsWith(specFileName)) {
                 zipFile.extractFile(fileHeader, unzipDestination);
-                this.movedecider.readTmcprojectYml(Paths.get(unzipDestination + "/" + fileHeader.getFileName()));
+                Path tmcYmlPath = Paths.get(unzipDestination + "/" + fileHeader.getFileName());
+                this.movedecider.readTmcprojectYml(tmcYmlPath);
             }
         }
     }
