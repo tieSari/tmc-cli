@@ -27,7 +27,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
-                </configuration>
+                </configuration>f
             </plugin>
             -->
             <!-- Removes the jar from scripts/ when cleaning-->

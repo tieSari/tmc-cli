@@ -3,6 +3,9 @@ package hy.tmc.cli.backendcommunication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.client.HttpClient;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
@@ -10,13 +13,9 @@ import hy.tmc.cli.zipping.DefaultMoveDecider;
 import hy.tmc.cli.zipping.MoveDecider;
 import hy.tmc.cli.zipping.ZipHandler;
 
-import org.apache.http.client.HttpClient;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.util.List;
-import net.lingala.zip4j.exception.ZipException;
 
 public class ExerciseDownloader {
 
