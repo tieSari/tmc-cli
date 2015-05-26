@@ -38,7 +38,6 @@ public class ResultInterpreter {
             }
             message += "Test " + testResult.name + " failed.\n";
             message += testResult.errorMessage;
-            
         }
         
         return "";
