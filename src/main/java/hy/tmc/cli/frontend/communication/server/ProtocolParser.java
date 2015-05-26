@@ -7,7 +7,6 @@ import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.logic.Logic;
 
 import java.util.HashMap;
-
 /**
  * ProtocolParser parses user input to executable command.
  */
