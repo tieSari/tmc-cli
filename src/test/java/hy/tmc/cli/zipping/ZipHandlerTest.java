@@ -24,9 +24,9 @@ public class ZipHandlerTest {
     MoveDecider decider;
 
     public ZipHandlerTest() {
-        decider = new DefaultMoveDecider(new DefaultRootDetector());
+        decider = new DefaultMoveDecider();
     }
-    
+
     @Before
     public void setup() {
         handler = new ZipHandler(testZipPath, unzipPath, decider);
@@ -119,7 +119,7 @@ public class ZipHandlerTest {
         handler.setUnzipLocation("best");
         assertEquals("best", handler.getUnzipLocation());
     }
-    
+
     @Test
     public void doesntUnzipBadPath() {
         try {
@@ -132,18 +132,18 @@ public class ZipHandlerTest {
         }
         catch (net.lingala.zip4j.exception.ZipException ex) {
             //ok
-        }        
-    }    
-   /* @Test
-    public void doesntOverwriteSomethingInTmcprojectYml() {
-        try {
-            handler.unzip();
         }
-        catch (IOException | net.lingala.zip4j.exception.ZipException ex) {
-            Logger.getLogger(ZipHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("Exception thrown by unzip");
-        }
+    }
+    /* @Test
+     public void doesntOverwriteSomethingInTmcprojectYml() {
+     try {
+     handler.unzip();
+     }
+     catch (IOException | net.lingala.zip4j.exception.ZipException ex) {
+     Logger.getLogger(ZipHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+     fail("Exception thrown by unzip");
+     }
         
-        helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
-    }*/
+     helper.writeStuffToFile(unzipPath+ "/sdf/sdf.txt");
+     }*/
 }

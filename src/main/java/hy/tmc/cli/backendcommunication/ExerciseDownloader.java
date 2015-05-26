@@ -1,5 +1,7 @@
 package hy.tmc.cli.backendcommunication;
 
+
+import static hy.tmc.cli.Main.main;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.List;
+import net.lingala.zip4j.exception.ZipException;
 
 public class ExerciseDownloader {
 
@@ -90,26 +93,28 @@ public class ExerciseDownloader {
         downloadFile(exercise.getZip_url(), filePath);
         try {
             unzipFile(filePath, path);
-        } catch (IOException | ZipException ex) {
+        }
+        catch (IOException | ZipException ex) {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
 
     /**
+     * Unzips a zip file
+     *
      * Unzips single file after downloading. 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath)
-            throws IOException, ZipException {
-        MoveDecider md = new DefaultMoveDecider(new DefaultRootDetector());
+    public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
+        MoveDecider md = new DefaultMoveDecider();
         ZipHandler zipHandler = new ZipHandler(unzipPath, destinationPath, md);
         zipHandler.unzip();
     }
 
     /**
      * Tells which exercise is currently being downloaded.
-     *
+     * 
      * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
      */
@@ -137,7 +142,7 @@ public class ExerciseDownloader {
 
     /**
      * Get advantage percent in downloading single exercise.
-     *
+     * 
      * @param exCount order number of exercise in downloading
      * @param exercisesSize total amount of exercises that will be downloaded
      * @return percents
