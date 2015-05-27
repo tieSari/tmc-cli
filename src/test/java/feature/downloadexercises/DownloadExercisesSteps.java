@@ -81,7 +81,7 @@ public class DownloadExercisesSteps {
         createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
         verify(getRequestedFor(urlEqualTo("/user")));
-                // .withHeader("Authorization", containing("Basic cGlobGE6anV1aA==")));
+        // .withHeader("Authorization", containing("Basic cGlobGE6anV1aA==")));
     }
 
     @When("^user gives a download exercises command and course id\\.$")
