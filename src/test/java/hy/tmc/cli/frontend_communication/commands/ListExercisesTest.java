@@ -3,10 +3,10 @@ package hy.tmc.cli.frontend_communication.commands;
 import hy.tmc.cli.frontend.communication.commands.ListExercises;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.backendcommunication.HttpResult;
-import hy.tmc.cli.backendcommunication.UrlCommunicator;
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
+
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import static org.junit.Assert.assertFalse;
@@ -30,7 +30,7 @@ public class ListExercisesTest {
     @Before
     public void setup() {
         front = new FrontendStub();
-        list = new ListExercises(front, new Logic());
+        list = new ListExercises(front);
 
         PowerMockito.mockStatic(UrlCommunicator.class);
 
@@ -45,7 +45,7 @@ public class ListExercisesTest {
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        ListExercises ls = new ListExercises(front, new Logic());
+        ListExercises ls = new ListExercises(front);
         ls.setParameter("courseUrl", "legit");
         try {
             ls.checkData();

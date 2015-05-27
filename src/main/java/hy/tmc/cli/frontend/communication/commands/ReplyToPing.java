@@ -7,7 +7,7 @@ public class ReplyToPing extends Command {
     private final String answer = "pong";
 
     public ReplyToPing(FrontendListener front) {
-        super(front, backend);
+        super(front);
     }
 
     /**

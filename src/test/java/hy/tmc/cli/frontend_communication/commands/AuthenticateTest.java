@@ -1,13 +1,13 @@
 package hy.tmc.cli.frontend_communication.commands;
 
-import hy.tmc.cli.backendcommunication.authorization.Authorization;
-import hy.tmc.cli.backendcommunication.HttpResult;
-import hy.tmc.cli.backendcommunication.UrlCommunicator;
+import hy.tmc.cli.backend.communication.authorization.Authorization;
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.frontend.communication.commands.Authenticate;
 
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
+
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -28,9 +28,8 @@ public class AuthenticateTest {
 
     @Before
     public void setUp() {
-        Logic logic = new Logic();
         this.serverMock = new FrontendStub();
-        this.auth = new Authenticate(serverMock, logic);
+        this.auth = new Authenticate(serverMock);
     }
 
     @Test

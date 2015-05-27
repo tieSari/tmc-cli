@@ -40,7 +40,7 @@ public class DownloadExercisesSteps {
         wireMockServer = new WireMockServer(wireMockConfig().port(5055));
         config = new ConfigHandler();
         config.writeServerAddress("http://127.0.0.1:5055");
-        server = new Server(null);
+        server = new Server();
         ClientData.setUserData("pihla", "juuh");
         port = config.readPort();
         System.out.println(port);

@@ -1,4 +1,4 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
