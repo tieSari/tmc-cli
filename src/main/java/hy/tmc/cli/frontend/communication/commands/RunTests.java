@@ -40,7 +40,6 @@ public class RunTests extends Command {
     public void runTests(Path p) throws NoLanguagePluginFoundException {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         RunResult result = taskExecutor.runTests(p);
-        ValidationResult validationResult = taskExecutor;
         
         ResultInterpreter resInt = new ResultInterpreter();
         String res = resInt.interpret(result);

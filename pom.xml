@@ -164,9 +164,7 @@
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-ant</artifactId>
-            <scope>system</scope>
             <version>1.0-SNAPSHOT</version>
-            <systemPath>${basedir}/lib/tmc-langs-ant-1.0-SNAPSHOT.jar</systemPath>
         </dependency>      
         <dependency>
             <groupId>org.yaml</groupId>
@@ -359,6 +357,12 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>11.0.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
     </dependencies>
