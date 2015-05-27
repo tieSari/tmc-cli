@@ -10,6 +10,7 @@ import hy.tmc.cli.testhelpers.testresults.TestResultFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,6 +22,9 @@ public class ResultInterpreterTest {
     RunResult someFailed;
     RunResult compileError;
     RunResult genericError;
+
+    private ResultInterpreter allFailedInterpreter;
+    private ResultInterpreter someFailedInterpreter;
 
     public ResultInterpreterTest() {
         allPassed = new RunResultBuilder().withStatus(PASSED).build();
@@ -57,6 +61,8 @@ public class ResultInterpreterTest {
 
     @Before
     public void setUp() {
+        allFailedInterpreter = new ResultInterpreter(this.allFailed);
+        someFailedInterpreter = new ResultInterpreter(this.someFailed);
     }
 
     @After
@@ -82,18 +88,35 @@ public class ResultInterpreterTest {
     }
 
     @Test
-    public void testSaysThatTestsAreFailing() {
-
+    public void testMainFailureMessage() {
+        String summary = this.allFailedInterpreter.interpret();
+        assertTrue(summary.contains("Some tests failed:"));
+        summary = this.someFailedInterpreter.interpret();
+        assertTrue(summary.contains("Some tests failed:"));
     }
 
     @Test
-    public void correctAmountOfPassedTests() {
-
+    public void correctAmountOfPassedTestsAllFails() {
+        String summary = this.allFailedInterpreter.interpret();
+        assertTrue(summary.contains("No tests passed"));
     }
 
     @Test
-    public void correctAmountOfFailedTests() {
+    public void correctAmountOfPassedTestsSomeFails() {
+        String summary = this.someFailedInterpreter.interpret();
+        assertTrue(summary.contains("3 tests passed"));
+    }
 
+    @Test
+    public void correctAmountOfFailedTestsAllFails() {
+        String summary = this.allFailedInterpreter.interpret();
+        assertTrue(summary.contains("2 tests failed"));
+    }
+
+    @Test
+    public void correctAmountOfFailedTestsSomeFails() {
+        String summary = this.allFailedInterpreter.interpret();
+        assertTrue(summary.contains("2 tests failed"));
     }
 
 }
