@@ -1,77 +1,96 @@
 package hy.tmc.cli.frontend;
 
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.COMPILE_FAILED;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.GENERIC_ERROR;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.PASSED;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
-
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ResultInterpreter {
 
-    public String interpret(RunResult result) {
+    private final RunResult result;
+    private final String TEST_PADDING=  "  ";
+    private final String STACK_TRACE_PADDING = TEST_PADDING + " "; 
+
+    public ResultInterpreter(RunResult result) {
+        this.result = result;
+    }
+
+    public String interpret() {
         switch (result.status) {
-            case PASSED: 
+            case PASSED:
                 return "All tests passed. You can now submit";
-            case TESTS_FAILED: 
-                return testFailureReport(result);
+            case TESTS_FAILED:
+                return testFailureReport();
             case COMPILE_FAILED:
                 return "Code did not compile.";
-            case GENERIC_ERROR: 
-                return "A generic error occured.";
+            case GENERIC_ERROR:
+                return "Failed to run tests.";
             default:
                 throw new IllegalArgumentException("bad argument");
         }
     }
-    
-    private String testFailureReport(RunResult result) {
+
+    private String testFailureReport() {
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append("Some tests failed:\n");
-    
-        List<TestResult> passedTests = passedTests(result);
-        List<TestResult> failedTests = failedTests(result);
-        
-        reportBuilder.append(passedTests.size()).append(" tests passed:\n");
-        for (TestResult testResult : passedTests) {
-            reportBuilder.append(testResult.name).append("\n");
-        }
-        reportBuilder.append(failedTests.size()).append(" tests failed:\n");
-        for (TestResult testResult : failedTests) {
-            reportBuilder.append(testResult.name)
-                    .append(" failed: ")
-                    .append(testResult.errorMessage)
-                    .append("\n");
-            reportBuilder.append(stackTrace(testResult)).append("\n");
-        }
+
+        succesfulTests(reportBuilder);
+        failedTests(reportBuilder);
+
         return reportBuilder.toString();
     }
-    
+
+    private void succesfulTests(StringBuilder builder) {
+        List<TestResult> passedTests = getPassedTests();
+        if (passedTests.isEmpty()) {
+            builder.append("No tests passed.\n");
+            return;
+        }
+        builder.append(passedTests.size()).append(" tests passed:\n");
+        for (TestResult testResult : passedTests) {
+            builder.append(TEST_PADDING).append(testResult.name).append("\n");
+        }
+    }
+
+    private void failedTests(StringBuilder builder) {
+        List<TestResult> failures = getFailedTests();
+        builder.append(failures.size()).append(" tests failed:\n");
+        for (TestResult testResult : failures) {
+            failedTestOutput(builder, testResult);
+        }
+    }
+
+    private void failedTestOutput(StringBuilder builder, TestResult testResult) {
+        builder.append(TEST_PADDING);
+        builder.append(testResult.name)
+                .append(" failed: ")
+                .append(testResult.errorMessage)
+                .append("\n");
+        builder.append(stackTrace(testResult)).append("\n");
+    }
+
     private String stackTrace(TestResult testResult) {
         StringBuilder builder = new StringBuilder();
-        for (String line : testResult.backtrace){
-            builder.append(line).append("\n");
+        for (String line : testResult.backtrace) {
+            builder.append(STACK_TRACE_PADDING).append(line).append("\n");
         }
         return builder.toString();
     }
-    
-    private List<TestResult> passedTests(RunResult result) {
+
+    private List<TestResult> getPassedTests() {
         List<TestResult> passes = new ArrayList<>();
-        for (TestResult test : result.testResults){
+        for (TestResult test : result.testResults) {
             if (test.passed) {
                 passes.add(test);
             }
         }
         return passes;
     }
-    
-    private List<TestResult> failedTests(RunResult result) {
+
+    private List<TestResult> getFailedTests() {
         List<TestResult> fails = new ArrayList<>();
-        for (TestResult test : result.testResults){
+        for (TestResult test : result.testResults) {
             if (!test.passed) {
                 fails.add(test);
             }
