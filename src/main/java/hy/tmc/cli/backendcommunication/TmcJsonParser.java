@@ -19,7 +19,11 @@ import java.util.List;
 public class TmcJsonParser {
 
     /**
+<<<<<<< HEAD:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
+     * Get JSON-data from url.
+=======
      * get JSON-data from url.
+>>>>>>> origin:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
      *
      * @param url url from which the object data is fetched
      * @return JSON-object containing JSON-data

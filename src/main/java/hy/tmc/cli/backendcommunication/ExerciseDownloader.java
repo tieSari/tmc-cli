@@ -1,23 +1,21 @@
 package hy.tmc.cli.backendcommunication;
 
 
-import static hy.tmc.cli.Main.main;
+import static com.google.common.base.Preconditions.checkNotNull;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.zipping.DefaultMoveDecider;
-import hy.tmc.cli.zipping.DefaultRootDetector;
-import hy.tmc.cli.zipping.MoveDecider;
-import hy.tmc.cli.zipping.ZipHandler;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
+import hy.tmc.cli.zipping.DefaultUnzipDecider;
+import hy.tmc.cli.zipping.UnzipDecider;
+import hy.tmc.cli.zipping.Unzipper;
+
 import java.io.File;
 import java.io.IOException;
-
 import java.util.List;
-import net.lingala.zip4j.exception.ZipException;
 
 public class ExerciseDownloader {
 
@@ -29,10 +27,7 @@ public class ExerciseDownloader {
      * @param front component which implements frontend interface
      */
     public ExerciseDownloader(FrontendListener front) {
-        if (front == null) {
-            return;
-        }
-        this.front = front;
+        this.front = checkNotNull(front);
     }
 
     /**
@@ -42,7 +37,7 @@ public class ExerciseDownloader {
      */
     public void downloadExercises(String courseUrl) {
         List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
-        if(exercises.isEmpty()){
+        if (exercises.isEmpty()) {
             this.front.printLine("No exercises to download.");
             return;
         }
@@ -90,25 +85,25 @@ public class ExerciseDownloader {
             List<Exercise> exercises, String path) {
         tellStateForUser(exercise, exCount, exercises);
         String filePath = path + exercise.getName() + ".zip";
-        downloadFile(exercise.getZip_url(), filePath);
+        downloadFile(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
-        }
-        catch (IOException | ZipException ex) {
+        } catch (IOException | ZipException ex) {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
 
     /**
      * Unzips a zip file
-     *
      * Unzips single file after downloading. 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        MoveDecider md = new DefaultMoveDecider();
-        ZipHandler zipHandler = new ZipHandler(unzipPath, destinationPath, md);
+    public void unzipFile(String unzipPath,
+                          String destinationPath) throws IOException, ZipException {
+        UnzipDecider md = new DefaultUnzipDecider();
+        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
+
         zipHandler.unzip();
     }
 
@@ -158,6 +153,7 @@ public class ExerciseDownloader {
      * @param path where to download
      */
     private static void downloadFile(String zipUrl, String path) {
+        System.out.println(zipUrl);
         HttpClient client = UrlCommunicator.createClient();
         File file = new File(path);
         UrlCommunicator.downloadFile(client, zipUrl, file,

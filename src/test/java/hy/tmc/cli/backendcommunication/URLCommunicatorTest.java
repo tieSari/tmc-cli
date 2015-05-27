@@ -51,7 +51,7 @@ public class URLCommunicatorTest {
     public void notFoundWithoutValidParams() {
         // next will fail, becouse wiremock does not accept headers like that.
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
-        assertEquals(404, result.getStatusCode());
+        assertEquals(403, result.getStatusCode());
     }
 
     @Test
