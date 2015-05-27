@@ -3,8 +3,6 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,13 +12,13 @@ public class ChooseServer extends Command {
 
     private ConfigHandler handler;
 
-    public ChooseServer(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public ChooseServer(FrontendListener front) {
+        super(front);
         this.handler = new ConfigHandler();
     }
 
-    public ChooseServer(ConfigHandler handler, FrontendListener front, Logic backend) {
-        super(front, backend);
+    public ChooseServer(ConfigHandler handler, FrontendListener front) {
+        super(front);
         this.handler = handler;
     }
 
