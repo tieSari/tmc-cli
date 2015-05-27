@@ -8,29 +8,10 @@ import hy.tmc.cli.zipping.Zipper;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import net.lingala.zip4j.exception.ZipException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpEntity;
-import static org.apache.http.HttpHeaders.USER_AGENT;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import static org.apache.http.client.methods.RequestBuilder.post;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.util.EntityUtils;
 
 public class CourseSubmitter {
 
@@ -49,47 +30,12 @@ public class CourseSubmitter {
         String destinationFolder = currentPath;
         String submissionZipPath = currentPath + "/submission.zip";
         String URL = currentExercise.getReturnUrl() + "?api_version=7";
-        //String URL = "http://localhost:8080/gifs";
 
         zip(exerciseFolderToZip, submissionZipPath);
-        HttpClient httpclient = HttpClientBuilder.create().build();
-        File file = new File(submissionZipPath);
-        Path path = Paths.get(submissionZipPath);
-        byte[] data = Files.readAllBytes(path);
 
-        HttpPost httppost = new HttpPost(URL);
+        HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
 
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        FileBody fileBody = new FileBody(file); //image should be a String
-        builder.addPart("submission[file]", fileBody);
-
-        String encoding = Base64.encodeBase64String(("test:1234").getBytes());
-        httppost.setHeader("Authorization", "Basic " + encoding);
-        httppost.setHeader("User-Agent", USER_AGENT);
-      //  httppost.setHeader("Content-Type", );
-        
-        
-        HttpEntity entity = builder.build();
-        httppost.setEntity(entity);
-        System.out.println("executing request " + httppost.getRequestLine());
-        HttpResponse response = httpclient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
-
-        System.out.println(response.getStatusLine());
-        if (resEntity != null) {
-            System.out.println(EntityUtils.toString(resEntity));
-        }
-        if (resEntity != null) {
-            resEntity.consumeContent();
-        }
-
-        httpclient.getConnectionManager().shutdown();
-
-        System.out.println(response.getStatusLine());
-        System.out.println(response);
-
+        System.out.println(makePostWithFile.getData());
         new File(submissionZipPath).delete();
     }
 

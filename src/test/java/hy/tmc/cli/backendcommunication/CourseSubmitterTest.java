@@ -4,6 +4,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
+import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,9 +12,9 @@ import org.junit.Test;
 public class CourseSubmitterTest {
 
     private CourseSubmitter courseSubmitter;
-    private String testFilePath = "/home/samutamm/Desktop/2013_ohpeJaOhja/viikko1";
-    private final String kurssinNimi = "2013_ohpeJaOhja";
-    private final String tehtavanNimi = "Viikko1_002.HeiMaailma";
+    private String testFilePath = "/home/kristianw/Downloads/k14-ohpe/viikko1";
+    private final String kurssinNimi = "k14-ohpe";
+    private final String tehtavanNimi = "Viikko1_001.Nimi";
 
     @Before
     public void setup() {
@@ -28,7 +29,7 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void submission() {
+    public void submission() throws IOException {
         
         this.courseSubmitter.submit(testFilePath, tehtavanNimi);
         
