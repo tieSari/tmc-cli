@@ -11,7 +11,7 @@ import org.junit.Test;
 public class CourseSubmitterTest {
 
     private CourseSubmitter courseSubmitter;
-    private String testFilePath = "/home/samutamm/Desktop/2013_ohpeJaOhja";
+    private String testFilePath = "/home/samutamm/Desktop/2013_ohpeJaOhja/viikko1";
     private final String kurssinNimi = "2013_ohpeJaOhja";
     private final String tehtavanNimi = "Viikko1_002.HeiMaailma";
 

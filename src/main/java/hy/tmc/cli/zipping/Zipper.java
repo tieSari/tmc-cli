@@ -6,7 +6,6 @@ import net.lingala.zip4j.model.ZipParameters;
 
 import java.io.File;
 
-
 /**
  * Class for zipping stuff.
  */
