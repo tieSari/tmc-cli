@@ -1,4 +1,4 @@
-package hy.tmc.cli.testhelpers;
+package hy.tmc.cli.testhelpers.testresults;
 
 import com.google.common.collect.ImmutableList;
 import fi.helsinki.cs.tmc.langs.TestResult;
@@ -56,5 +56,13 @@ public class TestResultBuilder {
     public TestResult build() {
         return new TestResult(name, passed, ImmutableList.copyOf(points), errorMessage,
                 ImmutableList.copyOf(stackTrace));
+    }
+
+    public void clear() {
+        this.stackTrace.clear();
+        this.points.clear();
+        this.errorMessage = "";
+        this.name = "";
+        this.passed = false;
     }
 }

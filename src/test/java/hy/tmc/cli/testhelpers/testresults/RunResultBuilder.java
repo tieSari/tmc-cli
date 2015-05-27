@@ -1,4 +1,4 @@
-package hy.tmc.cli.testhelpers;
+package hy.tmc.cli.testhelpers.testresults;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -21,12 +21,17 @@ public class RunResultBuilder {
         this.logs = new HashMap<>();
     }
     
+    public RunResultBuilder withStatus(Status status) {
+        this.status = status;
+        return this;
+    }
+    
     public RunResultBuilder withTest(TestResult result) {
         this.tests.add(result);
         return this;
     }
     
-    public RunResultBuilder withManyTests(List<TestResult> results) {
+    public RunResultBuilder withTests(List<TestResult> results) {
         this.tests.addAll(results);
         return this;
     }
