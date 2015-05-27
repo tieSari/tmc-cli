@@ -48,14 +48,13 @@ public class ResultInterpreter {
                     .append("\n");
             reportBuilder.append(stackTrace(testResult)).append("\n");
         }
-        
-        return "";
+        return reportBuilder.toString();
     }
     
     private String stackTrace(TestResult testResult) {
         StringBuilder builder = new StringBuilder();
         for (String line : testResult.backtrace){
-            
+            builder.append(line).append("\n");
         }
         return builder.toString();
     }
