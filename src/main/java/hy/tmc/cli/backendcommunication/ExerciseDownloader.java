@@ -154,9 +154,9 @@ public class ExerciseDownloader {
      */
     private static void downloadFile(String zipUrl, String path) {
         System.out.println(zipUrl);
-        HttpClient client = UrlCommunicator.createClient();
+        //HttpClient client = UrlCommunicator.createClient();
         File file = new File(path);
-        UrlCommunicator.downloadFile(client, zipUrl, file,
+        UrlCommunicator.downloadFile(zipUrl, file,
                 ClientData.getFormattedUserData());
     }
 }
