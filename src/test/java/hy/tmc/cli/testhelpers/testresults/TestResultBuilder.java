@@ -16,6 +16,8 @@ public class TestResultBuilder {
     public TestResultBuilder() {
         this.points = new ArrayList<>();
         this.stackTrace = new ArrayList<>();
+        this.name = "";
+        this.errorMessage = "";
     }
 
     public TestResultBuilder withName(String name) {

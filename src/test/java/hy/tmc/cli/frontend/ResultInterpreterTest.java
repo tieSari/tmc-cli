@@ -9,8 +9,10 @@ import hy.tmc.cli.testhelpers.testresults.RunResultBuilder;
 import hy.tmc.cli.testhelpers.testresults.TestResultFactory;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class ResultInterpreterTest {
 
@@ -26,6 +28,23 @@ public class ResultInterpreterTest {
         createSomeFailed();
         compileError = new RunResultBuilder().withStatus(COMPILE_FAILED).build();
         genericError = new RunResultBuilder().withStatus(GENERIC_ERROR).build();
+    }
+
+    private void createAllFailed() {
+        RunResultBuilder builder = new RunResultBuilder();
+        allFailed = builder
+                .withStatus(TESTS_FAILED)
+                .withTests(TestResultFactory.failedTests())
+                .build();
+    }
+
+    private void createSomeFailed() {
+        RunResultBuilder builder = new RunResultBuilder();
+        someFailed = builder
+                .withStatus(TESTS_FAILED)
+                .withTests(TestResultFactory.passedTests())
+                .withTests(TestResultFactory.failedTests())
+                .build();
     }
 
     @BeforeClass
@@ -44,21 +63,37 @@ public class ResultInterpreterTest {
     public void tearDown() {
     }
 
-    private void createAllFailed() {
-        RunResultBuilder builder = new RunResultBuilder();
-        allFailed = builder
-                .withStatus(TESTS_FAILED)
-                .withTests(TestResultFactory.failedTests())
-                .build();
+    @Test
+    public void testAllTestsPassed() {
+        ResultInterpreter allPassedInterpreter = new ResultInterpreter(this.allPassed);
+        assertEquals("All tests passed. You can now submit", allPassedInterpreter.interpret());
     }
 
-    private void createSomeFailed() {
-        RunResultBuilder builder = new RunResultBuilder();
-        someFailed = builder
-                .withStatus(TESTS_FAILED)
-                .withTests(TestResultFactory.passedTests())
-                .withTests(TestResultFactory.failedTests())
-                .build();
+    @Test
+    public void testCompileErrorMessage() {
+        ResultInterpreter allPassedInterpreter = new ResultInterpreter(this.compileError);
+        assertEquals("Code did not compile.", allPassedInterpreter.interpret());
+    }
+
+    @Test
+    public void testGenericErrorMessage() {
+        ResultInterpreter allPassedInterpreter = new ResultInterpreter(this.genericError);
+        assertEquals("Failed to run tests.", allPassedInterpreter.interpret());
+    }
+
+    @Test
+    public void testSaysThatTestsAreFailing() {
+
+    }
+
+    @Test
+    public void correctAmountOfPassedTests() {
+
+    }
+
+    @Test
+    public void correctAmountOfFailedTests() {
+
     }
 
 }

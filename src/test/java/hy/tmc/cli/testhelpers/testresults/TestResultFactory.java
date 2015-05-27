@@ -45,7 +45,7 @@ public class TestResultFactory {
         List<String> trace = new ArrayList<>();
         try {
             Scanner scanner = new Scanner(new File("src/test/resources/stacktrace.txt"));
-            for (String line = scanner.nextLine(); line != null; scanner.nextLine()) {
+            for (String line = scanner.nextLine(); scanner.hasNextLine(); scanner.nextLine()) {
                 trace.add(line);
             }
         } catch (FileNotFoundException ex) {
