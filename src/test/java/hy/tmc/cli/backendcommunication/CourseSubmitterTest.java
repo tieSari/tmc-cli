@@ -11,6 +11,9 @@ import org.junit.Test;
 public class CourseSubmitterTest {
 
     private CourseSubmitter courseSubmitter;
+    private String testFilePath = "/home/samutamm/Desktop/2013_ohpeJaOhja";
+    private final String kurssinNimi = "2013_ohpeJaOhja";
+    private final String tehtavanNimi = "Viikko1_002.HeiMaailma";
 
     @Before
     public void setup() {
@@ -20,15 +23,14 @@ public class CourseSubmitterTest {
 
     @Test
     public void firstTest() {
-        Course ex1 = this.courseSubmitter.getCurrentCourse("/home/kristianw/Downloads/k14-ohpe/viikko1");
-        Course ex2 = this.courseSubmitter.getCurrentCourse("/home/kristianw/Downloads/k14-ohpe/viikko1/Viikko1_001.Nimi");
-        assertEquals("k14-ohpe", ex1.getName());
-        assertEquals("k14-ohpe", ex2.getName());
+        Course ex2 = this.courseSubmitter.getCurrentCourse(testFilePath);
+        assertEquals(kurssinNimi, ex2.getName());
     }
 
     @Test
     public void submission() {
-
-        this.courseSubmitter.submit("/home/kristianw/Downloads/k14-ohpe/viikko1", "Viikko1_001.Nimi");
+        
+        this.courseSubmitter.submit(testFilePath, tehtavanNimi);
+        
     }
 }
