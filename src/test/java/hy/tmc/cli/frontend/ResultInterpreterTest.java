@@ -119,4 +119,29 @@ public class ResultInterpreterTest {
         assertTrue(summary.contains("2 tests failed"));
     }
 
+    @Test
+    public void testErrorMessage() {
+        String summary = this.someFailedInterpreter.interpret();
+        assertTrue(summary.contains("Ohjelmasi pitäisi tulostaa 6 riviä, eli siinä pitäisi"));
+    }
+
+    @Test
+    public void testStackTrace() {
+        String summary = this.someFailedInterpreter.interpret();
+        
+        System.out.println(summary);
+        
+        String test1 = "sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)";
+        String test2 = "java.lang.reflect.Method.invoke(Method.java:497)";
+        String test3 = "org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)";
+        String test4 = "fi.helsinki.cs.tmc.edutestutils.MockStdio$1.evaluate(MockStdio.java:106) ";
+        String test5 = "org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)";
+        assertTrue(summary.contains(test1));
+        assertTrue(summary.contains(test2));
+        assertTrue(summary.contains(test3));
+        assertTrue(summary.contains(test4));
+        assertTrue(summary.contains(test5));
+
+    }
+
 }
