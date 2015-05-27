@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.backendcommunication.UrlCommunicator.makeGetRequest;
+import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;

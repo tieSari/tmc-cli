@@ -23,7 +23,7 @@ public class SetServerSteps {
     public void setup() {
         handler = new ConfigHandler("testResources/test.properties");
         front = new FrontendStub();
-        command = new ChooseServer(handler, front, null);
+        command = new ChooseServer(handler, front);
     }
 
     @Given ("^the server is \"(.*)\"$")

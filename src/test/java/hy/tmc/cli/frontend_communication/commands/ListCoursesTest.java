@@ -4,10 +4,10 @@ import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.ListCourses;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.backendcommunication.HttpResult;
-import hy.tmc.cli.backendcommunication.UrlCommunicator;
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
+
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +31,7 @@ public class ListCoursesTest {
     @Before
     public void setUp() {
         front = new FrontendStub();
-        list = new ListCourses(front, new Logic());
+        list = new ListCourses(front);
         
         
         PowerMockito.mockStatic(UrlCommunicator.class);
@@ -48,7 +48,7 @@ public class ListCoursesTest {
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        ListCourses ls = new ListCourses(front, new Logic());
+        ListCourses ls = new ListCourses(front);
         ClientData.setUserData("asdf", "bsdf");
         try {
             ls.checkData();

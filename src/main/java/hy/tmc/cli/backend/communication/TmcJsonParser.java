@@ -1,4 +1,4 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

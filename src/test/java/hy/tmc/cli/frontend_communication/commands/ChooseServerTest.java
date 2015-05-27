@@ -3,7 +3,6 @@ package hy.tmc.cli.frontend_communication.commands;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.File;
 import java.io.IOException;
@@ -20,18 +19,16 @@ public class ChooseServerTest {
 
     private ChooseServer chooser;
     private final FrontendStub frontendMock;
-    private final Logic logic;
     private final String path = "testResources/test.properties";
 
     public ChooseServerTest() {
-        this.logic = new Logic();
         this.frontendMock = new FrontendStub();
     }
 
     @Before
     public void setup() {
         this.chooser = new ChooseServer(new ConfigHandler(path), 
-                this.frontendMock, this.logic);
+                this.frontendMock);
     }
     
     @After

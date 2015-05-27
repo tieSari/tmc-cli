@@ -1,10 +1,5 @@
 package hy.tmc.cli.frontend;
 
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.COMPILE_FAILED;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.GENERIC_ERROR;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.PASSED;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
-
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
 
