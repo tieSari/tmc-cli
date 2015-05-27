@@ -4,12 +4,12 @@ import hy.tmc.cli.backendcommunication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
+
 
 public class ListCourses extends Command {
 
-    public ListCourses(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public ListCourses(FrontendListener front) {
+        super(front);
     }
 
     /**

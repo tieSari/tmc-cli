@@ -15,19 +15,17 @@ public class CommandFactory {
      * @param logic that the commands will use
      * @return A map of names to corresponding commands
      */
-    public static HashMap<String, Command> createCommandMap(
-            FrontendListener frontend,
-            Logic logic) {
+    public static HashMap<String, Command> createCommandMap(FrontendListener frontend) {
         HashMap<String, Command> commandsByName = new HashMap<>();
-        commandsByName.put("auth", authenticate(frontend, logic));
-        commandsByName.put("help", help(frontend, logic));
-        commandsByName.put("login", login(frontend, logic));
-        commandsByName.put("ping", replyToPing(frontend, logic));
-        commandsByName.put("listCourses", listCourses(frontend, logic));
-        commandsByName.put("listExercises", listExercises(frontend, logic));
-        commandsByName.put("downloadExercises", downloadExercises(frontend, logic));
-        commandsByName.put("logout", logout(frontend, logic));
-        commandsByName.put("setServer", chooseServer(frontend, logic));
+        commandsByName.put("auth", authenticate(frontend));
+        commandsByName.put("help", help(frontend));
+        commandsByName.put("login", login(frontend));
+        commandsByName.put("ping", replyToPing(frontend));
+        commandsByName.put("listCourses", listCourses(frontend));
+        commandsByName.put("listExercises", listExercises(frontend));
+        commandsByName.put("downloadExercises", downloadExercises(frontend));
+        commandsByName.put("logout", logout(frontend));
+        commandsByName.put("setServer", chooseServer(frontend));
         return commandsByName;
     }
 

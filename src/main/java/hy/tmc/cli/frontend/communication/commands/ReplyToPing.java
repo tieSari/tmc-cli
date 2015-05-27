@@ -1,13 +1,12 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.logic.Logic;
 
 public class ReplyToPing extends Command {
 
     private final String answer = "pong";
 
-    public ReplyToPing(FrontendListener front, Logic backend) {
+    public ReplyToPing(FrontendListener front) {
         super(front, backend);
     }
 

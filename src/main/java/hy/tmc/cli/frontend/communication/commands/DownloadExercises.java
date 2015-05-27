@@ -7,7 +7,6 @@ import hy.tmc.cli.backendcommunication.TmcJsonParser;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 
 import java.util.List;
 
@@ -18,8 +17,8 @@ public class DownloadExercises extends Command {
      */
     private ExerciseDownloader exDl;
 
-    public DownloadExercises(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public DownloadExercises(FrontendListener front) {
+        super(front);
         this.exDl = new ExerciseDownloader(front);
     }
 
