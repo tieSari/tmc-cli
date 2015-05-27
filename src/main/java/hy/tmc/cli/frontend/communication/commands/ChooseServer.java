@@ -4,6 +4,7 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,8 +28,7 @@ public class ChooseServer extends Command {
     protected void functionality() {
         try {
             handler.writeServerAddress(data.get("tmc-server"));            
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(ChooseServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -38,12 +38,12 @@ public class ChooseServer extends Command {
         if (!this.data.containsKey("tmc-server")) {
             throw new ProtocolException("must specify new server");
         }
-        if (!isValidTmcURL(this.data.get("tmc-server"))) {
+        if (!isValidTmcUrl(this.data.get("tmc-server"))) {
             throw new ProtocolException("given URL is not valid");
         }
     }
 
-    private boolean isValidTmcURL(String url) {
+    private boolean isValidTmcUrl(String url) {
         Pattern tmcServerAddress = Pattern.compile("http://.*");
         if (url == null) {
             return false;
