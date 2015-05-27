@@ -45,8 +45,8 @@ public class TestResultFactory {
         List<String> trace = new ArrayList<>();
         try {
             Scanner scanner = new Scanner(new File("src/test/resources/stacktrace.txt"));
-            for (String line = scanner.nextLine(); scanner.hasNextLine(); scanner.nextLine()) {
-                trace.add(line);
+            while (scanner.hasNextLine()){
+                trace.add(scanner.nextLine());
             }
         } catch (FileNotFoundException ex) {
             fail("unable to read test sources, namely stacktrace.txt");
