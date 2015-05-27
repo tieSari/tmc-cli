@@ -22,13 +22,13 @@ public class CourseSubmitterTest {
         ClientData.setUserData("test", "1234");
     }
 
-    @Test
+
     public void firstTest() {
         Course ex2 = this.courseSubmitter.getCurrentCourse(testFilePath);
         assertEquals(kurssinNimi, ex2.getName());
     }
 
-    @Test
+
     public void submission() throws IOException {
         
         this.courseSubmitter.submit(testFilePath, tehtavanNimi);
