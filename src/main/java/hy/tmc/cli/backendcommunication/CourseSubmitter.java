@@ -1,14 +1,17 @@
 package hy.tmc.cli.backendcommunication;
 
-import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 
 import hy.tmc.cli.zipping.ProjectRootFinder;
+import hy.tmc.cli.zipping.Zipper;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.exception.ZipException;
 
 public class CourseSubmitter {
 
@@ -22,8 +25,24 @@ public class CourseSubmitter {
         Course currentCourse = getCurrentCourse(currentPath);
         List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
         Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
-        System.out.println(currentExercise);
-        System.out.println("CurrentEX " + currentExercise);   
+        
+        String exerciseFolderToZip = currentPath + "/" + exerciseName;
+        String destinationFolder = currentPath;
+        String submissionZipPath = currentPath+"/submission.zip";
+        System.out.println("exercise path:  " + exerciseFolderToZip);
+        System.out.println("submission path:  " + submissionZipPath);
+        zip(exerciseFolderToZip, submissionZipPath);
+        System.out.println("LÖYTYY: " + new File(submissionZipPath).exists());
+        //new File(submissionZipPath).delete();
+    }
+
+    private void zip(String exerciseFolderToZip, String currentPath) {
+        try {
+            new Zipper().zip(exerciseFolderToZip, currentPath);
+        }
+        catch (ZipException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
     private Exercise findCurrentExercise(List<Exercise> exercisesForCurrentCourse, String exerciseName) {
@@ -61,5 +80,4 @@ public class CourseSubmitter {
         Path path = rootFinder.getRootDirectory(Paths.get(directoryPath));
         return path.toString().split("/");
     }
-
 }
