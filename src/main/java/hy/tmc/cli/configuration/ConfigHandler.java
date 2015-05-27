@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Writes data to config file and reads from it
+ * Writes data to config file and reads from it.
  */
 public class ConfigHandler {
 
@@ -110,9 +110,17 @@ public class ConfigHandler {
         }
         return serverAddress + authExtension;
     }
-    
+
+    /**
+     * Returns an complete URL to course's json feed in
+     * defined server.
+     * @param id course id
+     * @return complete url to course json
+     */
     public String getCourseUrl(int id) {
-        return this.readServerAddress() + "/courses/" + id + ".json" + "?api_version=" + api_version;
+        return this.readServerAddress() + "/courses/"
+                + id + ".json"
+                + "?api_version=" + api_version;
     }
 
     /**

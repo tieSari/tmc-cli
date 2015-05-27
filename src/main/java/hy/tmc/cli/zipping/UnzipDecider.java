@@ -2,7 +2,7 @@ package hy.tmc.cli.zipping;
 
 import java.nio.file.Path;
 
-public interface MoveDecider {
+public interface UnzipDecider {
 
     /**
      * Decide whether this file should be moved or not, that is, does it contain

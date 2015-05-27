@@ -1,7 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.frontend.communication.commands.CommandFactory.downloadExercises;
-
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
@@ -12,6 +10,7 @@ public class CommandFactory {
 
     /**
      * Maps command strings to objects.
+     * 
      * @param frontend that the commands will use
      * @param logic that the commands will use
      * @return A map of names to corresponding commands
@@ -28,6 +27,7 @@ public class CommandFactory {
         commandsByName.put("listExercises", listExercises(frontend, logic));
         commandsByName.put("downloadExercises", downloadExercises(frontend, logic));
         commandsByName.put("logout", logout(frontend, logic));
+        commandsByName.put("setServer", chooseServer(frontend, logic));
         return commandsByName;
     }
 
@@ -120,12 +120,35 @@ public class CommandFactory {
     }
 
     /**
+     * Create a chooseServer Command object.
+     *
+     * @param front frontend that the command will use
+     * @param back logic that the command will use
+     * @return a lchooseServer object
+     */
+    public static Command chooseServer(FrontendListener front, Logic back) {
+        return new ChooseServer(front, back);
+    }
+
+    /**
      * Takes the command map and returns a set of command names.
-     * 
+     *
      * @return a set of all available command names.
      */
     static Set<String> allCommandNames() {
-        return createCommandMap(null, null).keySet();
+        FrontendListener stub = new FrontendListener () {
+            @Override
+            public void start() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void printLine(String line) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+
+        return createCommandMap(stub, null).keySet();
     }
 
 }

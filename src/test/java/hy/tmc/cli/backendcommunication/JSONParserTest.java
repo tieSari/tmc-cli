@@ -24,7 +24,7 @@ public class JSONParserTest {
     public void setup() {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        HttpResult fakeResult = new HttpResult(ExampleJSON.coursesExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJSON.allCoursesExample, 200, true);
         
         ClientData.setUserData("chang", "paras");
         PowerMockito
@@ -65,9 +65,9 @@ public class JSONParserTest {
                 .thenReturn(fakeResult);
         String names = TmcJsonParser.getExerciseNames("ankka");
 
-        assertTrue(names.contains("viikko01-Viikko01_000.Hiekkalaatikko"));
-        assertTrue(names.contains("viikko01-Viikko01_002.HeiMaailma"));
-        assertTrue(names.contains("viikko01-Viikko01_003.Kuusi"));
+        assertTrue(names.contains("viikko1-Viikko1_001.Nimi"));
+        assertTrue(names.contains("viikko1-Viikko1_002.HeiMaailma"));
+        assertTrue(names.contains("viikko1-Viikko1_003.Kuusi"));
     }
     
     @Test
@@ -79,7 +79,7 @@ public class JSONParserTest {
                 .thenReturn(fakeResult);
         String names = TmcJsonParser.getExerciseNames("ankka");
         
-        assertTrue(names.contains("viikko01-Viikko01_004.RobottiOhjain"));
+        assertTrue(names.contains("viikko11-Viikko11_147.Laskin"));
     }
     
     @Test
