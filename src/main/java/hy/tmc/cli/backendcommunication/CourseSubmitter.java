@@ -7,6 +7,7 @@ import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 public class CourseSubmitter {
@@ -18,11 +19,11 @@ public class CourseSubmitter {
     }
 
     public void submit(String currentPath, String exerciseName) {
-
         Course currentCourse = getCurrentCourse(currentPath);
         List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
         Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
-        System.out.println("CurrentEX " + currentExercise.getName());
+        System.out.println(currentExercise);
+        System.out.println("CurrentEX " + currentExercise);   
     }
 
     private Exercise findCurrentExercise(List<Exercise> exercisesForCurrentCourse, String exerciseName) {
