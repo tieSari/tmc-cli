@@ -56,14 +56,14 @@ public class DownloadExercisesSteps {
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)));
-        
+
         wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
                         .withBody(ExampleJSON.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
-        
+
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
@@ -81,7 +81,7 @@ public class DownloadExercisesSteps {
         createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
         verify(getRequestedFor(urlEqualTo("/user")));
-                // .withHeader("Authorization", containing("Basic cGlobGE6anV1aA==")));
+        // .withHeader("Authorization", containing("Basic cGlobGE6anV1aA==")));
     }
 
     @When("^user gives a download exercises command and course id\\.$")
