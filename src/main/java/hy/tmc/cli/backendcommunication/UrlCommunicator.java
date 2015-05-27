@@ -95,7 +95,7 @@ public class UrlCommunicator {
      * @param params params of the get request
      * @return true if succesful
      */
-    public static boolean downloadFile(HttpClient client,
+    public static boolean downloadFile(
             String url,
             File file,
             String... params) {
