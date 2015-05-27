@@ -34,7 +34,11 @@ public class DownloadExercisesSteps {
     private ArrayList<String> output;
     private ConfigHandler config;
     private WireMockServer wireMockServer;
-
+    
+    /**
+     * Set up server.
+     * @throws IOException 
+     */
     @Before
     public void setUpServer() throws IOException {
         wireMockServer = new WireMockServer(wireMockConfig().port(5055));
