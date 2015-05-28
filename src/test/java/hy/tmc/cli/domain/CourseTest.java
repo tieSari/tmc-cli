@@ -11,6 +11,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class CourseTest {
@@ -18,6 +22,8 @@ public class CourseTest {
     private Course course;
     private final int id = 7;
     private final String name = "ankka";
+    private List<Exercise> exercises;
+    private Exercise ex;
     
     public CourseTest() {
     }
@@ -35,6 +41,15 @@ public class CourseTest {
         course = new Course();
         course.setId(id);
         course.setName(name);
+        course.setDetailsUrl("http://mooc.fi/");
+
+        exercises = new ArrayList<>();
+        ex = new Exercise();
+        ex.setName("test");
+        ex.setId(2);
+        exercises.add(ex);
+
+        course.setExercises(exercises);
     }
     
     @After
@@ -61,5 +76,28 @@ public class CourseTest {
     public void testSetID(){
         course.setId(888);
         assertEquals(888, course.getId());
+    }
+
+    @Test
+    public void testGetExercises() {
+        assertEquals(exercises,course.getExercises());
+    }
+
+    @Test
+    public void testSetExercises() {
+        List<Exercise> newExercises = new ArrayList<>();
+        course.setExercises(newExercises);
+        assertEquals(newExercises,course.getExercises());
+    }
+
+    @Test
+    public void testGetDetailsUrl() {
+        assertEquals("http://mooc.fi/", course.getDetailsUrl());
+    }
+
+    @Test
+    public void testSetDetailsUrl() {
+        course.setDetailsUrl("http://cs.helsinki.fi");
+        assertEquals("http://cs.helsinki.fi", course.getDetailsUrl());
     }
 }
