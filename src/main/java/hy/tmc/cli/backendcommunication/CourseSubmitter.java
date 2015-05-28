@@ -5,11 +5,11 @@ import hy.tmc.cli.domain.Exercise;
 
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
-import hy.tmc.cli.zipping.Zipper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import net.lingala.zip4j.exception.ZipException;
 
@@ -25,34 +25,32 @@ public class CourseSubmitter {
 
     /**
      * Submits folder of exercise to TMC.
-     * 
+     *
      * @param currentPath path from which this was called.
      * @param exerciseName name of exercise to submit
      * @return String with url from which to get results.
      * @throws IOException if failed to create zip.
      */
-    
     public String submit(String currentPath, String exerciseName) throws IOException {
         Exercise currentExercise = findExercise(currentPath, exerciseName);
-
         String exerciseFolderToZip = rootFinder.getRootDirectory(
-                Paths.get(currentPath)).toString();
-        
+                Paths.get(currentPath)
+        ).toString();
+
         String submissionZipPath = currentPath + "/submission.zip";
         String URL = currentExercise.getReturnUrl() + "?api_version=7";
 
         zip(exerciseFolderToZip, submissionZipPath);
         HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
-        System.out.println("EWIREMOCKITA tänne: " + URL);
         String resultUrl = TmcJsonParser.getSubmissionUrl(makePostWithFile);
         new File(submissionZipPath).delete();
         return resultUrl;
     }
-    
+
     public String submit(String currentPath) throws IOException {
         return submit(currentPath, currentPath);
     }
-    
+
     private Exercise findExercise(String currentPath, String exerciseName) {
         Course currentCourse = getCurrentCourse(currentPath);
         List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
@@ -70,10 +68,10 @@ public class CourseSubmitter {
     }
 
     private Exercise findCurrentExercise(List<Exercise> exercisesForCurrentCourse, String currentDir) {
-        String [] path = rootFinder.getRootDirectory(Paths.get(currentDir)).toString().split("/");
-        String p = path[path.length-1];
+        String[] path = rootFinder.getRootDirectory(Paths.get(currentDir)).toString().split("/");
+        String directory = path[path.length - 1];
         for (Exercise exercise : exercisesForCurrentCourse) {
-            if (exercise.getName().contains(p)) {
+            if (exercise.getName().contains(directory)) {
                 return exercise;
             }
         }

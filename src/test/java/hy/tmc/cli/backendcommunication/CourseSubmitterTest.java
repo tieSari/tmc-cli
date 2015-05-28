@@ -26,9 +26,6 @@ public class CourseSubmitterTest {
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootfinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootfinder, new ZipperStub());
-        mockUrlCommunicator("http://tmc.mooc.fi/staging/courses.json?api_version=7", ExampleJSON.allCoursesExample);
-        mockUrlCommunicator("http://tmc.mooc.fi/staging/courses/3.json?api_version=7", ExampleJSON.courseExample);
-        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", "toimii");
     }
 
     @Test
@@ -41,15 +38,16 @@ public class CourseSubmitterTest {
     
     @Test
     public void testSubmit() throws IOException {
-        String testZip = "testResources/test.zip";
-        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01";
+        mockUrlCommunicator("http://tmc.mooc.fi/staging/courses.json?api_version=7", ExampleJSON.allCoursesExample);
+        mockUrlCommunicator("http://tmc.mooc.fi/staging/courses/3.json?api_version=7", ExampleJSON.courseExample);
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJSON.submitResponse);
+        
+        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
         rootfinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
-        
-        String course = "2013_ohpeJaOhja";
+        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath, exercise);
-        System.out.println("MITÄ TÄÄ ON: " + result);
-        
+        assertEquals(submissionPath, result);
     }
 
     private void mockUrlCommunicator(String url, String returnValue) {
