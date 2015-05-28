@@ -122,7 +122,7 @@ public class DownloadExercisesSteps {
         File[] paths = getFileArray(filepath);
         boolean zips = false;
         for(File path : paths){
-            if(path.getAbsolutePath().toString().contains(".zip")){
+            if(path.getAbsolutePath().toString().endsWith(".zip")){
                 zips = true;
             }
         }
