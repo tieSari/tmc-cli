@@ -1,6 +1,7 @@
 package hy.tmc.cli.backendcommunication;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -139,5 +140,18 @@ public class TmcJsonParser {
         JsonObject submission = getJsonFrom(url);
         Gson mapper = new Gson();
         return mapper.fromJson(submission, SubmissionResult.class);
+    }
+    
+    /**
+     * Parses the submission result URL from a HttpResult with JSON.
+     * 
+     * @param result HTTPResult containing JSON with submission url.
+     * @return url where submission results are located.
+     */
+    
+    public static String getSubmissionUrl(HttpResult result) {
+        JsonElement jelement = new JsonParser().parse(result.getData());
+        JsonObject  jobject = jelement.getAsJsonObject();
+        return jobject.get("submission_url").getAsString();
     }
 }
