@@ -1,9 +1,9 @@
 package hy.tmc.cli.backendcommunication;
 
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
+import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -22,13 +22,13 @@ public class CourseSubmitterTest {
     private ProjectRootFinderStub rootfinder;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
+        PowerMockito.mockStatic(UrlCommunicator.class);
         rootfinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootfinder, new ZipperStub());
         mockUrlCommunicator("http://tmc.mooc.fi/staging/courses.json?api_version=7", ExampleJSON.allCoursesExample);
-        System.out.println("TOIMIIKO? " + ExampleJSON.allCoursesExample);
         mockUrlCommunicator("http://tmc.mooc.fi/staging/courses/3.json?api_version=7", ExampleJSON.courseExample);
-        wireMockTMCServer();
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", "toimii");
     }
 
     @Test
@@ -47,12 +47,12 @@ public class CourseSubmitterTest {
         String exercise = "viikko1-Viikko1_001.Nimi";
         
         String course = "2013_ohpeJaOhja";
-        courseSubmitter.submit(testPath, exercise);
+        String result = courseSubmitter.submit(testPath, exercise);
+        System.out.println("MITÄ TÄÄ ON: " + result);
         
     }
 
     private void mockUrlCommunicator(String url, String returnValue) {
-        PowerMockito.mockStatic(UrlCommunicator.class);
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq(url),
@@ -60,8 +60,11 @@ public class CourseSubmitterTest {
                 .thenReturn(fakeResult);
     }
 
-    private void wireMockTMCServer() {
-        
+    private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException {
+        HttpResult fakeResult = new HttpResult(returnValue, 200, true);
+        PowerMockito
+                .when(UrlCommunicator.makePostWithFile(Mockito.any(File.class),
+                                Mockito.eq(url)))
+                .thenReturn(fakeResult);
     }
-
 }
