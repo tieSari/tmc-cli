@@ -8,7 +8,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
-import java.io.File;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,11 +19,7 @@ import java.util.List;
 public class TmcJsonParser {
 
     /**
-<<<<<<< HEAD:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
      * Get JSON-data from url.
-=======
-     * get JSON-data from url.
->>>>>>> origin:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
      *
      * @param url url from which the object data is fetched
      * @return JSON-object containing JSON-data
@@ -119,7 +115,6 @@ public class TmcJsonParser {
     }
 
     /**
-     * /**
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
@@ -133,5 +128,16 @@ public class TmcJsonParser {
                         Exercise[].class);
         return Arrays.asList(exercises);
     }
-
+    
+    /**
+     * Parses JSON in url to create a SubmissionResult object.
+     * 
+     * @param url to make request to
+     * @return A SubmissionResult object which contains data of submission.
+     */
+    public static SubmissionResult getSubmissionResult(String url) {
+        JsonObject submission = getJsonFrom(url);
+        Gson mapper = new Gson();
+        return mapper.fromJson(submission, SubmissionResult.class);
+    }
 }
