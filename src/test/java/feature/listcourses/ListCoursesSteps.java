@@ -6,6 +6,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -18,6 +21,8 @@ import hy.tmc.cli.testhelpers.ExampleJSON;
 import hy.tmc.cli.testhelpers.TestClient;
 
 import java.io.IOException;
+
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
@@ -43,7 +48,7 @@ public class ListCoursesSteps {
         configHandler.writeServerAddress("http://127.0.0.1:8080");
         
         server = new Server(null);
-        port = new ConfigHandler().readPort();
+        port = configHandler.readPort();
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
@@ -52,8 +57,9 @@ public class ListCoursesSteps {
     }
     
     private void startWireMock() {
-        wireMockServer = new WireMockServer();
+        wireMockServer = new WireMockServer(wireMockConfig().port(8080));
         wireMockServer.start();
+        WireMock.configureFor("wiremock.host", 8080);
         
         stubFor(get(urlEqualTo("/user"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
