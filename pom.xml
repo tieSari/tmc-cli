@@ -9,7 +9,19 @@
     <name>tmc-cli</name>
     <url>http://testmycode.net</url>
 
-
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <id>org</id>
+            <name>tmccli</name>
+            <url>http://tmc-cli.jvn.lu/maven2/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 
 
     <properties>
