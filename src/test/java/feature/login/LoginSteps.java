@@ -40,6 +40,7 @@ public class LoginSteps {
         serverThread.start();
         testClient = new TestClient(port);
 
+
         startWireMock();
     }
 
@@ -47,14 +48,13 @@ public class LoginSteps {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
 
-        stubFor(get(urlEqualTo("/user"))
+        wireMockServer.stubFor(get(urlEqualTo("/user"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
                         aResponse()
                         .withStatus(200)
                 )
         );
-
     }
 
     @When("^user gives username \"(.*?)\" and password \"(.*?)\"$")
