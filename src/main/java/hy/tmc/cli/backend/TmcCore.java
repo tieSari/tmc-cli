@@ -23,20 +23,20 @@ public class TmcCore {
         commands = CommandFactory.createCommandMap(frontend);
     }
     
-    public boolean login() {
-        return run("login");
+    public boolean login(String username, String password) {
+        return run("login", "username", username, "password", password);
     }
     
     public boolean logout() {
         return run("logout");
     }
     
-    public boolean selectServer() {
-        return run("setServer");
+    public boolean selectServer(String serverAddress) {
+        return run("setServer", "tmc-server", serverAddress);
     }
     
-    public boolean downloadExercises() {
-        return run("downloadExercises");
+    public boolean downloadExercises(String pwd, String courseId) {
+        return run("downloadExercises", "pwd", pwd, "courseID", courseId);
     }
     
     public boolean help() {
@@ -51,13 +51,24 @@ public class TmcCore {
         return run("listExercises");
     }
     
-    private boolean run(String commandName) {
+    private boolean run(String commandName, String... args) {
+        Command command = commands.get(commandName);
+        if (command == null) {
+            return false;
+        }
+        setParams(command, args);
         try {
-            commands.get(commandName).execute();
+            command.execute();
         } catch (ProtocolException ex) {
             Logger.getLogger(TmcCore.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
+    }
+    
+    private void setParams(Command command, String... args) {
+        for (int i=0, j=1; j < args.length; i+=2, j+=2) {
+            command.setParameter(args[i], args[j]);
+        }
     }
 }
