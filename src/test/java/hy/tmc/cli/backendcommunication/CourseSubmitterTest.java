@@ -16,11 +16,11 @@ public class CourseSubmitterTest {
     private final String kurssinNimi = "k14-ohpe";
     private final String tehtavanNimi = "Viikko1_001.Nimi";
 
-    @Before
-    public void setup() {
-        this.courseSubmitter = new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()));
-        ClientData.setUserData("test", "1234");
-    }
+//    @Before
+//    public void setup() {
+//        this.courseSubmitter = new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()));
+//        ClientData.setUserData("test", "1234");
+//    }
 
 
     public void firstTest() {

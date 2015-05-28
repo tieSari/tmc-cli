@@ -44,8 +44,7 @@ public class DownloadExercisesSteps {
         config.writeServerAddress("http://127.0.0.1:5055");
         server = new Server(null);
         ClientData.setUserData("pihla", "juuh");
-        port = config.readPort();
-        System.out.println(port);
+        port = server.getCurrentPort();
         serverThread = new Thread(server);
         output = new ArrayList<>();
         WireMock.configureFor("localhost", 5055);
@@ -111,7 +110,6 @@ public class DownloadExercisesSteps {
 
     @Then("^information about download progress\\.$")
     public void information_about_download_progress() throws Throwable {
-        System.out.println(output);
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
     }
 
@@ -123,5 +121,6 @@ public class DownloadExercisesSteps {
         server.close();
         serverThread.interrupt();
         config.writeServerAddress(originalServerAddress);
+        ClientData.clearUserData();
     }
 }
