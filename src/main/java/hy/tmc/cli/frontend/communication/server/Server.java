@@ -39,6 +39,10 @@ public class Server implements FrontendListener, Runnable {
         }
         this.parser = new ProtocolParser(this);
     }
+    
+    public int getCurrentPort() {
+        return this.serverSocket.getLocalPort();
+    }
 
     /**
      * Start is general function to set up server listening for the frontend.

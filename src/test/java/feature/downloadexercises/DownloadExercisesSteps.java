@@ -1,10 +1,13 @@
 package feature.downloadexercises;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -20,12 +23,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Rule;
+
 
 public class DownloadExercisesSteps {
 
+    private String originalServerAddress;
     private int port;
     private Thread serverThread;
     private Server server;
@@ -39,11 +41,11 @@ public class DownloadExercisesSteps {
     public void setUpServer() throws IOException {
         wireMockServer = new WireMockServer(wireMockConfig().port(5055));
         config = new ConfigHandler();
+        originalServerAddress = config.readServerAddress();
         config.writeServerAddress("http://127.0.0.1:5055");
         server = new Server();
         ClientData.setUserData("pihla", "juuh");
-        port = config.readPort();
-        System.out.println(port);
+        port = server.getCurrentPort();
         serverThread = new Thread(server);
         output = new ArrayList<>();
         WireMock.configureFor("localhost", 5055);
@@ -56,14 +58,14 @@ public class DownloadExercisesSteps {
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)));
-        
+
         wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
                         .withBody(ExampleJSON.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
-        
+
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
@@ -96,9 +98,9 @@ public class DownloadExercisesSteps {
                 break;
             }
         }
-        wireMockServer.verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
+        verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
-        wireMockServer.verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
+        verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
 
@@ -109,7 +111,6 @@ public class DownloadExercisesSteps {
 
     @Then("^information about download progress\\.$")
     public void information_about_download_progress() throws Throwable {
-        System.out.println(output);
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
     }
 
@@ -120,5 +121,7 @@ public class DownloadExercisesSteps {
         wireMockServer.stop();
         server.close();
         serverThread.interrupt();
+        config.writeServerAddress(originalServerAddress);
+        ClientData.clearUserData();
     }
 }

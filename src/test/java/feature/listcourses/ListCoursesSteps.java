@@ -55,14 +55,14 @@ public class ListCoursesSteps {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
         
-        stubFor(get(urlEqualTo("/user"))
+        wireMockServer.stubFor(get(urlEqualTo("/user"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
                         aResponse()
                         .withStatus(200)
                 )
         );
-        stubFor(get(urlEqualTo(new ConfigHandler().coursesExtension))
+        wireMockServer.stubFor(get(urlEqualTo(new ConfigHandler().coursesExtension))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
                         aResponse()

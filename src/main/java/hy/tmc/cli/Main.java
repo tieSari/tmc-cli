@@ -13,6 +13,9 @@ public class Main {
 
     /**
      * Starts the main program.
+     * @param args
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws IOException, InterruptedException {
         

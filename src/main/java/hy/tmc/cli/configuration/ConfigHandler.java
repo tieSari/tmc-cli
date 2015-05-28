@@ -84,7 +84,6 @@ public class ConfigHandler {
         Properties prop = getProperties();
         return prop.getProperty(serverAddressFieldName);
     }
-
     /**
      * Reads address from which to list courses.
      *

@@ -1,13 +1,11 @@
 package hy.tmc.cli.backend.communication;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
 
 import net.lingala.zip4j.exception.ZipException;
-import org.apache.http.client.HttpClient;
 
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
@@ -76,8 +74,7 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Handles downloading, unzipping & telling user information,
-     * for single exercise.
+     * Handles downloading, unzipping & telling user information, for single exercise.
      *
      * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
@@ -91,7 +88,8 @@ public class ExerciseDownloader {
         downloadFile(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
-        } catch (IOException | ZipException ex) {
+        }
+        catch (IOException | ZipException ex) {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
@@ -111,7 +109,7 @@ public class ExerciseDownloader {
 
     /**
      * Tells which exercise is currently being downloaded.
-     * 
+     *
      * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
      */
@@ -139,7 +137,7 @@ public class ExerciseDownloader {
 
     /**
      * Get advantage percent in downloading single exercise.
-     * 
+     *
      * @param exCount order number of exercise in downloading
      * @param exercisesSize total amount of exercises that will be downloaded
      * @return percents
@@ -155,10 +153,8 @@ public class ExerciseDownloader {
      * @param path where to download
      */
     private static void downloadFile(String zipUrl, String path) {
-        System.out.println(zipUrl);
-        HttpClient client = UrlCommunicator.createClient();
         File file = new File(path);
-        UrlCommunicator.downloadFile(client, zipUrl, file,
+        UrlCommunicator.downloadFile(zipUrl, file,
                 ClientData.getFormattedUserData());
     }
 }
