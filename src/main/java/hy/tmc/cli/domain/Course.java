@@ -2,16 +2,28 @@ package hy.tmc.cli.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Course {
     
     private int id;
     private String name;
+
+    private List<Exercise> exercises;
 
     @SerializedName("details_url")
     private String detailsUrl;
 
     public Course() {
 
+    }
+
+    public List<Exercise> getExercises() {
+        return exercises;
+    }
+
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
     }
 
     public int getId() {
