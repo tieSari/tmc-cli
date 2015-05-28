@@ -82,6 +82,6 @@ public class SubmissionInterpreter {
         if (testCase.isSuccessful()) {
             return "PASSED: " + testCase.getName();
         }
-        return "FAILED: " + testCase.getMessage();
+        return "FAILED: " + testCase.getName() + "\n  " + testCase.getMessage();
     }
 }
