@@ -53,15 +53,22 @@ public class ExerciseDownloader {
         downloadFiles(exercises, "");
     }
 
+    /**
+     * Method for downloading files if path where to download is defined.
+     * @param exercises
+     * @param path
+     */
     public void downloadFiles(List<Exercise> exercises, String path) {
         downloadFiles(exercises,path,null);
     }
 
     /**
      * Method for downloading files if path where to download is defined.
+     * Also requires seperate folder name that will be created to defined path.
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
+     * @param folderName folder name of where exercises will be extracted (for example course name)
      */
     public void downloadFiles(List<Exercise> exercises, String path, String folderName) {
         int exCount = 0;
