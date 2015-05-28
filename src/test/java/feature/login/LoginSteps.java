@@ -1,6 +1,7 @@
 package feature.login;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
@@ -9,6 +10,8 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
+
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 
@@ -32,7 +35,7 @@ public class LoginSteps {
     @Before
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
-        configHandler.writeServerAddress("http://127.0.0.1:8080");
+        configHandler.writeServerAddress("http://127.0.0.1:3333");
 
         server = new Server(null);
         port = new ConfigHandler().readPort();
@@ -44,7 +47,8 @@ public class LoginSteps {
     }
 
     private void startWireMock() {
-        wireMockServer = new WireMockServer();
+        wireMockServer = new WireMockServer(wireMockConfig().port(3333));
+        WireMock.configureFor("127.0.0.1", 3333);
         wireMockServer.start();
 
         stubFor(get(urlEqualTo("/user"))
@@ -71,6 +75,7 @@ public class LoginSteps {
     public void closeAll() throws IOException {
         server.close();
         serverThread.interrupt();
+        WireMock.reset();
         wireMockServer.stop();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
     }

@@ -45,7 +45,7 @@ public class ListCoursesSteps {
     @Before
     public void setUpServer() throws IOException {
         configHandler = new ConfigHandler();
-        configHandler.writeServerAddress("http://127.0.0.1:8080");
+        configHandler.writeServerAddress("http://127.0.0.1:7777");
         
         server = new Server(null);
         port = configHandler.readPort();
@@ -57,10 +57,10 @@ public class ListCoursesSteps {
     }
     
     private void startWireMock() {
-        wireMockServer = new WireMockServer(wireMockConfig().port(8080));
+        wireMockServer = new WireMockServer(wireMockConfig().port(7777));
+        WireMock.configureFor("127.0.0.1", 7777);
         wireMockServer.start();
-        WireMock.configureFor("wiremock.host", 8080);
-        
+
         stubFor(get(urlEqualTo("/user"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
@@ -125,6 +125,7 @@ public class ListCoursesSteps {
     public void closeServer() throws IOException {
         server.close();
         serverThread.interrupt();
+        WireMock.reset();
         wireMockServer.stop();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
     }
