@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.frontend.communication.commands.Help;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;

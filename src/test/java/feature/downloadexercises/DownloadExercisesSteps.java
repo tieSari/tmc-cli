@@ -1,28 +1,40 @@
 package feature.downloadexercises;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import hy.tmc.cli.testhelpers.TestClient;
+
+import org.junit.After;
+import org.junit.Before;
+
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import java.util.ArrayList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Rule;
 
 public class DownloadExercisesSteps {
 
@@ -37,7 +49,7 @@ public class DownloadExercisesSteps {
     
     /**
      * Set up server.
-     * @throws IOException 
+     * @throws IOException if server initializing fails
      */
     @Before
     public void setUpServer() throws IOException {
@@ -76,18 +88,32 @@ public class DownloadExercisesSteps {
                         .withBodyFile("test.zip")));
     }
 
+    /**
+     * Create test client.
+     * @throws IOException if creating fails
+     */
     private void createTestClient() throws IOException {
         testClient = new TestClient(port);
     }
 
+    /**
+     * Tests that user sends login request.
+     * @param username string
+     * @param password string
+     * @throws Throwable if something fails
+     */
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
-    public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
+    public void user_has_logged_in(String username, String password) throws Throwable {
         createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
         verify(getRequestedFor(urlEqualTo("/user")));
         // .withHeader("Authorization", containing("Basic cGlobGE6anV1aA==")));
     }
 
+    /**
+     * Verifies that user gives a download exercises command and course id.
+     * @throws Throwable if test fails
+     */
     @When("^user gives a download exercises command and course id\\.$")
     public void user_gives_a_download_exercises_command_and_course_id() throws Throwable {
         createTestClient();
@@ -106,17 +132,29 @@ public class DownloadExercisesSteps {
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
 
+    /**
+     * Verifies that output contains zip files and folders contain unzipped files.
+     * @throws Throwable if something fails
+     */
     @Then("^output should contain zip files and folders containing unzipped files$")
-    public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
+    public void output_contains_zip_files_and_folders_containing_unzipped_files() throws Throwable {
         assertTrue(new File(tempDir.toAbsolutePath() + File.separator + "/viikko1").exists());
     }
 
+    /**
+     * Verifies that downloading gives information about progress.
+     * @throws Throwable if something fails
+     */
     @Then("^information about download progress\\.$")
     public void information_about_download_progress() throws Throwable {
         System.out.println(output);
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
     }
 
+    /**
+     * Closes server after test.
+     * @throws IOException if server operations fail
+     */
     @After
     public void closeServer() throws IOException {
         tempDir.toFile().delete();
