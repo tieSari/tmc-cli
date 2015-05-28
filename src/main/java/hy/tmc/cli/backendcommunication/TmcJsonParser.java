@@ -150,7 +150,9 @@ public class TmcJsonParser {
      */
     
     public static String getSubmissionUrl(HttpResult result) {
-        JsonElement jelement = new JsonParser().parse(result.getData());
+        System.out.println("result: " + result);
+        System.out.println("result data: " + result.getData());
+        JsonElement jelement = new JsonParser().parse(result.getData());        
         JsonObject  jobject = jelement.getAsJsonObject();
         return jobject.get("submission_url").getAsString();
     }

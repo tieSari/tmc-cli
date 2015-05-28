@@ -8,6 +8,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
+import hy.tmc.cli.zipping.Zipper;
 
 import java.io.IOException;
 
@@ -26,7 +27,12 @@ public class Submit extends Command {
      */
     @Override
     protected void functionality() {
-        CourseSubmitter submitter = new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()));
+        CourseSubmitter submitter = new CourseSubmitter(
+                new ProjectRootFinder(
+                        new DefaultRootDetector()
+                ),
+                new Zipper()
+        );
         try {
             if (data.containsKey("exerciseName")) {
                 String returnUrl = submitter.submit(data.get("path"), data.get("exerciseName"));

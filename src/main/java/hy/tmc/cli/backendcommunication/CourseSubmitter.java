@@ -4,6 +4,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 
 import hy.tmc.cli.zipping.RootFinder;
+import hy.tmc.cli.zipping.ZipMaker;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +16,10 @@ import net.lingala.zip4j.exception.ZipException;
 public class CourseSubmitter {
 
     private RootFinder rootFinder;
+    private ZipMaker zipper;
 
-    public CourseSubmitter(RootFinder rootFinder) {
+    public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
+        this.zipper = zipper;
         this.rootFinder = rootFinder;
     }
 
@@ -40,7 +43,7 @@ public class CourseSubmitter {
 
         zip(exerciseFolderToZip, submissionZipPath);
         HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
-
+        System.out.println("EWIREMOCKITA tänne: " + URL);
         String resultUrl = TmcJsonParser.getSubmissionUrl(makePostWithFile);
         new File(submissionZipPath).delete();
         return resultUrl;
@@ -59,7 +62,7 @@ public class CourseSubmitter {
 
     private void zip(String exerciseFolderToZip, String currentPath) {
         try {
-            new Zipper().zip(exerciseFolderToZip, currentPath);
+            this.zipper.zip(exerciseFolderToZip, currentPath);
         }
         catch (ZipException ex) {
             System.err.println(ex.getMessage());
