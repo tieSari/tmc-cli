@@ -26,6 +26,7 @@ import org.junit.Rule;
 
 public class DownloadExercisesSteps {
 
+    private String originalServerAddress;
     private int port;
     private Thread serverThread;
     private Server server;
@@ -39,6 +40,7 @@ public class DownloadExercisesSteps {
     public void setUpServer() throws IOException {
         wireMockServer = new WireMockServer(wireMockConfig().port(5055));
         config = new ConfigHandler();
+        originalServerAddress = config.readServerAddress();
         config.writeServerAddress("http://127.0.0.1:5055");
         server = new Server(null);
         ClientData.setUserData("pihla", "juuh");
@@ -96,9 +98,9 @@ public class DownloadExercisesSteps {
                 break;
             }
         }
-        wireMockServer.verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
+        verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
-        wireMockServer.verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
+        verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
 
@@ -106,7 +108,9 @@ public class DownloadExercisesSteps {
     public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
         assertTrue(new File(tempDir.toAbsolutePath() + File.separator + "/viikko1").exists());
     }
-
+    
+    
+    
     @Then("^information about download progress\\.$")
     public void information_about_download_progress() throws Throwable {
         System.out.println(output);
@@ -120,5 +124,6 @@ public class DownloadExercisesSteps {
         wireMockServer.stop();
         server.close();
         serverThread.interrupt();
+        config.writeServerAddress(originalServerAddress);
     }
 }
