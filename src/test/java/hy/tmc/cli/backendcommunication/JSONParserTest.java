@@ -37,7 +37,6 @@ public class JSONParserTest {
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
-
     }
 
     @After

@@ -43,26 +43,29 @@ public class SubmissionInterpreter {
      * @return a String containing human-readable information about tests.
      * @throws InterruptedException if thread was interrupted.
      */
-    
     public String resultSummary(String url, boolean detailed) throws InterruptedException {
         SubmissionResult result = pollSubmissionUrl(url);
         return summarize(result, detailed);
     }
-    
+
     private String summarize(SubmissionResult result, boolean detailed) {
         if (result.isAllTestsPassed()) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("All tests passed. Points awarded: ")
-                    .append(Arrays.toString(result.getPoints()))
-                    .append("\n")
-                    .append(testCaseResults(result.getTestCases(), detailed))
-                    .append("View model solution: \n")
-                    .append(result.getSolutionUrl());
-            return builder.toString();
+            return buildSuccessMessage(result, detailed);
         } else {
             return "Some tests failed on server. Summary: \n"
                     + testCaseResults(result.getTestCases(), detailed);
         }
+    }
+
+    private String buildSuccessMessage(SubmissionResult result, boolean detailed) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("All tests passed. Points awarded: ")
+                .append(Arrays.toString(result.getPoints()))
+                .append("\n")
+                .append(testCaseResults(result.getTestCases(), detailed))
+                .append("View model solution: \n")
+                .append(result.getSolutionUrl());
+        return builder.toString();
     }
 
     private String testCaseResults(TestCase[] cases, boolean showSuccessful) {
@@ -74,7 +77,7 @@ public class SubmissionInterpreter {
         }
         return result.toString();
     }
-    
+
     private String failOrSuccess(TestCase testCase) {
         if (testCase.isSuccessful()) {
             return "PASSED: " + testCase.getName();
