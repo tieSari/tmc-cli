@@ -22,21 +22,34 @@ public class CourseSubmitter {
     }
 
     public void submit(String currentPath, String exerciseName) throws UnsupportedEncodingException, IOException {
-        Course currentCourse = getCurrentCourse(currentPath);
-        List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
-        Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
+        Exercise currentExercise = findExercise(currentPath, exerciseName);
 
         String exerciseFolderToZip = currentPath + "/" + exerciseName;
-        String destinationFolder = currentPath;
         String submissionZipPath = currentPath + "/submission.zip";
         String URL = currentExercise.getReturnUrl() + "?api_version=7";
 
         zip(exerciseFolderToZip, submissionZipPath);
-
         HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
 
         System.out.println(makePostWithFile.getData());
         new File(submissionZipPath).delete();
+    }
+
+    private Exercise findExercise(String currentPath, String exerciseName) {
+        if (exerciseName == null) {
+            exerciseName = getLastDirectoryFromPath(currentPath);
+        }
+        Course currentCourse = getCurrentCourse(currentPath);
+        List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
+        Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
+        return currentExercise;
+    }
+
+    private String getLastDirectoryFromPath(String currentPath) {
+        String exerciseName;
+        String[] directories = currentPath.split("/");
+        exerciseName = directories[directories.length - 1];
+        return exerciseName;
     }
 
     private void zip(String exerciseFolderToZip, String currentPath) {
@@ -52,8 +65,7 @@ public class CourseSubmitter {
         Exercise currentExercise = null;
         for (Exercise exercise : exercisesForCurrentCourse) {
             if (exercise.getName().contains(exerciseName)) {
-                currentExercise = exercise;
-                break;
+                return exercise;
             }
         }
         return currentExercise;
@@ -70,12 +82,11 @@ public class CourseSubmitter {
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {
-                    currentCourse = course;
-                    break;
+                    return course;
                 }
             }
         }
-        assert currentCourse != null; // if currentCourse is null this fails
+        assert currentCourse != null;
         return currentCourse;
     }
 
