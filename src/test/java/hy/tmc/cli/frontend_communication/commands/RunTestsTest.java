@@ -1,41 +1,36 @@
 package hy.tmc.cli.frontend_communication.commands;
 
-import hy.tmc.cli.frontend.communication.commands.ListExercises;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 public class RunTestsTest {
 
     private FrontendStub front;
     private RunTests runTests;
 
+    /**
+     * Create FrontendStub and RunTests command.
+     */
     @Before
     public void setup() {
         front = new FrontendStub();
         runTests = new RunTests(front, null);
-
-
-
-        /* PowerMockito.mockStatic(UrlCommunicator.class);
-
-        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
-
-        ClientData.setUserData("chang", "paras");
-        PowerMockito
-                .when(UrlCommunicator.makeGetRequest(
-                        Mockito.anyString(), Mockito.anyString()))
-                .thenReturn(fakeResult); */
     }
 
+    /**
+     * Check that data checking success.
+     */
     @Test
     public void testCheckDataSuccess() {
         RunTests rt = new RunTests(front,null);
@@ -47,6 +42,9 @@ public class RunTestsTest {
         }
     }
 
+    /**
+     * Check that if user didn't give correct data, data checking fails.
+     */
     @Test
     public void testCheckDataFail() {
         RunTests rt = new RunTests(front,null);
@@ -58,16 +56,19 @@ public class RunTestsTest {
         }
     }
     
-    @Test(timeout=15000)
-    public void testFailedExercise(){
+    /**
+     * Test that failing exercise output is correct.
+     */
+    @Test(timeout = 15000)
+    public void testFailedExercise() {
         RunTests run = new RunTests(front, null);
-        String filepath = "testResources" + File.separator + "failingExercise" + File.separator + "viikko1" + File.separator + "Viikko1_001.Nimi";
+        String folders = "testResources" + File.separator + "failingExercise" + File.separator;
+        String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("filepath", file.getAbsolutePath());
         try {
             run.execute();
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             fail("Test executing failed");
         }
         
@@ -80,16 +81,19 @@ public class RunTestsTest {
         assertTrue(front.getMostRecentLine().contains("Et tulostanut"));
     }
     
-    @Test(timeout=15000)
-    public void testSuccessfulExercise(){
+    /**
+     * Check that successfull exercise output is correct.
+     */
+    @Test(timeout = 15000)
+    public void testSuccessfulExercise() {
         RunTests run = new RunTests(front, null);
-        String filepath = "testResources" + File.separator + "successExercise" + File.separator + "viikko1" + File.separator + "Viikko1_001.Nimi";
+        String folders = "testResources" + File.separator + "successExercise" + File.separator;
+        String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("filepath", file.getAbsolutePath());
         try {
             run.execute();
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             fail("Test executing failed");
         }
         
