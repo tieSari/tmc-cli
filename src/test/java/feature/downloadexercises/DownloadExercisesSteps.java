@@ -107,7 +107,9 @@ public class DownloadExercisesSteps {
     public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
         assertTrue(new File(tempDir.toAbsolutePath() + File.separator + "/viikko1").exists());
     }
-
+    
+    
+    
     @Then("^information about download progress\\.$")
     public void information_about_download_progress() throws Throwable {
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
