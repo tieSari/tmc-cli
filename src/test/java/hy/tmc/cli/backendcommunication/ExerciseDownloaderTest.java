@@ -1,21 +1,31 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.backendcommunication.ExerciseDownloader;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 
 public class ExerciseDownloaderTest {
     
@@ -24,7 +34,10 @@ public class ExerciseDownloaderTest {
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
     private FrontendStub front;
-    
+
+    /**
+     * Creates required stubs and example data for downloader.
+     */
     @Before
     public void setup() {
         front = new FrontendStub();
@@ -87,7 +100,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadedExercisesExists(){
+    public void downloadedExercisesExists() {
         exDl.downloadFiles(exercises);
         File exercise1 = new File("Exercise1.zip");
         assertTrue("File Exercise1 was not downloaded to the fs", exercise1.exists());
@@ -96,7 +109,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadedExercisesHasContent(){
+    public void downloadedExercisesHasContent() {
         exDl.downloadFiles(exercises);
         
         String ex1content;

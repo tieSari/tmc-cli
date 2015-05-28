@@ -1,8 +1,5 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
 
-import hy.tmc.cli.backendcommunication.HttpResult;
-import hy.tmc.cli.backendcommunication.UrlCommunicator;
-import hy.tmc.cli.backendcommunication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import static org.junit.Assert.assertFalse;
