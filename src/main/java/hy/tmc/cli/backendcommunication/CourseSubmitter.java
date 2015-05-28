@@ -41,7 +41,7 @@ public class CourseSubmitter {
 
         zip(exerciseFolderToZip, submissionZipPath);
         HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
-
+        System.out.println("EWIREMOCKITA tänne: " + URL);
         String resultUrl = TmcJsonParser.getSubmissionUrl(makePostWithFile);
         new File(submissionZipPath).delete();
         return resultUrl;

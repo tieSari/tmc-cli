@@ -26,11 +26,9 @@ public class TmcJsonParser {
      * @return JSON-object containing JSON-data
      */
     private static JsonObject getJsonFrom(String url) {
-        System.out.println("MOCKITA TÄMÄ: " + url);
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
                 url, ClientData.getFormattedUserData()
         );
-        System.out.println("Mockitus palautti: "+ httpResult);
         String data = httpResult.getData();
         return new JsonParser().parse(data).getAsJsonObject();
     }
@@ -152,7 +150,9 @@ public class TmcJsonParser {
      */
     
     public static String getSubmissionUrl(HttpResult result) {
-        JsonElement jelement = new JsonParser().parse(result.getData());
+        System.out.println("result: " + result);
+        System.out.println("result data: " + result.getData());
+        JsonElement jelement = new JsonParser().parse(result.getData());        
         JsonObject  jobject = jelement.getAsJsonObject();
         return jobject.get("submission_url").getAsString();
     }
