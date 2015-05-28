@@ -1,4 +1,4 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import hy.tmc.cli.configuration.ClientData;

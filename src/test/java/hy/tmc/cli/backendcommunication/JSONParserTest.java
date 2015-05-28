@@ -1,37 +1,51 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
+
 
 import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.testhelpers.ExampleJSON;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.submission.SubmissionResult;
+import hy.tmc.cli.testhelpers.ExampleJSON;
+
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
 public class JSONParserTest {
+
+    String realAddress = "http://real.address.fi";
 
     @Before
     public void setup() {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJSON.allCoursesExample, 200, true);
-        
+
         ClientData.setUserData("chang", "paras");
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(), 
-                                                    Mockito.anyString()))
+                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                                Mockito.anyString()))
                 .thenReturn(fakeResult);
-        
+    }
+
+    @After
+    public void teardown() {
+        ClientData.clearUserData();
     }
 
     @Test
@@ -56,35 +70,62 @@ public class JSONParserTest {
         assertFalse(courses.contains("Jani"));
     }
 
-    @Test
-    public void getsExercisesCorrectlyFromCourseJSON() {
+    private void mockCourse(String url) {
         HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
-                                                    Mockito.anyString()))
+                .when(UrlCommunicator.makeGetRequest(Mockito.eq(url),
+                                Mockito.anyString()))
                 .thenReturn(fakeResult);
-        String names = TmcJsonParser.getExerciseNames("ankka");
+    }
+
+    @Test
+    public void getsExercisesCorrectlyFromCourseJSON() {
+        mockCourse(realAddress);
+        String names = TmcJsonParser.getExerciseNames(realAddress);
 
         assertTrue(names.contains("viikko1-Viikko1_001.Nimi"));
         assertTrue(names.contains("viikko1-Viikko1_002.HeiMaailma"));
         assertTrue(names.contains("viikko1-Viikko1_003.Kuusi"));
     }
-    
+
     @Test
     public void getsLastExerciseOfCourseJSON() {
-        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
-        PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
-                                                    Mockito.anyString()))
-                .thenReturn(fakeResult);
-        String names = TmcJsonParser.getExerciseNames("ankka");
-        
+        mockCourse(realAddress);
+        String names = TmcJsonParser.getExerciseNames(realAddress);
+
         assertTrue(names.contains("viikko11-Viikko11_147.Laskin"));
     }
-    
+
     @Test
-    public void canFetchOneCourse(){
-        // TODO: implement!
+    public void canFetchOneCourse() {
+        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
+        PowerMockito
+                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                                Mockito.anyString()))
+                .thenReturn(fakeResult);
+
+        Course course = TmcJsonParser.getCourse(3);
+        assertNotNull(course);
+        assertEquals("2013_ohpeJaOhja", course.getName());
+
+    }
+
+    private void mockSubmissionUrl() {
+        PowerMockito.mockStatic(UrlCommunicator.class);
+
+        HttpResult fakeResult = new HttpResult(ExampleJSON.successfulSubmission, 200, true);
+        PowerMockito
+                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                                Mockito.anyString()))
+                .thenReturn(fakeResult);
+    }
+
+    @Test
+    public void canFetchSubmissionData() {
+        mockSubmissionUrl();
+        SubmissionResult result = TmcJsonParser.getSubmissionResult("http://real.address.fi");
+        assertNotNull(result);
+        assertEquals("2014-mooc-no-deadline", result.getCourse());
     }
 
 }

@@ -1,6 +1,7 @@
 package hy.tmc.cli.backend.communication;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -8,6 +9,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,25 +20,22 @@ import java.util.List;
 public class TmcJsonParser {
 
     /**
-<<<<<<< HEAD:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
      * Get JSON-data from url.
-=======
-     * get JSON-data from url.
->>>>>>> origin:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
      *
      * @param url url from which the object data is fetched
      * @return JSON-object containing JSON-data
      */
-    private static JsonObject getJsomFrom(String url) {
+    private static JsonObject getJsonFrom(String url) {
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
                 url, ClientData.getFormattedUserData()
         );
         String data = httpResult.getData();
         return new JsonParser().parse(data).getAsJsonObject();
     }
-    
+
     /**
      * Get the names of all courses on the server specified by ServerData.
+     *
      * @return String containing all course names separated by newlines
      */
     public static String getCourseNames() {
@@ -54,10 +53,11 @@ public class TmcJsonParser {
 
     /**
      * Get list of all the courses on the server specified by ServerData.
+     *
      * @return List of Course-objects
      */
     public static List<Course> getCourses() {
-        JsonObject jsonObject = getJsomFrom(new ConfigHandler()
+        JsonObject jsonObject = getJsonFrom(new ConfigHandler()
                 .readCoursesAddress());
         Gson mapper = new Gson();
         Course[] courses = mapper
@@ -66,7 +66,21 @@ public class TmcJsonParser {
     }
 
     /**
+     * @param courseId
+     * @return Course-object by id
+     */
+    public static Course getCourse(int courseId) {
+        JsonObject jsonObject = getJsonFrom(new ConfigHandler()
+                .getCourseUrl(courseId));
+        Gson mapper = new Gson();
+        Course course = mapper
+                .fromJson(jsonObject.getAsJsonObject("course"), Course.class);
+        return course;
+    }
+
+    /**
      * Get all exercise names of a course specified by courseUrl.
+     *
      * @param courseUrl url of the course we are interested in
      * @return String of all exercise names separated by newlines
      */
@@ -82,6 +96,7 @@ public class TmcJsonParser {
 
     /**
      * Get all exercises of a course specified by Course.
+     *
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
      */
@@ -91,6 +106,7 @@ public class TmcJsonParser {
 
     /**
      * Get all exercises of a course specified by Course id.
+     *
      * @param id id of the course we are interested in
      * @return List of a all exercises as Exercise-objects
      */
@@ -100,19 +116,42 @@ public class TmcJsonParser {
     }
 
     /**
-    /**
      * Get all exercises of a course specified by courseUrl.
+     *
      * @param courseUrl url of the course we are interested in
      * @return List of all exercises as Exercise-objects
      */
     public static List<Exercise> getExercises(String courseUrl) {
-        JsonObject course = getJsomFrom(courseUrl);
+        JsonObject course = getJsonFrom(courseUrl);
         Gson mapper = new Gson();
-        System.out.println(course);
         Exercise[] exercises = mapper
-                .fromJson(course.getAsJsonObject("course").get("exercises"), 
+                .fromJson(course.getAsJsonObject("course").get("exercises"),
                         Exercise[].class);
         return Arrays.asList(exercises);
     }
-
+    
+    /**
+     * Parses JSON in url to create a SubmissionResult object.
+     * 
+     * @param url to make request to
+     * @return A SubmissionResult object which contains data of submission.
+     */
+    public static SubmissionResult getSubmissionResult(String url) {
+        JsonObject submission = getJsonFrom(url);
+        Gson mapper = new Gson();
+        return mapper.fromJson(submission, SubmissionResult.class);
+    }
+    
+    /**
+     * Parses the submission result URL from a HttpResult with JSON.
+     * 
+     * @param result HTTPResult containing JSON with submission url.
+     * @return url where submission results are located.
+     */
+    
+    public static String getSubmissionUrl(HttpResult result) {
+        JsonElement jelement = new JsonParser().parse(result.getData());
+        JsonObject  jobject = jelement.getAsJsonObject();
+        return jobject.get("submission_url").getAsString();
+    }
 }
