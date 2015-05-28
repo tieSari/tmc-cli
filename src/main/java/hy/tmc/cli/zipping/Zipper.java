@@ -10,7 +10,7 @@ import java.io.File;
  * Class for zipping stuff.
  */
 
-public class Zipper {    
+public class Zipper implements ZipMaker {    
     
     /**
      * Zips a single folder to destination.
@@ -19,6 +19,7 @@ public class Zipper {
      * @param outDestination path to unzip to
      * @throws ZipException if failed to create zip
      */
+    @Override
     public void zip(String folderPath, String outDestination) throws ZipException {
         ZipFile zipFile = new ZipFile(new File(outDestination));
         zipFile.addFolder(folderPath, new ZipParameters());
