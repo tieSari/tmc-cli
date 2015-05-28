@@ -32,7 +32,9 @@ public class CourseSubmitter {
     public String submit(String currentPath, String exerciseName) throws IOException {
         Exercise currentExercise = findExercise(currentPath, exerciseName);
 
-        String exerciseFolderToZip = currentPath + "/" + exerciseName;
+        String exerciseFolderToZip = rootFinder.getRootDirectory(
+                Paths.get(currentPath)).toString();
+        
         String submissionZipPath = currentPath + "/submission.zip";
         String URL = currentExercise.getReturnUrl() + "?api_version=7";
 
@@ -45,21 +47,14 @@ public class CourseSubmitter {
     }
     
     public String submit(String currentPath) throws IOException {
-        return submit(currentPath, getLastDirectoryFromPath(currentPath));
+        return submit(currentPath, currentPath);
     }
-
+    
     private Exercise findExercise(String currentPath, String exerciseName) {
         Course currentCourse = getCurrentCourse(currentPath);
         List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
         Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
         return currentExercise;
-    }
-
-    private String getLastDirectoryFromPath(String currentPath) {
-        String exerciseName;
-        String[] directories = currentPath.split("/");
-        exerciseName = directories[directories.length - 1];
-        return exerciseName;
     }
 
     private void zip(String exerciseFolderToZip, String currentPath) {
@@ -71,9 +66,11 @@ public class CourseSubmitter {
         }
     }
 
-    private Exercise findCurrentExercise(List<Exercise> exercisesForCurrentCourse, String exerciseName) {
+    private Exercise findCurrentExercise(List<Exercise> exercisesForCurrentCourse, String currentDir) {
+        String [] path = rootFinder.getRootDirectory(Paths.get(currentDir)).toString().split("/");
+        String p = path[path.length-1];
         for (Exercise exercise : exercisesForCurrentCourse) {
-            if (exercise.getName().contains(exerciseName)) {
+            if (exercise.getName().contains(p)) {
                 return exercise;
             }
         }
