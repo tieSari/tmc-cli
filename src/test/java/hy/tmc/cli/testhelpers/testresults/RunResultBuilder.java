@@ -2,9 +2,11 @@ package hy.tmc.cli.testhelpers.testresults;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.RunResult.Status;
 import fi.helsinki.cs.tmc.langs.TestResult;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
