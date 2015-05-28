@@ -154,7 +154,13 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>3.1.0</version>
             </plugin>
-            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+
+
         </plugins>
     </build>
 
@@ -170,6 +176,21 @@
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-ant</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-maven</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-framework</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>      
         <dependency>
