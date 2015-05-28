@@ -73,7 +73,7 @@ public class RunTestsTest {
         
         assertTrue(front.getMostRecentLine().contains("Some tests failed:"));
         
-        assertTrue(front.getMostRecentLine().contains("0 tests passed:"));
+        assertTrue(front.getMostRecentLine().contains("No tests passed"));
         assertTrue(front.getMostRecentLine().contains("1 tests failed:"));
         
         assertTrue(front.getMostRecentLine().contains("NimiTest"));
