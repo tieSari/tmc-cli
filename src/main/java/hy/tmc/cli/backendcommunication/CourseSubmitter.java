@@ -23,7 +23,16 @@ public class CourseSubmitter {
         this.rootFinder = rootFinder;
     }
 
-    public void submit(String currentPath, String exerciseName) throws IOException {
+    /**
+     * Submits folder of exercise to TMC.
+     * 
+     * @param currentPath path from which this was called.
+     * @param exerciseName name of exercise to submit
+     * @return String with url from which to get results.
+     * @throws IOException if failed to create zip.
+     */
+    
+    public String submit(String currentPath, String exerciseName) throws IOException {
         Exercise currentExercise = findExercise(currentPath, exerciseName);
 
         String exerciseFolderToZip = currentPath + "/" + exerciseName;
@@ -33,12 +42,13 @@ public class CourseSubmitter {
         zip(exerciseFolderToZip, submissionZipPath);
         HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
 
-        System.out.println(makePostWithFile.getData());
+        String resultUrl = TmcJsonParser.getSubmissionUrl(makePostWithFile);
         new File(submissionZipPath).delete();
+        return resultUrl;
     }
-
-    public void submit(String currentPath) throws IOException {
-        submit(currentPath, getLastDirectoryFromPath(currentPath));
+    
+    public String submit(String currentPath) throws IOException {
+        return submit(currentPath, getLastDirectoryFromPath(currentPath));
     }
 
     private Exercise findExercise(String currentPath, String exerciseName) {
