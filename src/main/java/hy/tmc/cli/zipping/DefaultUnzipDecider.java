@@ -1,5 +1,8 @@
 package hy.tmc.cli.zipping;
 
+import org.apache.commons.io.FileUtils;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -7,16 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-import org.yaml.snakeyaml.Yaml;
-
 public class DefaultUnzipDecider implements UnzipDecider {
 
     protected List<String> additionalStudentFiles;
 
     /**
      * Default movedecider, which decides whether something can be overwritten in a Maven or an Ant
-     * project
+     * project.
      */
     public DefaultUnzipDecider() {
         this.additionalStudentFiles = new ArrayList();
@@ -50,8 +50,7 @@ public class DefaultUnzipDecider implements UnzipDecider {
         String contents;
         try {
             contents = FileUtils.readFileToString(ymlFilePath.toFile());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return;
         }
         Yaml yaml = new Yaml();
