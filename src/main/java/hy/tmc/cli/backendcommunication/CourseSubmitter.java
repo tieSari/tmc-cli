@@ -6,11 +6,11 @@ import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
 
 public class CourseSubmitter {
@@ -21,19 +21,22 @@ public class CourseSubmitter {
         this.rootFinder = rootFinder;
     }
 
-    public void submit(String currentPath, String exerciseName) {
+    public void submit(String currentPath, String exerciseName) throws UnsupportedEncodingException, IOException {
         Course currentCourse = getCurrentCourse(currentPath);
         List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
         Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
-        
+
         String exerciseFolderToZip = currentPath + "/" + exerciseName;
         String destinationFolder = currentPath;
-        String submissionZipPath = currentPath+"/submission.zip";
-        System.out.println("exercise path:  " + exerciseFolderToZip);
-        System.out.println("submission path:  " + submissionZipPath);
+        String submissionZipPath = currentPath + "/submission.zip";
+        String URL = currentExercise.getReturnUrl() + "?api_version=7";
+
         zip(exerciseFolderToZip, submissionZipPath);
-        System.out.println("LÖYTYY: " + new File(submissionZipPath).exists());
-        //new File(submissionZipPath).delete();
+
+        HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
+
+        System.out.println(makePostWithFile.getData());
+        new File(submissionZipPath).delete();
     }
 
     private void zip(String exerciseFolderToZip, String currentPath) {

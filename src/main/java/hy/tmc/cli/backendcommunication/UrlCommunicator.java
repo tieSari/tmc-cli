@@ -1,13 +1,9 @@
 package hy.tmc.cli.backendcommunication;
 
 import static hy.tmc.cli.backendcommunication.authorization.Authorization.encode;
-import static org.apache.http.HttpHeaders.USER_AGENT;
+import hy.tmc.cli.configuration.ClientData;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -16,57 +12,64 @@ import org.apache.http.util.EntityUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+
+import static org.apache.http.HttpHeaders.USER_AGENT;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.http.HttpEntity;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 
 public class UrlCommunicator {
 
     public static final int BAD_REQUEST = 400;
 
     /**
-     * Make a post request.
+     * Creates and executes post-request to specified URL.
      *
-     * @param url the url of the request
-     * @param params parameters of the post request
-     * @return A Result-object with some data and a state of success or fail
+     * @param toBeUploaded File-object that gets attached to request.
+     * @param destionationURL
+     * @return HttpResult that contains response from the server.
+     * @throws java.io.IOException
      */
-    public static HttpResult makePostRequest(String url,
-            String... params) {
-        try {
-            HttpPost post = new HttpPost(url);
-            post = addHeaders(params, post);
+    public static HttpResult makePostWithFile(File toBeUploaded, String destionationURL) throws IOException {
 
-            HttpResponse response = execute(post);
-            StringBuilder result = writeResponse(response);
-            int status = response.getStatusLine().getStatusCode();
-            return new HttpResult(result.toString(), status, true);
-        } catch (IOException e) {
-            return new HttpResult("", BAD_REQUEST, false);
-        }
+        HttpPost httppost = new HttpPost(destionationURL);
+        FileBody fileBody = new FileBody(toBeUploaded);
+
+        addFileToRequest(fileBody, httppost);
+
+        HttpResponse response = executeRequest(httppost);
+        StringBuilder result = writeResponse(response);
+        int status = response.getStatusLine().getStatusCode();
+        return new HttpResult(result.toString(), status, true);
     }
 
-    private static HttpResponse execute(HttpPost post) throws IOException {
-        return createClient().execute(post);
+    private static void addFileToRequest(FileBody fileBody, HttpPost httppost) {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.addPart("submission[file]", fileBody);
+        addCredentials(httppost, ClientData.getFormattedUserData());
+
+        HttpEntity entity = builder.build();
+        httppost.setEntity(entity);
     }
 
-    private static HttpPost addHeaders(String[] params, HttpPost post) throws UnsupportedEncodingException {
-        String encoding = Base64.encodeBase64String((params[0]).getBytes());
-        post.setHeader("Authorization", "Basic " + encoding);
-        post.setHeader("User-Agent", USER_AGENT);
-        List<NameValuePair> urlParameters = new ArrayList();
-        post.setEntity(new UrlEncodedFormEntity(urlParameters));
-        return post;
+    private static void addCredentials(HttpRequestBase httpRequest, String credentials) {
+        httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
+        httpRequest.setHeader("User-Agent", USER_AGENT);
     }
 
     /**
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is
-     * always username:password
+     * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
@@ -77,7 +80,8 @@ public class UrlCommunicator {
                     result.toString(),
                     response.getStatusLine().getStatusCode(),
                     true);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
@@ -91,7 +95,7 @@ public class UrlCommunicator {
      * @param params params of the get request
      * @return true if succesful
      */
-    public static boolean downloadFile(HttpClient client,
+    public static boolean downloadFile(
             String url,
             File file,
             String... params) {
@@ -103,7 +107,8 @@ public class UrlCommunicator {
             fileOutputStream.close();
 
             return true;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return false;
         }
     }
@@ -120,19 +125,18 @@ public class UrlCommunicator {
         return result;
     }
 
-    public static HttpClient createClient() {
-        return HttpClientBuilder.create().build();
-    }
-
     private static HttpResponse createAndExecuteGet(String url, String[] params)
             throws IOException {
         HttpGet request = new HttpGet(url);
-        request.setHeader("Authorization", "Basic " + encode(params[0]));
-        request.addHeader("User-Agent", USER_AGENT);
-        return executeGetRequest(request);
+        addCredentials(request, params[0]);
+        return executeRequest(request);
     }
 
-    private static HttpResponse executeGetRequest(HttpGet request)
+    private static HttpClient createClient() {
+        return HttpClientBuilder.create().build();
+    }
+
+    private static HttpResponse executeRequest(HttpRequestBase request)
             throws IOException {
         return createClient().execute(request);
     }
