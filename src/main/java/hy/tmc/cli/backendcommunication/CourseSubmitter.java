@@ -1,14 +1,12 @@
 package hy.tmc.cli.backendcommunication;
 
-import com.google.common.base.Preconditions;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 
-import hy.tmc.cli.zipping.ProjectRootFinder;
+import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -16,9 +14,9 @@ import net.lingala.zip4j.exception.ZipException;
 
 public class CourseSubmitter {
 
-    private ProjectRootFinder rootFinder;
+    private RootFinder rootFinder;
 
-    public CourseSubmitter(ProjectRootFinder rootFinder) {
+    public CourseSubmitter(RootFinder rootFinder) {
         this.rootFinder = rootFinder;
     }
 
