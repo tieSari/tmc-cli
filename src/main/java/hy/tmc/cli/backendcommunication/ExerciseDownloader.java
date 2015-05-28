@@ -2,13 +2,13 @@ package hy.tmc.cli.backendcommunication;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.FrontendListener;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
 
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
 import hy.tmc.cli.zipping.Unzipper;
@@ -16,6 +16,9 @@ import hy.tmc.cli.zipping.Unzipper;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+
+
 
 public class ExerciseDownloader {
 
@@ -94,11 +97,12 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Unzips a zip file
      * Unzips single file after downloading. 
+     * 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
+
     public void unzipFile(String unzipPath,
                           String destinationPath) throws IOException, ZipException {
         UnzipDecider md = new DefaultUnzipDecider();
