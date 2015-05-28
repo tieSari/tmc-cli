@@ -1,5 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
+import com.google.common.base.Preconditions;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 
@@ -21,7 +22,7 @@ public class CourseSubmitter {
         this.rootFinder = rootFinder;
     }
 
-    public void submit(String currentPath, String exerciseName) throws UnsupportedEncodingException, IOException {
+    public void submit(String currentPath, String exerciseName) throws IOException {
         Exercise currentExercise = findExercise(currentPath, exerciseName);
 
         String exerciseFolderToZip = currentPath + "/" + exerciseName;
@@ -35,10 +36,11 @@ public class CourseSubmitter {
         new File(submissionZipPath).delete();
     }
 
+    public void submit(String currentPath) throws IOException {
+        submit(currentPath, getLastDirectoryFromPath(currentPath));
+    }
+
     private Exercise findExercise(String currentPath, String exerciseName) {
-        if (exerciseName == null) {
-            exerciseName = getLastDirectoryFromPath(currentPath);
-        }
         Course currentCourse = getCurrentCourse(currentPath);
         List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
         Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
@@ -62,16 +64,15 @@ public class CourseSubmitter {
     }
 
     private Exercise findCurrentExercise(List<Exercise> exercisesForCurrentCourse, String exerciseName) {
-        Exercise currentExercise = null;
         for (Exercise exercise : exercisesForCurrentCourse) {
             if (exercise.getName().contains(exerciseName)) {
                 return exercise;
             }
         }
-        return currentExercise;
+        return null;
     }
 
-    public Course getCurrentCourse(String directoryPath) {
+    private Course getCurrentCourse(String directoryPath) {
         String[] exerciseName = getExerciseName(directoryPath);
         return getCurrentCourseByName(exerciseName);
     }
