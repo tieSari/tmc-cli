@@ -9,25 +9,31 @@ import java.util.List;
 public class ResultInterpreter {
 
     private final RunResult result;
-    private final String TEST_PADDING=  "  ";
-    private final String STACK_TRACE_PADDING = TEST_PADDING + " "; 
+    private final String testPadding = "  ";
+    private final String stackTracePadding = testPadding + " "; 
 
     public ResultInterpreter(RunResult result) {
         this.result = result;
     }
 
+    /**
+     * Transform the RunResult given to this interpreter in its constructor into a human
+     * readable output.
+     * 
+     * @return a String representation of a RunResult 
+     */
     public String interpret() {
         switch (result.status) {
-            case PASSED:
-                return "All tests passed. You can now submit";
-            case TESTS_FAILED:
-                return testFailureReport();
-            case COMPILE_FAILED:
-                return "Code did not compile.";
-            case GENERIC_ERROR:
-                return "Failed to run tests.";
-            default:
-                throw new IllegalArgumentException("bad argument");
+          case PASSED:
+              return "All tests passed. You can now submit";
+          case TESTS_FAILED:
+              return testFailureReport();
+          case COMPILE_FAILED:
+              return "Code did not compile.";
+          case GENERIC_ERROR:
+              return "Failed to run tests.";
+          default:
+              throw new IllegalArgumentException("bad argument");
         }
     }
 
@@ -49,7 +55,7 @@ public class ResultInterpreter {
         }
         builder.append(passedTests.size()).append(" tests passed:\n");
         for (TestResult testResult : passedTests) {
-            builder.append(TEST_PADDING).append(testResult.name).append("\n");
+            builder.append(testPadding).append(testResult.name).append("\n");
         }
     }
 
@@ -62,7 +68,7 @@ public class ResultInterpreter {
     }
 
     private void failedTestOutput(StringBuilder builder, TestResult testResult) {
-        builder.append(TEST_PADDING);
+        builder.append(testPadding);
         builder.append(testResult.name)
                 .append(" failed: ")
                 .append(testResult.errorMessage)
@@ -73,7 +79,7 @@ public class ResultInterpreter {
     private String stackTrace(TestResult testResult) {
         StringBuilder builder = new StringBuilder();
         for (String line : testResult.backtrace) {
-            builder.append(STACK_TRACE_PADDING).append(line).append("\n");
+            builder.append(stackTracePadding).append(line).append("\n");
         }
         return builder.toString();
     }

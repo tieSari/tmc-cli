@@ -1,19 +1,22 @@
 package hy.tmc.cli.frontend;
 
-import fi.helsinki.cs.tmc.langs.RunResult;
+
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.COMPILE_FAILED;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.GENERIC_ERROR;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.PASSED;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
-import hy.tmc.cli.testhelpers.testresults.RunResultBuilder;
-import hy.tmc.cli.testhelpers.testresults.TestResultFactory;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import fi.helsinki.cs.tmc.langs.RunResult;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import hy.tmc.cli.testhelpers.testresults.RunResultBuilder;
+import hy.tmc.cli.testhelpers.testresults.TestResultFactory;
 
 public class ResultInterpreterTest {
 
@@ -26,6 +29,9 @@ public class ResultInterpreterTest {
     private ResultInterpreter allFailedInterpreter;
     private ResultInterpreter someFailedInterpreter;
 
+    /**
+     * initialize the test sample RunResults.
+     */
     public ResultInterpreterTest() {
         allPassed = new RunResultBuilder().withStatus(PASSED).build();
         createAllFailed();
@@ -131,15 +137,17 @@ public class ResultInterpreterTest {
         
         System.out.println(summary);
         
-        String test1 = "sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)";
-        String test2 = "java.lang.reflect.Method.invoke(Method.java:497)";
-        String test3 = "org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)";
-        String test4 = "fi.helsinki.cs.tmc.edutestutils.MockStdio$1.evaluate(MockStdio.java:106) ";
-        String test5 = "org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)";
+        String test1 = "sun.reflect.DelegatingMethodAccessorImpl.invoke("
+                + "DelegatingMethodAccessorImpl.java:43)";
         assertTrue(summary.contains(test1));
+        String test2 = "java.lang.reflect.Method.invoke(Method.java:497)";
         assertTrue(summary.contains(test2));
+        String test3 = "org.junit.runners.model.FrameworkMethod.invokeExplosively("
+                + "FrameworkMethod.java:42)";
         assertTrue(summary.contains(test3));
+        String test4 = "fi.helsinki.cs.tmc.edutestutils.MockStdio$1.evaluate(MockStdio.java:106) ";
         assertTrue(summary.contains(test4));
+        String test5 = "org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)";
         assertTrue(summary.contains(test5));
 
     }
