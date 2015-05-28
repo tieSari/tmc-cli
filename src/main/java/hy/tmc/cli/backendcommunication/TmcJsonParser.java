@@ -18,11 +18,7 @@ import java.util.List;
 public class TmcJsonParser {
 
     /**
-<<<<<<< HEAD:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
      * Get JSON-data from url.
-=======
-     * get JSON-data from url.
->>>>>>> origin:src/main/java/hy/tmc/cli/backendcommunication/TmcJsonParser.java
      *
      * @param url url from which the object data is fetched
      * @return JSON-object containing JSON-data
@@ -81,6 +77,28 @@ public class TmcJsonParser {
     }
 
     /**
+     * Get information about course specified by the course ID.
+     * @return an course Object (parsed from JSON)
+     */
+    public static Course getCourse(int courseID) {
+        ConfigHandler confighandler = new ConfigHandler();
+        return getCourse(confighandler.getCourseUrl(courseID));
+    }
+
+    /**
+     * Get information about course specified by the URL path
+     * to course json.
+     * @param courseURL URL path to course json
+     * @return an Course object (parsed from JSON)
+     */
+    public static Course getCourse(String courseURL) {
+        JsonObject courseJson = getJsomFrom(courseURL);
+        Gson mapper = new Gson();
+        Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
+        return course;
+    }
+
+    /**
      * Get all exercises of a course specified by Course.
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
@@ -106,13 +124,8 @@ public class TmcJsonParser {
      * @return List of all exercises as Exercise-objects
      */
     public static List<Exercise> getExercises(String courseUrl) {
-        JsonObject course = getJsomFrom(courseUrl);
-        Gson mapper = new Gson();
-        System.out.println(course);
-        Exercise[] exercises = mapper
-                .fromJson(course.getAsJsonObject("course").get("exercises"), 
-                        Exercise[].class);
-        return Arrays.asList(exercises);
+        Course course = getCourse(courseUrl);
+        return course.getExercises();
     }
 
 }
