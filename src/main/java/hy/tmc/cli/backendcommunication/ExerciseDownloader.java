@@ -1,12 +1,7 @@
 package hy.tmc.cli.backendcommunication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-<<<<<<< HEAD
-
-import net.lingala.zip4j.exception.ZipException;
-=======
 import static com.google.common.base.Strings.isNullOrEmpty;
->>>>>>> 27ed3a119417b55837974c0af6b40d9dbb91e27c
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
@@ -137,17 +132,10 @@ public class ExerciseDownloader {
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-<<<<<<< HEAD
-    public void unzipFile(String unzipPath, String destinationPath) throws IOException,
-            ZipException {
-        UnzipDecider decider = new DefaultUnzipDecider();
-        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
-=======
     public void unzipFile(String unzipPath,
                           String destinationPath) throws IOException, ZipException {
-        UnzipDecider md = new DefaultUnzipDecider();
-        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
->>>>>>> 27ed3a119417b55837974c0af6b40d9dbb91e27c
+        UnzipDecider decider = new DefaultUnzipDecider();
+        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
 
         zipHandler.unzip();
 

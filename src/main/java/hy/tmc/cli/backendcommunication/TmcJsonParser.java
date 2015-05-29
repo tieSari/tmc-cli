@@ -66,19 +66,6 @@ public class TmcJsonParser {
     }
 
     /**
-     * @param courseId
-     * @return Course-object by id
-     */
-    public static Course getCourse(int courseId) {
-        JsonObject jsonObject = getJsonFrom(new ConfigHandler()
-                .getCourseUrl(courseId));
-        Gson mapper = new Gson();
-        Course course = mapper
-                .fromJson(jsonObject.getAsJsonObject("course"), Course.class);
-        return course;
-    }
-
-    /**
      * Get all exercise names of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
@@ -110,7 +97,7 @@ public class TmcJsonParser {
      * @return an Course object (parsed from JSON)
      */
     public static Course getCourse(String courseUrl) {
-        JsonObject courseJson = getJsomFrom(courseUrl);
+        JsonObject courseJson = getJsonFrom(courseUrl);
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
         return course;
@@ -144,17 +131,8 @@ public class TmcJsonParser {
      * @return List of all exercises as Exercise-objects
      */
     public static List<Exercise> getExercises(String courseUrl) {
-<<<<<<< HEAD
-        JsonObject course = getJsonFrom(courseUrl);
-        Gson mapper = new Gson();
-        Exercise[] exercises = mapper
-                .fromJson(course.getAsJsonObject("course").get("exercises"),
-                        Exercise[].class);
-        return Arrays.asList(exercises);
-=======
         Course course = getCourse(courseUrl);
         return course.getExercises();
->>>>>>> 27ed3a119417b55837974c0af6b40d9dbb91e27c
     }
     
     /**
