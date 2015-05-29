@@ -1,24 +1,21 @@
 package hy.tmc.cli.backendcommunication;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
-
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.http.client.HttpClient;
 
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
 import hy.tmc.cli.zipping.Unzipper;
 
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.client.HttpClient;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-
-
 
 public class ExerciseDownloader {
 
