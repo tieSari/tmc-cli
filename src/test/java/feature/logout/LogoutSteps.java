@@ -1,5 +1,7 @@
 package feature.logout;
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -7,9 +9,6 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
-
-import org.junit.After;
-import org.junit.Before;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
