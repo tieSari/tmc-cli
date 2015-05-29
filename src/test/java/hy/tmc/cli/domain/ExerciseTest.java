@@ -1,9 +1,11 @@
 package hy.tmc.cli.domain;
 
-import java.util.Date;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.util.Date;
 
 public class ExerciseTest {
 
