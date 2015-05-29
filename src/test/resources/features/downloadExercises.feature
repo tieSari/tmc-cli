@@ -6,3 +6,4 @@ Feature: Downloading exercises -command
         When user gives a download exercises command and course id.
         Then output should contain zip files and folders containing unzipped files
         And information about download progress.
+        And .zip -files are removed.
