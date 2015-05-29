@@ -1,6 +1,7 @@
 package hy.tmc.cli.backendcommunication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
@@ -55,17 +56,38 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined.
+     */
+    public void downloadFiles(List<Exercise> exercises, String path) {
+        downloadFiles(exercises,path,null);
+    }
+
+    /**
+     * Method for downloading files if path where to download is defined.
+     * Also requires seperate folder name that will be created to defined path.
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
+     * @param folderName folder name of where exercises will be extracted (for example course name)
      */
-    public void downloadFiles(List<Exercise> exercises, String path) {
+    public void downloadFiles(List<Exercise> exercises, String path, String folderName) {
         int exCount = 0;
         path = getCorrectPath(path);
+
+        if (!isNullOrEmpty(folderName)) {
+            path += folderName + File.separator;
+        }
+
+        File coursePath = new File(path);
+
+        if (!coursePath.exists()) {
+            coursePath.mkdirs();
+        }
+
         for (Exercise exercise : exercises) {
             handleSingleExercise(exercise, exCount, exercises, path);
             exCount++;
         }
+
         if (this.front != null) {
             front.printLine(exercises.size() + " exercises downloaded.");
         }
@@ -98,20 +120,21 @@ public class ExerciseDownloader {
      * Delete .zip -file after unzipping.
      * @param filePath path to delete
      */
-    private void deleteZip(String filePath){
+    private void deleteZip(String filePath) {
         File file = new File(filePath);
         file.delete();
     }
 
     /**
      * Unzips single file after downloading. 
+     * 
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath) throws IOException, 
-            ZipException {
-        UnzipDecider decider = new DefaultUnzipDecider();
-        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
+    public void unzipFile(String unzipPath,
+                          String destinationPath) throws IOException, ZipException {
+        UnzipDecider md = new DefaultUnzipDecider();
+        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
 
         zipHandler.unzip();
         
@@ -139,8 +162,8 @@ public class ExerciseDownloader {
     public String getCorrectPath(String path) {
         if (path == null) {
             path = "";
-        } else if (!path.isEmpty() && !path.endsWith("/")) {
-            path += "/";
+        } else if (!path.isEmpty() && !path.endsWith(File.separator)) {
+            path += File.separator + "";
         }
         return path;
     }
