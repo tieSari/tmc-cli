@@ -1,6 +1,7 @@
 package hy.tmc.cli.backendcommunication;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
@@ -27,6 +28,8 @@ public class CourseSubmitterTest {
 
     @Before
     public void setup() throws IOException {
+        System.out.println("LOL CHANG: " + new ConfigHandler().readCoursesAddress());
+        new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
