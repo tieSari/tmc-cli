@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 public class Server implements FrontendListener, Runnable {
 
-    public final static String PROTOCOL_ERROR_MSG = "message not in accordance with protocol";
     private Socket clientSocket;
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
@@ -40,6 +39,10 @@ public class Server implements FrontendListener, Runnable {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.parser = new ProtocolParser(this, logic);
+    }
+    
+    public int getCurrentPort() {
+        return this.serverSocket.getLocalPort();
     }
 
     /**
@@ -90,8 +93,7 @@ public class Server implements FrontendListener, Runnable {
         try {
             parseAndExecuteCommand(inputLine);
         } catch (ProtocolException ex) {
-            System.out.println(ex.getMessage());
-            printLine(Server.PROTOCOL_ERROR_MSG);
+            printLine(ex.getMessage());
         }
         return true;
     }

@@ -1,4 +1,4 @@
-package feature.runTests;
+package feature.runtests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -1,9 +1,16 @@
 package hy.tmc.cli.zipping;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.nio.file.Paths;
 import java.util.List;
-import org.junit.*;
-import static org.junit.Assert.*;
+
+
 
 public class DefaultMoveDeciderTest {
 
