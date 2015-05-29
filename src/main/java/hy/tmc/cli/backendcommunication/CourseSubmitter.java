@@ -56,6 +56,7 @@ public class CourseSubmitter {
     }
 
     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
+        System.out.println("Post URL: " + url);
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new File(submissionZipPath), url
         );
@@ -64,6 +65,9 @@ public class CourseSubmitter {
 
     private Exercise findExercise(String currentPath, String exerciseName) {
         Course currentCourse = getCurrentCourse(currentPath);
+        if (currentCourse == null) {
+            throw new TypeNotPresentException("Could not find course from path: " + currentPath, null);
+        }
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.getId());
         Exercise currentExercise = findCurrentExercise(courseExercises, exerciseName);
         return currentExercise;
