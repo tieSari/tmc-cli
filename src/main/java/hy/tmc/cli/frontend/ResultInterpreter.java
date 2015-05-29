@@ -10,39 +10,48 @@ public class ResultInterpreter {
 
     private final RunResult result;
     private final String testPadding = "  ";
-    private final String stackTracePadding = testPadding + " "; 
+    private final String stackTracePadding = testPadding + " ";
 
     public ResultInterpreter(RunResult result) {
         this.result = result;
     }
 
     /**
-     * Transform the RunResult given to this interpreter in its constructor into a human
-     * readable output.
-     * 
-     * @return a String representation of a RunResult 
+     * Param showStackTrace defaults to false.
+     * @see interpet(boolean showStackTrace)
      */
     public String interpret() {
+        return this.interpret(false);
+    }
+
+    /**
+     * Transform the RunResult given to this interpreter in its constructor into a human readable
+     * output.
+     *
+     * @param showStackTrace set if stacktraces are shown for failing tests.
+     * @return a String representation of a RunResult
+     */
+    public String interpret(boolean showStackTrace) {
         switch (result.status) {
-          case PASSED:
-              return "All tests passed. You can now submit";
-          case TESTS_FAILED:
-              return testFailureReport();
-          case COMPILE_FAILED:
-              return "Code did not compile.";
-          case GENERIC_ERROR:
-              return "Failed to run tests.";
-          default:
-              throw new IllegalArgumentException("bad argument");
+            case PASSED:
+                return "All tests passed. You can now submit";
+            case TESTS_FAILED:
+                return testFailureReport(showStackTrace);
+            case COMPILE_FAILED:
+                return "Code did not compile.";
+            case GENERIC_ERROR:
+                return "Failed to run tests.";
+            default:
+                throw new IllegalArgumentException("bad argument");
         }
     }
 
-    private String testFailureReport() {
+    private String testFailureReport(boolean showStackTrace) {
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append("Some tests failed:\n");
 
         succesfulTests(reportBuilder);
-        failedTests(reportBuilder);
+        failedTests(reportBuilder, showStackTrace);
 
         return reportBuilder.toString();
     }
@@ -59,21 +68,24 @@ public class ResultInterpreter {
         }
     }
 
-    private void failedTests(StringBuilder builder) {
+    private void failedTests(StringBuilder builder, boolean showStackTrace) {
         List<TestResult> failures = getFailedTests();
         builder.append(failures.size()).append(" tests failed:\n");
         for (TestResult testResult : failures) {
-            failedTestOutput(builder, testResult);
+            failedTestOutput(builder, testResult, showStackTrace);
         }
     }
 
-    private void failedTestOutput(StringBuilder builder, TestResult testResult) {
+    private void failedTestOutput(StringBuilder builder, TestResult testResult,
+            boolean showStackTrace) {
         builder.append(testPadding);
         builder.append(testResult.name)
                 .append(" failed: ")
                 .append(testResult.errorMessage)
                 .append("\n");
-        builder.append(stackTrace(testResult)).append("\n");
+        if (showStackTrace) {
+            builder.append(stackTrace(testResult)).append("\n");
+        }
     }
 
     private String stackTrace(TestResult testResult) {

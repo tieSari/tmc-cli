@@ -133,7 +133,7 @@ public class ResultInterpreterTest {
 
     @Test
     public void testStackTrace() {
-        String summary = this.someFailedInterpreter.interpret();
+        String summary = this.someFailedInterpreter.interpret(true);
         
         System.out.println(summary);
         
