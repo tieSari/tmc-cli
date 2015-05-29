@@ -1,18 +1,20 @@
 package hy.tmc.cli.zipping;
 
-import hy.tmc.cli.testhelpers.FileWriterHelper;
-import java.io.File;
-import java.io.IOException;
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import hy.tmc.cli.testhelpers.FileWriterHelper;
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 public class UnzipperTest {
 
@@ -33,6 +35,9 @@ public class UnzipperTest {
         handler = new Unzipper(testZipPath, unzipPath, decider);
     }
 
+    /**
+     * Deletes files used in tests.
+     */
     @After
     public void teardown() throws IOException {
         final File file = new File(unzipPath);
@@ -101,11 +106,9 @@ public class UnzipperTest {
             handler.setZipPath("nonexistingplace");
             handler.unzip();
             fail("did not raise exception");
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Didn't work");
-        }
-        catch (net.lingala.zip4j.exception.ZipException ex) {
+        } catch (net.lingala.zip4j.exception.ZipException ex) {
             //ok
         }
     }
