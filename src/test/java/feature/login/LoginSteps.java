@@ -1,19 +1,28 @@
 package feature.login;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
+import static org.junit.Assert.assertTrue;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
-import java.io.IOException;
-import static org.junit.Assert.assertTrue;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+import java.io.IOException;
 
 public class LoginSteps {
 
@@ -29,6 +38,10 @@ public class LoginSteps {
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
+    /**
+     * Initialize server, set address and start thread.
+     * @throws IOException if server creating fails
+     */
     @Before
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
@@ -58,7 +71,7 @@ public class LoginSteps {
     }
 
     @When("^user gives username \"(.*?)\" and password \"(.*?)\"$")
-    public void user_gives_username_and_password(String username, String password) throws Throwable {
+    public void user_gives_uname_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
     }
 
@@ -67,6 +80,10 @@ public class LoginSteps {
         assertTrue(testClient.reply().contains("Saved userdata in session"));
     }
 
+    /**
+     * Close server and wiremock after test.
+     * @throws IOException if server closing fails
+     */
     @After
     public void closeAll() throws IOException {
         server.close();
