@@ -1,11 +1,16 @@
 package hy.tmc.cli.configuration;
 
-import java.io.File;
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 public class ConfigHandlerTest {
 
@@ -23,13 +28,15 @@ public class ConfigHandlerTest {
         new File("test.properties").delete();
     }
     
+    /**
+     * Clean all marks of test in config files.
+     */
     @After
     public void tearstuff() {
         try {
             handler.writeServerAddress("");
             new File("test.properties").delete();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("something went wrong");
         }
     }
@@ -37,8 +44,7 @@ public class ConfigHandlerTest {
     private void writeServerAddress(String address) {
         try {
             handler.writeServerAddress(address);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Something went wrong");
         }
     }
@@ -83,8 +89,7 @@ public class ConfigHandlerTest {
     public void canWriteAddressToConfig() {
         try {
             handler.writeServerAddress(address);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Something went wrong");
         }
     }
@@ -93,8 +98,7 @@ public class ConfigHandlerTest {
     public void canReadAddressFromConfig() {
         try {
             handler.writeServerAddress(address);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Failed writing to file");
         }
         String readAddress = handler.readServerAddress();
@@ -105,19 +109,17 @@ public class ConfigHandlerTest {
     public void canWritePortAddress() {
         try {
             handler.writePort(1234);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("failed to write port");
         }
     }
     
-  @Test
+    @Test
     public void correctPortGetsWritten() {
         try {
             handler.writePort(12355);
             assertEquals(12355, handler.readPort());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Failed to read or write port");
         }
     }

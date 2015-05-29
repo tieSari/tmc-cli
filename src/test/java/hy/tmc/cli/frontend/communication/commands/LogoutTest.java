@@ -1,14 +1,14 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend.communication.commands.Logout;
-import hy.tmc.cli.frontend.communication.commands.Command;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,8 +29,7 @@ public class LogoutTest {
         try {
             logout.execute();
             assertFalse(ClientData.userDataExists());
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             fail("Something went wrong");
         }
     }
@@ -42,8 +41,7 @@ public class LogoutTest {
             logout.execute();
             String response = front.getMostRecentLine();
             assertTrue(response.contains("clear"));
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             fail("Something went wrong");
         }
     }
@@ -55,8 +53,7 @@ public class LogoutTest {
             logout.execute();
             String response = front.getMostRecentLine();
             assertTrue(response.contains("Nobody"));
-        }
-        catch (ProtocolException e) {
+        } catch (ProtocolException e) {
             fail("Something went wrong");
         }
     }
