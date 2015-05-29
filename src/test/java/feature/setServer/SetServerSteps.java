@@ -48,7 +48,6 @@ public class SetServerSteps {
             command.setParameter("tmc-server", serverName);
             command.execute();
         } catch (ProtocolException ex) {
-            fail("ProtocolException.");
         }
     }
     
@@ -60,8 +59,9 @@ public class SetServerSteps {
         try {
             command.execute();
         } catch (ProtocolException ex) {
-            fail("ProtocolException.");
+            return;
         }
+        fail("ProtocolException.");
     }
     
     @Then ("^the server will be \"(.*)\"$")
