@@ -21,13 +21,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class CourseSubmitterTest {
 
     private CourseSubmitter courseSubmitter;
-    private ProjectRootFinderStub rootfinder;
+    private ProjectRootFinderStub rootFinder;
 
     @Before
     public void setup() throws IOException {
         PowerMockito.mockStatic(UrlCommunicator.class);
-        rootfinder = new ProjectRootFinderStub();
-        this.courseSubmitter = new CourseSubmitter(rootfinder, new ZipperStub());
+        rootFinder = new ProjectRootFinderStub();
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
         
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJSON.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJSON.courseExample);
@@ -37,7 +37,7 @@ public class CourseSubmitterTest {
     @Test
     public void testGetExerciseName() {
         final String path = "/home/test/ohpe-test/viikko_01";
-        rootfinder.setReturnValue(path);
+        rootFinder.setReturnValue(path);
         String[] names = courseSubmitter.getExerciseName(path);
         assertEquals("viikko_01", names[names.length - 1]);
     }
@@ -66,7 +66,7 @@ public class CourseSubmitterTest {
     @Test
     public void testSubmitWithOneParam() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
-        rootfinder.setReturnValue(testPath);
+        rootFinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
         String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
@@ -76,22 +76,23 @@ public class CourseSubmitterTest {
     @Test (expected=IllegalArgumentException.class)
     public void testSubmitWithNonexistentExercise() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
-        rootfinder.setReturnValue(testPath);
+        rootFinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
         String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertNull(result);
     }
     
-    public void submitWithNonExistantCourseReturnsNull() throws IOException {
+    @Test(expected=IllegalArgumentException.class)
+    public void submitWithNonExistentCourseThrowsException() throws IOException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
-        rootfinder.setReturnValue(testPath);
+        rootFinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
         String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertNull(result);
     }
-
+    
     private void mockUrlCommunicator(String pieceOfURL, String returnValue) {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito

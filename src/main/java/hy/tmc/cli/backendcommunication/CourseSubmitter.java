@@ -9,6 +9,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -39,14 +40,13 @@ public class CourseSubmitter {
         throw new UnsupportedOperationException("Doesnt work yet");
     }
 
-     /**
+    /**
      * Submits folder of exercise to TMC. Finds it from current directory.
      *
      * @param currentPath path from which this was called.
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
      */
-    
     public String submit(String currentPath) throws IOException {
         Exercise currentExercise = findExercise(currentPath);
         if (currentExercise == null) {
@@ -84,6 +84,9 @@ public class CourseSubmitter {
 
     private List<Exercise> findCourseExercises(String currentPath) {
         Course currentCourse = getCurrentCourse(currentPath);
+        if (currentCourse == null) {
+            throw new IllegalArgumentException("Not under any course directory");
+        }
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.getId());
         return courseExercises;
     }
@@ -98,8 +101,11 @@ public class CourseSubmitter {
     }
 
     private Exercise findCurrentExercise(List<Exercise> courseExercises, String currentDir) {
-        String[] path = rootFinder.getRootDirectory(
-                Paths.get(currentDir)).toString().split("/");
+        Path rootDir = rootFinder.getRootDirectory(Paths.get(currentDir));
+        if (rootDir == null) {
+            throw new IllegalArgumentException("Could not find exercise directory");
+        }
+        String[] path = rootDir.toString().split("/");
         String directory = path[path.length - 1];
         return getExerciseByName(directory, courseExercises);
     }
