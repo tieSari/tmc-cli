@@ -7,6 +7,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.apache.http.HttpResponse;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,9 +16,7 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.apache.http.HttpResponse;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 
 
