@@ -45,8 +45,7 @@ public class ExerciseDownloader {
     /**
      * Method for downloading files if path is not defined.
      *
-     * @param exercises list of exercises which will be downloaded, list is
-    parsed from json.
+     * @param exercises list of exercises which will be downloaded, list is parsed from json.
      */
     public void downloadFiles(List<Exercise> exercises) {
         downloadFiles(exercises, "");
@@ -55,8 +54,7 @@ public class ExerciseDownloader {
     /**
      * Method for downloading files if path where to download is defined.
      *
-     * @param exercises list of exercises which will be downloaded, list is
-     parsed from json.
+     * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
      */
     public void downloadFiles(List<Exercise> exercises, String path) {
@@ -73,8 +71,7 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Handles downloading, unzipping & telling user information, for single
-     * exercise.
+     * Handles downloading, unzipping & telling user information, for single exercise.
      *
      * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
@@ -88,7 +85,8 @@ public class ExerciseDownloader {
         downloadFile(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
-        } catch (IOException | ZipException ex) {
+        }
+        catch (IOException | ZipException ex) {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
@@ -99,10 +97,10 @@ public class ExerciseDownloader {
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath,
-            String destinationPath) throws IOException, ZipException {
-        UnzipDecider md = new DefaultUnzipDecider();
-        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, md);
+    public void unzipFile(String unzipPath, String destinationPath) throws IOException,
+            ZipException {
+        UnzipDecider decider = new DefaultUnzipDecider();
+        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
 
         zipHandler.unzip();
     }

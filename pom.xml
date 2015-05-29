@@ -51,6 +51,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.15</version>
                 <configuration>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     <configLocation>checkstyle.xml</configLocation>
                 </configuration>
                 <dependencies>
@@ -149,6 +150,13 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>3.1.0</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+
+
         </plugins>
     </build>
 
@@ -160,6 +168,26 @@
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
             <version>6.6</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-ant</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-maven</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-framework</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>      
         <dependency>
             <groupId>org.yaml</groupId>
