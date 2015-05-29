@@ -50,8 +50,8 @@ public class TmcTestsSteps {
     public void theUserSeesBothPassedAndFailedTests() {
         String output = front.getMostRecentLine();
         System.out.println(output);
-        assertTrue(output.contains("2 tests passed"));
-        assertTrue(output.contains("1 tests failed"));
+        assertTrue(output.contains("1 tests passed"));
+        assertTrue(output.contains("2 tests failed"));
 
     }
 }
