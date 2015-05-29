@@ -1,26 +1,31 @@
 package feature.listcourses;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import com.github.tomakehurst.wiremock.WireMockServer;
+
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 
-import java.io.IOException;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
+
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+import java.io.IOException;
 
 public class ListCoursesSteps {
     
@@ -36,7 +41,10 @@ public class ListCoursesSteps {
     
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
-    
+
+    /**
+     * Setups client's config and starts WireMock.
+     */
     @Before
     public void setUpServer() throws IOException {
         configHandler = new ConfigHandler();
@@ -75,7 +83,8 @@ public class ListCoursesSteps {
     }
     
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
-    public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
+    public void user_has_logged_in_with_username_and_password(String username,
+                                                              String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
         testClient.init();
     }
@@ -85,7 +94,7 @@ public class ListCoursesSteps {
         testClient.sendMessage("listCourses");
         
     }
-    
+
     @Then("^output should contain more than one line$")
     public void output_should_contain_more_than_one_line() throws Throwable {
         String content = testClient.reply();
@@ -97,14 +106,16 @@ public class ListCoursesSteps {
     public void user_has_not_logged_in() throws Throwable {
         testClient = new TestClient(port);
     }
-    
+
+    /**
+     * User sends command "listCourses" to server.
+     */
     @When("^user writes listCourses\\.$")
     public void user_writes_listCourses() throws Throwable {
         testThrown = false;
         try {
             testClient.sendMessage("listCourses");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             testThrown = true;
         }
     }
@@ -114,7 +125,10 @@ public class ListCoursesSteps {
         assertFalse(testThrown);
         serverThread.interrupt();
     }
-    
+
+    /**
+     * Shuts down the server and WireMock after scenario.
+     */
     @After
     public void closeServer() throws IOException {
         server.close();
