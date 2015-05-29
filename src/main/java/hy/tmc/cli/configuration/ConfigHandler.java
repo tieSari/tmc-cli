@@ -5,8 +5,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,8 +19,8 @@ public class ConfigHandler {
     private String configFilePath;
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
-    public final String api_version = "7";
-    public final String coursesExtension = "/courses.json?api_version=" + api_version;
+    public final String apiVersion = "7";
+    public final String coursesExtension = "/courses.json?api_version=" + apiVersion;
     public final String authExtension = "/user";
 
     /**
@@ -119,7 +119,7 @@ public class ConfigHandler {
     public String getCourseUrl(int id) {
         return this.readServerAddress() + "/courses/"
                 + id + ".json"
-                + "?api_version=" + api_version;
+                + "?api_version=" + apiVersion;
     }
 
     /**
