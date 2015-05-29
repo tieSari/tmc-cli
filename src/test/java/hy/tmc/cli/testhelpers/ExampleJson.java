@@ -1,10 +1,11 @@
 package hy.tmc.cli.testhelpers;
 
-import java.io.File;
-import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
-public class ExampleJSON {
+import java.io.File;
+import java.io.IOException;
+
+public class ExampleJson {
 
     public static String courseExample = courseExample();
     public static String allCoursesExample = allCoursesExample();
@@ -19,10 +20,11 @@ public class ExampleJSON {
     private static String failedSubmission() {
         return readFile("src/test/resources/failedSubmission.json");
     }
-    
+
     private static String courseExample(){
         return readFile("src/test/resources/course.json");
     }
+    
     
     private static String allCoursesExample() {
         return readFile("src/test/resources/courses.json");
