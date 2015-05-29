@@ -2,10 +2,7 @@ package hy.tmc.cli.backendcommunication;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-<<<<<<< HEAD:src/test/java/hy/tmc/cli/backendcommunication/ExerciseDownloaderTest.java
-=======
 import hy.tmc.cli.backendcommunication.ExerciseDownloader;
->>>>>>> b74eb8a96adac2eb45800abaf6e70f2180990919:src/test/java/hy/tmc/cli/backend_communication/ExerciseDownloaderTest.java
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.testhelpers.FrontendStub;
