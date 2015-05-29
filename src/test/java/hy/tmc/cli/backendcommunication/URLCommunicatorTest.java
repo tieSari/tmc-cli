@@ -1,5 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
+import com.github.tomakehurst.wiremock.client.ValueMatchingStrategy;
 import hy.tmc.cli.backendcommunication.HttpResult;
 import hy.tmc.cli.backendcommunication.UrlCommunicator;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -9,12 +10,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import hy.tmc.cli.configuration.ClientData;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.apache.http.HttpResponse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -25,6 +28,7 @@ public class URLCommunicatorTest {
 
     @Test
     public void okWithValidParams() {
+        new UrlCommunicator();
         stubFor(get(urlEqualTo("/"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
@@ -58,17 +62,21 @@ public class URLCommunicatorTest {
 
     @Test
     public void httpPostAddsFileToRequest() throws IOException {
+        ClientData.setUserData("test", "1234");
         stubFor(post(urlEqualTo("/kivaurl"))
-               // .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
+                .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
+                .withRequestBody(containing("submission[file]"))
+                .withRequestBody(containing("test.zip"))
                 .willReturn(
                         aResponse()
+                        .withBody("All tests passed")
                         .withStatus(200)
                 )
         );
         File testFile = new File("testResources/test.zip");
-        System.out.println(testFile.getAbsolutePath());
         HttpResult result = UrlCommunicator.makePostWithFile(testFile, "http://127.0.0.1:8080/kivaurl");
-        System.out.println(result.getData());
+        ClientData.clearUserData();
+        assertEquals("All tests passed", result.getData());
     }
 
     @Test
