@@ -1,9 +1,11 @@
 package hy.tmc.cli.backendcommunication;
 
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.testhelpers.ExampleJSON;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.testhelpers.ExampleJSON;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +17,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
-public class JSONParserTest {
+public class JsonParserTest {
 
+    /**
+     * Mocks UrlCommunicator.
+     */
     @Before
     public void setup() {
         PowerMockito.mockStatic(UrlCommunicator.class);
@@ -54,7 +59,7 @@ public class JSONParserTest {
     }
 
     @Test
-    public void getsExercisesCorrectlyFromCourseJSON() {
+    public void getsExercisesCorrectlyFromCourseJson() {
         HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
@@ -68,7 +73,7 @@ public class JSONParserTest {
     }
     
     @Test
-    public void getsLastExerciseOfCourseJSON() {
+    public void getsLastExerciseOfCourseJson() {
         HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 

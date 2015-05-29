@@ -5,15 +5,22 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import org.apache.http.HttpResponse;
 import static org.junit.Assert.assertEquals;
+
+
 import org.junit.Rule;
 import org.junit.Test;
 
-public class URLCommunicatorTest {
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.apache.http.HttpResponse;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
+
+
+public class UrlCommunicatorTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -32,7 +39,7 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void badRequestWithoutValidURL() {
+    public void badRequestWithoutValidUrl() {
         stubFor(get(urlEqualTo("/vaaraurl"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
@@ -53,7 +60,10 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void createGetRequest() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void createGetRequest() throws ClassNotFoundException,
+            NoSuchMethodException, InstantiationException,
+            IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException {
         stubFor(get(urlEqualTo("/"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
@@ -62,7 +72,9 @@ public class URLCommunicatorTest {
                 )
         );
         
-        Method createMethod = UrlCommunicator.class.getDeclaredMethod("createAndExecuteGet", String.class, String[].class);
+        Method createMethod = UrlCommunicator.class.getDeclaredMethod("createAndExecuteGet",
+                String.class,
+                String[].class);
         createMethod.setAccessible(true);
         Object instance = UrlCommunicator.class.newInstance();
         HttpResponse result = (HttpResponse) createMethod.invoke(instance, "http://127.0.0.1:8080/", new String[]{
