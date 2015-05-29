@@ -42,12 +42,12 @@
 init:
 
 -deps-jar-init:
-   [delete] Deleting: /home/ad/fshome6/u6/x/xtoxtox/Linux/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/built-jar.properties
 
 deps-jar:
+    [mkdir] Created dir: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build
 
 -warn-already-built-jar:
-[propertyfile] Updating property file: /home/ad/fshome6/u6/x/xtoxtox/Linux/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/built-jar.properties
+[propertyfile] Updating property file: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/built-jar.properties
 
 -check-automatic-build:
 
@@ -56,6 +56,7 @@ deps-jar:
 -verify-automatic-build:
 
 -pre-pre-compile:
+    [mkdir] Created dir: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/classes
 
 -pre-compile:
 
@@ -64,22 +65,31 @@ deps-jar:
 -compile-depend:
 
 -do-compile:
+    [mkdir] Created dir: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/empty
+    [mkdir] Created dir: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/generated-sources/ap-source-output
+    [javac] Compiling 1 source file to /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
 
 -post-compile:
 
 compile:
 
 -pre-pre-compile-test:
+    [mkdir] Created dir: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/test/classes
 
 -pre-compile-test:
 
 -compile-test-depend:
 
 -do-compile-test:
+    [javac] Compiling 1 source file to /media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/test/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
 
 -post-compile-test:
 
 compile-test:
 
 BUILD SUCCESSFUL
-Total time: 0 seconds
+Total time: 2 seconds
