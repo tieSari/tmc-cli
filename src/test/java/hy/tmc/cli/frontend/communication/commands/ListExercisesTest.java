@@ -9,7 +9,7 @@ import hy.tmc.cli.backendcommunication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
-import hy.tmc.cli.testhelpers.ExampleJSON;
+import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class ListExercisesTest {
 
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
 
         ClientData.setUserData("chang", "paras");
         PowerMockito

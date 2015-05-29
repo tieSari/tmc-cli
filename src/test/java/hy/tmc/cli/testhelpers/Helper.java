@@ -1,39 +1,51 @@
 package hy.tmc.cli.testhelpers;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 public class Helper {
+    
     private ProcessBuilder createProcessBuilder(String command, String cliPath) {
         if (cliPath == null) {
             cliPath = "scripts/frontend.sh";
         }
         return new ProcessBuilder("bash", cliPath, command);
     }
+    
     private Process createProcess(String command, String cliPath, boolean waitUntilFinished) {
-        Process p = null;
+        Process pr = null;
         try {
-            p = createProcessBuilder(command, cliPath).start();
+            pr = createProcessBuilder(command, cliPath).start();
             if (waitUntilFinished) {
-                p.waitFor();
+                pr.waitFor();
             }
         } catch (Exception e) {
             System.out.println("prosessin luonti feilas");
         }
-        return p;
+        return pr;
     }
     
-    
-    
-    public Process createAndStartProcess(String...params) throws IOException{
+    public Process createAndStartProcess(String...params) throws IOException {
         return new ProcessBuilder(params).start();
     }
     
     public String printOutput(String command, String cliPath) throws InterruptedException, IOException {
-        Process p = createProcess(command, cliPath, true);
-        return readOutputFromProcess(p);
+        Process pr = createProcess(command, cliPath, true);
+        return readOutputFromProcess(pr);
     }
 
+    /**
+     * Read output from process.
+     * @param process
+     * @return
+     * @throws InterruptedException
+     * @throws IOException 
+     */
     public String readOutputFromProcess(Process process) throws InterruptedException, IOException {
         process.waitFor();
         InputStream inputStream = process.getInputStream();
@@ -45,7 +57,7 @@ public class Helper {
             }
         } catch (IOException e) {
             return "";
-        }finally{
+        } finally {
             inputStream.close();
         }
         return sb.toString();
@@ -60,8 +72,7 @@ public class Helper {
     private void waitMilliseconds(int s) {
         try {
             Thread.sleep(s);
-        }
-        catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
     }

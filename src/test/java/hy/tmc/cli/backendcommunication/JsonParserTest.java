@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.testhelpers.ExampleJSON;
+import hy.tmc.cli.testhelpers.ExampleJson;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class JsonParserTest {
     public void setup() {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        HttpResult fakeResult = new HttpResult(ExampleJSON.allCoursesExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
         
         ClientData.setUserData("chang", "paras");
         PowerMockito
@@ -60,7 +60,7 @@ public class JsonParserTest {
 
     @Test
     public void getsExercisesCorrectlyFromCourseJson() {
-        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
                                                     Mockito.anyString()))
@@ -74,7 +74,7 @@ public class JsonParserTest {
     
     @Test
     public void getsLastExerciseOfCourseJson() {
-        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
                                                     Mockito.anyString()))
