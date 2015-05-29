@@ -8,6 +8,8 @@ import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
+import hy.tmc.cli.zipping.DefaultRootDetector;
+import hy.tmc.cli.zipping.ProjectRootFinder;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +23,12 @@ public class RunTests extends Command {
     @Override
     protected void functionality() {
         String path = this.data.get("filepath");
-        Path exercise = Paths.get(path);
+        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());      
+        Path exercise = finder.getRootDirectory(Paths.get(path));
+        if (exercise == null){
+            this.frontend.printLine("Not an exercise. (null)");
+            return;
+        }
         try {
             runTests(exercise);
         } catch (NoLanguagePluginFoundException ex) {
@@ -38,8 +45,10 @@ public class RunTests extends Command {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         RunResult result = taskExecutor.runTests(exercise);
         
+        boolean showStackTrace = this.data.containsKey("verbose");
+        
         ResultInterpreter resInt = new ResultInterpreter(result);
-        String res = resInt.interpret();
+        String res = resInt.interpret(showStackTrace);
         
         this.frontend.printLine(res);
     }
