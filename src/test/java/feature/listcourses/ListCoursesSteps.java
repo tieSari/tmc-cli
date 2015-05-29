@@ -19,10 +19,8 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -44,9 +42,6 @@ public class ListCoursesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    
-    @Rule
-    WireMockRule wireMockRule = new WireMockRule();
 
     /**
      * Setups client's config and starts WireMock.
