@@ -23,8 +23,7 @@ public class JarBuilder {
             Process exec = Runtime.getRuntime().exec("mvn package -Dmaven.test.skip=true");
             exec.waitFor();
             file = new File(path);
-        }
-        catch (IOException | InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             System.err.println(ex.getMessage());
         }
 
