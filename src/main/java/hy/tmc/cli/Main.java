@@ -10,9 +10,9 @@ public class Main {
 
     /**
      * Starts the main program.
-     * @param args
-     * @throws java.io.IOException
-     * @throws java.lang.InterruptedException
+     * @param args arguments.
+     * @throws java.io.IOException if there is an error while reading UIN.
+     * @throws java.lang.InterruptedException if server is interrupted.
      */
     public static void main(String[] args) throws IOException, InterruptedException {
         Logic backend = new Logic();
