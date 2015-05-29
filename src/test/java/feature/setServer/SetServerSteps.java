@@ -1,4 +1,4 @@
-package feature.setServer;
+package feature.setserver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
