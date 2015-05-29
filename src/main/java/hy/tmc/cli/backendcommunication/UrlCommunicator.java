@@ -38,16 +38,10 @@ public class UrlCommunicator {
      * @throws java.io.IOException
      */
     public static HttpResult makePostWithFile(File toBeUploaded, String destionationURL) throws IOException {
-
         HttpPost httppost = new HttpPost(destionationURL);
         FileBody fileBody = new FileBody(toBeUploaded);
-
         addFileToRequest(fileBody, httppost);
-
-        HttpResponse response = executeRequest(httppost);
-        StringBuilder result = writeResponse(response);
-        int status = response.getStatusLine().getStatusCode();
-        return new HttpResult(result.toString(), status, true);
+        return getResponseResult(httppost);
     }
 
     private static void addFileToRequest(FileBody fileBody, HttpPost httppost) {
@@ -60,55 +54,50 @@ public class UrlCommunicator {
         httppost.setEntity(entity);
     }
 
-    private static void addCredentials(HttpRequestBase httpRequest, String credentials) {
-        httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
-        httpRequest.setHeader("User-Agent", USER_AGENT);
-    }
-
     /**
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is always username:password
+     * @param params Any amount of parameters for the request. params[0] is
+     * always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
         try {
-            HttpResponse response = createAndExecuteGet(url, params);
-            StringBuilder result = writeResponse(response);
-            return new HttpResult(
-                    result.toString(),
-                    response.getStatusLine().getStatusCode(),
-                    true);
-        }
-        catch (IOException e) {
+            HttpGet httpGet = createGet(url, params);
+            return getResponseResult(httpGet);
+        } catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
+    }
+
+    private static HttpGet createGet(String url, String[] params)
+            throws IOException {
+        HttpGet request = new HttpGet(url);
+        addCredentials(request, params[0]);
+        return request;
     }
 
     /**
      * Download a file from the internet.
      *
-     * @param client httpclient to be used
      * @param url url of the get request
      * @param file file to write the results into
      * @param params params of the get request
-     * @return true if succesful
+     * @return true if successful
      */
     public static boolean downloadFile(
             String url,
             File file,
             String... params) {
-        try {
-            HttpResponse response = createAndExecuteGet(url, params);
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+           
+            HttpGet httpget = createGet(url, params);
+            HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
-            fileOutputStream.close();
-
+           
             return true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return false;
         }
     }
@@ -118,18 +107,11 @@ public class UrlCommunicator {
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
-        String line = "";
+        String line;
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
         return result;
-    }
-
-    private static HttpResponse createAndExecuteGet(String url, String[] params)
-            throws IOException {
-        HttpGet request = new HttpGet(url);
-        addCredentials(request, params[0]);
-        return executeRequest(request);
     }
 
     private static HttpClient createClient() {
@@ -139,6 +121,18 @@ public class UrlCommunicator {
     private static HttpResponse executeRequest(HttpRequestBase request)
             throws IOException {
         return createClient().execute(request);
+    }
+
+    private static void addCredentials(HttpRequestBase httpRequest, String credentials) {
+        httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
+        httpRequest.setHeader("User-Agent", USER_AGENT);
+    }
+
+    private static HttpResult getResponseResult(HttpRequestBase httpRequest) throws UnsupportedOperationException, IOException {
+        HttpResponse response = executeRequest(httpRequest);
+        StringBuilder result = writeResponse(response);
+        int status = response.getStatusLine().getStatusCode();
+        return new HttpResult(result.toString(), status, true);
     }
 
 }
