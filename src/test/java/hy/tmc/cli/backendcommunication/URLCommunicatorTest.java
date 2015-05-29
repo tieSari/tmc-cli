@@ -81,7 +81,8 @@ public class URLCommunicatorTest {
 
     @Test
     public void badGetRequestIsCatched() {
-
+        HttpResult makeGetRequest = UrlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
+        assertEquals(UrlCommunicator.BAD_REQUEST, makeGetRequest.getStatusCode());
     }
 
 }
