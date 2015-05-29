@@ -1,24 +1,16 @@
 #!/usr/bin/env bash
 
-# echo $@
-# echo $1
-
-
-#function command_help () {
-#    declare -A array
-#    array[help]=description
-#
-#    echo "Listing commands..."
-#    echo "-----"
-#
-#    for i in "${!array[@]}"
-#    do
-#        echo "command: $i"
-#        echo "description: ${array[$i]}"
-#    done
-#
-#    return 0;
-#}
+#Submit command
+function command_submit () {
+  #submit [<exercise name>]
+  if [ $# -eq 0 ]
+    then
+    send_command "submit path `pwd`"
+  else
+    echo "submit path `pwd` exerciseName $1"
+    send_command "submit path `pwd` exerciseName $1"
+  fi
+}
 
 function command_login () {
     read -p "Username: " username
@@ -52,7 +44,9 @@ function login () {
 function send_command () {
 #    OUTPUT=$(echo $@ | nc localhost 1234)
 #    echo $OUTPUT
-    CONFIGPATH='config.properties'
+    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+    CONFIGPATH="$DIR/config.properties"
     CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
     echo $@ | nc localhost $CONFIGPORT
 
@@ -74,14 +68,13 @@ trap control_c SIGINT
 #echo "Servu paalle"
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
 STARTUP=$DIR
 STARTUP+="/startup.sh"
-
 bash $STARTUP
 
 case "$1" in
 #    "help") command_help;;
     "login") command_login;;
+    "submit") command_submit $2;;
     *) command_default $@;;
 esac
