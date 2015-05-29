@@ -8,8 +8,7 @@ import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
-import org.junit.Before;
-
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -49,7 +48,6 @@ public class SetServerSteps {
             command.setParameter("tmc-server", serverName);
             command.execute();
         } catch (ProtocolException ex) {
-            fail("ProtocolException.");
         }
     }
     
@@ -61,8 +59,9 @@ public class SetServerSteps {
         try {
             command.execute();
         } catch (ProtocolException ex) {
-            fail("ProtocolException.");
+            return;
         }
+        fail("ProtocolException.");
     }
     
     @Then ("^the server will be \"(.*)\"$")

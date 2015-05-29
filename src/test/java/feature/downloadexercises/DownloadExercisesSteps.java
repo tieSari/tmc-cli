@@ -9,28 +9,30 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
+
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import org.junit.After;
-import org.junit.Before;
 
 
 public class DownloadExercisesSteps {
@@ -146,8 +148,11 @@ public class DownloadExercisesSteps {
      * @throws Throwable if something fails
      */
     @Then("^output should contain zip files and folders containing unzipped files$")
-    public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
-        assertTrue(new File(tempDir.toAbsolutePath() + File.separator + "2013_ohpeJaOhja" + File.separator + "viikko1").exists());
+    public void output_should_contain_zip_files_and_folders_containing_unzipped_files()
+            throws Throwable {
+        assertTrue(new File(tempDir.toAbsolutePath()
+                + File.separator + "2013_ohpeJaOhja"
+                + File.separator + "viikko1").exists());
     }
 
     /**
@@ -155,7 +160,8 @@ public class DownloadExercisesSteps {
      * @throws Throwable if something fails
      */
     @Then("^information about download progress\\.$")
-    public void information_about_download_progress() throws Throwable {
+    public void information_about_download_progress()
+            throws Throwable {
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
     }
 
