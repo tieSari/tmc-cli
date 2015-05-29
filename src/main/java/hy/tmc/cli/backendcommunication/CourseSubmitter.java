@@ -2,16 +2,16 @@ package hy.tmc.cli.backendcommunication;
 
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
-
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
+
+import net.lingala.zip4j.exception.ZipException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
-import net.lingala.zip4j.exception.ZipException;
 
 public class CourseSubmitter {
 
@@ -37,12 +37,16 @@ public class CourseSubmitter {
             return null;
         }
         String submissionZipPath = currentPath + "/submission.zip";
-        String URL = currentExercise.getReturnUrl() + "?api_version=7";
+        String returnUrl = currentExercise.getReturnUrl() + "?api_version=7";
 
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
-        String resultUrl = sendSubmissionToServer(submissionZipPath, URL);
+        String resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
         new File(submissionZipPath).delete();
         return resultUrl;
+    }
+    
+    public String submit(String currentPath) throws IOException {
+        return submit(currentPath, currentPath);
     }
 
     private String findExerciseFolderToZip(String currentPath) {
@@ -51,35 +55,35 @@ public class CourseSubmitter {
         ).toString();
     }
 
-    private String sendSubmissionToServer(String submissionZipPath, String URL) throws IOException {
-        HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
-        return TmcJsonParser.getSubmissionUrl(makePostWithFile);
-    }
-
-    public String submit(String currentPath) throws IOException {
-        return submit(currentPath, currentPath);
+    private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
+        HttpResult result = UrlCommunicator.makePostWithFile(
+                new File(submissionZipPath), url
+        );
+        return TmcJsonParser.getSubmissionUrl(result);
     }
 
     private Exercise findExercise(String currentPath, String exerciseName) {
         Course currentCourse = getCurrentCourse(currentPath);
-        List<Exercise> exercisesForCurrentCourse = TmcJsonParser.getExercises(currentCourse.getId());
-        Exercise currentExercise = findCurrentExercise(exercisesForCurrentCourse, exerciseName);
+        List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.getId());
+        Exercise currentExercise = findCurrentExercise(courseExercises, exerciseName);
         return currentExercise;
     }
 
     private void zip(String exerciseFolderToZip, String currentPath) {
         try {
             this.zipper.zip(exerciseFolderToZip, currentPath);
-        }
-        catch (ZipException ex) {
+        } catch (ZipException ex) {
             System.err.println(ex.getMessage());
         }
     }
 
-    private Exercise findCurrentExercise(List<Exercise> exercisesForCurrentCourse, String currentDir) {
-        String[] path = rootFinder.getRootDirectory(Paths.get(currentDir)).toString().split("/");
+    private Exercise findCurrentExercise(List<Exercise> courseExercises, String currentDir) {
+        String[] path = rootFinder.getRootDirectory(
+                Paths.get(currentDir)
+        ).toString().split("/");
+        
         String directory = path[path.length - 1];
-        for (Exercise exercise : exercisesForCurrentCourse) {
+        for (Exercise exercise : courseExercises) {
             if (exercise.getName().contains(directory)) {
                 return exercise;
             }
@@ -92,6 +96,13 @@ public class CourseSubmitter {
         return findCourseByPath(exerciseName);
     }
 
+    /**
+     * Downloads all courses and iterates over them. Returns Course 
+     * whose name matches with one folder in given path.
+     * 
+     * @param foldersPath contains the names of the folders in path
+     * @return Course
+     */
     public Course findCourseByPath(String[] foldersPath) {
         List<Course> courses = TmcJsonParser.getCourses();
         Course currentCourse = null;
