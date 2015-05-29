@@ -28,23 +28,32 @@ public class CourseSubmitter {
      *
      * @param currentPath path from which this was called.
      * @param exerciseName name of exercise to submit
-     * @return String with url from which to get results.
+     * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
      */
     public String submit(String currentPath, String exerciseName) throws IOException {
         Exercise currentExercise = findExercise(currentPath, exerciseName);
-        String exerciseFolderToZip = rootFinder.getRootDirectory(
-                Paths.get(currentPath)
-        ).toString();
-
+        if (currentExercise == null) {
+            return null;
+        }
         String submissionZipPath = currentPath + "/submission.zip";
         String URL = currentExercise.getReturnUrl() + "?api_version=7";
 
-        zip(exerciseFolderToZip, submissionZipPath);
-        HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
-        String resultUrl = TmcJsonParser.getSubmissionUrl(makePostWithFile);
+        zip(findExerciseFolderToZip(currentPath), submissionZipPath);
+        String resultUrl = sendSubmissionToServer(submissionZipPath, URL);
         new File(submissionZipPath).delete();
         return resultUrl;
+    }
+
+    private String findExerciseFolderToZip(String currentPath) {
+        return rootFinder.getRootDirectory(
+                Paths.get(currentPath)
+        ).toString();
+    }
+
+    private String sendSubmissionToServer(String submissionZipPath, String URL) throws IOException {
+        HttpResult makePostWithFile = UrlCommunicator.makePostWithFile(new File(submissionZipPath), URL);
+        return TmcJsonParser.getSubmissionUrl(makePostWithFile);
     }
 
     public String submit(String currentPath) throws IOException {
@@ -80,10 +89,10 @@ public class CourseSubmitter {
 
     private Course getCurrentCourse(String directoryPath) {
         String[] exerciseName = getExerciseName(directoryPath);
-        return getCurrentCourseByName(exerciseName);
+        return findCourseByPath(exerciseName);
     }
 
-    private Course getCurrentCourseByName(String[] foldersPath) {
+    public Course findCourseByPath(String[] foldersPath) {
         List<Course> courses = TmcJsonParser.getCourses();
         Course currentCourse = null;
         for (Course course : courses) {

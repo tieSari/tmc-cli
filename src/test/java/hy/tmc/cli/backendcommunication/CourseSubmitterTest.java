@@ -6,6 +6,7 @@ import hy.tmc.cli.testhelpers.ZipperStub;
 import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,10 @@ public class CourseSubmitterTest {
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootfinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootfinder, new ZipperStub());
+        
+        mockUrlCommunicator("/courses.json?api_version=7", ExampleJSON.allCoursesExample);
+        mockUrlCommunicator("courses/3.json?api_version=7", ExampleJSON.courseExample);
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJSON.submitResponse);
     }
 
     @Test
@@ -37,11 +42,14 @@ public class CourseSubmitterTest {
     }
     
     @Test
-    public void testSubmit() throws IOException {
-        mockUrlCommunicator("http://tmc.mooc.fi/staging/courses.json?api_version=7", ExampleJSON.allCoursesExample);
-        mockUrlCommunicator("http://tmc.mooc.fi/staging/courses/3.json?api_version=7", ExampleJSON.courseExample);
-        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJSON.submitResponse);
-        
+    public void testFindCourseByCorrectPath() {
+        final String path = "/home/kansio/toinen/c-demo/viikko_01";
+        courseSubmitter.findCourseByPath(path.split("/"));
+        //assert
+    }
+    
+    @Test
+    public void testSubmitWithTwoParams() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
         rootfinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
@@ -49,11 +57,40 @@ public class CourseSubmitterTest {
         String result = courseSubmitter.submit(testPath, exercise);
         assertEquals(submissionPath, result);
     }
+    
+    @Test
+    public void testSubmitWithOneParam() throws IOException {
+        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
+        rootfinder.setReturnValue(testPath);
+        String exercise = "viikko1-Viikko1_001.Nimi";
+        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
+        String result = courseSubmitter.submit(testPath);
+        assertEquals(submissionPath, result);
+    }
+    
+    @Test
+    public void testSubmitWithNonexistentExercise() throws IOException {
+        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
+        rootfinder.setReturnValue(testPath);
+        String exercise = "viikko1-Viikko1_001.Nimi";
+        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
+        String result = courseSubmitter.submit(testPath);
+        assertNull(result);
+    }
+    
+    public void submitWithNonExistantCourseReturnsNull() throws IOException {
+        String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
+        rootfinder.setReturnValue(testPath);
+        String exercise = "viikko1-Viikko1_001.Nimi";
+        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
+        String result = courseSubmitter.submit(testPath);
+        assertNull(result);
+    }
 
-    private void mockUrlCommunicator(String url, String returnValue) {
+    private void mockUrlCommunicator(String pieceOfURL, String returnValue) {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.eq(url),
+                .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfURL),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
@@ -62,7 +99,7 @@ public class CourseSubmitterTest {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(File.class),
-                                Mockito.eq(url)))
+                                Mockito.contains(url)))
                 .thenReturn(fakeResult);
     }
 }
