@@ -91,7 +91,6 @@ public class SubmitSteps {
         testClient.init();
         String submitCommand = "submit path ";
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
-        System.out.println("SUBMITPATH: " + submitPath);
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
     }
@@ -99,7 +98,6 @@ public class SubmitSteps {
     @Then("^user will see the result of tests$")
     public void user_will_see_the_result_of_tests() throws Throwable {
         final String result = testClient.reply();
-        System.out.println("RESULT: " + result);
         assertTrue(result.contains("All tests passed"));
     }
 

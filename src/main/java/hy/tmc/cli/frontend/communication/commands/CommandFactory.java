@@ -29,7 +29,7 @@ public class CommandFactory {
         commandsByName.put("logout", logout(frontend, logic));
         commandsByName.put("setServer", chooseServer(frontend, logic));
         commandsByName.put("submit", submit(frontend, logic));
-
+        commandsByName.put("runTests", runTests(frontend, logic));
         return commandsByName;
     }
 
@@ -53,6 +53,16 @@ public class CommandFactory {
      */
     public static Command replyToPing(FrontendListener front, Logic back) {
         return new ReplyToPing(front, back);
+    }
+    
+    /**
+     * Create RunTests command object.
+     * @param front frontend that the command will use
+     * @param back logic that the command will use
+     * @return a help object
+     */
+    public static Command runTests(FrontendListener front, Logic back){
+        return new RunTests(front, back);
     }
 
     /**
