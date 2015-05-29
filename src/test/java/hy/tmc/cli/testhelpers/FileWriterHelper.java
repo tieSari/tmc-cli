@@ -1,24 +1,29 @@
 package hy.tmc.cli.testhelpers;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.Random;
-import static org.junit.Assert.fail;
 
 public class FileWriterHelper {
 
     FileWriter writer;
 
+    /**
+     * Writes stuff to file.
+     * @param path to write
+     */
     public void writeStuffToFile(String path) {
         try {
             writer = new FileWriter(new File(path));
             Random random = new Random();
             for (int i = 0; i < 20; i++) {
-                writer.append(random.nextBoolean()+ "\n");
+                writer.append(random.nextBoolean() + "\n");
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("writer failed to init");
         }
     }

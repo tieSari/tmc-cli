@@ -1,17 +1,18 @@
 package feature.frontend;
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
+import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 
-import java.io.IOException;
+import org.junit.After;
+import org.junit.Before;
 
-import static org.junit.Assert.assertTrue;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+
+import java.io.IOException;
 
 public class FrontendSteps {
 
@@ -21,6 +22,10 @@ public class FrontendSteps {
     private Server server;
     private TestClient testClient;
 
+    /**
+     * Set up server and testclient.
+     * @throws IOException if server initializing fails
+     */
     @Before
     public void setUpServer() throws IOException {
         server = new Server(null);
@@ -30,16 +35,19 @@ public class FrontendSteps {
         testClient = new TestClient(port);
     }
 
-    @Given("^a help command\\.$")
-    public void a_help_command() throws Throwable {
+    @Given("^help command\\.$")
+    public void help_command() throws Throwable {
         testClient.sendMessage("help");
     }
 
+    /**
+     * Tests that output contains available commands.
+     * @throws Throwable if something fails
+     */
     @Then("^output should contains commands\\.$")
     public void output_should_contains_commands() throws Throwable {
         String contents = testClient.reply();
         assertTrue(contents.contains("Available commands: "));
-
     }
 
     @After

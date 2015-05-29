@@ -1,7 +1,7 @@
 package hy.tmc.cli.backendcommunication;
 
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.testhelpers.ExampleJSON;
+import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
 import java.io.File;
@@ -29,9 +29,9 @@ public class CourseSubmitterTest {
         rootFinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
         
-        mockUrlCommunicator("/courses.json?api_version=7", ExampleJSON.allCoursesExample);
-        mockUrlCommunicator("courses/3.json?api_version=7", ExampleJSON.courseExample);
-        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJSON.submitResponse);
+        mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
+        mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
     }
 
     @Test

@@ -1,8 +1,14 @@
 package hy.tmc.cli.backendcommunication;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import hy.tmc.cli.backendcommunication.ExerciseDownloader;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.testhelpers.FrontendStub;
@@ -11,12 +17,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import org.junit.After;
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+
 
 public class ExerciseDownloaderTest {
     
@@ -25,7 +32,10 @@ public class ExerciseDownloaderTest {
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
     private FrontendStub front;
-    
+
+    /**
+     * Creates required stubs and example data for downloader.
+     */
     @Before
     public void setup() {
         front = new FrontendStub();
@@ -101,13 +111,13 @@ public class ExerciseDownloaderTest {
     }
     
     @Test
-    public void exerciseListIsEmpty(){
+    public void exerciseListIsEmpty() {
         exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
         assertTrue(front.getMostRecentLine().contains("No exercises to download."));
     }
 
     @Test
-    public void downloadedExercisesExists(){
+    public void downloadedExercisesExists() {
         exDl.downloadFiles(exercises);
         File exercise1 = new File("Exercise1.zip");
         assertTrue("File Exercise1 was not downloaded to the fs", exercise1.exists());
@@ -116,7 +126,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadedExercisesHasContent(){
+    public void downloadedExercisesHasContent() {
         exDl.downloadFiles(exercises);
         
         String ex1content;

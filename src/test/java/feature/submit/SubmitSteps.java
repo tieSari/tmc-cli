@@ -15,7 +15,8 @@ import cucumber.api.java.en.When;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
-import hy.tmc.cli.testhelpers.ExampleJSON;
+import hy.tmc.cli.testhelpers.ExampleJson;
+
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
@@ -59,10 +60,10 @@ public class SubmitSteps {
                         .withStatus(200)
                 )
         );
-        wiremockGET("/courses.json?api_version=7", ExampleJSON.allCoursesExample);
-        wiremockGET("/courses/3.json?api_version=7", ExampleJSON.courseExample);
-        wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJSON.submitResponse);
-        wiremockGET("/submissions/1781.json?api_version=7", ExampleJSON.successfulSubmission);
+        wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
+        wiremockGET("/courses/3.json?api_version=7", ExampleJson.courseExample);
+        wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
+        wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
     }
 
     private void wiremockGET(final String urlToMock, final String returnBody) {

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.testhelpers.ExampleJSON;
+import hy.tmc.cli.testhelpers.ExampleJson;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class SubmissionInterpreterTest {
     }
 
     private void initFailedMock() {
-        HttpResult fakeResult = new HttpResult(ExampleJSON.failedSubmission, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJson.failedSubmission, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
@@ -47,7 +47,7 @@ public class SubmissionInterpreterTest {
     }
 
     private void initSuccessMock() {
-        HttpResult fakeResult = new HttpResult(ExampleJSON.successfulSubmission, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
