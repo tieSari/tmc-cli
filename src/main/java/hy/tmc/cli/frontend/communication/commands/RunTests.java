@@ -12,9 +12,6 @@ import hy.tmc.cli.logic.Logic;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class RunTests extends Command {
 
     public RunTests(FrontendListener front, Logic backend) {
@@ -29,7 +26,6 @@ public class RunTests extends Command {
             runTests(exercise);
         } catch (NoLanguagePluginFoundException ex) {
             this.frontend.printLine("Not an exercise.");
-            return;
         }
     }
 
@@ -42,8 +38,8 @@ public class RunTests extends Command {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         RunResult result = taskExecutor.runTests(exercise);
         
-        ResultInterpreter resInt = new ResultInterpreter();
-        String res = resInt.interpret(result);
+        ResultInterpreter resInt = new ResultInterpreter(result);
+        String res = resInt.interpret();
         
         this.frontend.printLine(res);
     }

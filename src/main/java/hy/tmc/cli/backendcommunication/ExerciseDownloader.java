@@ -85,10 +85,24 @@ public class ExerciseDownloader {
         downloadFile(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
+<<<<<<< HEAD
         }
         catch (IOException | ZipException ex) {
+=======
+            deleteZip(filePath);
+        } catch (IOException | ZipException ex) {
+>>>>>>> b74eb8a96adac2eb45800abaf6e70f2180990919
             this.front.printLine("Unzipping exercise failed.");
         }
+    }
+    
+    /**
+     * Delete .zip -file after unzipping.
+     * @param filePath path to delete
+     */
+    private void deleteZip(String filePath){
+        File file = new File(filePath);
+        file.delete();
     }
 
     /**
@@ -103,6 +117,7 @@ public class ExerciseDownloader {
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
 
         zipHandler.unzip();
+        
     }
 
     /**
