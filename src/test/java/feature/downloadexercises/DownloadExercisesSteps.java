@@ -35,18 +35,22 @@ public class DownloadExercisesSteps {
     private ConfigHandler config;
     private WireMockServer wireMockServer;
 
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 5055;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+
     @Before
     public void setUpServer() throws IOException {
-        wireMockServer = new WireMockServer(wireMockConfig().port(5055));
+        wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         config = new ConfigHandler();
-        config.writeServerAddress("http://127.0.0.1:5055");
+        config.writeServerAddress(SERVER_ADDRESS);
         server = new Server(null);
         ClientData.setUserData("pihla", "juuh");
         port = config.readPort();
         System.out.println(port);
         serverThread = new Thread(server);
         output = new ArrayList<>();
-        WireMock.configureFor("127.0.0.1", 5055);
+        WireMock.configureFor(SERVER_ADDRESS, SERVER_PORT);
         wireMockServer.start();
         serverThread.start();
 

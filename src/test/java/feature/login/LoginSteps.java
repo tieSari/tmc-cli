@@ -29,13 +29,17 @@ public class LoginSteps {
     private ConfigHandler configHandler; // writes the test address
     private WireMockServer wireMockServer;
 
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 3333;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
     @Before
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
-        configHandler.writeServerAddress("http://127.0.0.1:3333");
+        configHandler.writeServerAddress(SERVER_ADDRESS);
 
         server = new Server(null);
         port = new ConfigHandler().readPort();
@@ -47,8 +51,8 @@ public class LoginSteps {
     }
 
     private void startWireMock() {
-        wireMockServer = new WireMockServer(wireMockConfig().port(3333));
-        WireMock.configureFor("127.0.0.1", 3333);
+        wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
+        WireMock.configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
 
         stubFor(get(urlEqualTo("/user"))
