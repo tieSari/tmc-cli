@@ -3,7 +3,7 @@ package hy.tmc.cli.domain;
 import com.google.gson.annotations.SerializedName;
 
 public class Exercise {
-    
+
     private int id; // = 284;
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",
     private boolean locked; // false,
@@ -51,7 +51,7 @@ public class Exercise {
 
     @SerializedName("exercise_submissions_url")
     private String exerciseSubmissionsUrl; // https://tmc.mooc.fi/staging/exercises/284.json?api_version=7
-    
+
     public int getId() {
         return id;
     }
@@ -101,6 +101,13 @@ public class Exercise {
     }
 
     public String getReturnUrl() {
+        return returnUrl;
+    }
+
+    public String getReturnUrlWithApiVersion() {
+        if (!returnUrl.contains("api_version")) {
+            return returnUrl + "?api_version=7";
+        }
         return returnUrl;
     }
 

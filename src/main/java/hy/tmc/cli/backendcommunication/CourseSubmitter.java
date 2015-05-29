@@ -32,21 +32,32 @@ public class CourseSubmitter {
      * @throws IOException if failed to create zip.
      */
     public String submit(String currentPath, String exerciseName) throws IOException {
-        Exercise currentExercise = findExercise(currentPath, exerciseName);
+        throw new UnsupportedOperationException("Doesnt work yet");
+    }
+
+    /**
+     * Submits folder of exercise to TMC. Finds it from current directory.
+     *
+     * @param currentPath path from which this was called.
+     * @return String with url from which to get results or null if exercise was not found.
+     * @throws IOException if failed to create zip.
+     */
+    public String submit(String currentPath) throws IOException {
+        Exercise currentExercise = findExercise(currentPath);
         if (currentExercise == null) {
-            return null;
+            throw new IllegalArgumentException("Could not find exercise in this directory");
         }
+        return sendZipFile(currentPath, currentExercise);
+    }
+
+    private String sendZipFile(String currentPath, Exercise currentExercise) throws IOException {
         String submissionZipPath = currentPath + "/submission.zip";
-        String returnUrl = currentExercise.getReturnUrl() + "?api_version=7";
+        String returnUrl = currentExercise.getReturnUrlWithApiVersion();
 
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
         String resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
         new File(submissionZipPath).delete();
         return resultUrl;
-    }
-    
-    public String submit(String currentPath) throws IOException {
-        return submit(currentPath, currentPath);
     }
 
     private String findExerciseFolderToZip(String currentPath) {
@@ -63,32 +74,42 @@ public class CourseSubmitter {
         return TmcJsonParser.getSubmissionUrl(result);
     }
 
-    private Exercise findExercise(String currentPath, String exerciseName) {
+    private Exercise findExercise(String currentPath) {
+        return findCurrentExercise(findCourseExercises(currentPath), currentPath);
+    }
+
+    private List<Exercise> findCourseExercises(String currentPath) {
         Course currentCourse = getCurrentCourse(currentPath);
         if (currentCourse == null) {
-            throw new TypeNotPresentException("Could not find course from path: " + currentPath, null);
+            throw new IllegalArgumentException("Not under any course directory");
         }
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.getId());
-        Exercise currentExercise = findCurrentExercise(courseExercises, exerciseName);
-        return currentExercise;
+        return courseExercises;
     }
 
     private void zip(String exerciseFolderToZip, String currentPath) {
         try {
             this.zipper.zip(exerciseFolderToZip, currentPath);
-        } catch (ZipException ex) {
+        }
+        catch (ZipException ex) {
             System.err.println(ex.getMessage());
         }
     }
 
     private Exercise findCurrentExercise(List<Exercise> courseExercises, String currentDir) {
-        String[] path = rootFinder.getRootDirectory(
-                Paths.get(currentDir)
-        ).toString().split("/");
-        
+        Path rootDir = rootFinder.getRootDirectory(Paths.get(currentDir));
+        if (rootDir == null) {
+            throw new IllegalArgumentException("Could not find exercise directory");
+        }
+        String[] path = rootDir.toString().split("/");
         String directory = path[path.length - 1];
+        return getExerciseByName(directory, courseExercises);
+    }
+
+    private Exercise getExerciseByName(String name, List<Exercise> courseExercises) {
+
         for (Exercise exercise : courseExercises) {
-            if (exercise.getName().contains(directory)) {
+            if (exercise.getName().contains(name)) {
                 return exercise;
             }
         }
@@ -96,14 +117,14 @@ public class CourseSubmitter {
     }
 
     private Course getCurrentCourse(String directoryPath) {
-        String[] exerciseName = getExerciseName(directoryPath);
-        return findCourseByPath(exerciseName);
+        String[] foldersOfPwd = getExerciseName(directoryPath);
+        return findCourseByPath(foldersOfPwd);
     }
 
     /**
-     * Downloads all courses and iterates over them. Returns Course 
-     * whose name matches with one folder in given path.
-     * 
+     * Downloads all courses and iterates over them. Returns Course whose name matches with one
+     * folder in given path.
+     *
      * @param foldersPath contains the names of the folders in path
      * @return Course
      */
@@ -122,7 +143,6 @@ public class CourseSubmitter {
     }
 
     public String[] getExerciseName(String directoryPath) {
-        Path path = rootFinder.getRootDirectory(Paths.get(directoryPath));
-        return path.toString().split("/");
+        return directoryPath.split("/");
     }
 }
