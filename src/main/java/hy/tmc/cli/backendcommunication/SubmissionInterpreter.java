@@ -80,8 +80,8 @@ public class SubmissionInterpreter {
 
     private String failOrSuccess(TestCase testCase) {
         if (testCase.isSuccessful()) {
-            return "PASSED: " + testCase.getName();
+            return "  PASSED: " + testCase.getName();
         }
-        return "FAILED: " + testCase.getName() + "\n  " + testCase.getMessage();
+        return "  FAILED: " + testCase.getName() + "\n  " + testCase.getMessage();
     }
 }
