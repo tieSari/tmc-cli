@@ -1,20 +1,25 @@
 package hy.tmc.cli.backendcommunication;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+<<<<<<< HEAD:src/test/java/hy/tmc/cli/backendcommunication/ExerciseDownloaderTest.java
+=======
+import hy.tmc.cli.backendcommunication.ExerciseDownloader;
+>>>>>>> b74eb8a96adac2eb45800abaf6e70f2180990919:src/test/java/hy/tmc/cli/backend_communication/ExerciseDownloaderTest.java
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.testhelpers.FrontendStub;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import java.util.List;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 public class ExerciseDownloaderTest {
     
@@ -45,6 +50,19 @@ public class ExerciseDownloaderTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "text/xml")
                         .withBody("<response>Exercise 1</response>")));
+        
+        stubFor(get(urlEqualTo("/emptyCourse.json"))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBody("{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
+                        + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
+                        + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
+                        + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
+                        + "/21/reviews"
+                        + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
+                        + "comet\",\"spyware_urls\":[\"http://staging.spyware."
+                        + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}")));
 
         wireMockRule.stubFor(get(urlEqualTo("/ex2.zip"))
                 .willReturn(aResponse()
@@ -83,6 +101,12 @@ public class ExerciseDownloaderTest {
     public void downloadingGivesOutput() {
         exDl.downloadFiles(exercises);
         assertTrue(front.getMostRecentLine().endsWith(" exercises downloaded."));
+    }
+    
+    @Test
+    public void exerciseListIsEmpty(){
+        exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
+        assertTrue(front.getMostRecentLine().contains("No exercises to download."));
     }
 
     @Test

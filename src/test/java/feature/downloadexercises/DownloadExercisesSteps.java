@@ -23,7 +23,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+<<<<<<< HEAD
 
+=======
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
+import org.junit.Rule;
+>>>>>>> b74eb8a96adac2eb45800abaf6e70f2180990919
 
 public class DownloadExercisesSteps {
 
@@ -112,6 +121,25 @@ public class DownloadExercisesSteps {
     @Then("^information about download progress\\.$")
     public void information_about_download_progress() throws Throwable {
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
+    }
+
+    @Then("^\\.zip -files are removed\\.$")
+    public void zip_files_are_removed() throws Throwable {
+        String filepath = tempDir.toAbsolutePath().toString();
+        File[] paths = getFileArray(filepath);
+        boolean zips = false;
+        for(File path : paths){
+            if(path.getAbsolutePath().toString().endsWith(".zip")){
+                zips = true;
+            }
+        }
+        assertFalse(zips);
+    }
+    
+    public File[] getFileArray(String filepath){
+        File fi = new File(filepath);
+        File[] paths = fi.listFiles();
+        return paths;
     }
 
     @After
