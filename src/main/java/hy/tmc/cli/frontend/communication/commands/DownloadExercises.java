@@ -47,6 +47,10 @@ public class DownloadExercises extends Command {
         }
     }
 
+    /**
+     * Check that user has given also course id.
+     * @throws ProtocolException if course id is not a number
+     */
     private void checkCourseId() throws ProtocolException {
         if (!this.data.containsKey("courseID")) {
             throw new ProtocolException("Course ID required");

@@ -17,7 +17,7 @@ public class FrontendStub implements FrontendListener {
         this.line = line;
     }
     
-    public String getMostRecentLine(){
+    public String getMostRecentLine() {
         return line;
     }
     

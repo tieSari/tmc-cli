@@ -44,7 +44,8 @@ public class ChooseServer extends Command {
     }
 
     private boolean isValidTmcUrl(String url) {
-        Pattern tmcServerAddress = Pattern.compile("http://.*");
+        String urlPattern = "(http://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
+        Pattern tmcServerAddress = Pattern.compile(urlPattern);
         if (url == null) {
             return false;
         }
