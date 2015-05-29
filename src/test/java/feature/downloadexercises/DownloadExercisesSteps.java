@@ -58,6 +58,7 @@ public class DownloadExercisesSteps {
     public void setUpServer() throws IOException {
         wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         config = new ConfigHandler();
+        originalServerAddress = config.readServerAddress();
         config.writeServerAddress(SERVER_ADDRESS);
         server = new Server(null);
         ClientData.setUserData("pihla", "juuh");
