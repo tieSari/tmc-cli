@@ -21,7 +21,7 @@ public class TmcJsonParser {
      * Get JSON-data from url.
      *
      * @param url url from which the object data is fetched
-     * @return JSON-object containing JSON-data
+     * @return JSON-object
      */
     private static JsonObject getJsomFrom(String url) {
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
@@ -87,12 +87,12 @@ public class TmcJsonParser {
 
     /**
      * Get information about course specified by the URL path
-     * to course json.
-     * @param courseURL URL path to course json
+     * to course JSON.
+     * @param courseUrl URL path to course JSON
      * @return an Course object (parsed from JSON)
      */
-    public static Course getCourse(String courseURL) {
-        JsonObject courseJson = getJsomFrom(courseURL);
+    public static Course getCourse(String courseUrl) {
+        JsonObject courseJson = getJsomFrom(courseUrl);
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
         return course;

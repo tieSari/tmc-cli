@@ -2,6 +2,7 @@ package hy.tmc.cli.backendcommunication;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.client.HttpClient;
@@ -16,6 +17,7 @@ import hy.tmc.cli.zipping.Unzipper;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
 
 
 
@@ -58,8 +60,6 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined.
-     * @param exercises
-     * @param path
      */
     public void downloadFiles(List<Exercise> exercises, String path) {
         downloadFiles(exercises,path,null);
@@ -77,7 +77,7 @@ public class ExerciseDownloader {
         int exCount = 0;
         path = getCorrectPath(path);
 
-        if (folderName != null && !folderName.isEmpty()) {
+        if (!isNullOrEmpty(folderName)) {
             path += folderName + File.separator;
         }
 
