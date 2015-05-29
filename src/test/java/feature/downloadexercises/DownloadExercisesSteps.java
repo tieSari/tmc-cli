@@ -47,23 +47,31 @@ public class DownloadExercisesSteps {
     private ArrayList<String> output;
     private ConfigHandler config;
     private WireMockServer wireMockServer;
+<<<<<<< HEAD
     
     /**
      * Set up server.
      * @throws IOException if server initializing fails
      */
+=======
+
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 5055;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+
+>>>>>>> origin/master
     @Before
     public void setUpServer() throws IOException {
-        wireMockServer = new WireMockServer(wireMockConfig().port(5055));
+        wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         config = new ConfigHandler();
-        config.writeServerAddress("http://127.0.0.1:5055");
+        config.writeServerAddress(SERVER_ADDRESS);
         server = new Server(null);
         ClientData.setUserData("pihla", "juuh");
         port = config.readPort();
         System.out.println(port);
         serverThread = new Thread(server);
         output = new ArrayList<>();
-        WireMock.configureFor("localhost", 5055);
+        configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
         serverThread.start();
 
@@ -107,8 +115,22 @@ public class DownloadExercisesSteps {
     public void user_has_logged_in(String username, String password) throws Throwable {
         createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
+<<<<<<< HEAD
         verify(getRequestedFor(urlEqualTo("/user")));
         // .withHeader("Authorization", containing("Basic cGlobGE6anV1aA==")));
+=======
+
+        // waiting for command to complete
+        while (true) {
+            String out = testClient.reply();
+            if (!(out != null && !out.equals("fail"))) {
+                break;
+            }
+        }
+
+        verify(getRequestedFor(urlEqualTo("/user"))
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
+>>>>>>> origin/master
     }
 
     /**
@@ -138,8 +160,13 @@ public class DownloadExercisesSteps {
      * @throws Throwable if something fails
      */
     @Then("^output should contain zip files and folders containing unzipped files$")
+<<<<<<< HEAD
     public void output_contains_zip_files_and_folders_containing_unzipped_files() throws Throwable {
         assertTrue(new File(tempDir.toAbsolutePath() + File.separator + "/viikko1").exists());
+=======
+    public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
+        assertTrue(new File(tempDir.toAbsolutePath() + File.separator + "2013_ohpeJaOhja" + File.separator + "viikko1").exists());
+>>>>>>> origin/master
     }
 
     /**
