@@ -2,25 +2,28 @@ package hy.tmc.cli.backendcommunication;
 
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
+
 import java.util.Arrays;
 
 public class SubmissionInterpreter {
 
     /**
-     * Seconds after which request times out
+     * Seconds after which request times out.
      */
     private final int timeOut = 30;
 
     /**
-     * Milliseconds to sleep between each poll attempt
+     * Milliseconds to sleep between each poll attempt.
      */
     private final int pollInterval = 1000;
 
     /**
-     * Returns a ready SubmissionResult with all fields complete after processing.
+     * Returns a ready SubmissionResult with all fields complete after
+     * processing.
      *
      * @param url url to make request to
-     * @return SubmissionResult containing details of submission. Null if timed out.
+     * @return SubmissionResult containing details of submission. Null if timed
+     * out.
      * @throws InterruptedException if thread failed to sleep
      */
     private SubmissionResult pollSubmissionUrl(String url) throws InterruptedException {

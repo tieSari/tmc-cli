@@ -1,29 +1,27 @@
 package hy.tmc.cli.backendcommunication;
 
 import static hy.tmc.cli.backendcommunication.authorization.Authorization.encode;
-import hy.tmc.cli.configuration.ClientData;
+import static org.apache.http.HttpHeaders.USER_AGENT;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+
+import hy.tmc.cli.configuration.ClientData;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-
-import static org.apache.http.HttpHeaders.USER_AGENT;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.apache.http.HttpEntity;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 
 public class UrlCommunicator {
 
@@ -33,12 +31,13 @@ public class UrlCommunicator {
      * Creates and executes post-request to specified URL.
      *
      * @param toBeUploaded File-object that gets attached to request.
-     * @param destionationURL
+     * @param destinationUrl destination of the url.
      * @return HttpResult that contains response from the server.
-     * @throws java.io.IOException
+     * @throws java.io.IOException if file is invalid.
      */
-    public static HttpResult makePostWithFile(File toBeUploaded, String destionationURL) throws IOException {
-        HttpPost httppost = new HttpPost(destionationURL);
+    public static HttpResult makePostWithFile(File toBeUploaded, String destinationUrl)
+            throws IOException {
+        HttpPost httppost = new HttpPost(destinationUrl);
         FileBody fileBody = new FileBody(toBeUploaded);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
@@ -58,7 +57,7 @@ public class UrlCommunicator {
      *
      * @param url URL to make request to
      * @param params Any amount of parameters for the request. params[0] is
-     * always username:password
+     always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
@@ -90,11 +89,11 @@ public class UrlCommunicator {
             File file,
             String... params) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-           
+
             HttpGet httpget = createGet(url, params);
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
-           
+
             return true;
         } catch (IOException e) {
             return false;
@@ -127,7 +126,8 @@ public class UrlCommunicator {
         httpRequest.setHeader("User-Agent", USER_AGENT);
     }
 
-    private static HttpResult getResponseResult(HttpRequestBase httpRequest) throws UnsupportedOperationException, IOException {
+    private static HttpResult getResponseResult(HttpRequestBase httpRequest) 
+            throws UnsupportedOperationException, IOException {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();
