@@ -25,9 +25,6 @@ public class CourseTest {
     private List<Exercise> exercises;
     private Exercise ex;
     
-    public CourseTest() {
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
