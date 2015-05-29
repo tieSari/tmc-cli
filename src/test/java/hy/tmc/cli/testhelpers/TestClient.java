@@ -25,15 +25,12 @@ public class TestClient {
         this.init();
     }
 
-    public void init() {
-        try {
+    public void init() throws IOException {
             this.socket = new Socket("localhost", portnumber);
             this.output = new PrintWriter(socket.getOutputStream(), true);
             this.input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
+
     }
     
     public boolean isClosedFromServer() {
