@@ -12,6 +12,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJSON;
@@ -90,6 +91,7 @@ public class SubmitSteps {
         testClient.init();
         String submitCommand = "submit path ";
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
+        System.out.println("SUBMITPATH: " + submitPath);
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
     }
@@ -107,5 +109,6 @@ public class SubmitSteps {
         serverThread.interrupt();
         wireMockServer.stop();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
+        ClientData.clearUserData();
     }
 }
