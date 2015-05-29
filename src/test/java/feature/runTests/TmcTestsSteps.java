@@ -45,7 +45,7 @@ public class TmcTestsSteps {
     }
 
     /**
-     * Test case when some tests fail.
+     * Test case when some tests fail and user gets information.
      */
     @Then("^the user sees which tests have failed$")
     public void theUserSeesWhichTestsHaveFailed() {
