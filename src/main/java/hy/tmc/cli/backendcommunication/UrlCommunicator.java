@@ -49,7 +49,6 @@ public class UrlCommunicator {
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("submission[file]", fileBody);
         addCredentials(httppost, ClientData.getFormattedUserData());
-
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
     }
