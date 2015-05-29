@@ -3,10 +3,9 @@ package hy.tmc.cli.zipping;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 
 import java.nio.file.Paths;
 import java.util.List;
