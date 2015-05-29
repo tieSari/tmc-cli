@@ -57,7 +57,7 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
         rootfinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
-        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
+        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath, exercise);
         assertEquals(submissionPath, result);
     }
@@ -67,7 +67,7 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
         rootfinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
-        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
+        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
@@ -77,7 +77,7 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
         rootfinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
-        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
+        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertNull(result);
     }
@@ -86,7 +86,7 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootfinder.setReturnValue(testPath);
         String exercise = "viikko1-Viikko1_001.Nimi";
-        String submissionPath = "https://tmc.mooc.fi/staging/submissions/1781.json?api_version=7";
+        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertNull(result);
     }
