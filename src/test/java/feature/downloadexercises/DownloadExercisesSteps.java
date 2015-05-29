@@ -1,6 +1,14 @@
 package feature.downloadexercises;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 import static org.junit.Assert.assertEquals;
@@ -16,9 +24,8 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 
-import org.junit.After;
-import org.junit.Before;
-
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -144,8 +151,11 @@ public class DownloadExercisesSteps {
      * @throws Throwable if something fails
      */
     @Then("^output should contain zip files and folders containing unzipped files$")
-    public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
-        assertTrue(new File(tempDir.toAbsolutePath() + File.separator + "2013_ohpeJaOhja" + File.separator + "viikko1").exists());
+    public void output_should_contain_zip_files_and_folders_containing_unzipped_files()
+            throws Throwable {
+        assertTrue(new File(tempDir.toAbsolutePath()
+                + File.separator + "2013_ohpeJaOhja"
+                + File.separator + "viikko1").exists());
     }
 
     /**
@@ -153,7 +163,8 @@ public class DownloadExercisesSteps {
      * @throws Throwable if something fails
      */
     @Then("^information about download progress\\.$")
-    public void information_about_download_progress() throws Throwable {
+    public void information_about_download_progress()
+            throws Throwable {
         System.out.println(output);
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
     }
