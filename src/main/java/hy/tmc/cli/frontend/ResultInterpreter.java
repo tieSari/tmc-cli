@@ -16,6 +16,12 @@ public class ResultInterpreter {
         this.result = result;
     }
 
+    /**
+     * Transform the RunResult given to this interpreter in its constructor into a human
+     * readable output.
+     * 
+     * @return a String representation of a RunResult 
+     */
     public String interpret() {
         switch (result.status) {
           case PASSED:

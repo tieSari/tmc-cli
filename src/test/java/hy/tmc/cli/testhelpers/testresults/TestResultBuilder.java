@@ -1,7 +1,9 @@
 package hy.tmc.cli.testhelpers.testresults;
 
 import com.google.common.collect.ImmutableList;
+
 import fi.helsinki.cs.tmc.langs.TestResult;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +15,15 @@ public class TestResultBuilder {
     private String errorMessage;
     private ArrayList<String> stackTrace;
 
+    /**
+     * A Builder to help creation of TestResults. All variables of the TestResult are
+     * guaranteed to be non-null, even if not set.
+     */
     public TestResultBuilder() {
         this.points = new ArrayList<>();
         this.stackTrace = new ArrayList<>();
+        this.name = "";
+        this.errorMessage = "";
     }
 
     public TestResultBuilder withName(String name) {
@@ -33,7 +41,7 @@ public class TestResultBuilder {
         return this;
     }
     
-    public TestResultBuilder withErrorMessage(String errMsg){
+    public TestResultBuilder withErrorMessage(String errMsg) {
         this.errorMessage = errMsg;
         return this;
     }
@@ -56,13 +64,5 @@ public class TestResultBuilder {
     public TestResult build() {
         return new TestResult(name, passed, ImmutableList.copyOf(points), errorMessage,
                 ImmutableList.copyOf(stackTrace));
-    }
-
-    public void clear() {
-        this.stackTrace.clear();
-        this.points.clear();
-        this.errorMessage = "";
-        this.name = "";
-        this.passed = false;
     }
 }
