@@ -50,7 +50,7 @@ public class DownloadExercisesSteps {
         System.out.println(port);
         serverThread = new Thread(server);
         output = new ArrayList<>();
-        WireMock.configureFor(SERVER_ADDRESS, SERVER_PORT);
+        configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
         serverThread.start();
 
