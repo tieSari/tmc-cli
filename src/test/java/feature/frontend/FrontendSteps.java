@@ -35,7 +35,7 @@ public class FrontendSteps {
         testClient = new TestClient(port);
     }
 
-    @Given("^a help command\\.$")
+    @Given("^help command\\.$")
     public void help_command() throws Throwable {
         testClient.sendMessage("help");
     }
