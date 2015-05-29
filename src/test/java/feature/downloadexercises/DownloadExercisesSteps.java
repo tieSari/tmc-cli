@@ -10,6 +10,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -155,6 +156,25 @@ public class DownloadExercisesSteps {
      * Closes server after test.
      * @throws IOException if server operations fail
      */
+    @Then("^\\.zip -files are removed\\.$")
+    public void zip_files_are_removed() throws Throwable {
+        String filepath = tempDir.toAbsolutePath().toString();
+        File[] paths = getFileArray(filepath);
+        boolean zips = false;
+        for (File path : paths) {
+            if (path.getAbsolutePath().toString().endsWith(".zip")) {
+                zips = true;
+            }
+        }
+        assertFalse(zips);
+    }
+    
+    public File[] getFileArray(String filepath) {
+        File fi = new File(filepath);
+        File[] paths = fi.listFiles();
+        return paths;
+    }
+
     @After
     public void closeServer() throws IOException {
         tempDir.toFile().delete();
