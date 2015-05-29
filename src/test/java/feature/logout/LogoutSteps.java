@@ -1,17 +1,21 @@
 package feature.logout;
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
+
+import org.junit.After;
+import org.junit.Before;
+
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
 import java.io.IOException;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class LogoutSteps {
 
@@ -20,6 +24,10 @@ public class LogoutSteps {
     private TestClient testClient;
     private Server server;
 
+    /**
+     * Read port from ConfigHandler, create test client and server.
+     * @throws IOException if server creating fails
+     */
     @Before
     public void initializeServer() throws IOException {
         ClientData.clearUserData();
@@ -30,8 +38,8 @@ public class LogoutSteps {
         testClient = new TestClient(port);
     }
 
-    @Given("^a logout command\\.$")
-    public void a_logout_command() throws Throwable {
+    @Given("^logout command\\.$")
+    public void logout_command() throws Throwable {
         ClientData.setUserData("Samu", "Samuonparas3443434334");
         testClient.sendMessage("logout");
     }
@@ -47,8 +55,8 @@ public class LogoutSteps {
         assertFalse(ClientData.userDataExists());
     }
 
-    @Given("^a logout command without being logged in\\.$")
-    public void a_logout_command_without_being_logged_in() throws Throwable {
+    @Given("^logout command without being logged in\\.$")
+    public void logout_command_without_being_logged_in() throws Throwable {
         testClient.sendMessage("logout");
     }
 
@@ -62,6 +70,10 @@ public class LogoutSteps {
         assertTrue(testClient.reply().contains("Nobody"));
     }
 
+    /**
+     * Clear ClientData and close server.
+     * @throws IOException if server closing fails
+     */
     @After
     public void closeAll() throws IOException {
         ClientData.clearUserData();
