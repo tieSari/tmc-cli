@@ -42,12 +42,12 @@
 init:
 
 -deps-jar-init:
-   [delete] Deleting: /home/ad/fshome6/u6/x/xtoxtox/Linux/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/built-jar.properties
+   [delete] Deleting: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/built-jar.properties
 
 deps-jar:
 
 -warn-already-built-jar:
-[propertyfile] Updating property file: /home/ad/fshome6/u6/x/xtoxtox/Linux/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/built-jar.properties
+[propertyfile] Updating property file: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/build/built-jar.properties
 
 -check-automatic-build:
 

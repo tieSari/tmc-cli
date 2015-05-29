@@ -1,26 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package hy.tmc.cli.domain;
+
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseTest {
     
     private Course course;
     private final int id = 7;
     private final String name = "ankka";
-    
-    public CourseTest() {
-    }
+    private List<Exercise> exercises;
+    private Exercise ex;
     
     @BeforeClass
     public static void setUpClass() {
@@ -29,12 +26,24 @@ public class CourseTest {
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
+    /**
+     * Setups an Course object for testing.
+     */
     @Before
     public void setUp() {
         course = new Course();
         course.setId(id);
         course.setName(name);
+        course.setDetailsUrl("http://mooc.fi/");
+
+        exercises = new ArrayList<>();
+        ex = new Exercise();
+        ex.setName("test");
+        ex.setId(2);
+        exercises.add(ex);
+
+        course.setExercises(exercises);
     }
     
     @After
@@ -53,13 +62,36 @@ public class CourseTest {
     }
     
     @Test
-    public void testGetID(){
+    public void testGetId() {
         assertEquals(id, course.getId());
     }
     
     @Test
-    public void testSetID(){
+    public void testSetId() {
         course.setId(888);
         assertEquals(888, course.getId());
+    }
+
+    @Test
+    public void testGetExercises() {
+        assertEquals(exercises,course.getExercises());
+    }
+
+    @Test
+    public void testSetExercises() {
+        List<Exercise> newExercises = new ArrayList<>();
+        course.setExercises(newExercises);
+        assertEquals(newExercises,course.getExercises());
+    }
+
+    @Test
+    public void testGetDetailsUrl() {
+        assertEquals("http://mooc.fi/", course.getDetailsUrl());
+    }
+
+    @Test
+    public void testSetDetailsUrl() {
+        course.setDetailsUrl("http://cs.helsinki.fi");
+        assertEquals("http://cs.helsinki.fi", course.getDetailsUrl());
     }
 }

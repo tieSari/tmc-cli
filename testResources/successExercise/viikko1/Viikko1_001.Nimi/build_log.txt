@@ -42,12 +42,20 @@
 init:
 
 -deps-jar-init:
+<<<<<<< HEAD
    [delete] Deleting: /home/ilari/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+=======
+   [delete] Deleting: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+>>>>>>> 106a3283c86b11abf90b0cb8d248165628c0c4ec
 
 deps-jar:
 
 -warn-already-built-jar:
+<<<<<<< HEAD
 [propertyfile] Updating property file: /home/ilari/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+=======
+[propertyfile] Updating property file: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+>>>>>>> 106a3283c86b11abf90b0cb8d248165628c0c4ec
 
 -check-automatic-build:
 

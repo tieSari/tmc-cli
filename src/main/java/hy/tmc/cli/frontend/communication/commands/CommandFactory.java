@@ -10,7 +10,7 @@ public class CommandFactory {
 
     /**
      * Maps command strings to objects.
-     * 
+     *
      * @param frontend that the commands will use
      * @param logic that the commands will use
      * @return A map of names to corresponding commands
@@ -28,6 +28,7 @@ public class CommandFactory {
         commandsByName.put("downloadExercises", downloadExercises(frontend, logic));
         commandsByName.put("logout", logout(frontend, logic));
         commandsByName.put("setServer", chooseServer(frontend, logic));
+        commandsByName.put("submit", submit(frontend, logic));
         commandsByName.put("runTests", runTests(frontend, logic));
         return commandsByName;
     }
@@ -135,10 +136,22 @@ public class CommandFactory {
      *
      * @param front frontend that the command will use
      * @param back logic that the command will use
-     * @return a lchooseServer object
+     * @return a chooseServer object
      */
     public static Command chooseServer(FrontendListener front, Logic back) {
         return new ChooseServer(front, back);
+    }
+    
+    /**
+     * Create a Submit Command object.
+     *
+     * @param front frontend that the command will use
+     * @param back logic that the command will use
+     * @return a Submit object
+     */
+    
+    public static Command submit(FrontendListener front, Logic back) {
+        return new Submit(front, back);
     }
 
     /**

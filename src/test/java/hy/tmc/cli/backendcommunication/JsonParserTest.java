@@ -1,12 +1,11 @@
-package hy.tmc.cli.backend_communication;
+package hy.tmc.cli.backendcommunication;
 
-import hy.tmc.cli.backendcommunication.HttpResult;
-import hy.tmc.cli.backendcommunication.UrlCommunicator;
-import hy.tmc.cli.backendcommunication.TmcJsonParser;
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.testhelpers.ExampleJSON;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.testhelpers.ExampleJson;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +17,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
-public class JSONParserTest {
+public class JsonParserTest {
 
+    /**
+     * Mocks UrlCommunicator.
+     */
     @Before
     public void setup() {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        HttpResult fakeResult = new HttpResult(ExampleJSON.allCoursesExample, 200, true);
+        HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
         
         ClientData.setUserData("chang", "paras");
         PowerMockito
@@ -57,8 +59,8 @@ public class JSONParserTest {
     }
 
     @Test
-    public void getsExercisesCorrectlyFromCourseJSON() {
-        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
+    public void getsExercisesCorrectlyFromCourseJson() {
+        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
                                                     Mockito.anyString()))
@@ -71,8 +73,8 @@ public class JSONParserTest {
     }
     
     @Test
-    public void getsLastExerciseOfCourseJSON() {
-        HttpResult fakeResult = new HttpResult(ExampleJSON.courseExample, 200, true);
+    public void getsLastExerciseOfCourseJson() {
+        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"), 
                                                     Mockito.anyString()))

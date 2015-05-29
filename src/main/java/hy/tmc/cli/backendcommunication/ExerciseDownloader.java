@@ -1,24 +1,22 @@
 package hy.tmc.cli.backendcommunication;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
-
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.http.client.HttpClient;
 
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
 import hy.tmc.cli.zipping.Unzipper;
 
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.client.HttpClient;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-
-
 
 public class ExerciseDownloader {
 
@@ -58,17 +56,38 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined.
+     */
+    public void downloadFiles(List<Exercise> exercises, String path) {
+        downloadFiles(exercises,path,null);
+    }
+
+    /**
+     * Method for downloading files if path where to download is defined.
+     * Also requires seperate folder name that will be created to defined path.
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
+     * @param folderName folder name of where exercises will be extracted (for example course name)
      */
-    public void downloadFiles(List<Exercise> exercises, String path) {
+    public void downloadFiles(List<Exercise> exercises, String path, String folderName) {
         int exCount = 0;
         path = getCorrectPath(path);
+
+        if (!isNullOrEmpty(folderName)) {
+            path += folderName + File.separator;
+        }
+
+        File coursePath = new File(path);
+
+        if (!coursePath.exists()) {
+            coursePath.mkdirs();
+        }
+
         for (Exercise exercise : exercises) {
             handleSingleExercise(exercise, exCount, exercises, path);
             exCount++;
         }
+
         if (this.front != null) {
             front.printLine(exercises.size() + " exercises downloaded.");
         }
@@ -76,8 +95,7 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Handles downloading, unzipping & telling user information,
-     * for single exercise.
+     * Handles downloading, unzipping & telling user information, for single exercise.
      *
      * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
@@ -92,37 +110,40 @@ public class ExerciseDownloader {
         try {
             unzipFile(filePath, path);
             deleteZip(filePath);
-        } catch (IOException | ZipException ex) {
+        }
+        catch (IOException | ZipException ex) {
             this.front.printLine("Unzipping exercise failed.");
         }
     }
-    
+
     /**
      * Delete .zip -file after unzipping.
+     *
      * @param filePath path to delete
      */
-    private void deleteZip(String filePath){
+    private void deleteZip(String filePath) {
         File file = new File(filePath);
         file.delete();
     }
 
     /**
-     * Unzips single file after downloading. 
+     * Unzips single file after downloading.
+     *
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath, String destinationPath) throws IOException, 
-            ZipException {
+    public void unzipFile(String unzipPath,
+                          String destinationPath) throws IOException, ZipException {
         UnzipDecider decider = new DefaultUnzipDecider();
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
 
         zipHandler.unzip();
-        
+
     }
 
     /**
      * Tells which exercise is currently being downloaded.
-     * 
+     *
      * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
      */
@@ -142,15 +163,15 @@ public class ExerciseDownloader {
     public String getCorrectPath(String path) {
         if (path == null) {
             path = "";
-        } else if (!path.isEmpty() && !path.endsWith("/")) {
-            path += "/";
+        } else if (!path.isEmpty() && !path.endsWith(File.separator)) {
+            path += File.separator + "";
         }
         return path;
     }
 
     /**
      * Get advantage percent in downloading single exercise.
-     * 
+     *
      * @param exCount order number of exercise in downloading
      * @param exercisesSize total amount of exercises that will be downloaded
      * @return percents
@@ -166,10 +187,8 @@ public class ExerciseDownloader {
      * @param path where to download
      */
     private static void downloadFile(String zipUrl, String path) {
-        System.out.println(zipUrl);
-        HttpClient client = UrlCommunicator.createClient();
         File file = new File(path);
-        UrlCommunicator.downloadFile(client, zipUrl, file,
+        UrlCommunicator.downloadFile(zipUrl, file,
                 ClientData.getFormattedUserData());
     }
 }

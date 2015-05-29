@@ -23,7 +23,6 @@
         </repository>
     </repositories>
 
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -143,12 +142,14 @@
                             <ignore>hy.tmc.cli.frontend.Result*</ignore>
                             <ignore>hy.tmc.cli.domain.Exercise*</ignore>
                             <ignore>hy.tmc.cli.Main*</ignore>
+                            <ignore>hy.tmc.cli.domain.submission</ignore>
                         </ignores>
                         <excludes>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.enum</exclude>
                             <exclude>hy/tmc/cli/frontend_communication/Result*.class</exclude>
                             <exclude>hy/tmc/cli/domain/Exercise*.class</exclude>
                             <exclude>hy/tmc/cli/Main*.class</exclude>
+                            <exclude>hy/tmc/cli/domain/submission/*</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->
@@ -392,6 +393,12 @@
             <version>11.0.2</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.3.5</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <reporting>
         <plugins>
@@ -400,7 +407,13 @@
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.3</version>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
         </plugins>
     </reporting>
 </project>
