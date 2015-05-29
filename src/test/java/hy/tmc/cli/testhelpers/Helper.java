@@ -2,9 +2,9 @@ package hy.tmc.cli.testhelpers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
@@ -34,17 +34,14 @@ public class Helper {
         return new ProcessBuilder(params).start();
     }
     
-    public String printOutput(String command, String cliPath) throws InterruptedException, IOException {
+    public String printOutput(String command,
+                              String cliPath) throws InterruptedException, IOException {
         Process pr = createProcess(command, cliPath, true);
         return readOutputFromProcess(pr);
     }
 
     /**
      * Read output from process.
-     * @param process
-     * @return
-     * @throws InterruptedException
-     * @throws IOException 
      */
     public String readOutputFromProcess(Process process) throws InterruptedException, IOException {
         process.waitFor();
@@ -69,9 +66,9 @@ public class Helper {
         return process;
     }
     
-    private void waitMilliseconds(int s) {
+    private void waitMilliseconds(int milliseconds) {
         try {
-            Thread.sleep(s);
+            Thread.sleep(milliseconds);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
