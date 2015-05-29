@@ -84,6 +84,15 @@ public class DownloadExercisesSteps {
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
+
+        // waiting for command to complete
+        while (true) {
+            String out = testClient.reply();
+            if (!(out != null && !out.equals("fail"))) {
+                break;
+            }
+        }
+
         verify(getRequestedFor(urlEqualTo("/user"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
