@@ -1,5 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.testhelpers.ExampleJSON;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
@@ -44,8 +45,11 @@ public class CourseSubmitterTest {
     @Test
     public void testFindCourseByCorrectPath() {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
-        courseSubmitter.findCourseByPath(path.split("/"));
-        //assert
+        Course course = courseSubmitter.findCourseByPath(path.split("/"));
+        assertEquals(7, course.getId());
+        final String path2 = "/home/kansio/toinen/OLEMATON/viikko_01";
+        Course course2 = courseSubmitter.findCourseByPath(path2.split("/"));
+        assertNull(null);
     }
     
     @Test
