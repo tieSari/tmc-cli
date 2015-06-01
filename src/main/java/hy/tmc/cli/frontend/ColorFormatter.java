@@ -6,7 +6,8 @@ public class ColorFormatter {
     private static final String clearFormatting = "\u001B[0m";
     
     /**
-     * Add color formatting codes to text.
+     * Add color formatting codes to text. 
+     * @color the foreground color to be used
      * @return a string that will be colored with the specified color
      */
     public static String coloredString(String text, CommandLineColor color) {
