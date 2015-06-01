@@ -1,5 +1,7 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.RootFinder;

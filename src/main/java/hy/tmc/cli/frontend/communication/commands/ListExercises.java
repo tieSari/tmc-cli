@@ -1,15 +1,14 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backendcommunication.TmcJsonParser;
+import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 
 public class ListExercises extends Command {
 
-    public ListExercises(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public ListExercises(FrontendListener front) {
+        super(front);
     }
 
     /**
