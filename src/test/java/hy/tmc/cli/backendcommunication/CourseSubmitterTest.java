@@ -28,7 +28,6 @@ public class CourseSubmitterTest {
 
     @Before
     public void setup() throws IOException {
-        System.out.println("LOL CHANG: " + new ConfigHandler().readCoursesAddress());
         new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
