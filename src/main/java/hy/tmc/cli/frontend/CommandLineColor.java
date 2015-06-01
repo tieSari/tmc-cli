@@ -36,6 +36,12 @@ public enum CommandLineColor {
 
     }
 
+    /**
+     * Get the color code corresponding to this color.
+     * 
+     * @param foreground true if you want the foreground code, false otherwise
+     * @return the foreground or background color code for this color
+     */
     public String getColorCode(boolean foreground) {
         if (foreground) {
             return generateCode(foregroundCode);

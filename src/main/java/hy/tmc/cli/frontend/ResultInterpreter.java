@@ -1,11 +1,12 @@
 package hy.tmc.cli.frontend;
 
-import fi.helsinki.cs.tmc.langs.RunResult;
-import fi.helsinki.cs.tmc.langs.TestResult;
 import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
 import static hy.tmc.cli.frontend.CommandLineColor.RED;
 import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
+
+import fi.helsinki.cs.tmc.langs.RunResult;
+import fi.helsinki.cs.tmc.langs.TestResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ResultInterpreter {
         return ColorFormatter.coloredString("Code did not compile.", RED, WHITE);
     }
     
-    private String allPassedOutput(){
+    private String allPassedOutput() {
         return ColorFormatter.coloredString("All tests passed.", GREEN) + " You can now submit";
     }
 
