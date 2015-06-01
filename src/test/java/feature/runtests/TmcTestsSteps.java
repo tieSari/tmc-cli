@@ -41,7 +41,8 @@ public class TmcTestsSteps {
     @Then("^the user sees that all tests have passed\\.$")
     public void theUserSeesAllTestsPassing() {
         String output = front.getMostRecentLine();
-        assertEquals("All tests passed. You can now submit", output);
+        assertTrue(output.contains("All tests passed.")); 
+        assertTrue(output.contains("You can now submit"));
     }
 
     /**
@@ -51,8 +52,8 @@ public class TmcTestsSteps {
     public void theUserSeesWhichTestsHaveFailed() {
         String output = front.getMostRecentLine();
         assertEquals("Some tests failed:", output.substring(0, 18));
-        assertTrue(output.contains("1 tests failed:\n"
-                + "  NimiTest test failed: Et tulostanut mitään!"));
+        assertTrue(output.contains("1 tests failed:\n"));
+        assertTrue(output.contains("  NimiTest test failed: Et tulostanut mitään!"));
     }
     
     /**
