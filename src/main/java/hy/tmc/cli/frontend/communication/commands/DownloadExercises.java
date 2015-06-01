@@ -4,6 +4,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.ExerciseDownloader;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -27,9 +28,8 @@ public class DownloadExercises extends Command {
      */
     @Override
     protected void functionality() {
-        List<Exercise> exercises = TmcJsonParser.getExercises(
-                Integer.parseInt(this.data.get("courseID")));
-        exDl.downloadFiles(exercises, this.data.get("pwd"));
+        Course course = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
+        exDl.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
     }
 
     /**
@@ -46,6 +46,10 @@ public class DownloadExercises extends Command {
         }
     }
 
+    /**
+     * Check that user has given also course id.
+     * @throws ProtocolException if course id is not a number
+     */
     private void checkCourseId() throws ProtocolException {
         if (!this.data.containsKey("courseID")) {
             throw new ProtocolException("Course ID required");

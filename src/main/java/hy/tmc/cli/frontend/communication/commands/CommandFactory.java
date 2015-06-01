@@ -58,6 +58,7 @@ public class CommandFactory {
     public static Command runTests(FrontendListener front){
         return new RunTests(front);
     }
+    
 
     /**
      * Create an Authenticate Command object.
@@ -123,12 +124,7 @@ public class CommandFactory {
      * Create a chooseServer Command object.
      *
      * @param front frontend that the command will use
-<<<<<<< HEAD
-     * @return a lchooseServer object
-=======
-     * @param back logic that the command will use
      * @return a chooseServer object
->>>>>>> 08a00310b08b9990e0004bcc2d7d3e99d8c72826
      */
     public static Command chooseServer(FrontendListener front) {
         return new ChooseServer(front);
@@ -145,6 +141,7 @@ public class CommandFactory {
     public static Command submit(FrontendListener front) {
         return new Submit(front);
     }
+    
 
     /**
      * Takes the command map and returns a set of command names.

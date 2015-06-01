@@ -1,19 +1,20 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.FrontendStub;
-import java.io.File;
-import java.io.IOException;
+
 import org.apache.commons.io.FileUtils;
+
 import org.junit.After;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ChooseServerTest {
 
@@ -32,7 +33,7 @@ public class ChooseServerTest {
     }
     
     @After
-    public void teardown(){
+    public void teardown() {
         new File(path).delete();
     }
 
@@ -48,30 +49,28 @@ public class ChooseServerTest {
         try {
             String propFile = FileUtils.readFileToString(new File(path));
             assertTrue(propFile.contains("tmc.ebin.fi"));
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("unable to read propertiesfile");
         }
     }
     
     @Test (expected = ProtocolException.class)
-    public void throwsExceptionWithoutData() throws ProtocolException{
+    public void throwsExceptionWithoutData() throws ProtocolException {
         chooser.checkData();
     }
     
     @Test
-    public void correctURLisAccepted() {
+    public void correctUrlisAccepted() {
         chooser.setParameter("tmc-server", "http://tmc.mooc.fi");
         try {
             chooser.checkData();
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             fail("checkData threw exception");
         }
     }
     
     @Test (expected = ProtocolException.class)
-    public void incorrectURLThrowsException() throws ProtocolException {
+    public void incorrectUrlThrowsException() throws ProtocolException {
         chooser.setParameter("tmc-server", "lak3jf02ja3fji23j");
         chooser.checkData();
     }

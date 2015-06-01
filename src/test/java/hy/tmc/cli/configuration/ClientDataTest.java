@@ -1,10 +1,22 @@
 package hy.tmc.cli.configuration;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static hy.tmc.cli.configuration.ClientData.*;
+import static hy.tmc.cli.configuration.ClientData.getFormattedUserData;
+import static hy.tmc.cli.configuration.ClientData.getPassword;
+import static hy.tmc.cli.configuration.ClientData.getUsername;
+import static hy.tmc.cli.configuration.ClientData.logOutCurrentUser;
+import static hy.tmc.cli.configuration.ClientData.setUserData;
+import static hy.tmc.cli.configuration.ClientData.userDataExists;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import hy.tmc.cli.domain.Course;
+
 import org.junit.Before;
+import org.junit.Test;
+
+
 
 public class ClientDataTest {
 
@@ -15,8 +27,8 @@ public class ClientDataTest {
 
     @Test
     public void initiallyUserDataIsInitialData() {
-        String s = getUsername() + getPassword();
-        assertTrue(s.isEmpty());
+        String st = getUsername() + getPassword();
+        assertTrue(st.isEmpty());
     }
 
     @Test
@@ -118,7 +130,7 @@ public class ClientDataTest {
      * Test of getPID method, of class ClientData.
      */
     @Test
-    public void testGetPID() {
+    public void testGetPid() {
         int expResult = 0;
         int result = ClientData.getPid();
         assertEquals(expResult, result);
@@ -128,17 +140,17 @@ public class ClientDataTest {
      * Test of setPID method, of class ClientData.
      */
     @Test
-    public void testSetPID() {
-        int PID = 123;
-        ClientData.setPid(PID);
-        assertEquals(PID, ClientData.getPid());
+    public void testSetPid() {
+        int pid = 123;
+        ClientData.setPid(pid);
+        assertEquals(pid, ClientData.getPid());
     }
 
     /**
      * Test of getUSERNAME method, of class ClientData.
      */
     @Test
-    public void testGetUSERNAME() {
+    public void testGetUsername() {
         String expResult = "";
         String result = ClientData.getUsername();
         assertEquals(expResult, result);
@@ -148,7 +160,7 @@ public class ClientDataTest {
      * Test of getPASSWORD method, of class ClientData.
      */
     @Test
-    public void testGetPASSWORD() {
+    public void testGetPassword() {
         String expResult = "";
         String result = ClientData.getPassword();
         assertEquals(expResult, result);
