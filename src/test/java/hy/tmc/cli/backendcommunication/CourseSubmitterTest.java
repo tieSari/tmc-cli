@@ -1,8 +1,11 @@
 package hy.tmc.cli.backendcommunication;
 
+<<<<<<< HEAD
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
+=======
+>>>>>>> 7e7a21132628c119da1f04ccfde7cba48da84eab
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;

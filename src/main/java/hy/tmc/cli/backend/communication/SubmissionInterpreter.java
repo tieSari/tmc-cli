@@ -1,6 +1,5 @@
 package hy.tmc.cli.backend.communication;
 
-import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
 

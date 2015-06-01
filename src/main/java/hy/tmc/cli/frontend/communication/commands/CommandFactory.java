@@ -58,7 +58,6 @@ public class CommandFactory {
     public static Command runTests(FrontendListener front){
         return new RunTests(front);
     }
-    
 
     /**
      * Create an Authenticate Command object.
@@ -141,7 +140,6 @@ public class CommandFactory {
     public static Command submit(FrontendListener front) {
         return new Submit(front);
     }
-    
 
     /**
      * Takes the command map and returns a set of command names.

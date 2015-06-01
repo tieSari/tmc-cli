@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-
 public class RunTestsTest {
 
     private FrontendStub front;
