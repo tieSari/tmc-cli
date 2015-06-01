@@ -2,6 +2,10 @@ package hy.tmc.cli.frontend;
 
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
+import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +29,28 @@ public class ResultInterpreter {
     public String interpret() {
         switch (result.status) {
           case PASSED:
-              return "All tests passed. You can now submit";
+              return allPassedOutput();
           case TESTS_FAILED:
               return testFailureReport();
           case COMPILE_FAILED:
-              return "Code did not compile.";
+              return compileErrorOutput();
           case GENERIC_ERROR:
-              return "Failed to run tests.";
+              return genericErrorOutput();
           default:
               throw new IllegalArgumentException("bad argument");
         }
+    }
+    
+    private String genericErrorOutput() {
+        return ColorFormatter.coloredString("Failed due to an internal error", RED, WHITE);
+    }
+    
+    private String compileErrorOutput() {
+        return ColorFormatter.coloredString("Code did not compile.", RED, WHITE);
+    }
+    
+    private String allPassedOutput(){
+        return ColorFormatter.coloredString("All tests passed.", GREEN) + " You can now submit";
     }
 
     private String testFailureReport() {
@@ -53,7 +69,8 @@ public class ResultInterpreter {
             builder.append("No tests passed.\n");
             return;
         }
-        builder.append(passedTests.size()).append(" tests passed:\n");
+        String passes = passedTests.size() + " tests passed:\n";
+        builder.append(coloredString(passes, GREEN));
         for (TestResult testResult : passedTests) {
             builder.append(testPadding).append(testResult.name).append("\n");
         }
@@ -61,7 +78,8 @@ public class ResultInterpreter {
 
     private void failedTests(StringBuilder builder) {
         List<TestResult> failures = getFailedTests();
-        builder.append(failures.size()).append(" tests failed:\n");
+        String fails = failures.size() + " tests failed:\n";
+        builder.append(coloredString(fails, RED));
         for (TestResult testResult : failures) {
             failedTestOutput(builder, testResult);
         }
