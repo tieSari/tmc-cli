@@ -80,8 +80,8 @@ public class DownloadExercisesSteps {
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withHeader("Content-Type", "text/json")));
-                        //.withBody(ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
 
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))

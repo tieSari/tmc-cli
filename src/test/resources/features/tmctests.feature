@@ -12,10 +12,6 @@ Feature: Test command
         Then the user sees which tests have failed
 
     Scenario: Test an exercise where some tests fail
-<<<<<<< HEAD
-        Given the user is in the exercise directory "testResources/halfdoneExercise/viikko1/Viikko1_015.TaysiIkaisyys"
-=======
         Given the user is in the exercise directory "testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat"
->>>>>>> 7e7a21132628c119da1f04ccfde7cba48da84eab
         When the user runs the tests
         Then the user sees both passed and failed tests
