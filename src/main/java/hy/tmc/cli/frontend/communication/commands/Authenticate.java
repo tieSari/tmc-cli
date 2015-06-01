@@ -1,12 +1,11 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.backendcommunication.UrlCommunicator.makeGetRequest;
+import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 
 public class Authenticate extends Command {
 
@@ -15,8 +14,8 @@ public class Authenticate extends Command {
      */
     private final String httpOk = "2..";
 
-    public Authenticate(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public Authenticate(FrontendListener front) {
+        super(front);
     }
 
     private String returnResponse(int statusCode) {

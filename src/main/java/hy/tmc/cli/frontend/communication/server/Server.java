@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.server;
 
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.logic.Logic;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,11 +25,10 @@ public class Server implements FrontendListener, Runnable {
 
     /**
      * Constructor for server.
-     * @param logic backend logic
      * @throws IOException if failed to write port to config file
      */
     
-    public Server(Logic logic) throws IOException {
+    public Server() throws IOException {
         try {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
@@ -38,13 +36,13 @@ public class Server implements FrontendListener, Runnable {
             System.out.println("Server creation failed");
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.parser = new ProtocolParser(this, logic);
+        this.parser = new ProtocolParser(this);
     }
     
     public int getCurrentPort() {
         return this.serverSocket.getLocalPort();
     }
-
+    
     /**
      * Start is general function to set up server listening for the frontend.
      */

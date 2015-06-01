@@ -1,12 +1,9 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
 
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.apache.commons.io.FileUtils;
@@ -17,23 +14,25 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 
 public class ChooseServerTest {
 
     private ChooseServer chooser;
     private final FrontendStub frontendMock;
-    private final Logic logic;
     private final String path = "testResources/test.properties";
 
     public ChooseServerTest() {
-        this.logic = new Logic();
         this.frontendMock = new FrontendStub();
     }
 
     @Before
     public void setup() {
         this.chooser = new ChooseServer(new ConfigHandler(path), 
-                this.frontendMock, this.logic);
+                this.frontendMock);
     }
     
     @After
