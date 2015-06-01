@@ -1,6 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
-import hy.tmc.cli.backendcommunication.HttpResult;
+import hy.tmc.cli.backend.communication.HttpResult;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
