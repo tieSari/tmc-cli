@@ -1,19 +1,22 @@
 package hy.tmc.cli.frontend;
 
 import fi.helsinki.cs.tmc.langs.RunResult;
+import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
 import fi.helsinki.cs.tmc.langs.TestResult;
-
+import hy.tmc.cli.frontend.formatters.ResultFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResultInterpreter {
 
     private final RunResult result;
+    private final ResultFormatter formatter;
     private final String testPadding = "  ";
     private final String stackTracePadding = testPadding + " ";
 
-    public ResultInterpreter(RunResult result) {
+    public ResultInterpreter(RunResult result, ResultFormatter formatter) {
         this.result = result;
+        this.formatter = formatter;
     }
 
     /**
@@ -23,23 +26,16 @@ public class ResultInterpreter {
      * @return a String representation of a RunResult 
      */
     public String interpret() {
-        switch (result.status) {
-          case PASSED:
-              return "All tests passed. You can now submit";
-          case TESTS_FAILED:
-              return testFailureReport();
-          case COMPILE_FAILED:
-              return "Code did not compile.";
-          case GENERIC_ERROR:
-              return "Failed to run tests.";
-          default:
-              throw new IllegalArgumentException("bad argument");
+        if(result.status == TESTS_FAILED){
+            return testFailureReport();
+        } else {
+            return formatter.interpretStatus(result);
         }
     }
 
     private String testFailureReport() {
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append("Some tests failed:\n");
+        reportBuilder.append(formatter.someTestsFailed());
 
         succesfulTests(reportBuilder);
         failedTests(reportBuilder);
@@ -50,38 +46,24 @@ public class ResultInterpreter {
     private void succesfulTests(StringBuilder builder) {
         List<TestResult> passedTests = getPassedTests();
         if (passedTests.isEmpty()) {
-            builder.append("No tests passed.\n");
+            builder.append(formatter.noTestsPassed());
             return;
-        }
-        builder.append(passedTests.size()).append(" tests passed:\n");
-        for (TestResult testResult : passedTests) {
-            builder.append(testPadding).append(testResult.name).append("\n");
-        }
+        }   
+        builder.append(formatter.howMuchTestsPassed(passedTests.size()));
+        builder.append(formatter.getPassedTests(passedTests));
     }
 
     private void failedTests(StringBuilder builder) {
         List<TestResult> failures = getFailedTests();
-        builder.append(failures.size()).append(" tests failed:\n");
+        builder.append(formatter.howMuchTestsFailed(failures.size()));
         for (TestResult testResult : failures) {
             failedTestOutput(builder, testResult);
         }
     }
 
     private void failedTestOutput(StringBuilder builder, TestResult testResult) {
-        builder.append(testPadding);
-        builder.append(testResult.name)
-                .append(" failed: ")
-                .append(testResult.errorMessage)
-                .append("\n");
-        builder.append(stackTrace(testResult)).append("\n");
-    }
-
-    private String stackTrace(TestResult testResult) {
-        StringBuilder builder = new StringBuilder();
-        for (String line : testResult.backtrace) {
-            builder.append(stackTracePadding).append(line).append("\n");
-        }
-        return builder.toString();
+        builder.append(formatter.getFailedTestOutput(testResult));
+        builder.append(formatter.getStackTrace(testResult));
     }
 
     private List<TestResult> getPassedTests() {
