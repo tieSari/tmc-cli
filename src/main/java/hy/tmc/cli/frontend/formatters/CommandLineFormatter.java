@@ -12,7 +12,8 @@ public class CommandLineFormatter implements ResultFormatter {
     private String stackTracePadding;
     
     /**
-     * CommandLineFormatter gives result explainings for command line user interface. ResultInterpreter class uses this class. 
+     * CommandLineFormatter gives result explainings for command line user interface. 
+     * ResultInterpreter class uses this class. 
      */
     public CommandLineFormatter() {
         this.testPadding = "  ";

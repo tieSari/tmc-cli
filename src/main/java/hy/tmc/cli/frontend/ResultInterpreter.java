@@ -11,8 +11,6 @@ public class ResultInterpreter {
 
     private final RunResult result;
     private final ResultFormatter formatter;
-    private final String testPadding = "  ";
-    private final String stackTracePadding = testPadding + " ";
 
     public ResultInterpreter(RunResult result, ResultFormatter formatter) {
         this.result = result;
