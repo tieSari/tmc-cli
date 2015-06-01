@@ -1,11 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
-<<<<<<< HEAD:src/test/java/hy/tmc/cli/frontend/communication/commands/ChooseServerTest.java
-=======
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
->>>>>>> 7e7a21132628c119da1f04ccfde7cba48da84eab:src/test/java/hy/tmc/cli/frontend/communication/commands/ChooseServerTest.java
+
 
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -19,12 +14,10 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-<<<<<<< HEAD:src/test/java/hy/tmc/cli/frontend/communication/commands/ChooseServerTest.java
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-=======
->>>>>>> 7e7a21132628c119da1f04ccfde7cba48da84eab:src/test/java/hy/tmc/cli/frontend/communication/commands/ChooseServerTest.java
+
 
 public class ChooseServerTest {
 
