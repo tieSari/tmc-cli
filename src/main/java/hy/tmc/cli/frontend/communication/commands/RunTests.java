@@ -3,12 +3,11 @@ package hy.tmc.cli.frontend.communication.commands;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.frontend.formatters.CommandLineFormatter;
 import hy.tmc.cli.logic.Logic;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -37,8 +36,8 @@ public class RunTests extends Command {
     public void runTests(Path exercise) throws NoLanguagePluginFoundException {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         RunResult result = taskExecutor.runTests(exercise);
-        
-        ResultInterpreter resInt = new ResultInterpreter(result);
+        CommandLineFormatter formatter = new CommandLineFormatter();
+        ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         String res = resInt.interpret();
         
         this.frontend.printLine(res);
