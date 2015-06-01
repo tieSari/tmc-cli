@@ -23,7 +23,7 @@ public class TmcJsonParser {
      * Get JSON-data from url.
      *
      * @param url url from which the object data is fetched
-     * @return JSON-object containing JSON-data
+     * @return JSON-object
      */
     private static JsonObject getJsonFrom(String url) {
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
@@ -66,19 +66,6 @@ public class TmcJsonParser {
     }
 
     /**
-     * @param courseId
-     * @return Course-object by id
-     */
-    public static Course getCourse(int courseId) {
-        JsonObject jsonObject = getJsonFrom(new ConfigHandler()
-                .getCourseUrl(courseId));
-        Gson mapper = new Gson();
-        Course course = mapper
-                .fromJson(jsonObject.getAsJsonObject("course"), Course.class);
-        return course;
-    }
-
-    /**
      * Get all exercise names of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
@@ -92,6 +79,28 @@ public class TmcJsonParser {
             asString.append("\n");
         }
         return asString.toString();
+    }
+
+    /**
+     * Get information about course specified by the course ID.
+     * @return an course Object (parsed from JSON)
+     */
+    public static Course getCourse(int courseID) {
+        ConfigHandler confighandler = new ConfigHandler();
+        return getCourse(confighandler.getCourseUrl(courseID));
+    }
+
+    /**
+     * Get information about course specified by the URL path
+     * to course JSON.
+     * @param courseUrl URL path to course JSON
+     * @return an Course object (parsed from JSON)
+     */
+    public static Course getCourse(String courseUrl) {
+        JsonObject courseJson = getJsonFrom(courseUrl);
+        Gson mapper = new Gson();
+        Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
+        return course;
     }
 
     /**
@@ -122,12 +131,8 @@ public class TmcJsonParser {
      * @return List of all exercises as Exercise-objects
      */
     public static List<Exercise> getExercises(String courseUrl) {
-        JsonObject course = getJsonFrom(courseUrl);
-        Gson mapper = new Gson();
-        Exercise[] exercises = mapper
-                .fromJson(course.getAsJsonObject("course").get("exercises"),
-                        Exercise[].class);
-        return Arrays.asList(exercises);
+        Course course = getCourse(courseUrl);
+        return course.getExercises();
     }
     
     /**
@@ -150,7 +155,7 @@ public class TmcJsonParser {
      */
     
     public static String getSubmissionUrl(HttpResult result) {
-        JsonElement jelement = new JsonParser().parse(result.getData());
+        JsonElement jelement = new JsonParser().parse(result.getData());        
         JsonObject  jobject = jelement.getAsJsonObject();
         return jobject.get("submission_url").getAsString();
     }

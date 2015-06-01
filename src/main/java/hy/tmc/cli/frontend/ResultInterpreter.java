@@ -10,7 +10,7 @@ public class ResultInterpreter {
 
     private final RunResult result;
     private final String testPadding = "  ";
-    private final String stackTracePadding = testPadding + " "; 
+    private final String stackTracePadding = testPadding + " ";
 
     public ResultInterpreter(RunResult result) {
         this.result = result;

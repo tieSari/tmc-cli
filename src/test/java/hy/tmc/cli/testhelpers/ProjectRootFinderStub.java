@@ -22,7 +22,7 @@ public class ProjectRootFinderStub implements RootFinder {
 
     @Override
     public Path getRootDirectory(Path zipRoot) {
-        return zipRoot;
+        return Paths.get(returnValue);
     }
 
 }

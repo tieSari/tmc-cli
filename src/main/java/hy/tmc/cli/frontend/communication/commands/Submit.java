@@ -7,6 +7,7 @@ import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
+import hy.tmc.cli.zipping.Zipper;
 
 import java.io.IOException;
 
@@ -14,27 +15,36 @@ import java.io.IOException;
  * Submit command for submitting exercises to TMC
  */
 public class Submit extends Command {
-
+    
     public Submit(FrontendListener front) {
         super(front);
     }
 
     /**
-     * Takes a pwd command's output in "path" and optionally the exercise's name
-     * in "exerciseName".
+     * Takes a pwd command's output in "path" and optionally the exercise's name in "exerciseName".
      */
     @Override
     protected void functionality() {
-        CourseSubmitter submitter = new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()));
+        CourseSubmitter submitter = new CourseSubmitter(
+                new ProjectRootFinder(
+                        new DefaultRootDetector()
+                ),
+                new Zipper()
+        );
         try {
             if (data.containsKey("exerciseName")) {
-                String returnUrl = submitter.submit(data.get("path"), data.get("exerciseName"));
-                frontend.printLine(new SubmissionInterpreter().resultSummary(returnUrl, true));
+//                String returnUrl = submitter.submit(data.get("path"), data.get("exerciseName"));
+//                frontend.printLine(new SubmissionInterpreter().resultSummary(returnUrl, true));
+                frontend.printLine("Doesnt work yet");
             } else {
                 String returnUrl = submitter.submit(data.get("path"));
                 frontend.printLine(new SubmissionInterpreter().resultSummary(returnUrl, true));
             }
-        } catch (IOException | InterruptedException ex) {
+        }
+        catch (IllegalArgumentException ex) {
+            frontend.printLine(ex.getMessage());
+        }
+        catch (IOException | InterruptedException ex) {
             frontend.printLine("Project not found with specified parameters or thread interrupted");
         }
     }

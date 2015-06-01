@@ -1,18 +1,22 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backend.communication.authorization.Authorization;
+
+import static org.junit.Assert.assertTrue;
+
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
-import hy.tmc.cli.frontend.communication.commands.Authenticate;
+import hy.tmc.cli.backend.communication.authorization.Authorization;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import hy.tmc.cli.testhelpers.FrontendStub;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
+
 import org.mockito.Mockito;
+
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -21,11 +25,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(UrlCommunicator.class)
 public class AuthenticateTest {
 
-    final private String testUsername = "test";
-    final private String testPassword = "1234";
+    private final String testUsername = "test";
+    private final String testPassword = "1234";
     private Authenticate auth;
     private FrontendStub serverMock;
 
+    /**
+     * Set up server mock and Authenticate command.
+     */
     @Before
     public void setUp() {
         this.serverMock = new FrontendStub();

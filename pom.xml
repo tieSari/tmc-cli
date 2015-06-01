@@ -11,9 +11,15 @@
 
     <repositories>
         <repository>
-            <id>in-project</id>
-            <name>In Project Repo</name>
-            <url>file://${project.basedir}/lib</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <id>org</id>
+            <name>tmccli</name>
+            <url>http://tmc-cli.jvn.lu/maven2/</url>
+            <layout>default</layout>
         </repository>
     </repositories>
 
@@ -401,7 +407,13 @@
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.3</version>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
         </plugins>
     </reporting>
 </project>
