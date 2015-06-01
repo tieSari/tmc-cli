@@ -2,16 +2,10 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.FrontendStub;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +18,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)

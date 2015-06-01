@@ -2,7 +2,6 @@ package hy.tmc.cli.backend.communication;
 
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.RootFinder;
@@ -18,8 +17,8 @@ import java.util.List;
 
 public class CourseSubmitter {
 
-    private final RootFinder rootFinder;
-    private final ZipMaker zipper;
+    private RootFinder rootFinder;
+    private ZipMaker zipper;
 
     public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
         this.zipper = zipper;

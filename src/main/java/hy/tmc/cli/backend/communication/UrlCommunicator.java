@@ -3,7 +3,6 @@ package hy.tmc.cli.backend.communication;
 import static hy.tmc.cli.backend.communication.authorization.Authorization.encode;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -12,7 +11,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
@@ -44,13 +42,12 @@ public class UrlCommunicator {
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
     }
-    
+
     private static void addFileToRequest(FileBody fileBody, HttpPost httppost) {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("submission[file]", fileBody);
         addCredentials(httppost, ClientData.getFormattedUserData());
-
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
     }
@@ -91,15 +88,14 @@ public class UrlCommunicator {
             String url,
             File file,
             String... params) {
-        
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+
             HttpGet httpget = createGet(url, params);
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
 
             return true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return false;
         }
     }

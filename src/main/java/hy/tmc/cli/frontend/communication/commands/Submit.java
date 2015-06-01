@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
@@ -10,6 +11,7 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 
 import java.io.IOException;
+import static javax.swing.text.html.HTML.Tag.HEAD;
 
 /**
  * Submit command for submitting exercises to TMC
