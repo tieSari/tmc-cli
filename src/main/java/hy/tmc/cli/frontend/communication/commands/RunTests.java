@@ -7,15 +7,14 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RunTests extends Command {
 
-    public RunTests(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public RunTests(FrontendListener front) {
+        super(front);
     }
 
     @Override

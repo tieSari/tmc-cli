@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,22 +13,15 @@ public abstract class Command {
      */
     protected final FrontendListener frontend;
 
-    /**
-     * The backend logic this command calls.
-     */
-    protected final Logic backend;
-
     protected Map<String, String> data;
 
     /**
      * Constructor sets frontend and backend.
      *
      * @param front frontend
-     * @param backend backend logic
      */
-    public Command(FrontendListener front, Logic backend) {
+    public Command(FrontendListener front) {
         this.frontend = front;
-        this.backend = backend;
         data = new HashMap();
     }
 
