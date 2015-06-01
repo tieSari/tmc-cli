@@ -1,9 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
-<<<<<<< HEAD
 import hy.tmc.cli.backend.communication.HttpResult;
-=======
->>>>>>> 7e7a21132628c119da1f04ccfde7cba48da84eab
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

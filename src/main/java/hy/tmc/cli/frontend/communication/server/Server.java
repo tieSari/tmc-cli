@@ -42,6 +42,7 @@ public class Server implements FrontendListener, Runnable {
     public int getCurrentPort() {
         return this.serverSocket.getLocalPort();
     }
+    
     /**
      * Start is general function to set up server listening for the frontend.
      */
