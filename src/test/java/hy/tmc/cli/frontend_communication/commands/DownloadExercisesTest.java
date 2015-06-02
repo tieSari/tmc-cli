@@ -27,7 +27,7 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        DownloadExercises de = new DownloadExercises(front,null);
+        DownloadExercises de = new DownloadExercises(front);
         de.setParameter("pwd", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         try {
@@ -42,7 +42,7 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataFail() {
-        DownloadExercises de = new DownloadExercises(front,null);
+        DownloadExercises de = new DownloadExercises(front);
         try {
             de.checkData();
             fail("testCheckDataFail should have failed");
@@ -56,7 +56,7 @@ public class DownloadExercisesTest {
      */
     @Test
     public void courseIdNotANumber() {
-        DownloadExercises de = new DownloadExercises(front,null);
+        DownloadExercises de = new DownloadExercises(front);
         de.setParameter("pwd", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "not a number");
         try {

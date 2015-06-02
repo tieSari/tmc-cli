@@ -1,25 +1,26 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backendcommunication.CourseSubmitter;
-import hy.tmc.cli.backendcommunication.SubmissionInterpreter;
+
+import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 
 import java.io.IOException;
+import static javax.swing.text.html.HTML.Tag.HEAD;
 
 /**
  * Submit command for submitting exercises to TMC
  */
 public class Submit extends Command {
     
-    public Submit(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public Submit(FrontendListener front) {
+        super(front);
     }
 
     /**
