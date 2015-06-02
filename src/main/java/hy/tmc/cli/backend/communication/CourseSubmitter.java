@@ -1,7 +1,5 @@
 package hy.tmc.cli.backend.communication;
 
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.RootFinder;
@@ -13,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 
 public class CourseSubmitter {
@@ -71,7 +70,7 @@ public class CourseSubmitter {
     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
         System.out.println("Post URL: " + url);
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new File(submissionZipPath), url
+                new File(submissionZipPath), url, null
         );
         return TmcJsonParser.getSubmissionUrl(result);
     }

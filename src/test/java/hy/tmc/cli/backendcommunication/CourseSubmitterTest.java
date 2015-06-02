@@ -11,6 +11,7 @@ import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -103,7 +104,8 @@ public class CourseSubmitterTest {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(File.class),
-                                Mockito.contains(url)))
+                                Mockito.contains(url),
+                                Mockito.any(Map.class)))
                 .thenReturn(fakeResult);
     }
 }
