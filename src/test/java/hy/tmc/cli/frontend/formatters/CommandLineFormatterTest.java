@@ -44,7 +44,7 @@ public class CommandLineFormatterTest {
     @Test
     public void testInterpretStatus(){
         String explanation = formatter.interpretStatus(allPassed);
-        assertTrue(explanation.contains("All tests passed. You can now submit"));
+        assertTrue(explanation.contains("All tests passed"));
     }
     
     @Test
