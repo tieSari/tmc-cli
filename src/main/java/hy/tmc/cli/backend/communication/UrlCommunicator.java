@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Map;
 
 public class UrlCommunicator {
@@ -33,14 +34,15 @@ public class UrlCommunicator {
      *
      * @param toBeUploaded File-object that gets attached to request.
      * @param destinationUrl destination of the url.
+     * @param headers
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public static HttpResult makePostWithFile(File toBeUploaded, 
-                                              String destinationUrl,
-                                              Map<String, String> headers) 
-                                              throws IOException {
-   
+    public static HttpResult makePostWithFile(File toBeUploaded,
+            String destinationUrl,
+            Map<String, String> headers)
+            throws IOException {
+
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         FileBody fileBody = new FileBody(toBeUploaded);
@@ -61,15 +63,15 @@ public class UrlCommunicator {
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is
-     always username:password
+     * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
         try {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
@@ -100,7 +102,8 @@ public class UrlCommunicator {
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
 
             return true;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return false;
         }
     }
@@ -130,22 +133,22 @@ public class UrlCommunicator {
         httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
         httpRequest.setHeader("User-Agent", USER_AGENT);
     }
-    
+
     /**
      * Adds headers to request if present.
+     *
      * @param httppost
-     * @param headers 
+     * @param headers
      */
     private static void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
-        if (headers == null) {
-            return;
-        }
-        for (String header : headers.keySet()) {
-            httpRequest.addHeader(header, headers.get(header));
+        if (headers != null) {
+            for (String header : headers.keySet()) {
+                httpRequest.addHeader(header, headers.get(header));
+            }
         }
     }
 
-    private static HttpResult getResponseResult(HttpRequestBase httpRequest) 
+    private static HttpResult getResponseResult(HttpRequestBase httpRequest)
             throws UnsupportedOperationException, IOException {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);
