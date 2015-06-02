@@ -3,21 +3,23 @@ package hy.tmc.cli.frontend.communication.commands;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
+
+import hy.tmc.cli.frontend.formatters.CommandLineFormatter;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import static javax.swing.text.html.HTML.Tag.HEAD;
 
 public class RunTests extends Command {
 
-    public RunTests(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public RunTests(FrontendListener front) {
+        super(front);
     }
 
     @Override
@@ -46,8 +48,8 @@ public class RunTests extends Command {
         RunResult result = taskExecutor.runTests(exercise);
         
         boolean showStackTrace = this.data.containsKey("verbose");
-        
-        ResultInterpreter resInt = new ResultInterpreter(result);
+        CommandLineFormatter formatter = new CommandLineFormatter();
+        ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         String res = resInt.interpret(showStackTrace);
         
         this.frontend.printLine(res);

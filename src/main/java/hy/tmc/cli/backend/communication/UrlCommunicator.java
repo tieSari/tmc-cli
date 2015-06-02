@@ -1,6 +1,6 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
-import static hy.tmc.cli.backendcommunication.authorization.Authorization.encode;
+import static hy.tmc.cli.backend.communication.authorization.Authorization.encode;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
 import org.apache.http.HttpEntity;

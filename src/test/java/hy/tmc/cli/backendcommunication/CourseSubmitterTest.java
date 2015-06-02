@@ -1,11 +1,17 @@
 package hy.tmc.cli.backendcommunication;
 
+import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
+import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
 import java.io.File;
 import java.io.IOException;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import org.junit.Before;
@@ -25,13 +31,21 @@ public class CourseSubmitterTest {
 
     @Before
     public void setup() throws IOException {
+        System.out.println("LOL CHANG: " + new ConfigHandler().readCoursesAddress());
+        new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
+        ClientData.setUserData("chang", "rajani");
         
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
+    }
+    
+    @After
+    public void clear() {
+        ClientData.clearUserData();
     }
 
     @Test
@@ -66,8 +80,6 @@ public class CourseSubmitterTest {
     public void testSubmitWithNonexistentExercise() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
         rootFinder.setReturnValue(testPath);
-        String exercise = "viikko1-Viikko1_001.Nimi";
-        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertNull(result);
     }
@@ -76,8 +88,6 @@ public class CourseSubmitterTest {
     public void submitWithNonExistentCourseThrowsException() throws IOException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
-        String exercise = "viikko1-Viikko1_001.Nimi";
-        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertNull(result);
     }

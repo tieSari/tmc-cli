@@ -1,12 +1,12 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
@@ -20,7 +20,7 @@ public class LogoutTest {
     @Before
     public void setup() {
         front = new FrontendStub();
-        logout = new Logout(front, new Logic());
+        logout = new Logout(front);
     }
 
     @Test

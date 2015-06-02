@@ -1,5 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
+import hy.tmc.cli.backend.communication.HttpResult;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

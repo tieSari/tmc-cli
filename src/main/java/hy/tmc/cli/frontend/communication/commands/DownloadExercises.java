@@ -2,15 +2,13 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 
-import hy.tmc.cli.backendcommunication.ExerciseDownloader;
-import hy.tmc.cli.backendcommunication.TmcJsonParser;
+
+import hy.tmc.cli.backend.communication.ExerciseDownloader;
+import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.logic.Logic;
 
-import java.util.List;
 
 public class DownloadExercises extends Command {
 
@@ -19,8 +17,8 @@ public class DownloadExercises extends Command {
      */
     private ExerciseDownloader exDl;
 
-    public DownloadExercises(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public DownloadExercises(FrontendListener front) {
+        super(front);
         this.exDl = new ExerciseDownloader(front);
     }
 
