@@ -1,6 +1,9 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
+
+import java.util.List;
 
 public class ServerMock implements FrontendListener{
 
@@ -18,6 +21,11 @@ public class ServerMock implements FrontendListener{
     @Override
     public void printLine(String line) {
         this.printedLines.append(line);
+    }
+
+    @Override
+    public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
+
     }
 
     public String getPrintedLine() {

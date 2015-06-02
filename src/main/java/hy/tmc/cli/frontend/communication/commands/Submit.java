@@ -3,6 +3,7 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.backendcommunication.CourseSubmitter;
 import hy.tmc.cli.backendcommunication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.logic.Logic;
@@ -39,7 +40,15 @@ public class Submit extends Command {
                 frontend.printLine("Doesnt work yet");
             } else {
                 String returnUrl = submitter.submit(data.get("path"));
-                frontend.printLine(new SubmissionInterpreter().resultSummary(returnUrl, true));
+                SubmissionInterpreter submissionInterpreter = new SubmissionInterpreter();
+                SubmissionResult submissionResult = submissionInterpreter.getSubmissionResult(returnUrl);
+                String summary = submissionInterpreter.resultSummary(true);
+                frontend.printLine(summary);
+
+                if (submissionResult.isAllTestsPassed()) {
+                    frontend.feedback(submissionResult.getFeedbackQuestions(),
+                            submissionResult.getFeedbackAnswerUrl());
+                }
             }
         }
         catch (IllegalArgumentException ex) {

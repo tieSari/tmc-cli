@@ -2,6 +2,8 @@ package hy.tmc.cli.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class SubmissionResult {
 
     @SerializedName("api_version")
@@ -24,7 +26,7 @@ public class SubmissionResult {
     @SerializedName("test_cases")
     private TestCase[] testCases;
     @SerializedName("feedback_questions")
-    private String[] feedbackQuestions;
+    private List<FeedbackQuestion> feedbackQuestions;
     @SerializedName("feedback_answer_url")
     private String feedbackAnswerUrl;
     @SerializedName("solution_url")
@@ -45,11 +47,11 @@ public class SubmissionResult {
         this.testCases = testCases;
     }
 
-    public String[] getFeedbackQuestions() {
+    public List<FeedbackQuestion> getFeedbackQuestions() {
         return feedbackQuestions;
     }
 
-    public void setFeedbackQuestions(String[] feedbackQuestions) {
+    public void setFeedbackQuestions(List<FeedbackQuestion> feedbackQuestions) {
         this.feedbackQuestions = feedbackQuestions;
     }
 

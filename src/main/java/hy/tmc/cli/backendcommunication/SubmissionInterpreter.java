@@ -1,9 +1,11 @@
 package hy.tmc.cli.backendcommunication;
 
+import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SubmissionInterpreter {
 
@@ -16,6 +18,9 @@ public class SubmissionInterpreter {
      * Milliseconds to sleep between each poll attempt.
      */
     private final int pollInterval = 1000;
+
+    private SubmissionResult latestResult;
+
 
     /**
      * Returns a ready SubmissionResult with all fields complete after
@@ -39,16 +44,32 @@ public class SubmissionInterpreter {
     }
 
     /**
+     * Returns feedback questions from the latest submission result.
+     */
+    public List<FeedbackQuestion> getFeedbackQuestions() {
+        return latestResult.getFeedbackQuestions();
+    }
+
+    /**
      * Organizes SubmissionResult into human-readable form.
      *
-     * @param url String of url to poll results from.
      * @param detailed true for stack trace, always show successful.
      * @return a String containing human-readable information about tests.
      * @throws InterruptedException if thread was interrupted.
      */
-    public String resultSummary(String url, boolean detailed) throws InterruptedException {
-        SubmissionResult result = pollSubmissionUrl(url);
-        return summarize(result, detailed);
+    public String resultSummary(boolean detailed) throws InterruptedException {
+        return summarize(latestResult, detailed);
+    }
+
+    /**
+     * Get a new submissionResult. This will update the classes state so that calls to methods
+     * like resultSummary will be based on the submissionResult fetched by this method.
+     *
+     * @param url the submission url
+     */
+    public SubmissionResult getSubmissionResult(String url) throws InterruptedException {
+        latestResult = pollSubmissionUrl(url);
+        return latestResult;
     }
 
     private String summarize(SubmissionResult result, boolean detailed) {

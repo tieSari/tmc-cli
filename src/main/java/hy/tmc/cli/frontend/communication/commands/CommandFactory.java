@@ -1,9 +1,11 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class CommandFactory {
@@ -168,6 +170,11 @@ public class CommandFactory {
 
             @Override
             public void printLine(String line) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };

@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.logic.Logic;
 
@@ -12,6 +13,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -137,5 +139,23 @@ public class Server implements FrontendListener, Runnable {
             System.out.println("Printlinessa");
         }
         System.out.println(outputLine);
+    }
+
+    @Override
+    public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
+        for (FeedbackQuestion question : feedbackQuestions) {
+            printLine(question.getQuestion() + ": ");
+
+            String answer;
+            try {
+                answer = readCommandFromClient(clientSocket);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+
+        }
+        printLine("no more questions");
     }
 }
