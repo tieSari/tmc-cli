@@ -13,11 +13,23 @@ public class Course {
 
     @SerializedName("details_url")
     private String detailsUrl;
+    
+    @SerializedName("spyware_urls")
+    private List<String> spywareUrls;
 
     public Course() {
 
     }
 
+    public List<String> getSpywareUrls() {
+        return spywareUrls;
+    }
+
+    public void setSpywareUrls(List<String> spywareUrls) {
+        this.spywareUrls = spywareUrls;
+    }
+
+    
     public List<Exercise> getExercises() {
         return exercises;
     }

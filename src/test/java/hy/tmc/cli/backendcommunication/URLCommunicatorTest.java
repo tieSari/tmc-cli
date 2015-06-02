@@ -69,7 +69,11 @@ public class URLCommunicatorTest {
                 )
         );
         File testFile = new File("testResources/test.zip");
-        HttpResult result = UrlCommunicator.makePostWithFile(testFile, "http://127.0.0.1:8080/kivaurl");
+        HttpResult result = UrlCommunicator.makePostWithFile(
+                testFile,
+                "http://127.0.0.1:8080/kivaurl",
+                null
+        );
         ClientData.clearUserData();
         assertEquals("All tests passed", result.getData());
     }

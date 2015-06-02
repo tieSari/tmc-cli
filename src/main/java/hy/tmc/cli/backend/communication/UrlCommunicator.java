@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 public class UrlCommunicator {
 
@@ -35,9 +36,13 @@ public class UrlCommunicator {
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public static HttpResult makePostWithFile(File toBeUploaded, String destinationUrl)
-            throws IOException {
+    public static HttpResult makePostWithFile(File toBeUploaded, 
+                                              String destinationUrl,
+                                              Map<String, String> headers) 
+                                              throws IOException {
+   
         HttpPost httppost = new HttpPost(destinationUrl);
+        addHeadersTo(httppost, headers);
         FileBody fileBody = new FileBody(toBeUploaded);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
@@ -125,6 +130,20 @@ public class UrlCommunicator {
         httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
         httpRequest.setHeader("User-Agent", USER_AGENT);
     }
+    
+    /**
+     * Adds headers to request if present.
+     * @param httppost
+     * @param headers 
+     */
+    private static void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
+        if (headers == null) {
+            return;
+        }
+        for (String header : headers.keySet()) {
+            httpRequest.addHeader(header, headers.get(header));
+        }
+    }
 
     private static HttpResult getResponseResult(HttpRequestBase httpRequest) 
             throws UnsupportedOperationException, IOException {
@@ -133,5 +152,4 @@ public class UrlCommunicator {
         int status = response.getStatusLine().getStatusCode();
         return new HttpResult(result.toString(), status, true);
     }
-
 }
