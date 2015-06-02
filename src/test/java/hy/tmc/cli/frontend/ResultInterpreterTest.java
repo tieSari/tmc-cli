@@ -82,20 +82,23 @@ public class ResultInterpreterTest {
 
     @Test
     public void testAllTestsPassed() {
+        
         ResultInterpreter allPassedInterpreter = new ResultInterpreter(this.allPassed, formatter);
-        assertEquals("All tests passed. You can now submit", allPassedInterpreter.interpret());
+        String output = allPassedInterpreter.interpret();
+        assertTrue(output.contains("All tests passed"));
+        assertTrue(output.contains("You can now submit"));
     }
 
     @Test
     public void testCompileErrorMessage() {
         ResultInterpreter allPassedInterpreter = new ResultInterpreter(this.compileError, formatter);
-        assertEquals("Code did not compile.", allPassedInterpreter.interpret());
+        assertTrue(allPassedInterpreter.interpret().contains("Code did not compile."));
     }
 
     @Test
     public void testGenericErrorMessage() {
         ResultInterpreter allPassedInterpreter = new ResultInterpreter(this.genericError, formatter);
-        assertEquals("Failed to run tests.", allPassedInterpreter.interpret());
+        assertTrue(allPassedInterpreter.interpret().contains("Failed due to an internal error"));
     }
 
     @Test

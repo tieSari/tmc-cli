@@ -50,7 +50,7 @@ public class ListCoursesSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
         
-        server = new Server(null);
+        server = new Server();
         port = configHandler.readPort();
         serverThread = new Thread(server);
         serverThread.start();
@@ -63,7 +63,6 @@ public class ListCoursesSteps {
         wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         WireMock.configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
-
         wireMockServer.stubFor(get(urlEqualTo("/user"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(

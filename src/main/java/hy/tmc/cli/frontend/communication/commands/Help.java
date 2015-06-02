@@ -3,12 +3,11 @@ package hy.tmc.cli.frontend.communication.commands;
 import com.google.common.base.Joiner;
 
 import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.logic.Logic;
 
 public class Help extends Command {
 
-    public Help(FrontendListener front, Logic backend) {
-        super(front, backend);
+    public Help(FrontendListener front) {
+        super(front);
     }
 
     /**

@@ -27,7 +27,7 @@ public class FrontendSteps {
      */
     @Before
     public void setUpServer() throws IOException {
-        server = new Server(null);
+        server = new Server();
         port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();
