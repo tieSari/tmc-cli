@@ -60,7 +60,7 @@ public class DownloadExercisesSteps {
         config = new ConfigHandler();
         originalServerAddress = config.readServerAddress();
         config.writeServerAddress(SERVER_ADDRESS);
-        server = new Server(null);
+        server = new Server();
         ClientData.setUserData("pihla", "juuh");
         port = server.getCurrentPort();
         serverThread = new Thread(server);
