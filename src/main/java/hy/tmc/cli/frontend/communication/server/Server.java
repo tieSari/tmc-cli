@@ -1,5 +1,9 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
@@ -27,6 +31,9 @@ public class Server implements FrontendListener, Runnable {
     private boolean isRunning;
     private BufferedReader in;
     private ArrayDeque<FeedbackQuestion> feedbackQueue;
+    private String feedbackUrl;
+    private JsonArray feedbackAnswers = new JsonArray();
+    private int lastQuestionId;
 
     /**
      * Constructor for server.
@@ -149,7 +156,11 @@ public class Server implements FrontendListener, Runnable {
 
     @Override
     public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
+        this.feedbackQueue.clear();
         this.feedbackQueue.addAll(feedbackQuestions);
+        this.feedbackUrl = feedbackUrl;
+
+        this.askQuestion();
 
         /*for (FeedbackQuestion question : feedbackQuestions) {
             printLine(question.getQuestion() + ": ");
@@ -170,5 +181,35 @@ public class Server implements FrontendListener, Runnable {
         }
         printLine("end");
         */
+    }
+
+    public void askQuestion() {
+        FeedbackQuestion nextQuestion = this.feedbackQueue.removeFirst();
+        lastQuestionId = nextQuestion.getId();
+        printLine(nextQuestion.getQuestion());
+    }
+
+    public void feedbackAnswer(String answer) {
+        JsonObject jsonAnswer = new JsonObject();
+        jsonAnswer.addProperty("question_id", lastQuestionId);
+        jsonAnswer.addProperty("answer", answer);
+        feedbackAnswers.add(jsonAnswer);
+
+        //printLine("accepted answer");
+
+        if (this.feedbackQueue.isEmpty()) {
+            printLine("end");
+            JsonObject req = new JsonObject();
+            req.add("answers", feedbackAnswers);
+
+            try {
+                HttpResult httpResult = UrlCommunicator.makePostWithJson(req, this.feedbackUrl);
+                printLine(httpResult.getData());
+            } catch (IOException e) {
+                printLine(e.getMessage());
+            }
+        } else
+            askQuestion();
+
     }
 }

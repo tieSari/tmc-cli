@@ -4,6 +4,7 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -49,6 +50,10 @@ public class Submit extends Command {
                 if (submissionResult.isAllTestsPassed()) {
                     frontend.feedback(submissionResult.getFeedbackQuestions(),
                             submissionResult.getFeedbackAnswerUrl());
+                    for (FeedbackQuestion question : submissionResult.getFeedbackQuestions()) {
+                        frontend.printLine("id: " + question.getId());
+                        frontend.printLine("question: " + question.getQuestion());
+                    }
                 }
             }
         }

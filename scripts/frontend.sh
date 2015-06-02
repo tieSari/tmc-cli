@@ -6,11 +6,20 @@ function command_submit () {
   echo "Submitting exercise..."
   if [ $# -eq 0 ]
     then
-    send_command "submit path `pwd`"
+    send_command_wait_output "submit path `pwd`"
   else
     echo "submit path `pwd` exerciseName $1"
-    send_command "submit path `pwd` exerciseName $1"
+    send_command_wait_output "submit path `pwd` exerciseName $1"
   fi
+
+  echo "$OUTPUT"
+
+  feedback ""
+
+  # read -p x
+  # send_command answerQuestion x y
+  # if [[ output = "end" ]] then quit else send_command answerQuestion z w
+
 
   #if [[ $OUTPUT =~ All\ tests\ passed.* ]]
   #then
@@ -22,7 +31,18 @@ function command_submit () {
   #fi
 }
 
-function give_feedback () {
+function feedback () {
+  read -p "$@: " answer
+  send_command_wait_output "answerQuestion answer $answer"
+  if [[ $OUTPUT =~ end ]]
+    then
+    echo "Thank you for your answers!"
+  else
+    feedback $OUTPUT
+  fi
+}
+
+function text_feedback () {
   TIMESTAMP=`date +%s`
   FEEDBACK="/tmp/feedback-$TIMESTAMP"
   echo "" >> $FEEDBACK
