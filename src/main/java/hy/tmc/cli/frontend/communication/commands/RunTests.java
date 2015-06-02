@@ -23,7 +23,7 @@ public class RunTests extends Command {
     @Override
     protected void functionality() {
         String path = this.data.get("filepath");
-        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());      
+        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());   
         Path exercise = finder.getRootDirectory(Paths.get(path));
         if (exercise == null){
             this.frontend.printLine("Not an exercise. (null)");
