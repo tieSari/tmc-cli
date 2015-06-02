@@ -6,30 +6,35 @@ function command_submit () {
   echo "Submitting exercise..."
   if [ $# -eq 0 ]
     then
-    send_command_wait_output "submit path `pwd`"
+    send_command "submit path `pwd`"
   else
     echo "submit path `pwd` exerciseName $1"
-    send_command_wait_output "submit path `pwd` exerciseName $1"
+    send_command "submit path `pwd` exerciseName $1"
   fi
 
-  if [[ $OUTPUT =~ All\ tests\ passed.* ]]
-  then
-    TIMESTAMP=`date +%s`
-    FEEDBACK="/tmp/feedback-$TIMESTAMP"
-    echo "" >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "#############" >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "Please enter feedback above the bar." >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "$OUTPUT" >> $FEEDBACK
-    nano $FEEDBACK
+  #if [[ $OUTPUT =~ All\ tests\ passed.* ]]
+  #then
 
-    PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
+    #give_feedback
     # TODO: send output to server
-  else
-    echo "$OUTPUT"
-  fi
+  #else
+  #  echo "$OUTPUT"
+  #fi
+}
+
+function give_feedback () {
+  TIMESTAMP=`date +%s`
+  FEEDBACK="/tmp/feedback-$TIMESTAMP"
+  echo "" >> $FEEDBACK
+  echo "" >> $FEEDBACK
+  echo "#############" >> $FEEDBACK
+  echo "" >> $FEEDBACK
+  echo "Please enter feedback above the bar." >> $FEEDBACK
+  echo "" >> $FEEDBACK
+  echo "$OUTPUT" >> $FEEDBACK
+  nano $FEEDBACK
+
+  PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
 }
 
 function command_login () {
@@ -68,7 +73,7 @@ function send_command () {
 
     CONFIGPATH="$DIR/config.properties"
     CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-    echo $@ | nc localhost $CONFIGPORT
+    echo $@ - | nc localhost $CONFIGPORT
 
     return 0;
 

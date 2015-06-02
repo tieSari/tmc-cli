@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,8 @@ public class Server implements FrontendListener, Runnable {
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private boolean isRunning;
+    private BufferedReader in;
+    private ArrayDeque<FeedbackQuestion> feedbackQueue;
 
     /**
      * Constructor for server.
@@ -33,6 +36,7 @@ public class Server implements FrontendListener, Runnable {
      */
     
     public Server(Logic logic) throws IOException {
+        this.feedbackQueue = new ArrayDeque<>();
         try {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
@@ -86,6 +90,8 @@ public class Server implements FrontendListener, Runnable {
     }
 
     private boolean canListenClient(Socket clientSocket) throws IOException {
+        in = new BufferedReader(
+                new InputStreamReader(clientSocket.getInputStream()));
         String inputLine = readCommandFromClient(clientSocket);
 
         if (inputLine == null) {
@@ -101,8 +107,7 @@ public class Server implements FrontendListener, Runnable {
     }
 
     private String readCommandFromClient(Socket clientSocket) throws IOException {
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
+        // BufferedReader in = ;
         return in.readLine();
     }
 
@@ -143,12 +148,18 @@ public class Server implements FrontendListener, Runnable {
 
     @Override
     public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
-        for (FeedbackQuestion question : feedbackQuestions) {
+        this.feedbackQueue.addAll(feedbackQuestions);
+
+        /*for (FeedbackQuestion question : feedbackQuestions) {
             printLine(question.getQuestion() + ": ");
 
             String answer;
             try {
-                answer = readCommandFromClient(clientSocket);
+                answer = null;
+                while (answer == null) {
+                    answer = readCommandFromClient(clientSocket);
+                }
+                printLine("vastaus: " + answer);
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -156,6 +167,7 @@ public class Server implements FrontendListener, Runnable {
 
 
         }
-        printLine("no more questions");
+        printLine("end");
+        */
     }
 }

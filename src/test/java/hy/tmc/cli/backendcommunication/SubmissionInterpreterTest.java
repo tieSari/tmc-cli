@@ -58,7 +58,8 @@ public class SubmissionInterpreterTest {
     public void passedResultOutputsPassed() throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, false);
+        SI.getSubmissionResult(url);
+        String output = SI.resultSummary(false);
         assertTrue(output.contains("passed"));
     }
 
@@ -66,7 +67,8 @@ public class SubmissionInterpreterTest {
     public void failedResultOutputsFailed() throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, false);
+        SI.getSubmissionResult(url);
+        String output = SI.resultSummary(false);
         assertTrue(output.contains("failed"));
 
     }
@@ -76,7 +78,8 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, false);
+        SI.getSubmissionResult(url);
+        String output = SI.resultSummary(false);
         assertTrue(output.contains("et tulosta mitään!"));
     }
 
@@ -85,7 +88,8 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, true);
+        SI.getSubmissionResult(url);
+        String output = SI.resultSummary(true);
         assertTrue(output.contains("PASSED"));
         assertTrue(output.contains("KayttajatunnuksetTest sopivatKayvat"));
 
@@ -96,7 +100,8 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, false);
+        SI.getSubmissionResult(url);
+        String output = SI.resultSummary(false);
         assertFalse(output.contains("PASSED"));
         assertFalse(output.contains("KayttajatunnuksetTest sopivatKayvat"));
 
