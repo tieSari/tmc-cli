@@ -1,5 +1,10 @@
 package hy.tmc.cli.frontend;
 
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
+import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
+
 import fi.helsinki.cs.tmc.langs.RunResult;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
 import fi.helsinki.cs.tmc.langs.TestResult;
@@ -18,17 +23,19 @@ public class ResultInterpreter {
     }
 
     /**
-     * Transform the RunResult given to this interpreter in its constructor into a human
-     * readable output.
-     * 
-     * @return a String representation of a RunResult 
+     * Transform the RunResult given to this interpreter in its constructor into
+     * a human readable output.
+     *
+     * @return a String representation of a RunResult
      */
     public String interpret() {
-        if(result.status == TESTS_FAILED){
+
+        if (result.status == TESTS_FAILED) {
             return testFailureReport();
         } else {
             return formatter.interpretStatus(result);
         }
+
     }
 
     private String testFailureReport() {
@@ -46,14 +53,17 @@ public class ResultInterpreter {
         if (passedTests.isEmpty()) {
             builder.append(formatter.noTestsPassed());
             return;
-        }   
+
+        }
         builder.append(formatter.howMuchTestsPassed(passedTests.size()));
         builder.append(formatter.getPassedTests(passedTests));
+
     }
 
     private void failedTests(StringBuilder builder) {
         List<TestResult> failures = getFailedTests();
         builder.append(formatter.howMuchTestsFailed(failures.size()));
+
         for (TestResult testResult : failures) {
             failedTestOutput(builder, testResult);
         }

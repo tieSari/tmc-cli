@@ -25,7 +25,7 @@ public class RunTestsTest {
     @Before
     public void setup() {
         front = new FrontendStub();
-        runTests = new RunTests(front, null);
+        runTests = new RunTests(front);
     }
 
     /**
@@ -33,7 +33,7 @@ public class RunTestsTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        RunTests rt = new RunTests(front,null);
+        RunTests rt = new RunTests(front);
         rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
         try {
             rt.checkData();
@@ -47,7 +47,7 @@ public class RunTestsTest {
      */
     @Test
     public void testCheckDataFail() {
-        RunTests rt = new RunTests(front,null);
+        RunTests rt = new RunTests(front);
         try {
             rt.checkData();
             fail("testCheckDataFail should have failed");
@@ -61,7 +61,7 @@ public class RunTestsTest {
      */
     @Test(timeout = 15000)
     public void testFailedExercise() {
-        RunTests run = new RunTests(front, null);
+        RunTests run = new RunTests(front);
         String folders = "testResources" + File.separator + "failingExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
@@ -86,7 +86,7 @@ public class RunTestsTest {
      */
     @Test(timeout = 15000)
     public void testSuccessfulExercise() {
-        RunTests run = new RunTests(front, null);
+        RunTests run = new RunTests(front);
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
@@ -99,7 +99,7 @@ public class RunTestsTest {
         
         assertFalse(front.getMostRecentLine().contains("tests failed:"));
         
-        assertEquals("All tests passed. You can now submit", front.getMostRecentLine());
+        assertTrue(front.getMostRecentLine().contains("All tests passed"));
     }
     
     /**
@@ -107,7 +107,7 @@ public class RunTestsTest {
      */
     @Test(timeout = 15000)
     public void testNonExercise() {
-        RunTests run = new RunTests(front, null);
+        RunTests run = new RunTests(front);
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1";
         File file = new File(filepath);
@@ -122,5 +122,4 @@ public class RunTestsTest {
         
         assertEquals("Not an exercise.", front.getMostRecentLine());
     }
-
 }

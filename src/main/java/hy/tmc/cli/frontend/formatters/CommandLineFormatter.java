@@ -2,7 +2,10 @@ package hy.tmc.cli.frontend.formatters;
 
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
-
+import hy.tmc.cli.frontend.ColorFormatter;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
+import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 import java.util.List;
 
 
@@ -29,11 +32,11 @@ public class CommandLineFormatter implements ResultFormatter {
     public String interpretStatus(RunResult result) {
         switch (result.status) {
           case PASSED:
-              return "All tests passed. You can now submit";
+              return ColorFormatter.coloredString("All tests passed.", GREEN) + " You can now submit";
           case COMPILE_FAILED:
-              return "Code did not compile.";
+              return ColorFormatter.coloredString("Code did not compile.", RED, WHITE);
           case GENERIC_ERROR:
-              return "Failed to run tests.";
+              return ColorFormatter.coloredString("Failed due to an internal error", RED, WHITE);
           default:
               throw new IllegalArgumentException("bad argument");
         }
@@ -64,7 +67,8 @@ public class CommandLineFormatter implements ResultFormatter {
      */
     @Override
     public String howMuchTestsPassed(int amount) {
-        return (amount + " tests passed:\n");
+        String passed = amount + " tests passed:\n";
+        return ColorFormatter.coloredString(passed, GREEN);
     }
 
     /**
@@ -118,7 +122,8 @@ public class CommandLineFormatter implements ResultFormatter {
      */
     @Override
     public String howMuchTestsFailed(int amount) {
-        return (amount + " tests failed:\n");
+        String failed = amount + " tests failed:\n";
+        return ColorFormatter.coloredString(failed, RED);
     }
 
 }
