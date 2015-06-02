@@ -26,7 +26,6 @@ public class CommandLineFormatter implements ResultFormatter {
     /**
      * Interprets status of RunResult.
      * @param result RunResult
-     * @return status
      */
     @Override
     public String interpretStatus(RunResult result) {
