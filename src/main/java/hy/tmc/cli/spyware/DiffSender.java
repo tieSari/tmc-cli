@@ -1,6 +1,7 @@
 
 package hy.tmc.cli.spyware;
 
+import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
@@ -29,11 +30,14 @@ public class DiffSender {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Tmc-Version", "1");
         headers.put("X-Tmc-Username", ClientData.getUsername());
-        headers.put("X-Tmc-Version", ClientData.getPassword());
+        headers.put("X-Tmc-Password", ClientData.getPassword());
+        HttpResult makePostWithFile = null;
         try {
-            UrlCommunicator.makePostWithFile(diffFile, url, headers);
+            makePostWithFile = UrlCommunicator.makePostWithFile(diffFile, url, headers);
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
+        System.out.println("DATA: " + makePostWithFile.getData());
+        
     }
 }

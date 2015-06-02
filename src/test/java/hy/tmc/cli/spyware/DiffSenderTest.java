@@ -1,20 +1,33 @@
 package hy.tmc.cli.spyware;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import java.io.File;
+import org.junit.After;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.Before;
 
 public class DiffSenderTest {
     
-
+    @Before
+    public void setup(){
+        ClientData.setUserData("test", "1234");
+    }
+    
     @Test
     public void testSendToSpyware() {
-//        System.out.println("sendToSpyware");
-//        File diffFile = null;
-//        Course currentCourse = null;
-//        DiffSender spyware = new DiffSender();
-//        spyware.sendToSpyware(diffFile, currentCourse);
+        DiffSender sender = new DiffSender();
+        Course testCourse = new Course();
+        testCourse.setSpywareUrls(
+                Arrays.asList(new String[]{"http://staging.spyware.testmycode.net/"})
+        );
+        sender.sendToSpyware(new File("testResources/test.zip"), testCourse);
+    }
+    
+    @After
+    public void cleanUp() {
+        ClientData.clearUserData();
     }
     
 }
