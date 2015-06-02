@@ -26,6 +26,7 @@ public class CommandFactory {
         commandsByName.put("setServer", chooseServer(frontend));
         commandsByName.put("submit", submit(frontend));
         commandsByName.put("runTests", runTests(frontend));
+        commandsByName.put("stopProcess", stopProcess(frontend));
         return commandsByName;
     }
 
@@ -139,6 +140,15 @@ public class CommandFactory {
     
     public static Command submit(FrontendListener front) {
         return new Submit(front);
+    }
+    
+    /**
+     * Stops the whole process and exits java virtual machine.
+     * @param front frontend that the command will use
+     * @return StopProcess object
+     */
+    private static Command stopProcess(FrontendListener front) {
+        return new StopProcess(front);
     }
 
     /**
