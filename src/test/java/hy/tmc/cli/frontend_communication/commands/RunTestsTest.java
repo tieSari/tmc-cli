@@ -99,7 +99,7 @@ public class RunTestsTest {
         
         assertFalse(front.getMostRecentLine().contains("tests failed:"));
         
-        assertEquals("All tests passed. You can now submit", front.getMostRecentLine());
+        assertTrue(front.getMostRecentLine().contains("All tests passed"));
     }
     
     /**
