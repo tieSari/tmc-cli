@@ -20,10 +20,13 @@ function command_submit () {
     echo "" >> $FEEDBACK
     echo "#############" >> $FEEDBACK
     echo "" >> $FEEDBACK
-    echo "You may enter feedback over the bar." >> $FEEDBACK
+    echo "Please enter feedback above the bar." >> $FEEDBACK
     echo "" >> $FEEDBACK
     echo "$OUTPUT" >> $FEEDBACK
     nano $FEEDBACK
+
+    PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
+    # TODO: send output to server
   else
     echo "$OUTPUT"
   fi
