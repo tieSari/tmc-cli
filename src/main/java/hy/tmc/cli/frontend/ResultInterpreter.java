@@ -23,27 +23,27 @@ public class ResultInterpreter {
     }
 
     /**
-     * Transform the RunResult given to this interpreter in its constructor into
-     * a human readable output.
+     * Transform the RunResult given to this interpreter in its constructor into a human readable
+     * output.
      *
+     * @param showStackTrace decide whether to include stacktrace in output
      * @return a String representation of a RunResult
      */
-    public String interpret() {
+    public String interpret(boolean showStackTrace) {
 
         if (result.status == TESTS_FAILED) {
-            return testFailureReport();
+            return testFailureReport(showStackTrace);
         } else {
             return formatter.interpretStatus(result);
         }
-
     }
 
-    private String testFailureReport() {
+    private String testFailureReport(boolean showStackTrace) {
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append(formatter.someTestsFailed());
 
         succesfulTests(reportBuilder);
-        failedTests(reportBuilder);
+        failedTests(reportBuilder, showStackTrace);
 
         return reportBuilder.toString();
     }
@@ -60,18 +60,20 @@ public class ResultInterpreter {
 
     }
 
-    private void failedTests(StringBuilder builder) {
+    private void failedTests(StringBuilder builder, boolean showStackTrace) {
         List<TestResult> failures = getFailedTests();
         builder.append(formatter.howMuchTestsFailed(failures.size()));
 
         for (TestResult testResult : failures) {
-            failedTestOutput(builder, testResult);
+            failedTestOutput(builder, testResult, showStackTrace);
         }
     }
 
-    private void failedTestOutput(StringBuilder builder, TestResult testResult) {
+    private void failedTestOutput(StringBuilder builder, TestResult testResult, boolean showStackTrace) {
         builder.append(formatter.getFailedTestOutput(testResult));
-        builder.append(formatter.getStackTrace(testResult));
+        if (showStackTrace) {
+            builder.append(formatter.getStackTrace(testResult));
+        }
     }
 
     private List<TestResult> getPassedTests() {

@@ -42,12 +42,12 @@
 init:
 
 -deps-jar-init:
-   [delete] Deleting: /home/ad/fshome6/u6/x/xtoxtox/Linux/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+   [delete] Deleting: /home/ilari/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
 
 deps-jar:
 
 -warn-already-built-jar:
-[propertyfile] Updating property file: /home/ad/fshome6/u6/x/xtoxtox/Linux/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+[propertyfile] Updating property file: /home/ilari/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
 
 -check-automatic-build:
 
