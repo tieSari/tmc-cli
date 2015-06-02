@@ -1,33 +1,104 @@
 package hy.tmc.cli.spyware;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
+import static org.junit.Assert.assertEquals;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import edu.emory.mathcs.backport.java.util.Arrays;
+
+import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
+
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.Rule;
+
 
 public class DiffSenderTest {
     
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
+
+    private final String spywareUrl = "http://127.0.0.1:8080/spyware";
+    private DiffSender sender;
+    private String originalServerUrl;
+    private ConfigHandler config;
+    
+    
+    /**
+     * Logins the users and creates fake server.
+     */
     @Before
-    public void setup(){
+    public void setup() throws IOException {
         ClientData.setUserData("test", "1234");
+        sender = new DiffSender();
+        config = new ConfigHandler();
+        originalServerUrl = config.readServerAddress();
+        config.writeServerAddress("http://127.0.0.1:8080");
+        startWiremock();
+    }
+
+    @Test
+    public void testSendToSpyware() throws IOException {
+        final File file = new File("testResources/test.zip");
+        DiffSender sender = new DiffSender();
+        HttpResult res = sender.sendToUrl(file,
+                spywareUrl);
+        assertEquals(200, res.getStatusCode());
     }
     
     @Test
-    public void testSendToSpyware() {
-        DiffSender sender = new DiffSender();
+    public void testSendToAllUrls() throws IOException {
+        final File file = new File("testResources/test.zip");
         Course testCourse = new Course();
         testCourse.setSpywareUrls(
-                Arrays.asList(new String[]{"http://staging.spyware.testmycode.net/"})
+                Arrays.asList(new String[]{spywareUrl})
         );
-        sender.sendToSpyware(new File("testResources/test.zip"), testCourse);
+        List<HttpResult> results = sender.sendToSpyware(file, testCourse);
+        for (HttpResult res : results) {
+            assertEquals(200, res.getStatusCode());
+        }
     }
     
+    @Test
+    public void spywarePostIncludesFileAndHeaders() throws IOException {
+        startWiremock();
+        File testFile = new File("testResources/test.zip");
+        HttpResult res = sender.sendToUrl(testFile, spywareUrl);
+        assertEquals(200, res.getStatusCode());
+    }
+
+    private void startWiremock() {
+        stubFor(post(urlEqualTo("/spyware"))
+                .withHeader("X-Tmc-Version", equalTo("1"))
+                .withHeader("X-Tmc-Username", equalTo(ClientData.getUsername()))
+                .withHeader("X-Tmc-Password", equalTo(ClientData.getPassword()))
+                .withRequestBody(containing("test.zip"))
+                .willReturn(
+                        aResponse()
+                                .withBody("OK")
+                                .withStatus(200)
+                )
+        );
+    }
+
     @After
-    public void cleanUp() {
+    public void cleanUp() throws IOException {
         ClientData.clearUserData();
+        config.writeServerAddress(originalServerUrl);
     }
-    
 }

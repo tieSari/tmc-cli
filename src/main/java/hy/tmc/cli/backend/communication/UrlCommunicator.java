@@ -34,7 +34,7 @@ public class UrlCommunicator {
      *
      * @param toBeUploaded File-object that gets attached to request.
      * @param destinationUrl destination of the url.
-     * @param headers
+     * @param headers Headers to be added to httprequest.
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
@@ -45,6 +45,7 @@ public class UrlCommunicator {
 
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
+        System.out.println("FILE: " + toBeUploaded);
         FileBody fileBody = new FileBody(toBeUploaded);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
@@ -70,8 +71,7 @@ public class UrlCommunicator {
         try {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
@@ -102,8 +102,7 @@ public class UrlCommunicator {
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
 
             return true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return false;
         }
     }
@@ -137,8 +136,8 @@ public class UrlCommunicator {
     /**
      * Adds headers to request if present.
      *
-     * @param httppost
-     * @param headers
+     * @param httpRequest where to put headers. 
+     * @param headers to be included.
      */
     private static void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
         if (headers != null) {
