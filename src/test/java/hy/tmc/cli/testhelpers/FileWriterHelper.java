@@ -16,7 +16,7 @@ public class FileWriterHelper {
      * Writes stuff to file.
      * @param path to write
      */
-    public void writeStuffToFile(String path) {
+    public void writeStuffToFile(String path) throws IOException {
         try {
             writer = new FileWriter(new File(path));
             Random random = new Random();
@@ -26,5 +26,6 @@ public class FileWriterHelper {
         } catch (IOException ex) {
             fail("writer failed to init");
         }
+        writer.close();
     }
 }
