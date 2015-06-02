@@ -8,6 +8,7 @@ import hy.tmc.cli.domain.Course;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,28 +17,42 @@ import java.util.Map;
 public class DiffSender {
 
     /**
-     * Sends given difffile to all URLs specified by course.
+     * Sends given file to all URLs specified by course.
+     * @param diffFile includes diffs to be sended
+     * @param currentCourse tell all spywareUrls
+     * @return all results
      */ 
-    public void sendToSpyware(File diffFile, Course currentCourse) {
+    public List<HttpResult> sendToSpyware(File diffFile, Course currentCourse) {
         List<String> spywareUrls = currentCourse.getSpywareUrls();
-        
+        List<HttpResult> results = new ArrayList<>();
         for (String url : spywareUrls) {
-            sendToUrl(diffFile, url);
+            results.add(sendToUrl(diffFile, url));
         }
+        return results;
     }
 
-    private void sendToUrl(File diffFile, String url) {
+    /**
+     * Sends given file to all URLs specified by course.
+     * @param diffFile includes diffs to be sended
+     * @param url of destination 
+     * @return  HttpResult from UrlCommunicator
+     */
+    public HttpResult sendToUrl(File diffFile, String url) {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Tmc-Version", "1");
         headers.put("X-Tmc-Username", ClientData.getUsername());
         headers.put("X-Tmc-Password", ClientData.getPassword());
-        HttpResult makePostWithFile = null;
+        HttpResult result = makePostRequest(diffFile, url, headers);
+        return result;
+    }
+
+    private HttpResult makePostRequest(File diffFile, String url, Map<String, String> headers) {
+        HttpResult result = null;
         try {
-            makePostWithFile = UrlCommunicator.makePostWithFile(diffFile, url, headers);
+            result = UrlCommunicator.makePostWithFile(diffFile, url, headers);
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
-        System.out.println("DATA: " + makePostWithFile.getData());
-        
+        return result;
     }
 }
