@@ -1,5 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
+import com.google.common.base.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -110,8 +111,7 @@ public class CourseSubmitterTest {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(File.class),
-                                Mockito.contains(url),
-                                Mockito.any(Map.class)))
+                                Mockito.contains(url), Mockito.any(Optional.class)))
                 .thenReturn(fakeResult);
     }
 }
