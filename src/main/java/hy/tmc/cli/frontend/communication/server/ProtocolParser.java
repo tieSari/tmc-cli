@@ -28,6 +28,16 @@ public class ProtocolParser {
     }
 
     /**
+     * Constructor for Protocol Parser.
+     *
+     * @param server frontend server
+     */
+    public ProtocolParser(FrontendListener server, HashMap<String, Command> availableCommands) {
+        this.server = server;
+        this.commandsByName = availableCommands;
+    }
+
+    /**
      * Search for command by inputline.
      *
      * @param inputLine input String
@@ -46,16 +56,15 @@ public class ProtocolParser {
     }
 
     private String[] getElements(String userInput) {
-        System.out.println("I got:" +userInput);
         List<String> items = new ArrayList<String>();
         boolean parsingLongValue = false;
         String multiWordItem = "";
         for (String word : userInput.split(" ")) {
             if (parsingLongValue) {
-                System.out.println("add this to long value: "+word);
                 if (word.contains("}")) {
                     parsingLongValue = false;
                     items.add(multiWordItem.trim());
+                    multiWordItem = "";
                 } else {
                     multiWordItem += " " + word;
                 }
@@ -67,7 +76,6 @@ public class ProtocolParser {
                 }
             }
         }
-        System.out.println(items);
         String[] array = new String[items.size()];
         array = items.toArray(array);
         return array;

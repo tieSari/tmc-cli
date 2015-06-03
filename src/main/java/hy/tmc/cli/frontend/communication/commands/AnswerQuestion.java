@@ -4,9 +4,6 @@ import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.Server;
 
-/**
- * Created by jani on 2.6.15.
- */
 public class AnswerQuestion extends Command {
     public AnswerQuestion(FrontendListener front) {
         super(front);
