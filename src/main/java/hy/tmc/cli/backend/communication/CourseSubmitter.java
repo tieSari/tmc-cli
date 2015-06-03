@@ -63,10 +63,7 @@ public class CourseSubmitter {
         catch (ParseException ex) {
             return false;
         }
-        if(date.getTime() > current.getTime()){
-            return true;
-        }
-        return false;
+        return date.getTime() > current.getTime();
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise) throws IOException {
