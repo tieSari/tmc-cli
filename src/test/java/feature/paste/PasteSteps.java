@@ -1,4 +1,4 @@
-package feature.submit;
+package feature.paste;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -12,17 +12,17 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import gherkin.deps.com.google.gson.Gson;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
-
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 
-public class SubmitSteps {
+public class PasteSteps {
 
     private int port;
 
@@ -36,9 +36,6 @@ public class SubmitSteps {
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
-    /*
-    * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
-    */
     @Before
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
@@ -49,13 +46,11 @@ public class SubmitSteps {
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
-
+        ClientData.setUserData("Chuck", "Norris");
+        
         startWireMock();
     }
 
-    /*
-    * Starts wiremock and defines routes.
-    */
     private void startWireMock() {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
@@ -68,25 +63,12 @@ public class SubmitSteps {
                 )
         );
         wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
-        wireMockSuccesfulScenario();
-        wiremockFailingScenario();
-    }
-
-    private void wiremockFailingScenario() {
-        wiremockGET("/courses/313.json?api_version=7", ExampleJson.failingCourse);
-        wiremockPOST("/exercises/285/submissions.json?api_version=7", ExampleJson.failedSubmitResponse);
-        wiremockGET("/submissions/7777.json?api_version=7", ExampleJson.failedSubmission);
-    }
-
-    private void wireMockSuccesfulScenario() {
         wiremockGET("/courses/3.json?api_version=7", ExampleJson.courseExample);
-        wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
+        wiremockPOST("/exercises/286/submissions.json?api_version=7&paste=1", ExampleJson.pasteResponse);
         wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
+
     }
 
-    /*
-    * When httpGet-request is sended to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-    */
     private void wiremockGET(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(get(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -95,9 +77,6 @@ public class SubmitSteps {
         );
     }
 
-    /*
-    * When httpPost-request is sended to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-    */
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -111,30 +90,21 @@ public class SubmitSteps {
         testClient.sendMessage("login username " + username + " password " + password);
     }
 
-    @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
-    public void user_gives_command_submit_with_valid_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
+    @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
+    public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
         testClient.init();
-        String submitCommand = "submit path ";
-        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
-        final String message = submitCommand + submitPath;
+        String pasteCommand = "paste path ";
+        String pastePath = System.getProperty("user.dir") + path + "/" + exercise;
+        final String message = pasteCommand + pastePath;
         testClient.sendMessage(message);
     }
 
-    @Then("^user will see all test passing$")
-    public void user_will_see_all_test_passing() throws Throwable {
+    @Then("^user will see the paste url$")
+    public void user_will_see_the_paste_url() throws Throwable {
         String result = testClient.reply();
-        assertTrue(result.contains("All tests passed"));
+        assertTrue(result.contains("Paste submitted"));
     }
 
-    @Then("^user will see the some test passing$")
-    public void user_will_see_the_some_test_passing() throws Throwable {
-        final String result = testClient.reply();
-        assertTrue(result.contains("failed"));
-    }
-
-    /*
-    * Returns everything to it's original state.
-    */
     @After
     public void closeAll() throws IOException {
         server.close();
@@ -143,4 +113,5 @@ public class SubmitSteps {
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
         ClientData.clearUserData();
     }
+
 }

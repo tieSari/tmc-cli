@@ -14,6 +14,7 @@ public class ExampleJson {
     public static String submitResponse = submitResponse();
     public static String failingCourse = failingCourse();
     public static String failedSubmitResponse = failedSubmitResponse();
+    public static String pasteResponse = pasteResponse();
     
     private static String failingCourse() {
         return readFile("src/test/resources/failingCourse.json");
@@ -22,28 +23,31 @@ public class ExampleJson {
     private static String failedSubmitResponse() {
         return readFile("src/test/resources/failedSubmitResponse.json");
     }
-    
+
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");
     }
-    
+
     private static String failedSubmission() {
         return readFile("src/test/resources/failedSubmission.json");
     }
 
-    private static String courseExample(){
+    private static String courseExample() {
         return readFile("src/test/resources/course.json");
     }
-    
-    
+
     private static String allCoursesExample() {
         return readFile("src/test/resources/courses.json");
     }
-    
+
     private static String submitResponse() {
         return readFile("src/test/resources/submitResponse.json");
     }
-    
+
+    private static String pasteResponse() {
+        return readFile("src/test/resources/pasteResponse.json");
+    }
+
     private static String readFile(final String path) {
         try {
             return FileUtils.readFileToString(new File(path));
@@ -52,4 +56,5 @@ public class ExampleJson {
             return "";
         }
     }
+
 }
