@@ -42,12 +42,12 @@
 init:
 
 -deps-jar-init:
-   [delete] Deleting: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+   [delete] Deleting: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
 
 deps-jar:
 
 -warn-already-built-jar:
-[propertyfile] Updating property file: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+[propertyfile] Updating property file: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
 
 -check-automatic-build:
 
@@ -82,4 +82,4 @@ compile:
 compile-test:
 
 BUILD SUCCESSFUL
-Total time: 0 seconds
+Total time: 1 second

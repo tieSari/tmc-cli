@@ -24,8 +24,8 @@ public class Helper {
             if (waitUntilFinished) {
                 pr.waitFor();
             }
-        } catch (Exception e) {
-            System.out.println("prosessin luonti feilas");
+        } catch (IOException | InterruptedException e) {
+            System.err.println(e.getMessage());
         }
         return pr;
     }
@@ -81,7 +81,7 @@ public class Helper {
             writer.write(input);
             writer.newLine();
         } catch (IOException e) {
-            System.out.println("Kirjoitus epäonnistui.");
+            System.err.println(e.getMessage());
         } finally {
             writer.flush();
             writer.close(); // this could cause IOException BEWARE

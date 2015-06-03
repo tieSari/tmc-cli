@@ -26,7 +26,6 @@ public class ProjectRootFinderTest {
 
     public void testGetRootDirectory() {
         Path root = finder.getRootDirectory(Paths.get("testResources/mockProject"));
-        System.out.println(root);
         assertEquals("testResources/mockProject/root",root.toString());
     }
     
