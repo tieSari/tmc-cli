@@ -18,6 +18,7 @@ public class FeedbackHandler {
     private ArrayDeque<FeedbackQuestion> feedbackQueue;
     private int lastQuestionId;
     private String feedbackUrl;
+    private String kind;
 
     public FeedbackHandler(FrontendListener server) {
         this.server = server;
@@ -39,7 +40,6 @@ public class FeedbackHandler {
             }
         }
 
-
         this.feedbackUrl = feedbackUrl;
 
         this.askQuestion();
@@ -52,12 +52,31 @@ public class FeedbackHandler {
     public void askQuestion() {
         FeedbackQuestion nextQuestion = this.feedbackQueue.removeFirst();
         lastQuestionId = nextQuestion.getId();
+        this.kind = nextQuestion.getKind();
         server.printLine(nextQuestion.getQuestion());
         server.printLine(nextQuestion.getKind());
     }
 
-    public String validateAnswer(String answer, int lowerbound, int upperbound) {
+    public String validateAnswer(String answer) {
+        if (kind.equals("text")) {
+            return answer;
+        }
+
+        String bounds = kind.split("[\\[\\]]")[1];
+        int lowerbound = Integer.parseInt(bounds.split("..")[0]);
+        int upperbound = Integer.parseInt(bounds.split("..")[1]);
+
+        int ans;
+        try {
+            ans = Integer.parseInt(answer);
+        } catch (NumberFormatException ex) {
+            return "" + lowerbound;
+        }
+        if (ans < lowerbound || ans > upperbound) {
+            return ""+lowerbound;
+        }
         return answer;
+
     }
 
     public int getLastId() {

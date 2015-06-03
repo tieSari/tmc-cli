@@ -163,7 +163,8 @@ public class Server implements FrontendListener, Runnable {
     public void feedbackAnswer(String answer) {
         JsonObject jsonAnswer = new JsonObject();
         jsonAnswer.addProperty("question_id", feedbackHandler.getLastId());
-        jsonAnswer.addProperty("answer", answer);
+        String validAnswer = feedbackHandler.validateAnswer(answer);
+        jsonAnswer.addProperty("answer", validAnswer);
         System.out.println("vastaus: ");
         System.out.println(answer);
         feedbackAnswers.add(jsonAnswer);
