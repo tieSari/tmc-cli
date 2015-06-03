@@ -6,14 +6,19 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
-
-import net.lingala.zip4j.exception.ZipException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.exception.ZipException;
 
 public class CourseSubmitter {
 
@@ -70,6 +75,22 @@ public class CourseSubmitter {
             throw new IllegalArgumentException("Could not find exercise in this directory");
         }
         return currentExercise;
+    }
+    
+    public boolean isExpired(Exercise currentExercise){
+        Date date = new Date();
+        Date current = new Date();
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss zzzz", Locale.ENGLISH);
+        try {
+            date = format.parse(currentExercise.getDeadline());
+        }
+        catch (ParseException ex) {
+            return false;
+        }
+        if(date.getTime() > current.getTime()){
+            return true;
+        }
+        return false;
     }
 
     private String sendSubmissionToServerWithPaste(
