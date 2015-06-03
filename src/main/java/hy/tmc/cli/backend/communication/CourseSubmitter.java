@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -100,7 +101,7 @@ public class CourseSubmitter {
         Course currentCourse = getCurrentCourse(currentPath);
         if (currentCourse == null) {
             throw new IllegalArgumentException("Not under any course directory");
-        }
+        };
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.getId());
         return courseExercises;
     }

@@ -41,7 +41,6 @@ public class UrlCommunicator {
             String destinationUrl,
             Map<String, String> headers)
             throws IOException {
-
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         FileBody fileBody = new FileBody(toBeUploaded);
