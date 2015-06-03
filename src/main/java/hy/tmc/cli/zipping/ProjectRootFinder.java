@@ -34,6 +34,7 @@ public class ProjectRootFinder implements RootFinder {
 
     private Path search(Path path) {
         while (path.getParent() != null) {
+            System.out.println(path.toString());
             if (detector.isRootDirectory(path)) {
                 return path;
             }
