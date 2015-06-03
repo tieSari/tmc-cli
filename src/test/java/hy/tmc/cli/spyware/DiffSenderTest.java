@@ -44,11 +44,11 @@ public class DiffSenderTest {
      */
     @Before
     public void setup() throws IOException {
-        ClientData.setUserData("test", "1234");
-        sender = new DiffSender();
         config = new ConfigHandler();
         originalServerUrl = config.readServerAddress();
         config.writeServerAddress("http://127.0.0.1:8080");
+        ClientData.setUserData("test", "1234");
+        sender = new DiffSender();
         startWiremock();
     }
 
@@ -96,6 +96,9 @@ public class DiffSenderTest {
         );
     }
 
+    /**
+     * Clears the state of test environment.
+     */
     @After
     public void cleanUp() throws IOException {
         ClientData.clearUserData();
