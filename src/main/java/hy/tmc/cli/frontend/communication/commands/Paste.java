@@ -1,27 +1,22 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
 import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
+import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
-
 import java.io.IOException;
-import static javax.swing.text.html.HTML.Tag.HEAD;
 
-/**
- * Submit command for submitting exercises to TMC
- */
-public class Submit extends Command {
-    
+public class Paste extends Command {
+
     CourseSubmitter submitter;
-    SubmissionInterpreter interpreter;
     
-    public Submit(FrontendListener front) {
+    public Paste(FrontendListener front) {
         super(front);
         submitter = new CourseSubmitter(
                 new ProjectRootFinder(
@@ -29,42 +24,34 @@ public class Submit extends Command {
                 ),
                 new Zipper()
         );
-        interpreter = new SubmissionInterpreter();
-    }
-    
-    /**
-     * Constructor for mocking.
-     * 
-     * @param front frontend.
-     * @param submitter can inject submitter mock.
-     * @param interpreter can inject interpreter mock.
-     */
-    
-    public Submit(FrontendListener front, CourseSubmitter submitter, SubmissionInterpreter interpreter) {
-        super(front);
-        this.submitter = submitter;
-        this.interpreter = interpreter;
     }
 
     /**
-     * Takes a pwd command's output in "path" and optionally the exercise's name in "exerciseName".
+     * Constructor for mocking.
+     *
+     * @param front frontend.
+     * @param submitter can inject submitter mock.
+     */
+
+    public Paste(FrontendListener front, CourseSubmitter submitter) {
+        super(front);
+        this.submitter = submitter;
+    }
+
+    /**
+     * Takes a pwd command's output in "path" and prints out the URL for the paste.
+     *
      */
     @Override
     protected void functionality() {
         try {
-            if (data.containsKey("exerciseName")) {
-                frontend.printLine("Doesnt work yet");
-            } else {
-                String returnUrl = submitter.submit(data.get("path"));
-                frontend.printLine(interpreter.resultSummary(returnUrl, true));
-            }
+            String returnUrl = submitter.submitPaste(data.get("path"));
+            frontend.printLine("Paste submitted. Here it is: \n  " + returnUrl);
         }
-        catch (IllegalArgumentException ex) {
+        catch (IOException ex) {
             frontend.printLine(ex.getMessage());
         }
-        catch (IOException | InterruptedException ex) {
-            frontend.printLine("Project not found with specified parameters or thread interrupted");
-        }
+
     }
 
     /**
@@ -81,4 +68,5 @@ public class Submit extends Command {
             throw new ProtocolException("pwd not supplied");
         }
     }
+
 }
