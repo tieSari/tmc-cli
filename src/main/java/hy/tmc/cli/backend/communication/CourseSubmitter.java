@@ -86,7 +86,6 @@ public class CourseSubmitter {
     }
 
     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
-        System.out.println("Post URL: " + url);
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new File(submissionZipPath), url, null
         );
