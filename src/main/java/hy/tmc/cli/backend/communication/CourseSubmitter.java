@@ -105,7 +105,8 @@ public class CourseSubmitter {
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException {
         String submissionZipPath = currentPath + "/submission.zip";
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
-
+        
+        new File(submissionZipPath).delete(); //Removes any previous zip file named submission.zip
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
         String resultUrl;
         if (paste) {
