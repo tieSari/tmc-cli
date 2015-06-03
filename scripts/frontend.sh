@@ -20,6 +20,18 @@ function command_login () {
     return 0;
 }
 
+function command_download () {
+  send_command "downloadExercises pwd `pwd` courseID $1"
+}
+
+function command_paste () {
+  send_command "paste path `pwd`"
+}
+
+function command_test () {
+  send_command "runTests filepath `pwd`"
+}
+
 function command_default () {
     send_command $@
     return 0;
@@ -76,5 +88,8 @@ case "$1" in
 #    "help") command_help;;
     "login") command_login;;
     "submit") command_submit $2;;
+    "download") command_download $2;;
+    "test") command_test;;
+    "paste") command_paste;;
     *) command_default $@;;
 esac
