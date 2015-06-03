@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend.communication;
 
+import com.google.common.base.Optional;
 import static hy.tmc.cli.backend.communication.authorization.Authorization.encode;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
@@ -39,7 +40,7 @@ public class UrlCommunicator {
      */
     public static HttpResult makePostWithFile(File toBeUploaded,
             String destinationUrl,
-            Map<String, String> headers)
+            Optional<Map<String, String>> headers)
             throws IOException {
 
         HttpPost httppost = new HttpPost(destinationUrl);
@@ -69,7 +70,8 @@ public class UrlCommunicator {
         try {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
@@ -100,7 +102,8 @@ public class UrlCommunicator {
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
 
             return true;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return false;
         }
     }
@@ -134,16 +137,15 @@ public class UrlCommunicator {
     /**
      * Adds headers to request if present.
      *
-     * @param httpRequest where to put headers. 
+     * @param httpRequest where to put headers.
      * @param headers to be included.
      */
-    private static void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
-        if (headers != null) {
-            for (String header : headers.keySet()) {
-                httpRequest.addHeader(header, headers.get(header));
+    private static void addHeadersTo(HttpRequestBase httpRequest, Optional<Map<String, String>> headers) {
+        if (headers.isPresent()) {
+            for (String header : headers.get().keySet()) {
+                httpRequest.addHeader(header, headers.get().get(header));
             }
         }
-        
     }
 
     private static HttpResult getResponseResult(HttpRequestBase httpRequest)
