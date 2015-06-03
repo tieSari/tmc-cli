@@ -12,6 +12,7 @@ public class ExampleJson {
     public static String successfulSubmission = successfulSubmission();
     public static String failedSubmission = failedSubmission();
     public static String submitResponse = submitResponse();
+    public static String noDeadlineCourseExample = noDeadlineCourseExample();
     
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");
@@ -23,6 +24,10 @@ public class ExampleJson {
 
     private static String courseExample(){
         return readFile("src/test/resources/course.json");
+    }
+    
+    private static String noDeadlineCourseExample(){
+        return readFile("src/test/resources/nodeadlinecourse.json");
     }
     
     

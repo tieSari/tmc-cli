@@ -6,11 +6,13 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -40,7 +42,9 @@ public class CourseSubmitterTest {
         
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
+        mockUrlCommunicator("courses/19.json?api_version=7", ExampleJson.noDeadlineCourseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.submitResponse);
     }
     
     @After
@@ -67,17 +71,16 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testSubmitWithOneParam() throws IOException {
-        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
+    public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
-        String exercise = "viikko1-Viikko1_001.Nimi";
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
     
     @Test (expected=IllegalArgumentException.class)
-    public void testSubmitWithNonexistentExercise() throws IOException {
+    public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
@@ -85,7 +88,7 @@ public class CourseSubmitterTest {
     }
     
     @Test(expected=IllegalArgumentException.class)
-    public void submitWithNonExistentCourseThrowsException() throws IOException {
+    public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);

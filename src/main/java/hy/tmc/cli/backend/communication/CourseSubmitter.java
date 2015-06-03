@@ -53,19 +53,27 @@ public class CourseSubmitter {
      */
     public String submit(String currentPath) throws IOException, ParseException, ExpiredException {
         Exercise currentExercise = findExercise(currentPath);
-        if(isExpired(currentExercise)){
-            throw new ExpiredException();
-        }
+        System.out.println("Submittauksessa");
         if (currentExercise == null) {
+            System.out.println("CurrentExercise on null");
             throw new IllegalArgumentException("Could not find exercise in this directory");
         }
+        if(isExpired(currentExercise)){
+            System.out.println("On vanhentunut");
+            throw new ExpiredException();
+        }
+        System.out.println("Iffin jälkeen");
         return sendZipFile(currentPath, currentExercise);
     }
 
     public boolean isExpired(Exercise currentExercise) throws ParseException {
+        if(currentExercise.getDeadline() == null){
+            return false;
+        }
         Date date = new Date();
         Date current = new Date();
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss zzzz", Locale.ENGLISH);
+        System.out.println("Deadline: " + currentExercise.getDeadline());
         date = format.parse(currentExercise.getDeadline());
         if (date.getTime() < current.getTime()) {
             return true;
@@ -106,6 +114,7 @@ public class CourseSubmitter {
         if (currentCourse == null) {
             throw new IllegalArgumentException("Not under any course directory");
         }
+        System.out.println("CURRENT COURSE: " + currentCourse.getName());
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.getId());
         return courseExercises;
     }
