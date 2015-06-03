@@ -196,7 +196,6 @@ public class CourseSubmitter {
                 }
             }
         }
-        assert currentCourse != null;
         return currentCourse;
     }
 
