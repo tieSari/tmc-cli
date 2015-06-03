@@ -16,7 +16,7 @@ function command_submit () {
 
   if [[ $OUTPUT =~ All\ tests\ passed.* ]]
   then
-    feedback ""
+    feedback
   fi
   # read -p x
   # send_command answerQuestion x y
