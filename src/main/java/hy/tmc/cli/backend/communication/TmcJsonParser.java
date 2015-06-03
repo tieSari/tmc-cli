@@ -171,6 +171,7 @@ public class TmcJsonParser {
      * @return url where submission results are located.
      */
     public static String getSubmissionUrl(HttpResult result) {
+<<<<<<< HEAD
         return getPropertyFromResult(result, "submission_url");
     }
     
@@ -189,5 +190,10 @@ public class TmcJsonParser {
         JsonElement jelement = new JsonParser().parse(result.getData());        
         JsonObject  jobject = jelement.getAsJsonObject();
         return jobject.get(property).getAsString();
+=======
+        JsonElement jelement = new JsonParser().parse(result.getData());
+        JsonObject jobject = jelement.getAsJsonObject();
+        return jobject.get("submission_url").getAsString();
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     }
 }

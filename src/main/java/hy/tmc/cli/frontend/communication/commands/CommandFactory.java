@@ -26,7 +26,10 @@ public class CommandFactory {
         commandsByName.put("setServer", chooseServer(frontend));
         commandsByName.put("submit", submit(frontend));
         commandsByName.put("runTests", runTests(frontend));
+<<<<<<< HEAD
         commandsByName.put("paste", paste(frontend));
+=======
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
         commandsByName.put("stopProcess", stopProcess(frontend));
         return commandsByName;
     }
@@ -50,6 +53,7 @@ public class CommandFactory {
     public static Command replyToPing(FrontendListener front) {
         return new ReplyToPing(front);
     }
+<<<<<<< HEAD
 
     /**
      * Create RunTests command object.
@@ -58,6 +62,16 @@ public class CommandFactory {
      * @return a help object
      */
     public static Command runTests(FrontendListener front) {
+=======
+    
+    /**
+     * Create RunTests command object.
+     * @param front frontend that the command will use
+     * @param back logic that the command will use
+     * @return a help object
+     */
+    public static Command runTests(FrontendListener front){
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
         return new RunTests(front);
     }
 
@@ -130,13 +144,24 @@ public class CommandFactory {
     public static Command chooseServer(FrontendListener front) {
         return new ChooseServer(front);
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     /**
      * Create a Submit Command object.
      *
      * @param front frontend that the command will use
+<<<<<<< HEAD
      * @return a Submit object
      */
+=======
+     * @param back logic that the command will use
+     * @return a Submit object
+     */
+    
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     public static Command submit(FrontendListener front) {
         return new Submit(front);
     }
@@ -151,6 +176,7 @@ public class CommandFactory {
     }
 
     /**
+<<<<<<< HEAD
      * Create a Paste Command object.
      *
      * @param front frontend that the command will use
@@ -161,6 +187,8 @@ public class CommandFactory {
     }
 
     /**
+=======
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
      * Takes the command map and returns a set of command names.
      *
      * @return a set of all available command names.

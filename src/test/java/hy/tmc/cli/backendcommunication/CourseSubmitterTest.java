@@ -48,8 +48,11 @@ public class CourseSubmitterTest {
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
+<<<<<<< HEAD
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/287/submissions.json?api_version=7", ExampleJson.pasteResponse);
 
+=======
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     }
 
     @After
@@ -79,11 +82,16 @@ public class CourseSubmitterTest {
     public void testSubmitWithOneParam() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
+<<<<<<< HEAD
+=======
+        String exercise = "viikko1-Viikko1_001.Nimi";
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
 
+<<<<<<< HEAD
     @Test
     public void submitWithPasteReturnsPasteUrl() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_003.Kuusi";
@@ -100,11 +108,17 @@ public class CourseSubmitterTest {
         String result = courseSubmitter.submit(testPath);
     }
 
+=======
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     @Test(expected = IllegalArgumentException.class)
     public void testSubmitWithNonexistentExercise() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
+<<<<<<< HEAD
+=======
+        assertNull(result);
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -112,6 +126,10 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
+<<<<<<< HEAD
+=======
+        assertNull(result);
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     }
 
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {

@@ -18,6 +18,7 @@ import static javax.swing.text.html.HTML.Tag.HEAD;
  */
 public class Submit extends Command {
     
+<<<<<<< HEAD
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
     
@@ -44,6 +45,10 @@ public class Submit extends Command {
         super(front);
         this.submitter = submitter;
         this.interpreter = interpreter;
+=======
+    public Submit(FrontendListener front) {
+        super(front);
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
     }
 
     /**
@@ -51,12 +56,29 @@ public class Submit extends Command {
      */
     @Override
     protected void functionality() {
+<<<<<<< HEAD
         try {
             if (data.containsKey("exerciseName")) {
                 frontend.printLine("Doesnt work yet");
             } else {
                 String returnUrl = submitter.submit(data.get("path"));
                 frontend.printLine(interpreter.resultSummary(returnUrl, true));
+=======
+        CourseSubmitter submitter = new CourseSubmitter(
+                new ProjectRootFinder(
+                        new DefaultRootDetector()
+                ),
+                new Zipper()
+        );
+        try {
+            if (data.containsKey("exerciseName")) {
+//                String returnUrl = submitter.submit(data.get("path"), data.get("exerciseName"));
+//                frontend.printLine(new SubmissionInterpreter().resultSummary(returnUrl, true));
+                frontend.printLine("Doesnt work yet");
+            } else {
+                String returnUrl = submitter.submit(data.get("path"));
+                frontend.printLine(new SubmissionInterpreter().resultSummary(returnUrl, true));
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
             }
         }
         catch (IllegalArgumentException ex) {

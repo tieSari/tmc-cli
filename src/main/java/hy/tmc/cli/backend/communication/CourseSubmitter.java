@@ -1,6 +1,9 @@
 package hy.tmc.cli.backend.communication;
 
+<<<<<<< HEAD
 import com.google.common.base.Optional;
+=======
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.RootFinder;
@@ -15,7 +18,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+<<<<<<< HEAD
 import java.util.Map;
+=======
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
 import net.lingala.zip4j.exception.ZipException;
 
 public class CourseSubmitter {
@@ -48,6 +54,7 @@ public class CourseSubmitter {
      * @throws IOException if failed to create zip.
      */
     public String submit(String currentPath) throws IOException {
+<<<<<<< HEAD
         Exercise currentExercise = searchExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -66,14 +73,23 @@ public class CourseSubmitter {
     }
 
     private Exercise searchExercise(String currentPath) throws IllegalArgumentException {
+=======
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
         Exercise currentExercise = findExercise(currentPath);
         if (currentExercise == null) {
             throw new IllegalArgumentException("Could not find exercise in this directory");
         }
+<<<<<<< HEAD
         return currentExercise;
     }
 
     public boolean isExpired(Exercise currentExercise) {
+=======
+        return sendZipFile(currentPath, currentExercise);
+    }
+    
+    public boolean isExpired(Exercise currentExercise){
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
         Date date = new Date();
         Date current = new Date();
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss zzzz", Locale.ENGLISH);
@@ -86,6 +102,7 @@ public class CourseSubmitter {
         return date.getTime() > current.getTime();
     }
 
+<<<<<<< HEAD
     private String sendSubmissionToServerWithPaste(
             String submissionZipPath,
             String url) throws IOException {
@@ -98,16 +115,23 @@ public class CourseSubmitter {
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException {
+=======
+    private String sendZipFile(String currentPath, Exercise currentExercise) throws IOException {
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
         String submissionZipPath = currentPath + "/submission.zip";
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
 
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
+<<<<<<< HEAD
         String resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(submissionZipPath, returnUrl);
         } else {
             resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
         }
+=======
+        String resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
         new File(submissionZipPath).delete();
         return resultUrl;
     }

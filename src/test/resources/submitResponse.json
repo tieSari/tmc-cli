@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 {
     "submission_url": "http://127.0.0.1:8080/submissions/1781.json?api_version=7",
     "paste_url": ""
 }
+=======
+{"submission_url":"http://127.0.0.1:8080/submissions/1781.json?api_version=7","paste_url":""}
+>>>>>>> a3f2f9be92426cd89883a869c76a9f187e20a8b1
