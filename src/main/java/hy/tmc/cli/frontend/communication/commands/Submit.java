@@ -10,7 +10,6 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 
 import java.io.IOException;
-import static javax.swing.text.html.HTML.Tag.HEAD;
 
 /**
  * Submit command for submitting exercises to TMC

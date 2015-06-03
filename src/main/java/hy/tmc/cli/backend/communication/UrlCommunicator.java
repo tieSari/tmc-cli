@@ -140,6 +140,7 @@ public class UrlCommunicator {
      * @param headers to be included.
      */
     private static void addHeadersTo(HttpRequestBase httpRequest, Optional<Map<String, String>> headers) {
+        System.out.println("HEADERS: chang: " + headers);
         if (headers.isPresent()) {
             for (String header : headers.get().keySet()) {
                 httpRequest.addHeader(header, headers.get().get(header));

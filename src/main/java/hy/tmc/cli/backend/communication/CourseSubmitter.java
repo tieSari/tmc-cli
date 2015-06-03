@@ -25,6 +25,7 @@ public class CourseSubmitter {
 
     private RootFinder rootFinder;
     private ZipMaker zipper;
+    private String submissionZipPath;
 
     public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
         this.zipper = zipper;
@@ -71,6 +72,7 @@ public class CourseSubmitter {
     private Exercise searchExercise(String currentPath) throws IllegalArgumentException {
         Exercise currentExercise = findExercise(currentPath);
         if (currentExercise == null) {
+            deleteZipIfExists();
             throw new IllegalArgumentException("Could not find exercise in this directory");
         }
         return currentExercise;
@@ -84,6 +86,7 @@ public class CourseSubmitter {
             date = format.parse(currentExercise.getDeadline());
         }
         catch (ParseException ex) {
+            deleteZipIfExists();
             return false;
         }
         return date.getTime() > current.getTime();
@@ -101,9 +104,9 @@ public class CourseSubmitter {
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException {
-        String submissionZipPath = currentPath + "/submission.zip";
+        this.submissionZipPath = currentPath + "/submission.zip";
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
-
+        deleteZipIfExists();
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
         String resultUrl;
         if (paste) {
@@ -111,7 +114,7 @@ public class CourseSubmitter {
         } else {
             resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
         }
-        new File(submissionZipPath).delete();
+        deleteZipIfExists();
         return resultUrl;
     }
 
@@ -123,7 +126,7 @@ public class CourseSubmitter {
 
     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new File(submissionZipPath), url, null
+                new File(submissionZipPath), url, Optional.<Map<String, String>>absent()
         );
         return TmcJsonParser.getSubmissionUrl(result);
     }
@@ -135,6 +138,7 @@ public class CourseSubmitter {
     private List<Exercise> findCourseExercises(String currentPath) {
         Course currentCourse = getCurrentCourse(currentPath);
         if (currentCourse == null) {
+            deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");
         };
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.getId());
@@ -153,6 +157,7 @@ public class CourseSubmitter {
     private Exercise findCurrentExercise(List<Exercise> courseExercises, String currentDir) {
         Path rootDir = rootFinder.getRootDirectory(Paths.get(currentDir));
         if (rootDir == null) {
+            deleteZipIfExists();
             throw new IllegalArgumentException("Could not find exercise directory");
         }
         String[] path = rootDir.toString().split("/");
@@ -161,7 +166,6 @@ public class CourseSubmitter {
     }
 
     private Exercise getExerciseByName(String name, List<Exercise> courseExercises) {
-
         for (Exercise exercise : courseExercises) {
             if (exercise.getName().contains(name)) {
                 return exercise;
@@ -198,5 +202,19 @@ public class CourseSubmitter {
 
     public String[] getExerciseName(String directoryPath) {
         return directoryPath.split("/");
+    }
+
+    /**
+     * If class submissionZipPath is defined in sendZipFile-method 
+     * and the file in defined path exists, it will be removed.
+     * This method should be invoked allways when submit-function fails.
+     */
+    private void deleteZipIfExists() {
+        if (submissionZipPath != null) {
+            File zip = new File(submissionZipPath);
+            if (zip.exists()) {
+                zip.delete();
+            }
+        }
     }
 }

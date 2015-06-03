@@ -30,7 +30,7 @@ public class SubmitSteps {
     private TestClient testClient;
     private Server server;
 
-    private ConfigHandler configHandler; // writes the test address
+    private ConfigHandler configHandler;
     private WireMockServer wireMockServer;
 
     @Rule
@@ -85,7 +85,7 @@ public class SubmitSteps {
     }
 
     /*
-    * When httpGet-request is sended to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+    * When httpGet-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
     */
     private void wiremockGET(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(get(urlEqualTo(urlToMock))
@@ -96,7 +96,7 @@ public class SubmitSteps {
     }
 
     /*
-    * When httpPost-request is sended to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+    * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
     */
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
