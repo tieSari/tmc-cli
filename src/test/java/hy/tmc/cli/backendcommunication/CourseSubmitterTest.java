@@ -48,6 +48,8 @@ public class CourseSubmitterTest {
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/287/submissions.json?api_version=7", ExampleJson.pasteResponse);
+
     }
 
     @After
@@ -77,10 +79,25 @@ public class CourseSubmitterTest {
     public void testSubmitWithOneParam() throws IOException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
-        String exercise = "viikko1-Viikko1_001.Nimi";
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
+    }
+
+    @Test
+    public void submitWithPasteReturnsPasteUrl() throws IOException {
+        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_003.Kuusi";
+        rootFinder.setReturnValue(testPath);
+        String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
+        String result = courseSubmitter.submitPaste(testPath);
+        assertEquals(pastePath, result);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void submitWithPasteFromBadPathThrowsException() throws IOException {
+        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikeintehtava";
+        rootFinder.setReturnValue(testPath);
+        String result = courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -88,7 +105,6 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
-        assertNull(result);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -96,7 +112,6 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
-        assertNull(result);
     }
 
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {

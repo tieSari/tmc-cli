@@ -10,3 +10,4 @@ Feature: Submit command
         Given user has logged in with username "test" and password "1234"
         When user gives command submit with valid path "/testResources/failingExercise/viikko1/src" and exercise "Viikko1_001.Nimi"
         Then user will see the some test passing
+        Then user will see the result of tests
