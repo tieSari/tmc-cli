@@ -4,6 +4,8 @@ import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
 import java.io.File;
@@ -49,25 +51,23 @@ public class CourseSubmitter {
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
      */
-    public String submit(String currentPath) throws IOException {
+    public String submit(String currentPath) throws IOException, ParseException, ExpiredException {
         Exercise currentExercise = findExercise(currentPath);
+        if(isExpired(currentExercise)){
+            throw new ExpiredException();
+        }
         if (currentExercise == null) {
             throw new IllegalArgumentException("Could not find exercise in this directory");
         }
         return sendZipFile(currentPath, currentExercise);
     }
-    
-    public boolean isExpired(Exercise currentExercise){
+
+    public boolean isExpired(Exercise currentExercise) throws ParseException {
         Date date = new Date();
         Date current = new Date();
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss zzzz", Locale.ENGLISH);
-        try {
-            date = format.parse(currentExercise.getDeadline());
-        }
-        catch (ParseException ex) {
-            return false;
-        }
-        if(date.getTime() > current.getTime()){
+        date = format.parse(currentExercise.getDeadline());
+        if (date.getTime() < current.getTime()) {
             return true;
         }
         return false;
