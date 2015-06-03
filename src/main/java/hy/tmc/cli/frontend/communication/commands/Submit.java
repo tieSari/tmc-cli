@@ -50,10 +50,6 @@ public class Submit extends Command {
                 if (submissionResult.isAllTestsPassed()) {
                     frontend.feedback(submissionResult.getFeedbackQuestions(),
                             submissionResult.getFeedbackAnswerUrl());
-                    for (FeedbackQuestion question : submissionResult.getFeedbackQuestions()) {
-                        frontend.printLine("id: " + question.getId());
-                        frontend.printLine("question: " + question.getQuestion());
-                    }
                 }
             }
         }

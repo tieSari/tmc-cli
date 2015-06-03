@@ -14,8 +14,10 @@ function command_submit () {
 
   echo "$OUTPUT"
 
-  feedback ""
-
+  if [[ $OUTPUT =~ All\ tests\ passed.* ]]
+  then
+    feedback ""
+  fi
   # read -p x
   # send_command answerQuestion x y
   # if [[ output = "end" ]] then quit else send_command answerQuestion z w
@@ -32,13 +34,23 @@ function command_submit () {
 }
 
 function feedback () {
-  read -p "$@: " answer
+  if [[ $OUTPUT =~ .*text ]]
+    then
+    text_feedback
+  else
+    int_feedback
+  fi
+}
+
+function int_feedback () {
+  echo "$OUTPUT"
+  read -p "> " answer
   send_command_wait_output "answerQuestion answer $answer"
   if [[ $OUTPUT =~ end ]]
     then
     echo "Thank you for your answers!"
   else
-    feedback $OUTPUT
+    feedback
   fi
 }
 
@@ -55,6 +67,13 @@ function text_feedback () {
   nano $FEEDBACK
 
   PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
+  send_command_wait_output "answerQuestion answer $PARSEDOUTPUT"
+  if [[ $OUTPUT =~ end ]]
+    then
+    echo "Thank you for your answers!"
+  else
+    feedback $OUTPUT
+  fi
 }
 
 function command_login () {

@@ -137,8 +137,11 @@ public class UrlCommunicator {
     public static HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
             throws IOException {
         HttpPost httppost = new HttpPost(feedbackUrl);
-        StringEntity feedbackJson = new StringEntity(req.getAsString());
+        String jsonString = req.toString();
+        System.out.println(jsonString);
+        StringEntity feedbackJson = new StringEntity(jsonString);
         httppost.addHeader("content-type", "application/json");
+        addCredentials(httppost, ClientData.getFormattedUserData());
         httppost.setEntity(feedbackJson);
         return getResponseResult(httppost);
     }

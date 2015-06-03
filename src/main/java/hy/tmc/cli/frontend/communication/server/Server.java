@@ -47,7 +47,9 @@ public class Server implements FrontendListener, Runnable {
         this.feedbackQueue = new ArrayDeque<>();
         try {
             serverSocket = new ServerSocket(0);
-            new ConfigHandler().writePort(serverSocket.getLocalPort());
+            int serverPort = serverSocket.getLocalPort();
+            new ConfigHandler().writePort(serverPort);
+            System.out.println("Listening on port " + serverPort);
         } catch (IOException ex) {
             System.out.println("Server creation failed");
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -157,7 +159,20 @@ public class Server implements FrontendListener, Runnable {
     @Override
     public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
         this.feedbackQueue.clear();
-        this.feedbackQueue.addAll(feedbackQuestions);
+
+        for (FeedbackQuestion question : feedbackQuestions) {
+            if (!question.getKind().equals("text")) {
+                this.feedbackQueue.add(question);
+            }
+        }
+
+        for (FeedbackQuestion question : feedbackQuestions) {
+            if (question.getKind().equals("text")) {
+                this.feedbackQueue.add(question);
+            }
+        }
+
+
         this.feedbackUrl = feedbackUrl;
 
         this.askQuestion();
@@ -187,6 +202,7 @@ public class Server implements FrontendListener, Runnable {
         FeedbackQuestion nextQuestion = this.feedbackQueue.removeFirst();
         lastQuestionId = nextQuestion.getId();
         printLine(nextQuestion.getQuestion());
+        printLine(nextQuestion.getKind());
     }
 
     public void feedbackAnswer(String answer) {
@@ -203,7 +219,7 @@ public class Server implements FrontendListener, Runnable {
             req.add("answers", feedbackAnswers);
 
             try {
-                HttpResult httpResult = UrlCommunicator.makePostWithJson(req, this.feedbackUrl);
+                HttpResult httpResult = UrlCommunicator.makePostWithJson(req, this.feedbackUrl + "?" + new ConfigHandler().apiParam);
                 printLine(httpResult.getData());
             } catch (IOException e) {
                 printLine(e.getMessage());

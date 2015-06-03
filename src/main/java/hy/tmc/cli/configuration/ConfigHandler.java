@@ -20,7 +20,8 @@ public class ConfigHandler {
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
     public final String apiVersion = "7";
-    public final String coursesExtension = "/courses.json?api_version=" + apiVersion;
+    public final String apiParam = "api_version=" + apiVersion;
+    public final String coursesExtension = "/courses.json?" + apiParam;
     public final String authExtension = "/user";
 
     /**
