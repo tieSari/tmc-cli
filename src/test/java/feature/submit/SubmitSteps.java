@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 
 public class SubmitSteps {
-    
+
     private int port;
 
     private Thread serverThread;
@@ -32,7 +32,7 @@ public class SubmitSteps {
 
     private ConfigHandler configHandler; // writes the test address
     private WireMockServer wireMockServer;
-    
+
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
@@ -46,9 +46,10 @@ public class SubmitSteps {
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
-        
+
         startWireMock();
     }
+
     private void startWireMock() {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
@@ -73,7 +74,7 @@ public class SubmitSteps {
                 )
         );
     }
-    
+
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -96,10 +97,15 @@ public class SubmitSteps {
         testClient.sendMessage(message);
     }
 
-    @Then("^user will see the result of tests$")
-    public void user_will_see_the_result_of_tests() throws Throwable {
+    @Then("^user will see all test passing$")
+    public void user_will_see_all_test_passing() throws Throwable {
         final String result = testClient.reply();
         assertTrue(result.contains("All tests passed"));
+    }
+
+    @Then("^user will see the some test passing$")
+    public void user_will_see_the_some_test_passing() throws Throwable {
+        System.out.println(testClient.reply());
     }
 
     @After
