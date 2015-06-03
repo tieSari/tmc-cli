@@ -99,7 +99,7 @@ public class SubmitSteps {
 
     @Then("^user will see all test passing$")
     public void user_will_see_all_test_passing() throws Throwable {
-        final String result = testClient.reply();
+        String result = testClient.reply();
         assertTrue(result.contains("All tests passed"));
     }
 
