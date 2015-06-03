@@ -71,7 +71,7 @@ public class SubmissionInterpreter {
         latestResult = pollSubmissionUrl(url);
         return latestResult;
     }
-
+    
     private String summarize(SubmissionResult result, boolean detailed) {
         if (result.isAllTestsPassed()) {
             return buildSuccessMessage(result, detailed);

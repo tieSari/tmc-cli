@@ -20,8 +20,32 @@ import static javax.swing.text.html.HTML.Tag.HEAD;
  */
 public class Submit extends Command {
     
+    CourseSubmitter submitter;
+    SubmissionInterpreter interpreter;
+    
     public Submit(FrontendListener front) {
         super(front);
+        submitter = new CourseSubmitter(
+                new ProjectRootFinder(
+                        new DefaultRootDetector()
+                ),
+                new Zipper()
+        );
+        interpreter = new SubmissionInterpreter();
+    }
+    
+    /**
+     * Constructor for mocking.
+     * 
+     * @param front frontend.
+     * @param submitter can inject submitter mock.
+     * @param interpreter can inject interpreter mock.
+     */
+    
+    public Submit(FrontendListener front, CourseSubmitter submitter, SubmissionInterpreter interpreter) {
+        super(front);
+        this.submitter = submitter;
+        this.interpreter = interpreter;
     }
 
     /**
@@ -29,16 +53,8 @@ public class Submit extends Command {
      */
     @Override
     protected void functionality() {
-        CourseSubmitter submitter = new CourseSubmitter(
-                new ProjectRootFinder(
-                        new DefaultRootDetector()
-                ),
-                new Zipper()
-        );
         try {
             if (data.containsKey("exerciseName")) {
-//                String returnUrl = submitter.submit(data.get("path"), data.get("exerciseName"));
-//                frontend.printLine(new SubmissionInterpreter().resultSummary(returnUrl, true));
                 frontend.printLine("Doesnt work yet");
             } else {
                 String returnUrl = submitter.submit(data.get("path"));

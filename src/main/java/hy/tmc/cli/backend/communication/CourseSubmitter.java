@@ -6,14 +6,19 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
-
-import net.lingala.zip4j.exception.ZipException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.exception.ZipException;
 
 public class CourseSubmitter {
 
@@ -45,19 +50,69 @@ public class CourseSubmitter {
      * @throws IOException if failed to create zip.
      */
     public String submit(String currentPath) throws IOException {
+        Exercise currentExercise = searchExercise(currentPath);
+        return sendZipFile(currentPath, currentExercise, false);
+    }
+
+    /**
+     * Submits folder of exercise to TMC. Finds it from current directory.
+     * Result includes URL of paste.
+     *
+     * @param currentPath path from which this was called.
+     * @return String with url from which to get paste URL or null if exercise was not found.
+     * @throws IOException if failed to create zip.
+     */
+    
+    
+    public String submitPaste(String currentPath) throws IOException {
+        Exercise currentExercise = searchExercise(currentPath);
+        return sendZipFile(currentPath, currentExercise, true);
+    }
+
+    private Exercise searchExercise(String currentPath) throws IllegalArgumentException {
         Exercise currentExercise = findExercise(currentPath);
         if (currentExercise == null) {
             throw new IllegalArgumentException("Could not find exercise in this directory");
         }
-        return sendZipFile(currentPath, currentExercise);
+        return currentExercise;
+    }
+    
+    public boolean isExpired(Exercise currentExercise){
+        Date date = new Date();
+        Date current = new Date();
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss zzzz", Locale.ENGLISH);
+        try {
+            date = format.parse(currentExercise.getDeadline());
+        }
+        catch (ParseException ex) {
+            return false;
+        }
+        if(date.getTime() > current.getTime()){
+            return true;
+        }
+        return false;
     }
 
-    private String sendZipFile(String currentPath, Exercise currentExercise) throws IOException {
+    private String sendSubmissionToServerWithPaste(
+            String submissionZipPath,
+            String url) throws IOException {
+        HttpResult result = UrlCommunicator.makePostWithFile(
+                new File(submissionZipPath), url + "&paste=1"
+        );
+        return TmcJsonParser.getPasteUrl(result);
+    }
+
+    private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException {
         String submissionZipPath = currentPath + "/submission.zip";
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
 
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
-        String resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
+        String resultUrl;
+        if (paste) {
+            resultUrl = sendSubmissionToServerWithPaste(submissionZipPath, returnUrl);
+        } else {
+            resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
+        }
         new File(submissionZipPath).delete();
         return resultUrl;
     }

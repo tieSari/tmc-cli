@@ -29,6 +29,8 @@ public class CommandFactory {
         commandsByName.put("submit", submit(frontend));
         commandsByName.put("runTests", runTests(frontend));
         commandsByName.put("answerQuestion", answerQuestion(frontend));
+        commandsByName.put("paste", paste(frontend));
+        commandsByName.put("stopProcess", stopProcess(frontend));
         return commandsByName;
     }
 
@@ -51,14 +53,14 @@ public class CommandFactory {
     public static Command replyToPing(FrontendListener front) {
         return new ReplyToPing(front);
     }
-    
+
     /**
      * Create RunTests command object.
+     *
      * @param front frontend that the command will use
-     * @param back logic that the command will use
      * @return a help object
      */
-    public static Command runTests(FrontendListener front){
+    public static Command runTests(FrontendListener front) {
         return new RunTests(front);
     }
 
@@ -131,17 +133,34 @@ public class CommandFactory {
     public static Command chooseServer(FrontendListener front) {
         return new ChooseServer(front);
     }
-    
+
     /**
      * Create a Submit Command object.
      *
      * @param front frontend that the command will use
-     * @param back logic that the command will use
      * @return a Submit object
      */
-    
     public static Command submit(FrontendListener front) {
         return new Submit(front);
+    }
+    
+    /**
+     * Stops the whole process and exits java virtual machine.
+     * @param front frontend that the command will use
+     * @return StopProcess object
+     */
+    private static Command stopProcess(FrontendListener front) {
+        return new StopProcess(front);
+    }
+
+    /**
+     * Create a Paste Command object.
+     *
+     * @param front frontend that the command will use
+     * @return a Paste object
+     */
+    public static Command paste(FrontendListener front) {
+        return new Paste(front);
     }
 
     public static Command answerQuestion(FrontendListener front) {

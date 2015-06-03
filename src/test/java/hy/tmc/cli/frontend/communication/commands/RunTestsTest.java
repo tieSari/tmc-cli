@@ -1,4 +1,4 @@
-package hy.tmc.cli.frontend_communication.commands;
+package hy.tmc.cli.frontend.communication.commands;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -100,26 +100,5 @@ public class RunTestsTest {
         assertFalse(front.getMostRecentLine().contains("tests failed:"));
         
         assertTrue(front.getMostRecentLine().contains("All tests passed"));
-    }
-    
-    /**
-     * Check that nonexercise folder is recognized.
-     */
-    @Test(timeout = 15000)
-    public void testNonExercise() {
-        RunTests run = new RunTests(front);
-        String folders = "testResources" + File.separator + "successExercise" + File.separator;
-        String filepath = folders + "viikko1";
-        File file = new File(filepath);
-        run.setParameter("filepath", file.getAbsolutePath());
-        try {
-            run.execute();
-        } catch (ProtocolException ex) {
-            fail("Test executing failed");
-        }
-        
-        assertFalse(front.getMostRecentLine().contains("tests failed:"));
-        
-        assertEquals("Not an exercise.", front.getMostRecentLine());
     }
 }
