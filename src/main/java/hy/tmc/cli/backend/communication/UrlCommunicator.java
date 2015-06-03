@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Map;
 
 public class UrlCommunicator {
@@ -144,6 +143,7 @@ public class UrlCommunicator {
                 httpRequest.addHeader(header, headers.get(header));
             }
         }
+        
     }
 
     private static HttpResult getResponseResult(HttpRequestBase httpRequest)
