@@ -3,12 +3,32 @@
 #Submit command
 function command_submit () {
   #submit [<exercise name>]
+  echo "Submitting exercise..."
   if [ $# -eq 0 ]
     then
-    send_command "submit path `pwd`"
+    send_command_wait_output "submit path `pwd`"
   else
     echo "submit path `pwd` exerciseName $1"
-    send_command "submit path `pwd` exerciseName $1"
+    send_command_wait_output "submit path `pwd` exerciseName $1"
+  fi
+
+  if [[ $OUTPUT =~ All\ tests\ passed.* ]]
+  then
+    TIMESTAMP=`date +%s`
+    FEEDBACK="/tmp/feedback-$TIMESTAMP"
+    echo "" >> $FEEDBACK
+    echo "" >> $FEEDBACK
+    echo "#############" >> $FEEDBACK
+    echo "" >> $FEEDBACK
+    echo "Please enter feedback above the bar." >> $FEEDBACK
+    echo "" >> $FEEDBACK
+    echo "$OUTPUT" >> $FEEDBACK
+    nano $FEEDBACK
+
+    PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
+    # TODO: send output to server
+  else
+    echo "$OUTPUT"
   fi
 }
 
@@ -66,10 +86,24 @@ function send_command () {
 
 }
 
+function send_command_wait_output () {
+#    OUTPUT=$(echo $@ | nc localhost 1234)
+#    echo $OUTPUT
+    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+    CONFIGPATH="$DIR/config.properties"
+    CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
+    OUTPUT=`echo $@ | nc localhost $CONFIGPORT`
+
+    return 0;
+
+}
+
 control_c()
 # run if user hits control-c
 {
   echo -en "\Cancelling\n"
+  send_command "stopProcess"
   exit $?
 }
 
