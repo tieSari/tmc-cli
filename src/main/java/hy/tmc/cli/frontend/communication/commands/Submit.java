@@ -58,9 +58,8 @@ public class Submit extends Command {
                 frontend.printLine("Doesnt work yet");
             } else {
                 String returnUrl = submitter.submit(data.get("path"));
-                SubmissionInterpreter submissionInterpreter = new SubmissionInterpreter();
-                SubmissionResult submissionResult = submissionInterpreter.getSubmissionResult(returnUrl);
-                String summary = submissionInterpreter.resultSummary(true);
+                SubmissionResult submissionResult = interpreter.getSubmissionResult(returnUrl);
+                String summary = interpreter.resultSummary(true);
                 frontend.printLine(summary);
 
                 if (submissionResult.isAllTestsPassed()) {

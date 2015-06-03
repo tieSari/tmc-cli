@@ -1,8 +1,12 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
+
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.IOException;
@@ -12,7 +16,7 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
+
 
 public class SubmitTest {
 
@@ -43,8 +47,11 @@ public class SubmitTest {
 
     @Test
     public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
+        SubmissionResult submissionResult = new SubmissionResult();
+        submissionResult.setAllTestsPassed(false);
+        when(interpreter.getSubmissionResult(Mockito.anyString())).thenReturn(submissionResult);
+        when(interpreter.resultSummary(Mockito.anyBoolean())).thenReturn("No tests passed.");
         front.start();
-        when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("No tests passed.");
 
         submit.setParameter("path", "/hieno/path");
         submit.execute();
@@ -55,7 +62,10 @@ public class SubmitTest {
     @Test
     public void submitPrintsAllTestsPassedWhenCodeIsCorrect() throws ProtocolException, InterruptedException {
         front.start();
-        when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("All tests passed.");
+        SubmissionResult submissionResult = new SubmissionResult();
+        submissionResult.setAllTestsPassed(true);
+        when(interpreter.getSubmissionResult(Mockito.anyString())).thenReturn(submissionResult);
+        when(interpreter.resultSummary(Mockito.anyBoolean())).thenReturn("All tests passed.");
 
         submit.setParameter("path", "/hieno/path");
         submit.execute();
