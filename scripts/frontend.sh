@@ -103,7 +103,6 @@ control_c()
 # run if user hits control-c
 {
   echo -en "\Cancelling\n"
-  send_command "stopProcess"
   exit $?
 }
 
