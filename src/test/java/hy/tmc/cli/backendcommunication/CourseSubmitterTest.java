@@ -105,7 +105,6 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
-        assertNull(result);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -113,7 +112,6 @@ public class CourseSubmitterTest {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
-        assertNull(result);
     }
 
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {

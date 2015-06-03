@@ -53,10 +53,11 @@ public class CommandFactory {
 
     /**
      * Create RunTests command object.
+     *
      * @param front frontend that the command will use
      * @return a help object
      */
-    public static Command runTests(FrontendListener front){
+    public static Command runTests(FrontendListener front) {
         return new RunTests(front);
     }
 

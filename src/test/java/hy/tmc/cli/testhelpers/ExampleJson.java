@@ -56,5 +56,4 @@ public class ExampleJson {
             return "";
         }
     }
-
 }

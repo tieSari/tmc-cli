@@ -15,3 +15,9 @@ tmc-cli.iml
 build/*
 */private/*
 */build/*
+/config.properties
+/scripts/config.properties
+config.properties
+test.properties
+build_log.*
+build-jar.*

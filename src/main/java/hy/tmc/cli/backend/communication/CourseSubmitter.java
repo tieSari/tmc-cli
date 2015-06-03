@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,8 +56,8 @@ public class CourseSubmitter {
     }
 
     /**
-     * Submits folder of exercise to TMC. Finds it from current directory. Result includes URL of
-     * paste.
+     * Submits folder of exercise to TMC. Finds it from current directory.
+     * Result includes URL of paste.
      *
      * @param currentPath path from which this was called.
      * @return String with url from which to get paste URL or null if exercise was not found.

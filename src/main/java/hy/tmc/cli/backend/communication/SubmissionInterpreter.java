@@ -50,7 +50,7 @@ public class SubmissionInterpreter {
         SubmissionResult result = pollSubmissionUrl(url);
         return summarize(result, detailed);
     }
-
+    
     private String summarize(SubmissionResult result, boolean detailed) {
         if (result.isAllTestsPassed()) {
             return buildSuccessMessage(result, detailed);

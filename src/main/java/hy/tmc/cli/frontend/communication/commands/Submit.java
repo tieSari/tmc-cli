@@ -14,8 +14,7 @@ import java.io.IOException;
 /**
  * Submit command for submitting exercises to TMC
  */
-public class Submit extends Command {
-
+public class Submit extends Command {   
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
 
@@ -48,14 +47,12 @@ public class Submit extends Command {
      */
     @Override
     protected void functionality() {
-
         try {
             if (data.containsKey("exerciseName")) {
                 frontend.printLine("Doesnt work yet");
             } else {
                 String returnUrl = submitter.submit(data.get("path"));
                 frontend.printLine(interpreter.resultSummary(returnUrl, true));
-
             }
         }
         catch (IllegalArgumentException ex) {

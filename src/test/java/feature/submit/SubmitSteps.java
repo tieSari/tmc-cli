@@ -94,7 +94,7 @@ public class SubmitSteps {
                 )
         );
     }
-
+    
     /*
     * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
     */
