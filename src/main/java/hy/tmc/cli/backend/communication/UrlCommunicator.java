@@ -45,7 +45,6 @@ public class UrlCommunicator {
 
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
-        System.out.println("FILE: " + toBeUploaded);
         FileBody fileBody = new FileBody(toBeUploaded);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);

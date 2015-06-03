@@ -132,7 +132,6 @@ public class Server implements FrontendListener, Runnable {
             out.println(outputLine);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Printlinessa");
         }
         System.out.println(outputLine);
     }
