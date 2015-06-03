@@ -79,6 +79,16 @@ public class CourseSubmitterTest {
         assertEquals(submissionPath, result);
     }
     
+    /*@Test
+    public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
+        rootFinder.setReturnValue(testPath);
+        String exercise = "viikko1-Viikko1_001.Nimi";
+        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
+        String result = courseSubmitter.submit(testPath);
+        assertEquals(submissionPath, result);
+    }*/
+    
     @Test (expected=IllegalArgumentException.class)
     public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException {
         String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
