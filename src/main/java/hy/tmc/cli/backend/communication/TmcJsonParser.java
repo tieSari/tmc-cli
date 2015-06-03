@@ -43,12 +43,28 @@ public class TmcJsonParser {
 
         StringBuilder result = new StringBuilder();
         for (Course course : courses) {
-            result.append(course.getName()).append(", id:")
+            String name = course.getName();
+            result = addSpaces(result, name);
+            result.append(name).append(", id:")
                     .append(course.getId());
             result.append("\n");
         }
 
         return result.toString();
+    }
+
+    /**
+     * Add
+     * @param result
+     * @param name
+     * @return 
+     */
+    public static StringBuilder addSpaces(StringBuilder result, String name) {
+        int spaces = 50 - name.length();
+        for (int i = 0; i < spaces; i++) {
+            result.append(" ");
+        }
+        return result;
     }
 
     /**
@@ -83,6 +99,7 @@ public class TmcJsonParser {
 
     /**
      * Get information about course specified by the course ID.
+     *
      * @return an course Object (parsed from JSON)
      */
     public static Course getCourse(int courseID) {
@@ -91,8 +108,8 @@ public class TmcJsonParser {
     }
 
     /**
-     * Get information about course specified by the URL path
-     * to course JSON.
+     * Get information about course specified by the URL path to course JSON.
+     *
      * @param courseUrl URL path to course JSON
      * @return an Course object (parsed from JSON)
      */
@@ -134,10 +151,10 @@ public class TmcJsonParser {
         Course course = getCourse(courseUrl);
         return course.getExercises();
     }
-    
+
     /**
      * Parses JSON in url to create a SubmissionResult object.
-     * 
+     *
      * @param url to make request to
      * @return A SubmissionResult object which contains data of submission.
      */
@@ -146,14 +163,13 @@ public class TmcJsonParser {
         Gson mapper = new Gson();
         return mapper.fromJson(submission, SubmissionResult.class);
     }
-    
+
     /**
      * Parses the submission result URL from a HttpResult with JSON.
-     * 
+     *
      * @param result HTTPResult containing JSON with submission url.
      * @return url where submission results are located.
      */
-    
     public static String getSubmissionUrl(HttpResult result) {
         return getPropertyFromResult(result, "submission_url");
     }
