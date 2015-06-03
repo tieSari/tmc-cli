@@ -67,7 +67,7 @@ function text_feedback () {
   nano $FEEDBACK
 
   PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
-  send_command_wait_output "answerQuestion answer $PARSEDOUTPUT"
+  send_command_wait_output "answerQuestion answer { ${PARSEDOUTPUT//$'\n'/<newline>} }"
   if [[ $OUTPUT =~ end ]]
     then
     echo "Thank you for your answers!"

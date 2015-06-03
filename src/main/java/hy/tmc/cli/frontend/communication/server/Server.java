@@ -6,6 +6,7 @@ import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
+import hy.tmc.cli.frontend.FeedbackHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 
 import java.io.BufferedReader;
@@ -30,10 +31,8 @@ public class Server implements FrontendListener, Runnable {
     private ServerSocket serverSocket;
     private boolean isRunning;
     private BufferedReader in;
-    private ArrayDeque<FeedbackQuestion> feedbackQueue;
-    private String feedbackUrl;
     private JsonArray feedbackAnswers = new JsonArray();
-    private int lastQuestionId;
+    private FeedbackHandler feedbackHandler;
 
     /**
      * Constructor for server.
@@ -44,7 +43,6 @@ public class Server implements FrontendListener, Runnable {
 
 
     public Server() throws IOException {
-        this.feedbackQueue = new ArrayDeque<>();
         try {
             serverSocket = new ServerSocket(0);
             int serverPort = serverSocket.getLocalPort();
@@ -55,6 +53,7 @@ public class Server implements FrontendListener, Runnable {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.parser = new ProtocolParser(this);
+        this.feedbackHandler = new FeedbackHandler(this);
     }
     
     public int getCurrentPort() {
@@ -158,74 +157,33 @@ public class Server implements FrontendListener, Runnable {
 
     @Override
     public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
-        this.feedbackQueue.clear();
-
-        for (FeedbackQuestion question : feedbackQuestions) {
-            if (!question.getKind().equals("text")) {
-                this.feedbackQueue.add(question);
-            }
-        }
-
-        for (FeedbackQuestion question : feedbackQuestions) {
-            if (question.getKind().equals("text")) {
-                this.feedbackQueue.add(question);
-            }
-        }
-
-
-        this.feedbackUrl = feedbackUrl;
-
-        this.askQuestion();
-
-        /*for (FeedbackQuestion question : feedbackQuestions) {
-            printLine(question.getQuestion() + ": ");
-
-            String answer;
-            try {
-                answer = null;
-                while (answer == null) {
-                    answer = readCommandFromClient(clientSocket);
-                }
-                printLine("vastaus: " + answer);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-
-        }
-        printLine("end");
-        */
-    }
-
-    public void askQuestion() {
-        FeedbackQuestion nextQuestion = this.feedbackQueue.removeFirst();
-        lastQuestionId = nextQuestion.getId();
-        printLine(nextQuestion.getQuestion());
-        printLine(nextQuestion.getKind());
+        this.feedbackHandler.feedback(feedbackQuestions, feedbackUrl);
     }
 
     public void feedbackAnswer(String answer) {
         JsonObject jsonAnswer = new JsonObject();
-        jsonAnswer.addProperty("question_id", lastQuestionId);
+        jsonAnswer.addProperty("question_id", feedbackHandler.getLastId());
         jsonAnswer.addProperty("answer", answer);
+        System.out.println("vastaus: ");
+        System.out.println(answer);
         feedbackAnswers.add(jsonAnswer);
 
         //printLine("accepted answer");
 
-        if (this.feedbackQueue.isEmpty()) {
+        if (this.feedbackHandler.allQuestionsAsked()) {
             printLine("end");
             JsonObject req = new JsonObject();
             req.add("answers", feedbackAnswers);
 
             try {
-                HttpResult httpResult = UrlCommunicator.makePostWithJson(req, this.feedbackUrl + "?" + new ConfigHandler().apiParam);
+                HttpResult httpResult = UrlCommunicator.makePostWithJson(req, feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam);
                 printLine(httpResult.getData());
             } catch (IOException e) {
                 printLine(e.getMessage());
             }
-        } else
-            askQuestion();
 
+            this.feedbackAnswers = new JsonArray();
+        } else
+            feedbackHandler.askQuestion();
     }
 }
