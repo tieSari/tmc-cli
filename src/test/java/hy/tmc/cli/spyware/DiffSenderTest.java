@@ -45,7 +45,6 @@ public class DiffSenderTest {
     @Before
     public void setup() throws IOException {
         config = new ConfigHandler();
-        originalServerUrl = config.readServerAddress();
         config.writeServerAddress("http://127.0.0.1:8080");
         ClientData.setUserData("test", "1234");
         sender = new DiffSender();
@@ -102,6 +101,6 @@ public class DiffSenderTest {
     @After
     public void cleanUp() throws IOException {
         ClientData.clearUserData();
-        config.writeServerAddress(originalServerUrl);
+        config.writeServerAddress("https://tmc.mooc.fi/staging");
     }
 }
