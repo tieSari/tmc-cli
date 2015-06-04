@@ -13,9 +13,19 @@ public class ExampleJson {
     public static String failedSubmission = failedSubmission();
     public static String submitResponse = submitResponse();
     public static String pasteResponse = pasteResponse();
+    public static String feedbackExample = feedbackExample();
+    public static String noFeedbackExample = noFeedbackExample();
 
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");
+    }
+
+    private static String feedbackExample() {
+        return readFile("src/test/resources/feedback.json");
+    }
+
+    private static String noFeedbackExample() {
+        return readFile("src/test/resourses/noFeedback.json");
     }
 
     private static String failedSubmission() {

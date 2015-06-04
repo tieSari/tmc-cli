@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
 public class Server implements FrontendListener, Runnable {
 
     private Socket clientSocket;
@@ -36,30 +34,36 @@ public class Server implements FrontendListener, Runnable {
 
     /**
      * Constructor for server.
+     *
      * @throws IOException if failed to write port to config file
      */
-    
-
-
-
     public Server() throws IOException {
         try {
             serverSocket = new ServerSocket(0);
             int serverPort = serverSocket.getLocalPort();
             new ConfigHandler().writePort(serverPort);
             System.out.println("Listening on port " + serverPort);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.out.println("Server creation failed");
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.parser = new ProtocolParser(this);
         this.feedbackHandler = new FeedbackHandler(this);
     }
-    
+
+    /**
+     * Dependency injection for tests.
+     */
+    public Server(FeedbackHandler handler) throws IOException {
+        this();
+        this.feedbackHandler = handler;
+    }
+
     public int getCurrentPort() {
         return this.serverSocket.getLocalPort();
     }
-    
+
     /**
      * Start is general function to set up server listening for the frontend.
      */
@@ -170,21 +174,23 @@ public class Server implements FrontendListener, Runnable {
         feedbackAnswers.add(jsonAnswer);
 
         //printLine("accepted answer");
-
         if (this.feedbackHandler.allQuestionsAsked()) {
             printLine("end");
-            JsonObject req = new JsonObject();
-            req.add("answers", feedbackAnswers);
-
-            try {
-                HttpResult httpResult = UrlCommunicator.makePostWithJson(req, feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam);
-                printLine(httpResult.getData());
-            } catch (IOException e) {
-                printLine(e.getMessage());
-            }
-
             this.feedbackAnswers = new JsonArray();
-        } else
+        } else {
             feedbackHandler.askQuestion();
+        }
+    }
+
+    protected void sendToTmcServer(JsonArray answers) {
+        JsonObject req = new JsonObject();
+        req.add("answers", feedbackAnswers);
+        try {
+            HttpResult httpResult = UrlCommunicator.makePostWithJson(req, feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam);
+            printLine(httpResult.getData());
+        }
+        catch (IOException e) {
+            printLine(e.getMessage());
+        }
     }
 }

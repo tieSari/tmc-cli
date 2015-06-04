@@ -1,9 +1,5 @@
 package hy.tmc.cli.frontend;
 
-import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
-import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
-import static hy.tmc.cli.frontend.CommandLineColor.RED;
-import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 
 import fi.helsinki.cs.tmc.langs.RunResult;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
