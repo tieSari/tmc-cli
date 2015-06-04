@@ -41,7 +41,6 @@ public class UnzipperTest {
     @After
     public void teardown() throws IOException {
         final File file = new File(unzipPath);
-        System.out.println(file.getAbsolutePath());
         FileUtils.deleteDirectory(file);
         file.mkdir();
     }

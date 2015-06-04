@@ -12,7 +12,6 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import gherkin.deps.com.google.gson.Gson;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
@@ -102,6 +101,7 @@ public class PasteSteps {
     @Then("^user will see the paste url$")
     public void user_will_see_the_paste_url() throws Throwable {
         String result = testClient.reply();
+        System.out.println("result: " + result);
         assertTrue(result.contains("Paste submitted"));
     }
 
