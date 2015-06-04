@@ -9,9 +9,9 @@
 tmc-cli.iml
 /scripts/config
 /scripts/*.jar
-/config.properties
+**/config.properties
 /scripts/config.properties
-config.properties
-test.properties
-build_log.*
-build-jar.*
+**/test.properties
+**/build_log.*
+**/build-jar.*
+**/config

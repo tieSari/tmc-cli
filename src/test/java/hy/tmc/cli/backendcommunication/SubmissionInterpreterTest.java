@@ -104,4 +104,15 @@ public class SubmissionInterpreterTest {
         assertFalse(output.contains("KayttajatunnuksetTest sopivatKayvat"));
 
     }
+    
+    @Test
+    public void resultWithCheckstyleContainsCheckstyleErrors() {
+        
+    }
+    
+    @Test
+    public void resultWithNoCheckstyleDoesntContainCheckstyleErrors() {
+        
+    }
+    
 }
