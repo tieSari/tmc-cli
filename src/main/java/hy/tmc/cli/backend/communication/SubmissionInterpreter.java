@@ -25,14 +25,15 @@ public class SubmissionInterpreter {
     private final int pollInterval = 1000;
 
     /**
-     * Returns a ready SubmissionResult with all fields complete after processing.
+     * Returns a ready SubmissionResult with all fields complete after
+     * processing.
      *
      * @param url url to make request to
-     * @return SubmissionResult containing details of submission. Null if timed out.
+     * @return SubmissionResult containing details of submission. Null if timed
+     * out.
      * @throws InterruptedException if thread failed to sleep
      */
     private SubmissionResult pollSubmissionUrl(String url) throws InterruptedException {
-        System.out.println(TmcJsonParser.getSubmissionResult(url).getExerciseName());
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = TmcJsonParser.getSubmissionResult(url);
             if (result.getStatus() == null || !result.getStatus().equals("processing")) {
@@ -69,6 +70,9 @@ public class SubmissionInterpreter {
     }
 
     private String checkStyleErrors(SubmissionResult result) {
+        if (result.getValidations() == null) {
+            return "";
+        }
         StringBuilder builder = new StringBuilder();
 
         Map<String, List<ValidationError>> errors = result.getValidations().getValidationErrors();
