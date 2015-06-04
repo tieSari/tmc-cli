@@ -25,8 +25,7 @@ public class FeedbackHandlerTest {
     public void answerOneQuestion() {
         builder.withSimpleTextQuestion();
         handler.feedback(builder.build(), "");
-        assertTrue(frontend.getAllLines().contains("hello world"));
-        assertTrue(frontend.getAllLines().contains("text"));
+        assertEquals("hello world", frontend.getMostRecentLine());
     }
 
     @Test
@@ -54,11 +53,35 @@ public class FeedbackHandlerTest {
         handler.askQuestion();
         assertTrue(frontend.getAllLines().contains("hello world"));
     }
-
+    
     @Test
     public void validateIntRange() {
         builder.withBasicIntRangeQuestion();
         handler.feedback(builder.build(), "");
         assertEquals("0", handler.validateAnswer("-1"));
+    }
+    
+    @Test
+    public void instructionMessage() {
+        builder.withBasicIntRangeQuestion();
+        handler.feedback(builder.build(), "");
+        String expected = "Please give your answer as an integer between [0..10] (inclusive)";
+        assertEquals(expected, frontend.getMostRecentLine());
+    }
+    
+    @Test
+    public void instructionMessageTest2() {
+        builder.withNegativeIntRange();
+        handler.feedback(builder.build(), "");
+        String expected = "Please give your answer as an integer between [-10..10] (inclusive)";
+        assertEquals(expected, frontend.getMostRecentLine());
+    }
+    
+    @Test
+    public void urlGetterTest(){
+        String url = "http://mooc.helsinki.fi/staging/test";
+        builder.withSimpleTextQuestion();
+        handler.feedback(builder.build(), url);
+        assertEquals(url, handler.getFeedbackUrl());
     }
 }
