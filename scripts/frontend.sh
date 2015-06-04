@@ -16,7 +16,7 @@ function command_submit () {
 
   if [[ $OUTPUT =~ All\ tests\ passed.*Please\ give\ feedback\:.* ]]
   then
-    OUTPUT=`sed -n '/Please give feedback\:/q;p' $OUTPUT`
+    OUTPUT=""
     feedback
   fi
   # read -p x

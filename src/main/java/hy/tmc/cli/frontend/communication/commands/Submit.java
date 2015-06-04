@@ -65,6 +65,7 @@ public class Submit extends Command {
                 if (submissionResult.isAllTestsPassed()) {
                     List<FeedbackQuestion> feedback = submissionResult.getFeedbackQuestions();
                     if (feedback != null && !feedback.isEmpty()) {
+                        frontend.printLine("Please give feedback:");
                         frontend.feedback(feedback, submissionResult.getFeedbackAnswerUrl());
                     }
                 }
