@@ -1,11 +1,11 @@
 
 package hy.tmc.cli.zipping;
 
+import com.google.common.base.Optional;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,13 +25,13 @@ public class ProjectRootFinderTest {
     }
 
     public void testGetRootDirectory() {
-        Path root = finder.getRootDirectory(Paths.get("testResources/mockProject"));
-        assertEquals("testResources/mockProject/root",root.toString());
+        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources/mockProject"));
+        assertEquals("testResources/mockProject/root",root.get().toString());
     }
     
     public void testGetRootDirectory2() {
-        Path root = finder.getRootDirectory(Paths.get("testResources/noyml"));
+        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources/noyml"));
         System.out.println(root);
-        assertEquals("testResources/noyml/rootWithoutYml",root.toString());
+        assertEquals("testResources/noyml/rootWithoutYml",root.get().toString());
     }
 }
