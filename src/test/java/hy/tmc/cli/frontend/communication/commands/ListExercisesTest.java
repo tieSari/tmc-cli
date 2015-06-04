@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
 import hy.tmc.cli.backend.communication.HttpResult;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +11,6 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +20,6 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
@@ -57,7 +53,8 @@ public class ListExercisesTest {
         ls.setParameter("courseUrl", "legit");
         try {
             ls.checkData();
-        } catch (ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -67,13 +64,26 @@ public class ListExercisesTest {
         list.setParameter("courseUrl", "any");
         try {
             list.execute();
-            System.out.println(front.getMostRecentLine());
+            front.getMostRecentLine();
             assertTrue(front.getMostRecentLine().contains("viikko1-Viikko1_000.Hiekkalaatikko"));
             assertTrue(front.getMostRecentLine().contains("viikko3-Viikko3_046.LukujenKeskiarvo"));
-        } catch (ProtocolException ex) {
+        }
+        catch (ProtocolException ex) {
             fail("unexpected exception");
         }
 
+    }
+
+    @Test(expected = ProtocolException.class)
+    public void throwsErrorIfNoUser() throws ProtocolException {
+        ClientData.clearUserData();
+        list.setParameter("courseUrl", "any");
+        list.execute();
+    }
+
+    @Test(expected = ProtocolException.class)
+    public void throwsErrorIfNoCourseSpecified() throws ProtocolException {
+        list.execute();
     }
 
     @Test
@@ -82,7 +92,8 @@ public class ListExercisesTest {
         try {
             list.execute();
             assertFalse(front.getMostRecentLine().contains("Ilari"));
-        } catch (ProtocolException ex) {
+        }
+        catch (ProtocolException ex) {
             fail("unexpected exception");
         }
     }
