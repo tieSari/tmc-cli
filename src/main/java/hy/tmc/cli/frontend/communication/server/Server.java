@@ -173,8 +173,7 @@ public class Server implements FrontendListener, Runnable {
 
         if (this.feedbackHandler.allQuestionsAsked()) {
             printLine("end");
-            JsonObject req = new JsonObject();
-            req.add("answers", feedbackAnswers);
+            JsonObject req = getAnswersJson();
 
             try {
                 HttpResult httpResult = UrlCommunicator.makePostWithJson(req, feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam);
@@ -186,5 +185,11 @@ public class Server implements FrontendListener, Runnable {
             this.feedbackAnswers = new JsonArray();
         } else
             feedbackHandler.askQuestion();
+    }
+
+    private JsonObject getAnswersJson() {
+        JsonObject req = new JsonObject();
+        req.add("answers", feedbackAnswers);
+        return req;
     }
 }
