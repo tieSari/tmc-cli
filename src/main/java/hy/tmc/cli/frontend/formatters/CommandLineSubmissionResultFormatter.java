@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class CommandLineSubmissionResultFormatter implements SubmissionResultFormatter {
 
     @Override
-    public String sometestsfailed() {
+    public String someTestsFailed() {
         return "Some tests failed on server. Summary: \n";
     }
 

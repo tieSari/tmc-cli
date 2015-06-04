@@ -10,7 +10,7 @@ import hy.tmc.cli.domain.submission.SubmissionResult;
  */
 public interface SubmissionResultFormatter {
 
-    public String sometestsfailed();
+    public String someTestsFailed();
     public String testCaseDescription(TestCase testCase);
     public String allTestsPassed();
     public String viewModelSolution(String solutionUrl);
