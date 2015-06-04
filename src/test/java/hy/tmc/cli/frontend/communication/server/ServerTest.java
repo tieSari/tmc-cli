@@ -1,8 +1,15 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -30,8 +37,12 @@ public class ServerTest {
     private final String wiremockServer = "127.0.0.1";
     private final String wiremockAddress = "http://" + wiremockServer + ":" + wiremockPort;
     private final String feedbackEndpoint = "/feedback";
-    private final String feedbackStubEndpoint = feedbackEndpoint + "?" + new ConfigHandler().apiParam;
+    private final String feedbackStubEndpoint = feedbackEndpoint
+            + "?" + new ConfigHandler().apiParam;
 
+    /**
+     * Setups the server and starts it in a thread.
+     */
     @Before
     public void setUp() throws Exception {
         this.server = new Server();
@@ -65,12 +76,12 @@ public class ServerTest {
         assertNotEquals("pong", client.reply());
     }
 
-    @Test(timeout=15000)
+    @Test(timeout = 15000)
     public void feedbackAnswerSendsCorrectJson() throws IOException {
         List<FeedbackQuestion> questions = getFeedbackQuestions();
 
         stubFor(post(urlEqualTo(feedbackStubEndpoint))
-        .willReturn(aResponse().withStatus(200)));
+            .willReturn(aResponse().withStatus(200)));
 
         TestClient client = createTestClient();
 
@@ -80,7 +91,6 @@ public class ServerTest {
 
         assertEquals("Hello", reply);
         assertEquals("text", client.reply());
-
         answerQuestion(client, "yo");
 
         reply = waitForInput(client);
@@ -95,9 +105,9 @@ public class ServerTest {
         waitForInput(client);
 
         verify(postRequestedFor(urlEqualTo(feedbackStubEndpoint))
-        .withRequestBody(equalTo("{\"answers" +
-                "\":[{\"question_id\":1,\"answer\":\"yo\"}," +
-                "{\"question_id\":2,\"answer\":\"sup\"}]}")));
+            .withRequestBody(equalTo("{\"answers"
+                + "\":[{\"question_id\":1,\"answer\":\"yo\"},"
+                + "{\"question_id\":2,\"answer\":\"sup\"}]}")));
     }
 
     private void answerQuestion(TestClient client, String answer) throws IOException {
