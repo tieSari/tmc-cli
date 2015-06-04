@@ -21,7 +21,6 @@ import hy.tmc.cli.testhelpers.ZipperStub;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
