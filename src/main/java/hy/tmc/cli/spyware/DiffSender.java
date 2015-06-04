@@ -30,20 +30,46 @@ public class DiffSender {
         }
         return results;
     }
+    
+    /**
+     * Sends given byte-data to all URLs specified by course.
+     *
+     * @param diffs as byte-array
+     * @param currentCourse tell all spywareUrls
+     * @return all results
+     */
+    public List<HttpResult> sendToSpyware(byte[] diffs, Course currentCourse) {
+        List<String> spywareUrls = currentCourse.getSpywareUrls();
+        List<HttpResult> results = new ArrayList<>();
+        for (String url : spywareUrls) {
+            results.add(sendToUrl(diffs, url));
+        }
+        return results;
+    }
 
     /**
-     * Sends given file to all URLs specified by course.
+     * Sends file to url.
      *
      * @param diffFile includes diffs to be sended
      * @param url of destination
      * @return HttpResult from UrlCommunicator
      */
     public HttpResult sendToUrl(File diffFile, String url) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("X-Tmc-Version", "1");
-        headers.put("X-Tmc-Username", ClientData.getUsername());
-        headers.put("X-Tmc-Password", ClientData.getPassword());
+        Map<String, String> headers = createHeaders();
         HttpResult result = makePostRequest(diffFile, url, headers);
+        return result;
+    }
+    
+    /**
+     * Sends diff-data to url.
+     *
+     * @param diffs as 
+     * @param url of destination
+     * @return HttpResult from UrlCommunicator
+     */
+    public HttpResult sendToUrl(byte[] diffs, String url) {
+        Map<String, String> headers = createHeaders();
+        HttpResult result = makePostRequest(diffs, url, headers);
         return result;
     }
 
@@ -55,5 +81,17 @@ public class DiffSender {
             System.err.println(ex.getMessage());
         }
         return result;
+    }
+    
+    private HttpResult makePostRequest(byte[] diffs, String url, Map<String, String> headers) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private Map<String, String> createHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Tmc-Version", "1");
+        headers.put("X-Tmc-Username", ClientData.getUsername());
+        headers.put("X-Tmc-Password", ClientData.getPassword());
+        return headers;
     }
 }
