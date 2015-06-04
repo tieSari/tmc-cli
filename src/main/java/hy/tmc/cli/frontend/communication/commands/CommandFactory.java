@@ -3,6 +3,7 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.frontend.FrontendListener;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class CommandFactory {
@@ -13,7 +14,7 @@ public class CommandFactory {
      * @param frontend that the commands will use
      * @return A map of names to corresponding commands
      */
-    public static HashMap<String, Command> createCommandMap(FrontendListener frontend) {
+    public static Map<String, Command> createCommandMap(FrontendListener frontend) {
         HashMap<String, Command> commandsByName = new HashMap<>();
         commandsByName.put("auth", authenticate(frontend));
         commandsByName.put("help", help(frontend));

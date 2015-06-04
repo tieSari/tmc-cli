@@ -30,7 +30,8 @@ public class TmcJsonParser {
                 url, ClientData.getFormattedUserData()
         );
         String data = httpResult.getData();
-        return new JsonParser().parse(data).getAsJsonObject();
+        final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        return json;
     }
 
     /**

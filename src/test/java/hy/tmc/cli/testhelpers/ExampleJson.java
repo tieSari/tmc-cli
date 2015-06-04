@@ -12,9 +12,21 @@ public class ExampleJson {
     public static String successfulSubmission = successfulSubmission();
     public static String failedSubmission = failedSubmission();
     public static String submitResponse = submitResponse();
+    public static String failingCourse = failingCourse();
+    public static String failedSubmitResponse = failedSubmitResponse();
     public static String pasteResponse = pasteResponse();
     public static String checkstyleFailed = checkstyleFailed();
     public static String valgrindFailed = valgrindFailed();
+
+    
+    private static String failingCourse() {
+        return readFile("src/test/resources/failingCourse.json");
+    }
+    
+    private static String failedSubmitResponse() {
+        return readFile("src/test/resources/failedSubmitResponse.json");
+    }
+
 
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");

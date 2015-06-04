@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
@@ -11,16 +10,14 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 
 import java.io.IOException;
-import static javax.swing.text.html.HTML.Tag.HEAD;
 
 /**
  * Submit command for submitting exercises to TMC
  */
-public class Submit extends Command {
-    
+public class Submit extends Command {   
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
-    
+
     public Submit(FrontendListener front) {
         super(front);
         submitter = new CourseSubmitter(
@@ -31,15 +28,14 @@ public class Submit extends Command {
         );
         interpreter = new SubmissionInterpreter();
     }
-    
+
     /**
      * Constructor for mocking.
-     * 
+     *
      * @param front frontend.
      * @param submitter can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    
     public Submit(FrontendListener front, CourseSubmitter submitter, SubmissionInterpreter interpreter) {
         super(front);
         this.submitter = submitter;
