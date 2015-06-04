@@ -2,7 +2,8 @@ package hy.tmc.cli.backend.communication;
 
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
-
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import java.util.Arrays;
 
 public class SubmissionInterpreter {
@@ -16,6 +17,8 @@ public class SubmissionInterpreter {
      * Milliseconds to sleep between each poll attempt.
      */
     private final int pollInterval = 1000;
+    
+    private final SubmissionResultFormatter formatter = new CommandLineSubmissionResultFormatter();
 
     /**
      * Returns a ready SubmissionResult with all fields complete after
@@ -55,19 +58,17 @@ public class SubmissionInterpreter {
         if (result.isAllTestsPassed()) {
             return buildSuccessMessage(result, detailed);
         } else {
-            return "Some tests failed on server. Summary: \n"
+            return formatter.sometestsfailed()
                     + testCaseResults(result.getTestCases(), detailed);
         }
     }
 
     private String buildSuccessMessage(SubmissionResult result, boolean detailed) {
         StringBuilder builder = new StringBuilder();
-        builder.append("All tests passed. Points awarded: ")
-                .append(Arrays.toString(result.getPoints()))
-                .append("\n")
+        builder.append(formatter.allTestsPassed())
+                .append(formatter.getPointsInformation(result))
                 .append(testCaseResults(result.getTestCases(), detailed))
-                .append("View model solution: \n")
-                .append(result.getSolutionUrl());
+                .append(formatter.viewModelSolution(result.getSolutionUrl()));
         return builder.toString();
     }
 
@@ -75,16 +76,13 @@ public class SubmissionInterpreter {
         StringBuilder result = new StringBuilder();
         for (TestCase aCase : cases) {
             if (showSuccessful || !aCase.isSuccessful()) {
-                result.append(failOrSuccess(aCase)).append("\n");
+                result.append(failOrSuccess(aCase));
             }
         }
         return result.toString();
     }
 
     private String failOrSuccess(TestCase testCase) {
-        if (testCase.isSuccessful()) {
-            return "  PASSED: " + testCase.getName();
-        }
-        return "  FAILED: " + testCase.getName() + "\n  " + testCase.getMessage();
+        return formatter.testCaseDescription(testCase);
     }
 }

@@ -7,10 +7,10 @@ import fi.helsinki.cs.tmc.langs.TestResult;
 import java.util.List;
 
 /**
- * ResultFormatter interface makes easier to attach new frontends to core. 
- * Result is formatted with some class which implements this interface.
+ * TestResultFormatter interface makes easier to attach new frontends to core. 
+ * TestResult is formatted with some class which implements this interface.
  */
-public interface ResultFormatter {
+public interface TestResultFormatter {
     public String interpretStatus(RunResult result);
     
     public String someTestsFailed();

@@ -7,7 +7,7 @@ import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-import hy.tmc.cli.frontend.formatters.CommandLineFormatter;
+import hy.tmc.cli.frontend.formatters.CommandLineTestResultFormatter;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
@@ -48,7 +48,7 @@ public class RunTests extends Command {
         RunResult result = taskExecutor.runTests(exercise);
         
         boolean showStackTrace = this.data.containsKey("verbose");
-        CommandLineFormatter formatter = new CommandLineFormatter();
+        CommandLineTestResultFormatter formatter = new CommandLineTestResultFormatter();
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         String res = resInt.interpret(showStackTrace);
         
