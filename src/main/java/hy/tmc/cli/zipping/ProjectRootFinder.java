@@ -1,8 +1,7 @@
 package hy.tmc.cli.zipping;
 
-import java.io.File;
+import com.google.common.base.Optional;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
 
 public class ProjectRootFinder implements RootFinder {
 
@@ -28,18 +27,18 @@ public class ProjectRootFinder implements RootFinder {
      * @return path of the root, of null if no root was found
      */
     @Override
-    public Path getRootDirectory(Path start) {
+    public Optional<Path> getRootDirectory(Path start) {
         return search(start);
     }
 
-    private Path search(Path path) {
+    private Optional<Path> search(Path path) {
         while (path.getParent() != null) {
             System.out.println(path.toString());
             if (detector.isRootDirectory(path)) {
-                return path;
+                return Optional.of(path);
             }
             path = path.getParent();
         }
-        return null;
+        return Optional.absent();
     }
 }

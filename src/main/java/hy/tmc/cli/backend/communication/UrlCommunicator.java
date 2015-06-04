@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend.communication;
 
+import com.google.common.base.Optional;
 import static hy.tmc.cli.backend.communication.authorization.Authorization.encode;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 public class UrlCommunicator {
 
@@ -32,12 +34,16 @@ public class UrlCommunicator {
      *
      * @param toBeUploaded File-object that gets attached to request.
      * @param destinationUrl destination of the url.
+     * @param headers Headers to be added to httprequest.
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public static HttpResult makePostWithFile(File toBeUploaded, String destinationUrl)
+    public static HttpResult makePostWithFile(File toBeUploaded,
+            String destinationUrl,
+            Optional<Map<String, String>> headers)
             throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
+        addHeadersTo(httppost, headers);
         FileBody fileBody = new FileBody(toBeUploaded);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
@@ -56,15 +62,15 @@ public class UrlCommunicator {
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is
-     always username:password
+     * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
         try {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
@@ -95,7 +101,8 @@ public class UrlCommunicator {
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
 
             return true;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return false;
         }
     }
@@ -126,12 +133,25 @@ public class UrlCommunicator {
         httpRequest.setHeader("User-Agent", USER_AGENT);
     }
 
-    private static HttpResult getResponseResult(HttpRequestBase httpRequest) 
+    /**
+     * Adds headers to request if present.
+     *
+     * @param httpRequest where to put headers.
+     * @param headers to be included.
+     */
+    private static void addHeadersTo(HttpRequestBase httpRequest, Optional<Map<String, String>> headers) {
+        if (headers.isPresent()) {
+            for (String header : headers.get().keySet()) {
+                httpRequest.addHeader(header, headers.get().get(header));
+            }
+        }
+    }
+
+    private static HttpResult getResponseResult(HttpRequestBase httpRequest)
             throws UnsupportedOperationException, IOException {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();
         return new HttpResult(result.toString(), status, true);
     }
-
 }

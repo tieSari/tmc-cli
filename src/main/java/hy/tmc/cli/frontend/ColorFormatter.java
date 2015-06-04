@@ -7,6 +7,8 @@ public class ColorFormatter {
     
     /**
      * Add color formatting codes to text. 
+     * @param text
+     * @param color
      * @color the foreground color to be used
      * @return a string that will be colored with the specified color
      */
@@ -16,6 +18,10 @@ public class ColorFormatter {
     
     /**
      * Add color formatting codes to text.
+     * @param text to show
+     * @param foreground color
+     * @param background color
+     * @return 
      */
     public static String coloredString(String text, 
             CommandLineColor foreground, CommandLineColor background) {

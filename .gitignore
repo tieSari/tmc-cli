@@ -9,6 +9,12 @@
 tmc-cli.iml
 /scripts/config
 /scripts/*.jar
+*/build_log.txt
+*/private/
+*/build/
+build/*
+*/private/*
+*/build/*
 /config.properties
 /scripts/config.properties
 config.properties

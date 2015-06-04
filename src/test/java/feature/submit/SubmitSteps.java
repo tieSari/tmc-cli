@@ -30,12 +30,15 @@ public class SubmitSteps {
     private TestClient testClient;
     private Server server;
 
-    private ConfigHandler configHandler; // writes the test address
+    private ConfigHandler configHandler;
     private WireMockServer wireMockServer;
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
+    /*
+    * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
+    */
     @Before
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
@@ -49,6 +52,10 @@ public class SubmitSteps {
 
         startWireMock();
     }
+
+    /*
+    * Starts wiremock and defines routes.
+    */
     private void startWireMock() {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
@@ -61,11 +68,25 @@ public class SubmitSteps {
                 )
         );
         wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
+        wireMockSuccesfulScenario();
+        wiremockFailingScenario();
+    }
+
+    private void wiremockFailingScenario() {
+        wiremockGET("/courses/313.json?api_version=7", ExampleJson.failingCourse);
+        wiremockPOST("/exercises/285/submissions.json?api_version=7", ExampleJson.failedSubmitResponse);
+        wiremockGET("/submissions/7777.json?api_version=7", ExampleJson.failedSubmission);
+    }
+
+    private void wireMockSuccesfulScenario() {
         wiremockGET("/courses/3.json?api_version=7", ExampleJson.courseExample);
         wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
         wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
     }
 
+    /*
+    * When httpGet-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+    */
     private void wiremockGET(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(get(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -73,7 +94,10 @@ public class SubmitSteps {
                 )
         );
     }
-
+    
+    /*
+    * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+    */
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -96,12 +120,21 @@ public class SubmitSteps {
         testClient.sendMessage(message);
     }
 
-    @Then("^user will see the result of tests$")
-    public void user_will_see_the_result_of_tests() throws Throwable {
-        final String result = testClient.reply();
+    @Then("^user will see all test passing$")
+    public void user_will_see_all_test_passing() throws Throwable {
+        String result = testClient.reply();
         assertTrue(result.contains("All tests passed"));
     }
 
+    @Then("^user will see the some test passing$")
+    public void user_will_see_the_some_test_passing() throws Throwable {
+        final String result = testClient.reply();
+        assertTrue(result.contains("failed"));
+    }
+
+    /*
+    * Returns everything to it's original state.
+    */
     @After
     public void closeAll() throws IOException {
         server.close();

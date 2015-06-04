@@ -6,13 +6,14 @@ import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Command;
 
 import java.util.HashMap;
+import java.util.Map;
 /**
  * ProtocolParser parses user input to executable command.
  */
 public class ProtocolParser {
 
     private FrontendListener server;
-    private HashMap<String, Command> commandsByName = new HashMap<>();
+    private Map<String, Command> commandsByName = new HashMap<>();
 
     /**
      * Constructor for Protocol Parser.
