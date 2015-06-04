@@ -1,5 +1,9 @@
 package hy.tmc.cli.backend.communication;
 
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
+
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
@@ -76,14 +80,16 @@ public class SubmissionInterpreter {
         if (result.isAllTestsPassed()) {
             return buildSuccessMessage(result, detailed);
         } else {
-            return "Some tests failed on server. Summary: \n"
+            return coloredString("Some tests failed on server.", RED) + " Summary: \n"
                     + testCaseResults(result.getTestCases(), detailed);
         }
     }
 
     private String buildSuccessMessage(SubmissionResult result, boolean detailed) {
         StringBuilder builder = new StringBuilder();
-        builder.append("All tests passed. Points awarded: ")
+        String successMessage = coloredString("All tests passed.", GREEN);
+        builder.append(successMessage)
+                .append( " Points awarded: ")
                 .append(Arrays.toString(result.getPoints()))
                 .append("\n")
                 .append(testCaseResults(result.getTestCases(), detailed))
@@ -104,8 +110,8 @@ public class SubmissionInterpreter {
 
     private String failOrSuccess(TestCase testCase) {
         if (testCase.isSuccessful()) {
-            return "  PASSED: " + testCase.getName();
+            return coloredString("  PASSED: ", GREEN) + testCase.getName();
         }
-        return "  FAILED: " + testCase.getName() + "\n  " + testCase.getMessage();
+        return coloredString("  FAILED: ", RED) + testCase.getName() + "\n  " + testCase.getMessage();
     }
 }
