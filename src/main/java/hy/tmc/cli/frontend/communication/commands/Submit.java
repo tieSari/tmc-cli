@@ -13,7 +13,7 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 
 import java.io.IOException;
-import static javax.swing.text.html.HTML.Tag.HEAD;
+import java.util.List;
 
 /**
  * Submit command for submitting exercises to TMC
@@ -49,7 +49,7 @@ public class Submit extends Command {
     }
 
     /**
-     * Takes a pwd command's output in "path" and optionally the exercise's name in "exerciseName".
+     * Takes working directory in "path" and optionally the exercise's name in "exerciseName".
      */
     @Override
     protected void functionality() {
@@ -63,8 +63,10 @@ public class Submit extends Command {
                 frontend.printLine(summary);
 
                 if (submissionResult.isAllTestsPassed()) {
-                    frontend.feedback(submissionResult.getFeedbackQuestions(),
-                            submissionResult.getFeedbackAnswerUrl());
+                    List<FeedbackQuestion> feedback = submissionResult.getFeedbackQuestions();
+                    if (feedback != null && !feedback.isEmpty()) {
+                        frontend.feedback(feedback, submissionResult.getFeedbackAnswerUrl());
+                    }
                 }
             }
         }
