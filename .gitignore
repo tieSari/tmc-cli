@@ -1,5 +1,4 @@
 /target/
-*~
 .classpath
 .project
 .settings/
@@ -7,14 +6,13 @@
 .idea/*
 .idea/**
 tmc-cli.iml
-/scripts/config
+/scripts/config*
 /scripts/*.jar
 */build_log.txt
-*/private/
-*/build/
-build/*
 */private/*
 */build/*
+build/*
+*/private/*
 /config.properties
 /scripts/config.properties
 config.properties
