@@ -176,15 +176,16 @@ public class Server implements FrontendListener, Runnable {
         //printLine("accepted answer");
         if (this.feedbackHandler.allQuestionsAsked()) {
             printLine("end");
+            sendToTmcServer(this.feedbackAnswers);
             this.feedbackAnswers = new JsonArray();
         } else {
             feedbackHandler.askQuestion();
         }
     }
 
-    protected void sendToTmcServer(JsonArray answers) {
+    protected void sendToTmcServer(JsonArray json) {
         JsonObject req = new JsonObject();
-        req.add("answers", feedbackAnswers);
+        req.add("answers", json);
         try {
             HttpResult httpResult = UrlCommunicator.makePostWithJson(req, feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam);
             printLine(httpResult.getData());
@@ -192,5 +193,11 @@ public class Server implements FrontendListener, Runnable {
         catch (IOException e) {
             printLine(e.getMessage());
         }
+    }
+
+    private JsonObject getAnswersJson() {
+        JsonObject req = new JsonObject();
+        req.add("answers", feedbackAnswers);
+        return req;
     }
 }
