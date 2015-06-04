@@ -61,10 +61,9 @@ public class FeedbackHandler {
         if (kind.equals("text")) {
             return answer;
         }
-
         String bounds = kind.split("[\\[\\]]")[1];
-        int lowerbound = Integer.parseInt(bounds.split("..")[0]);
-        int upperbound = Integer.parseInt(bounds.split("..")[1]);
+        int lowerbound = Integer.parseInt(bounds.split("\\.\\.")[0]);
+        int upperbound = Integer.parseInt(bounds.split("\\.\\.")[1]);
 
         int ans;
         try {

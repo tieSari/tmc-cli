@@ -9,9 +9,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -183,12 +183,19 @@ public class DownloadExercisesSteps {
         assertFalse(zips);
     }
     
+    /**
+     * Get the files under the directory specified
+     * @param filepath the directory
+     */
     public File[] getFileArray(String filepath) {
         File fi = new File(filepath);
         File[] paths = fi.listFiles();
         return paths;
     }
 
+    /**
+     * Close the server, so that the other tests will work.
+     */
     @After
     public void closeServer() throws IOException {
         tempDir.toFile().delete();

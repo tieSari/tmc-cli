@@ -2,6 +2,7 @@ package hy.tmc.cli.testhelpers;
 
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -9,7 +10,12 @@ import java.util.List;
 public class FrontendStub implements FrontendListener {
     
     String line;
+    List<String> allLines;
 
+    public FrontendStub() {
+        allLines = new ArrayList<>();
+    }
+    
     @Override
     public void start() {
         
@@ -18,6 +24,7 @@ public class FrontendStub implements FrontendListener {
     @Override
     public void printLine(String line) {
         this.line = line;
+        allLines.add(line);
     }
 
     @Override
@@ -27,6 +34,10 @@ public class FrontendStub implements FrontendListener {
 
     public String getMostRecentLine() {
         return line;
+    }
+    
+    public List<String> getAllLines() {
+        return this.allLines;
     }
     
 }
