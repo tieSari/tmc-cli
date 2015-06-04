@@ -95,8 +95,7 @@ public class FeedbackHandler {
         int ans;
         try {
             ans = Integer.parseInt(answer);
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             return "" + lowerbound;
         }
         if (ans < lowerbound || ans > upperbound) {

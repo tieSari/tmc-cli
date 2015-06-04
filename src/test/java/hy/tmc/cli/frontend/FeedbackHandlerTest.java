@@ -1,12 +1,14 @@
 package hy.tmc.cli.frontend;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import hy.tmc.cli.testhelpers.FeedbackBuilder;
 import hy.tmc.cli.testhelpers.FrontendStub;
+
 import org.junit.Before;
 import org.junit.Test;
-
-
-import static org.junit.Assert.*;
 
 public class FeedbackHandlerTest {
 
@@ -14,6 +16,9 @@ public class FeedbackHandlerTest {
     private FeedbackHandler handler;
     private FeedbackBuilder builder;
 
+    /**
+     * Make the frontend, feedbackHandler and FeedbackBuilder.
+     */
     @Before
     public void setUp() throws Exception {
         this.frontend = new FrontendStub();
@@ -78,7 +83,7 @@ public class FeedbackHandlerTest {
     }
     
     @Test
-    public void urlGetterTest(){
+    public void urlGetterTest() {
         String url = "http://mooc.helsinki.fi/staging/test";
         builder.withSimpleTextQuestion();
         handler.feedback(builder.build(), url);
