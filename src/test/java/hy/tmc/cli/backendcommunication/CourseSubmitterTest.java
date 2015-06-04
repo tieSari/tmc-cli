@@ -2,7 +2,6 @@ package hy.tmc.cli.backendcommunication;
 
 import com.google.common.base.Optional;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -21,8 +20,8 @@ import hy.tmc.cli.testhelpers.ZipperStub;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import org.junit.After;
+import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,11 +67,11 @@ public class CourseSubmitterTest {
     @Test
     public void testFindCourseByCorrectPath() {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
-        Course course = courseSubmitter.findCourseByPath(path.split("/"));
-        assertEquals(7, course.getId());
+        Optional<Course> course = courseSubmitter.findCourseByPath(path.split("/"));
+        assertEquals(7, course.get().getId());
         final String path2 = "/home/kansio/toinen/OLEMATON/viikko_01";
-        Course course2 = courseSubmitter.findCourseByPath(path2.split("/"));
-        assertNull(null);
+        Optional<Course> course2 = courseSubmitter.findCourseByPath(path2.split("/"));
+        assertFalse(course2.isPresent());
     }
 
     @Test
