@@ -72,7 +72,7 @@ public class FeedbackHandler {
 
     private String instructions(String kind) {
         if (kind.equals("text")) {
-            return "";
+            return "text";
         }
         String range = kind.replace("intrange", "");
         return "Please give your answer as an integer between " + range + " (inclusive)";

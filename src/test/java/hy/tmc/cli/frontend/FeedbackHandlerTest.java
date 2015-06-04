@@ -30,7 +30,7 @@ public class FeedbackHandlerTest {
     public void answerOneQuestion() {
         builder.withSimpleTextQuestion();
         handler.feedback(builder.build(), "");
-        assertEquals("hello world", frontend.getMostRecentLine());
+        assertTrue(frontend.getAllLines().contains("hello world"));
     }
 
     @Test

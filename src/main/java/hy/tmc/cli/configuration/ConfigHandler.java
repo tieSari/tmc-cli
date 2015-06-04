@@ -29,7 +29,7 @@ public class ConfigHandler {
      * directory.
      */
     public ConfigHandler() {
-        this.configFilePath = "scripts/config.properties";
+        this.configFilePath = "config.properties";
     }
 
     /**
