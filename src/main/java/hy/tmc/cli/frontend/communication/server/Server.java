@@ -176,23 +176,26 @@ public class Server implements FrontendListener, Runnable {
         //printLine("accepted answer");
         if (this.feedbackHandler.allQuestionsAsked()) {
             printLine("end");
-            sendToTmcServer(this.feedbackAnswers);
+            sendToTmcServer();
             this.feedbackAnswers = new JsonArray();
         } else {
             feedbackHandler.askQuestion();
         }
     }
 
-    protected void sendToTmcServer(JsonArray json) {
-        JsonObject req = new JsonObject();
-        req.add("answers", json);
+    protected void sendToTmcServer() {
+        JsonObject req = getAnswersJson();
         try {
-            HttpResult httpResult = UrlCommunicator.makePostWithJson(req, feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam);
+            HttpResult httpResult = UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
             printLine(httpResult.getData());
         }
         catch (IOException e) {
             printLine(e.getMessage());
         }
+    }
+
+    private String getFeedbackUrl() {
+        return feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam;
     }
 
     private JsonObject getAnswersJson() {

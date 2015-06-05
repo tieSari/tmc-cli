@@ -4,6 +4,7 @@ import static hy.tmc.cli.backend.communication.authorization.Authorization.encod
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
 import com.google.gson.JsonObject;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -20,6 +21,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import hy.tmc.cli.configuration.ClientData;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class UrlCommunicator {

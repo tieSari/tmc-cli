@@ -15,6 +15,7 @@ public class ExampleJson {
     public static String pasteResponse = pasteResponse();
     public static String feedbackExample = feedbackExample();
     public static String noFeedbackExample = noFeedbackExample();
+    public static String feedbackCourse = feedbackCourseExample();
 
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");
@@ -38,6 +39,10 @@ public class ExampleJson {
 
     private static String allCoursesExample() {
         return readFile("src/test/resources/courses.json");
+    }
+
+    private static String feedbackCourseExample() {
+        return readFile("src/test/resources/feedbackCourse.json");
     }
 
     private static String submitResponse() {

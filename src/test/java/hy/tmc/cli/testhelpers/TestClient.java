@@ -52,11 +52,14 @@ public class TestClient {
         output.println(message);
     }
 
+    public boolean hasNewMessages() throws IOException {
+        return input.ready();
+    }
+
     public String reply() {
         try {
             return input.readLine();
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
             return "fail";
         }
     }
