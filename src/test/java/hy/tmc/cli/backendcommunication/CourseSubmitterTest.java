@@ -49,6 +49,7 @@ public class CourseSubmitterTest {
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
         mockUrlCommunicator("courses/19.json?api_version=7", ExampleJson.noDeadlineCourseExample);
+        mockUrlCommunicator("courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.pasteResponse);
@@ -84,6 +85,14 @@ public class CourseSubmitterTest {
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
+    }
+    
+    @Test(expected = ExpiredException.class)
+    public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/k2015-tira/viikko01/tira1.1";
+        rootFinder.setReturnValue(testPath);
+        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
+        String result = courseSubmitter.submit(testPath);
     }
     
     @Test

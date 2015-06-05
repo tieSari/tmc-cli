@@ -18,6 +18,7 @@ public class ExampleJson {
     public static String pasteResponse = pasteResponse();
     public static String checkstyleFailed = checkstyleFailed();
     public static String valgrindFailed = valgrindFailed();
+    public static String expiredCourseExample = expiredCourseExample();
 
     
     private static String failingCourse() {
@@ -43,6 +44,10 @@ public class ExampleJson {
     
     private static String noDeadlineCourseExample(){
         return readFile("src/test/resources/nodeadlinecourse.json");
+    }
+    
+    private static String expiredCourseExample(){
+        return readFile("src/test/resources/expiredCourse.json");
     }
    
     private static String allCoursesExample() {

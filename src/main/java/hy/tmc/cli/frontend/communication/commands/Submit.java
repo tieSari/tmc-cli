@@ -64,7 +64,7 @@ public class Submit extends Command {
             frontend.printLine("Project not found with specified parameters or thread interrupted");
         } 
         catch(ExpiredException ex){
-            frontend.printLine("Exercise has expired so submit isn't possible.");
+            frontend.printLine("Exercise has expired.");
         }
     }
 
