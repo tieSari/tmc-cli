@@ -1,7 +1,6 @@
 package hy.tmc.cli.spyware;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -24,15 +23,20 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.After;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 
 public class DiffSenderTest {
     
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
+    
+    @Rule
+    public ExpectedException exceptedEx = ExpectedException.none();
 
     private final String spywareUrl = "http://127.0.0.1:8080/spyware";
     private DiffSender sender;
@@ -82,6 +86,16 @@ public class DiffSenderTest {
         HttpResult res = sender.sendToUrl(byteArray,
                 spywareUrl);
         assertEquals(200, res.getStatusCode());
+    }
+    
+    @Test
+    public void requestWithInvalidParams() throws IOException {
+        final File file = new File("testResources/test.zip");
+        byte[] byteArray = Files.toByteArray(file);
+        DiffSender sender = new DiffSender();
+        HttpResult res = sender.sendToUrl(byteArray,
+                "vaaraUrl");
+        assertNull(res);
     }
     
     @Test
