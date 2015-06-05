@@ -26,7 +26,7 @@ public class CourseSubmitter {
 
     private RootFinder rootFinder;
     private ZipMaker zipper;
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssX";
 
     public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
         this.zipper = zipper;
