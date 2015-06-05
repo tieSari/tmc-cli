@@ -17,6 +17,8 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
+import hy.tmc.cli.zipping.DefaultRootDetector;
+import hy.tmc.cli.zipping.ProjectRootFinder;
 
 import java.io.IOException;
 import org.apache.http.entity.mime.content.FileBody;
@@ -32,6 +34,7 @@ public class CourseSubmitterTest {
 
     private CourseSubmitter courseSubmitter;
     private ProjectRootFinderStub rootFinder;
+    private ProjectRootFinder realFinder;
 
     /**
      * Mocks components that use Internet.
@@ -48,7 +51,7 @@ public class CourseSubmitterTest {
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/287/submissions.json?api_version=7", ExampleJson.pasteResponse);
-
+        realFinder = new ProjectRootFinder(new DefaultRootDetector());
     }
 
     @After
@@ -67,10 +70,10 @@ public class CourseSubmitterTest {
     @Test
     public void testFindCourseByCorrectPath() {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
-        Optional<Course> course = courseSubmitter.findCourseByPath(path.split("/"));
+        Optional<Course> course = realFinder.findCourseByPath(path.split("/"));
         assertEquals(7, course.get().getId());
         final String path2 = "/home/kansio/toinen/OLEMATON/viikko_01";
-        Optional<Course> course2 = courseSubmitter.findCourseByPath(path2.split("/"));
+        Optional<Course> course2 = realFinder.findCourseByPath(path2.split("/"));
         assertFalse(course2.isPresent());
     }
 
