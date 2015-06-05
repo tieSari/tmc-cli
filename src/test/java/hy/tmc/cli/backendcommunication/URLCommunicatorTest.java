@@ -16,6 +16,7 @@ import hy.tmc.cli.configuration.ClientData;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import org.apache.http.entity.mime.content.FileBody;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,7 +74,8 @@ public class URLCommunicatorTest {
                 )
         );
         File testFile = new File("testResources/test.zip");
-        HttpResult result = UrlCommunicator.makePostWithFile(testFile,
+        HttpResult result = UrlCommunicator.makePostWithFile(
+                new FileBody(testFile),
                 "http://127.0.0.1:8080/kivaurl",
                 Optional.<Map<String,String>>absent());
         ClientData.clearUserData();

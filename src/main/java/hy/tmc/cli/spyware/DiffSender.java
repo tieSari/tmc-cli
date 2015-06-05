@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
 
 public class DiffSender {
 
@@ -56,7 +59,9 @@ public class DiffSender {
      */
     public HttpResult sendToUrl(File diffFile, String url) {
         Map<String, String> headers = createHeaders();
-        HttpResult result = makePostRequest(diffFile, url, headers);
+        HttpResult result = makePostRequest(
+                new FileBody(diffFile), url, headers
+        );
         return result;
     }
     
@@ -69,11 +74,13 @@ public class DiffSender {
      */
     public HttpResult sendToUrl(byte[] diffs, String url) {
         Map<String, String> headers = createHeaders();
-        HttpResult result = makePostRequest(diffs, url, headers);
+        HttpResult result = makePostRequest(
+                new ByteArrayBody(diffs, ""), url, headers
+        );
         return result;
     }
 
-    private HttpResult makePostRequest(File diffFile, String url, Map<String, String> headers) {
+    private HttpResult makePostRequest(ContentBody diffFile, String url, Map<String, String> headers) {
         HttpResult result = null;
         try {
             result = UrlCommunicator.makePostWithFile(diffFile, url, Optional.of(headers));
@@ -81,10 +88,6 @@ public class DiffSender {
             System.err.println(ex.getMessage());
         }
         return result;
-    }
-    
-    private HttpResult makePostRequest(byte[] diffs, String url, Map<String, String> headers) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     private Map<String, String> createHeaders() {

@@ -18,9 +18,8 @@ import java.util.List;
 import java.util.Locale;
 
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.entity.mime.content.FileBody;
 
 public class CourseSubmitter {
 
@@ -99,7 +98,7 @@ public class CourseSubmitter {
             String url) throws IOException {
         final String pasteExtensionForTmcServer = "&paste=1";
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new File(submissionZipPath),
+                new FileBody(new File(submissionZipPath)),
                 url + pasteExtensionForTmcServer,
                 Optional.<Map<String, String>>absent()
         );
@@ -130,7 +129,9 @@ public class CourseSubmitter {
 
     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new File(submissionZipPath), url, Optional.<Map<String, String>>absent()
+                new FileBody(new File(submissionZipPath)), 
+                url, 
+                Optional.<Map<String, String>>absent()
         );
         return TmcJsonParser.getSubmissionUrl(result);
     }
