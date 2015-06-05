@@ -84,7 +84,7 @@ public class SubmitSteps {
         wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
         wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
     }
-    
+
     private void wireMockExpiredScenario() {
         wiremockGET("/courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
     }
@@ -99,10 +99,11 @@ public class SubmitSteps {
                 )
         );
     }
-
+    
     /*
-     * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-     */
+    * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+    */
+
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -126,6 +127,7 @@ public class SubmitSteps {
     }
 
     @When("^user gives command submit with expired path \"(.*?)\" and exercise \"(.*?)\"$")
+
     public void user_gives_command_submit_with_expired_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
         testClient.init();
         String submitCommand = "submit path ";
@@ -135,6 +137,7 @@ public class SubmitSteps {
     }
 
     @Then("^user will see all test passing$")
+
     public void user_will_see_all_test_passing() throws Throwable {
         String result = testClient.reply();
         assertTrue(result.contains("All tests passed"));

@@ -22,6 +22,7 @@ import hy.tmc.cli.testhelpers.ZipperStub;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import org.apache.http.entity.mime.content.FileBody;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import org.junit.Before;
@@ -90,6 +91,7 @@ public class CourseSubmitterTest {
     @Test(expected = ExpiredException.class)
     public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException {
         String testPath = "/home/test/k2015-tira/viikko01/tira1.1";
+
         rootFinder.setReturnValue(testPath);
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
@@ -125,7 +127,7 @@ public class CourseSubmitterTest {
         String result = courseSubmitter.submit(testPath);
     }
 
-    private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {
+     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
@@ -136,7 +138,7 @@ public class CourseSubmitterTest {
     private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makePostWithFile(Mockito.any(File.class),
+                .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Optional.class)))
                 .thenReturn(fakeResult);
     }

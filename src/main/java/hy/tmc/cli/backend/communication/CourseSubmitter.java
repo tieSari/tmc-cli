@@ -20,14 +20,15 @@ import java.util.List;
 import java.util.Locale;
 
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.entity.mime.content.FileBody;
 
 public class CourseSubmitter {
 
     private RootFinder rootFinder;
     private ZipMaker zipper;
+
     /**
      * Exercise deadline is checked with this date format
      */
@@ -94,7 +95,6 @@ public class CourseSubmitter {
     /**
      * Submits folder of exercise to TMC. Finds it from current directory. Result includes URL of
      * paste.
-     *
      * @param currentPath path from which this was called.
      * @return String with url from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
@@ -133,7 +133,7 @@ public class CourseSubmitter {
             String url) throws IOException {
         final String pasteExtensionForTmcServer = "&paste=1";
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new File(submissionZipPath),
+                new FileBody(new File(submissionZipPath)),
                 url + pasteExtensionForTmcServer,
                 Optional.<Map<String, String>>absent()
         );
@@ -162,9 +162,11 @@ public class CourseSubmitter {
         ).get().toString();
     }
 
-    private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
+     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new File(submissionZipPath), url, Optional.<Map<String, String>>absent()
+                new FileBody(new File(submissionZipPath)), 
+                url, 
+                Optional.<Map<String, String>>absent()
         );
         return TmcJsonParser.getSubmissionUrl(result);
     }
@@ -242,8 +244,9 @@ public class CourseSubmitter {
     }
 
     /**
-     * If class submissionZipPath is defined in sendZipFile-method and the file in defined path
-     * exists, it will be removed. This method should be invoked allways when submit-function fails.
+     * If class submissionZipPath is defined in sendZipFile-method 
+     * and the file in defined path exists, it will be removed.
+     * This method should be invoked always when submit-function fails.
      */
     private void deleteZipIfExists() {
         if (submissionZipPath != null) {

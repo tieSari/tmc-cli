@@ -101,7 +101,6 @@ public class PasteSteps {
     @Then("^user will see the paste url$")
     public void user_will_see_the_paste_url() throws Throwable {
         String result = testClient.reply();
-        System.out.println("result: " + result);
         assertTrue(result.contains("Paste submitted"));
     }
 
