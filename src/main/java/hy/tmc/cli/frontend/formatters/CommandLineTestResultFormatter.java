@@ -9,16 +9,16 @@ import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 import java.util.List;
 
 
-public class CommandLineFormatter implements ResultFormatter {
+public class CommandLineTestResultFormatter implements TestResultFormatter {
 
     private String testPadding;
     private String stackTracePadding;
     
     /**
-     * CommandLineFormatter gives result explainings for command line user interface. 
+     * CommandLineTestResultFormatter gives testresult explainings for command line user interface. 
      * ResultInterpreter class uses this class. 
      */
-    public CommandLineFormatter() {
+    public CommandLineTestResultFormatter() {
         this.testPadding = "  ";
         this.stackTracePadding = testPadding + " ";
     }
