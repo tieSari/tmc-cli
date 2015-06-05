@@ -30,7 +30,8 @@ public class TmcJsonParser {
                 url, ClientData.getFormattedUserData()
         );
         String data = httpResult.getData();
-        return new JsonParser().parse(data).getAsJsonObject();
+        final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        return json;
     }
 
     /**
@@ -171,8 +172,23 @@ public class TmcJsonParser {
      * @return url where submission results are located.
      */
     public static String getSubmissionUrl(HttpResult result) {
-        JsonElement jelement = new JsonParser().parse(result.getData());
-        JsonObject jobject = jelement.getAsJsonObject();
-        return jobject.get("submission_url").getAsString();
+        return getPropertyFromResult(result, "submission_url");
+    }
+    
+    /**
+     * Parses the submission result paste URL from a HttpResult with JSON.
+     * 
+     * @param result HTTPResult containing JSON with paste url.
+     * @return url where paste is located.
+     */
+    
+    public static String getPasteUrl(HttpResult result) {
+        return getPropertyFromResult(result, "paste_url");
+    }
+    
+    private static String getPropertyFromResult(HttpResult result, String property) {
+        JsonElement jelement = new JsonParser().parse(result.getData());        
+        JsonObject  jobject = jelement.getAsJsonObject();
+        return jobject.get(property).getAsString();
     }
 }

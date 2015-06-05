@@ -8,16 +8,16 @@ import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
 import fi.helsinki.cs.tmc.langs.TestResult;
-import hy.tmc.cli.frontend.formatters.ResultFormatter;
+import hy.tmc.cli.frontend.formatters.TestResultFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResultInterpreter {
 
     private final RunResult result;
-    private final ResultFormatter formatter;
+    private final TestResultFormatter formatter;
 
-    public ResultInterpreter(RunResult result, ResultFormatter formatter) {
+    public ResultInterpreter(RunResult result, TestResultFormatter formatter) {
         this.result = result;
         this.formatter = formatter;
     }
