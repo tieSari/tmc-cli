@@ -14,7 +14,7 @@ import java.util.List;
 public class SubmissionInterpreter {
 
     /**
-     * Seconds after which request times out.
+     * Number of poll attempts. If the interval is one second, the timeout will be n seconds.
      */
     private final int timeOut = 30;
 
