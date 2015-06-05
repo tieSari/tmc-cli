@@ -192,7 +192,6 @@ public class CourseSubmitter {
      */
     public Optional<Course> findCourseByPath(String[] foldersPath) {
         List<Course> courses = TmcJsonParser.getCourses();
-        Course currentCourse = null;
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {

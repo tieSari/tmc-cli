@@ -172,14 +172,11 @@ public class CommandFactory {
             public void start() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
-
             @Override
             public void printLine(String line) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
-
         return createCommandMap(stub).keySet();
     }
-
 }

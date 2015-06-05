@@ -27,5 +27,4 @@ public class Help extends Command {
     public void checkData() {
 
     }
-
 }

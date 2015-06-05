@@ -1,9 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.CourseSubmitter;
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.SubmissionInterpreter;
-import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -51,7 +48,6 @@ public class Paste extends Command {
         catch (IOException ex) {
             frontend.printLine(ex.getMessage());
         }
-
     }
 
     /**
@@ -68,5 +64,4 @@ public class Paste extends Command {
             throw new ProtocolException("pwd not supplied");
         }
     }
-
 }

@@ -1,11 +1,10 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Strings;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class ChooseServer extends Command {
@@ -27,7 +26,7 @@ public class ChooseServer extends Command {
         try {
             handler.writeServerAddress(data.get("tmc-server"));            
         } catch (IOException ex) {
-            Logger.getLogger(ChooseServer.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -44,10 +43,9 @@ public class ChooseServer extends Command {
     private boolean isValidTmcUrl(String url) {
         String urlPattern = "(http://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
         Pattern tmcServerAddress = Pattern.compile(urlPattern);
-        if (url == null) {
+        if (Strings.isNullOrEmpty(url)) {
             return false;
         }
         return tmcServerAddress.matcher(url).matches();
     }
-
 }
