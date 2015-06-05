@@ -54,7 +54,7 @@ public class ConfigHandler {
             InputStream inputStream = new FileInputStream(new File(configFilePath));
             prop.load(inputStream);
         } catch (IOException e) {
-            Logger.getLogger(ConfigHandler.class.getName()).log(Level.SEVERE, null, e);
+            System.err.println(e.getMessage());
         }
         return prop;
     }

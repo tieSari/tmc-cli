@@ -102,7 +102,6 @@ public class ClientDataTest {
      */
     @Test
     public void testClearUserData() {
-        System.out.println("clearUserData");
         ClientData.clearUserData();
         assertFalse(ClientData.userDataExists());
     }
