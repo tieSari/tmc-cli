@@ -1,40 +1,32 @@
 package hy.tmc.cli.frontend.communication.server;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class ProtocolExceptionTest {
 
-    @Test
-    public void afterThrowingMessageCanBeRetrieved() {
-        new ProtocolException();
-        String msg = "throwing...";
-        String got = "";
-        try {
-            throw new ProtocolException(msg);
-        }
-        catch (ProtocolException ex) {
-            got = ex.getMessage();
-        }
-        assertEquals(msg, got);
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+
+    @Test()
+    public void afterThrowingMessageCanBeRetrieved() throws ProtocolException {
+        expectedEx.expect(ProtocolException.class);
+        expectedEx.expectMessage("asd");
+        throw new ProtocolException("asd");
     }
 
     @Test
-    public void afterThrowingClauseItCanBeRetrieved() {
-        String msg = "asd";
+    public void afterThrowingClauseItCanBeRetrieved() throws ProtocolException {
+        expectedEx.expect(ProtocolException.class);
+        expectedEx.expectMessage("Throw me");
         String tMsg = "Throw me";
         Throwable thr = new Throwable(tMsg);
-        String got = "";
-        
-        try {
-            throw new ProtocolException(msg, thr);
-        }
-        catch (ProtocolException ex) {
-            got = ex.getCause().getMessage();
-        }
-        assertEquals(tMsg, got);
+        throw new ProtocolException(thr);
     }
 
 }
