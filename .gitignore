@@ -8,6 +8,7 @@
 tmc-cli.iml
 /scripts/config*
 /scripts/*.jar
+**/config.properties
 */build_log.txt
 */private/*
 */build/*
@@ -15,7 +16,8 @@ build/*
 */private/*
 /config.properties
 /scripts/config.properties
-config.properties
-test.properties
-build_log.*
-build-jar.*
+**/test.properties
+**/build_log.*
+**/build-jar.*
+**/config
+/testResources/successExercise/viikko1/Viikko1_001.Nimi/nbproject/private/

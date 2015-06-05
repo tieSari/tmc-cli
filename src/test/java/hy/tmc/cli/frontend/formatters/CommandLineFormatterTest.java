@@ -25,7 +25,7 @@ public class CommandLineFormatterTest {
     RunResult compileError;
     RunResult genericError;
     RunResultBuilder builder;
-    CommandLineFormatter formatter;
+    CommandLineTestResultFormatter formatter;
     List<TestResult> passed;
     
     public CommandLineFormatterTest() {
@@ -37,7 +37,7 @@ public class CommandLineFormatterTest {
                 .withStatus(TESTS_FAILED)
                 .withTests(TestResultFactory.failedTests())
                 .build();
-        formatter = new CommandLineFormatter();
+        formatter = new CommandLineTestResultFormatter();
         passed = TestResultFactory.passedTests();
     }
     

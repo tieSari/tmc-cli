@@ -15,6 +15,9 @@ public class ExampleJson {
     public static String failingCourse = failingCourse();
     public static String failedSubmitResponse = failedSubmitResponse();
     public static String pasteResponse = pasteResponse();
+    public static String checkstyleFailed = checkstyleFailed();
+    public static String valgrindFailed = valgrindFailed();
+
     
     private static String failingCourse() {
         return readFile("src/test/resources/failingCourse.json");
@@ -23,6 +26,7 @@ public class ExampleJson {
     private static String failedSubmitResponse() {
         return readFile("src/test/resources/failedSubmitResponse.json");
     }
+
 
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");
@@ -46,6 +50,14 @@ public class ExampleJson {
 
     private static String pasteResponse() {
         return readFile("src/test/resources/pasteResponse.json");
+    }
+
+    private static String checkstyleFailed() {
+        return readFile("src/test/resources/checkstyleFailed.json");
+    }
+
+    private static String valgrindFailed() {
+        return readFile("src/test/resources/valgrindFailed.json");
     }
 
     private static String readFile(final String path) {
