@@ -71,7 +71,6 @@ public class CourseSubmitter {
 
     private Exercise searchExercise(String currentPath) throws IllegalArgumentException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
-        System.out.println("ex: " + currentExercise);
         if (!currentExercise.isPresent()) {
             deleteZipIfExists();
             throw new IllegalArgumentException("Could not find exercise in this directory");

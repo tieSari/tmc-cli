@@ -31,7 +31,6 @@ public class ProjectRootFinderTest {
     
     public void testGetRootDirectory2() {
         Optional<Path> root = finder.getRootDirectory(Paths.get("testResources/noyml"));
-        System.out.println(root);
         assertEquals("testResources/noyml/rootWithoutYml",root.get().toString());
     }
 }

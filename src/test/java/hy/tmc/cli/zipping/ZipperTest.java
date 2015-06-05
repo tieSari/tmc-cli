@@ -64,6 +64,7 @@ public class ZipperTest {
         zipper.zip(mockPath, mockUnzipPath);
         zip = new ZipFile(mockUnzipPath);
         FileHeader header = zip.getFileHeader(newFileName);
+        new File(newFileName).delete();
         assertEquals(newFileName, header.getFileName());
     }
 
