@@ -22,7 +22,7 @@ public abstract class Command {
      */
     public Command(FrontendListener front) {
         this.frontend = front;
-        data = new HashMap();
+        data = new HashMap<>();
     }
 
     /**

@@ -1,11 +1,6 @@
 package hy.tmc.cli.backend;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
@@ -19,7 +14,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CommandFactory.class)
