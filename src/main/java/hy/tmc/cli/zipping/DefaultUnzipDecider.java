@@ -19,7 +19,7 @@ public class DefaultUnzipDecider implements UnzipDecider {
      * project.
      */
     public DefaultUnzipDecider() {
-        this.additionalStudentFiles = new ArrayList();
+        this.additionalStudentFiles = new ArrayList<>();
     }
 
     /**

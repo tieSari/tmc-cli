@@ -36,10 +36,11 @@ public class ZipperTest {
     public void zipsFolder() throws ZipException {
         zipper.zip(mockPath, mockUnzipPath);
         ZipFile file = new ZipFile(mockUnzipPath);
-        List<FileHeader> filesInZip = file.getFileHeaders();
-        List<String> names = new ArrayList();
+        List<?> filesInZip = (List<?>) file.getFileHeaders();
+        List<String> names = new ArrayList<>();
 
-        for (FileHeader header : filesInZip) {
+        for (Object object : filesInZip) {
+            FileHeader header = (FileHeader) object;
             names.add(header.getFileName());
         }
         assertEquals(5, names.size());
