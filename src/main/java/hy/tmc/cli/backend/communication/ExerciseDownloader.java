@@ -12,7 +12,6 @@ import hy.tmc.cli.zipping.UnzipDecider;
 import hy.tmc.cli.zipping.Unzipper;
 
 import net.lingala.zip4j.exception.ZipException;
-import org.apache.http.client.HttpClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +90,6 @@ public class ExerciseDownloader {
         if (this.front != null) {
             front.printLine(exercises.size() + " exercises downloaded.");
         }
-
     }
 
     /**
@@ -136,9 +134,7 @@ public class ExerciseDownloader {
                           String destinationPath) throws IOException, ZipException {
         UnzipDecider decider = new DefaultUnzipDecider();
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
-
         zipHandler.unzip();
-
     }
 
     /**

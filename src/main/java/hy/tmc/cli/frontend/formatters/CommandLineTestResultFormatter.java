@@ -124,5 +124,4 @@ public class CommandLineTestResultFormatter implements TestResultFormatter {
         String failed = amount + " tests failed:\n";
         return ColorFormatter.coloredString(failed, RED);
     }
-
 }

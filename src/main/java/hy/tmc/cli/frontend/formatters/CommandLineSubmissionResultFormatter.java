@@ -50,5 +50,4 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
     public String getPointsInformation(SubmissionResult result) {
         return Arrays.toString(result.getPoints()) + "\n";
     }
-
 }

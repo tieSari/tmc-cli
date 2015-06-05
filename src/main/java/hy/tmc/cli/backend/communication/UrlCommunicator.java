@@ -14,7 +14,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 
 import hy.tmc.cli.configuration.ClientData;
 
@@ -23,7 +22,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Map;
 import org.apache.http.entity.mime.content.ContentBody;
 
@@ -96,11 +94,9 @@ public class UrlCommunicator {
             File file,
             String... params) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-
             HttpGet httpget = createGet(url, params);
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
-
             return true;
         }
         catch (IOException e) {

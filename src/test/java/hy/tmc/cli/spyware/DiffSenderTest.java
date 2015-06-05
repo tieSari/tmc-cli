@@ -43,7 +43,6 @@ public class DiffSenderTest {
     private String originalServerUrl;
     private ConfigHandler config;
     
-    
     /**
      * Logins the users and creates fake server.
      */
@@ -124,12 +123,7 @@ public class DiffSenderTest {
                 .withHeader("X-Tmc-Version", equalTo("1"))
                 .withHeader("X-Tmc-Username", equalTo(ClientData.getUsername()))
                 .withHeader("X-Tmc-Password", equalTo(ClientData.getPassword()))
-                .willReturn(
-                        aResponse()
-                                .withBody("OK")
-                                .withStatus(200)
-                )
-        );
+                .willReturn(aResponse().withBody("OK").withStatus(200)));
     }
 
     /**

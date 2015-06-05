@@ -1,14 +1,11 @@
-
 package hy.tmc.cli.frontend.communication.commands;
 
-
-
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseDownloader;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-
 
 public class DownloadExercises extends Command {
 
@@ -27,8 +24,11 @@ public class DownloadExercises extends Command {
      */
     @Override
     protected void functionality() {
-        Course course = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
-        exDl.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
+        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
+        if (courseResult.isPresent()) {
+            Course course = courseResult.get();
+            exDl.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
+        }
     }
 
     /**
