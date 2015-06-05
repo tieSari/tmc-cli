@@ -28,6 +28,9 @@ public class CourseSubmitter {
 
     private RootFinder rootFinder;
     private ZipMaker zipper;
+    /**
+     * Exercise deadline is checked with this date format
+     */
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
 
     private String submissionZipPath;
@@ -49,7 +52,12 @@ public class CourseSubmitter {
         throw new UnsupportedOperationException("Doesnt work yet");
     }
 
-    public boolean isExpired(Exercise currentExercise) throws ParseException {
+    /**
+     * Check if exercise is expired.
+     * @param currentExercise Exercise
+     * @throws ParseException to frontend 
+     */
+    private boolean isExpired(Exercise currentExercise) throws ParseException {
         if (currentExercise.getDeadline() == null || currentExercise.getDeadline().equals("")) {
             return false;
         }
@@ -60,7 +68,10 @@ public class CourseSubmitter {
         return deadlineGone(current, deadlineDate);
     }
 
-    public boolean deadlineGone(Date current, Date deadline) {
+    /**
+     * Compare two dates and tell if deadline has gone.
+     */
+    private boolean deadlineGone(Date current, Date deadline) {
         if (current.getTime() > deadline.getTime()) {
             return true;
         } else {
@@ -76,11 +87,7 @@ public class CourseSubmitter {
      * @throws IOException if failed to create zip.
      */
     public String submit(String currentPath) throws IOException, ParseException, ExpiredException {
-        Exercise currentExercise = searchExercise(currentPath);
-        if(isExpired(currentExercise)){
-            deleteZipIfExists();
-            throw new ExpiredException("Expired");
-        }
+        Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
 
@@ -93,14 +100,22 @@ public class CourseSubmitter {
      * @throws IOException if failed to create zip.
      */
     public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException {
-        Exercise currentExercise = searchExercise(currentPath);
-        System.out.println("Submitissa");
-        if(isExpired(currentExercise)){
-            System.out.println("Is expired");
-            deleteZipIfExists();
-            throw new ExpiredException("Expired");
-        }
+        Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
+    }
+    
+    /**
+     * Search exercise and throw exception if exercise is expired or not returnable.
+     * @throws ParseException to frontend
+     * @throws ExpiredException to frontend
+     */
+    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException{
+        Exercise currentExercise = searchExercise(currentPath);
+        if(isExpired(currentExercise) || !currentExercise.isReturnable()){
+            deleteZipIfExists();
+            throw new ExpiredException();
+        }
+        return currentExercise;
     }
 
     private Exercise searchExercise(String currentPath) throws IllegalArgumentException {

@@ -37,8 +37,8 @@ public class SubmitSteps {
     WireMockRule wireMockRule = new WireMockRule();
 
     /*
-    * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
-    */
+     * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
+     */
     @Before
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
@@ -54,8 +54,8 @@ public class SubmitSteps {
     }
 
     /*
-    * Starts wiremock and defines routes.
-    */
+     * Starts wiremock and defines routes.
+     */
     private void startWireMock() {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
@@ -70,6 +70,7 @@ public class SubmitSteps {
         wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         wireMockSuccesfulScenario();
         wiremockFailingScenario();
+        wireMockExpiredScenario();
     }
 
     private void wiremockFailingScenario() {
@@ -83,10 +84,14 @@ public class SubmitSteps {
         wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
         wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
     }
+    
+    private void wireMockExpiredScenario() {
+        wiremockGET("/courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
+    }
 
     /*
-    * When httpGet-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-    */
+     * When httpGet-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+     */
     private void wiremockGET(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(get(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -94,10 +99,10 @@ public class SubmitSteps {
                 )
         );
     }
-    
+
     /*
-    * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-    */
+     * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+     */
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -120,6 +125,15 @@ public class SubmitSteps {
         testClient.sendMessage(message);
     }
 
+    @When("^user gives command submit with expired path \"(.*?)\" and exercise \"(.*?)\"$")
+    public void user_gives_command_submit_with_expired_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
+        testClient.init();
+        String submitCommand = "submit path ";
+        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
+        final String message = submitCommand + submitPath;
+        testClient.sendMessage(message);
+    }
+
     @Then("^user will see all test passing$")
     public void user_will_see_all_test_passing() throws Throwable {
         String result = testClient.reply();
@@ -132,9 +146,15 @@ public class SubmitSteps {
         assertTrue(result.contains("failed"));
     }
 
+    @Then("^user will see a message which tells that exercise is expired\\.$")
+    public void user_will_see_a_message_which_tells_that_exercise_is_expired() throws Throwable {
+        final String result = testClient.reply();
+        assertTrue(result.contains("expired"));
+    }
+
     /*
-    * Returns everything to it's original state.
-    */
+     * Returns everything to it's original state.
+     */
     @After
     public void closeAll() throws IOException {
         server.close();
