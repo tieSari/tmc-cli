@@ -5,7 +5,6 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.zipping.DefaultRootDetector;
-import hy.tmc.cli.zipping.ProjectRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;

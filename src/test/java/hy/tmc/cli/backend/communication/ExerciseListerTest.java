@@ -129,5 +129,7 @@ public class ExerciseListerTest {
         exercises.add(ex);
 
         mockExercisesWith(exercises);
+        assertFalse(lister.listExercises("any").contains("x"));
+
     }
 }

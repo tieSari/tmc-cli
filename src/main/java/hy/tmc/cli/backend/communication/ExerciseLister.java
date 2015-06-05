@@ -46,7 +46,6 @@ public class ExerciseLister {
         }
         
         List<Exercise> exercises = TmcJsonParser.getExercises(course.get());
-        
         if (isNull(exercises) || exercises.isEmpty()) {
             return "No exercises found";
         }
