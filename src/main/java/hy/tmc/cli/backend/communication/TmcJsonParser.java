@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend.communication;
 
+import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,6 +11,7 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
+import java.util.ArrayList;
 
 import java.util.Arrays;
 import java.util.List;
@@ -103,7 +105,7 @@ public class TmcJsonParser {
      *
      * @return an course Object (parsed from JSON)
      */
-    public static Course getCourse(int courseID) {
+    public static Optional<Course> getCourse(int courseID) {
         ConfigHandler confighandler = new ConfigHandler();
         return getCourse(confighandler.getCourseUrl(courseID));
     }
@@ -114,11 +116,11 @@ public class TmcJsonParser {
      * @param courseUrl URL path to course JSON
      * @return an Course object (parsed from JSON)
      */
-    public static Course getCourse(String courseUrl) {
+    public static Optional<Course> getCourse(String courseUrl) {
         JsonObject courseJson = getJsonFrom(courseUrl);
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
-        return course;
+        return Optional.of(course);
     }
 
     /**
@@ -146,11 +148,15 @@ public class TmcJsonParser {
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects
+     * @return List of all exercises as Exercise-objects. If no course is found, 
+     * empty list will be returned.
      */
     public static List<Exercise> getExercises(String courseUrl) {
-        Course course = getCourse(courseUrl);
-        return course.getExercises();
+        Optional<Course> course = getCourse(courseUrl);
+        if (course.isPresent()) {
+            return course.get().getExercises();
+        }
+        return new ArrayList<>();
     }
 
     /**

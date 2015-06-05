@@ -21,9 +21,7 @@ public class Submit extends Command {
     public Submit(FrontendListener front) {
         super(front);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(
-                        new DefaultRootDetector()
-                ),
+                new ProjectRootFinder(new DefaultRootDetector()),
                 new Zipper()
         );
         interpreter = new SubmissionInterpreter();

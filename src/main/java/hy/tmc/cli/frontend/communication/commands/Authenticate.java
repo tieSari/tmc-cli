@@ -50,5 +50,4 @@ public class Authenticate extends Command {
         ).getStatusCode();
         this.frontend.printLine(returnResponse(code));
     }
-
 }

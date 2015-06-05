@@ -14,8 +14,6 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
 public class Server implements FrontendListener, Runnable {
 
     private Socket clientSocket;
@@ -34,7 +32,7 @@ public class Server implements FrontendListener, Runnable {
             new ConfigHandler().writePort(serverSocket.getLocalPort());
         } catch (IOException ex) {
             System.out.println("Server creation failed");
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
         this.parser = new ProtocolParser(this);
     }
@@ -131,7 +129,7 @@ public class Server implements FrontendListener, Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(outputLine);
         } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
         System.out.println(outputLine);
     }

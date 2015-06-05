@@ -61,5 +61,4 @@ public class RunTests extends Command {
             throw new ProtocolException("File path to exercise required.");
         }
     }
-
 }

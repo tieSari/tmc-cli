@@ -29,5 +29,4 @@ public class StopProcess extends Command {
     public void checkData() throws ProtocolException {
         
     }
-
 }
