@@ -23,7 +23,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Map;
+import org.apache.http.entity.mime.content.ContentBody;
 
 public class UrlCommunicator {
 
@@ -32,24 +34,23 @@ public class UrlCommunicator {
     /**
      * Creates and executes post-request to specified URL.
      *
-     * @param toBeUploaded File-object that gets attached to request.
+     * @param fileBody FileBody or ByteArrayBody that includes data to be sended.
      * @param destinationUrl destination of the url.
      * @param headers Headers to be added to httprequest.
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public static HttpResult makePostWithFile(File toBeUploaded,
+    public static HttpResult makePostWithFile(ContentBody fileBody,
             String destinationUrl,
             Optional<Map<String, String>> headers)
             throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
-        FileBody fileBody = new FileBody(toBeUploaded);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
     }
 
-    private static void addFileToRequest(FileBody fileBody, HttpPost httppost) {
+    private static void addFileToRequest(ContentBody fileBody, HttpPost httppost) {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("submission[file]", fileBody);

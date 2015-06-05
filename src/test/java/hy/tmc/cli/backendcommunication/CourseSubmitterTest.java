@@ -18,8 +18,8 @@ import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
 
-import java.io.File;
 import java.io.IOException;
+import org.apache.http.entity.mime.content.FileBody;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import org.junit.Before;
@@ -124,7 +124,7 @@ public class CourseSubmitterTest {
     private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makePostWithFile(Mockito.any(File.class),
+                .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Optional.class)))
                 .thenReturn(fakeResult);
     }
