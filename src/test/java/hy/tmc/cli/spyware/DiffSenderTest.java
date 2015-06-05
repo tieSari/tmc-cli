@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.configuration.ClientData;
@@ -20,6 +19,7 @@ import hy.tmc.cli.domain.Course;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -27,9 +27,8 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
 
-
 public class DiffSenderTest {
-    
+
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
@@ -37,8 +36,7 @@ public class DiffSenderTest {
     private DiffSender sender;
     private String originalServerUrl;
     private ConfigHandler config;
-    
-    
+
     /**
      * Logins the users and creates fake server.
      */
@@ -59,20 +57,22 @@ public class DiffSenderTest {
                 spywareUrl);
         assertEquals(200, res.getStatusCode());
     }
-    
+
     @Test
     public void testSendToAllUrls() throws IOException {
         final File file = new File("testResources/test.zip");
         Course testCourse = new Course();
+        List<String> urls = new ArrayList<>();
+        urls.add(spywareUrl);
         testCourse.setSpywareUrls(
-                Arrays.asList(new String[]{spywareUrl})
+                urls
         );
         List<HttpResult> results = sender.sendToSpyware(file, testCourse);
         for (HttpResult res : results) {
             assertEquals(200, res.getStatusCode());
         }
     }
-    
+
     @Test
     public void spywarePostIncludesFileAndHeaders() throws IOException {
         startWiremock();
@@ -89,8 +89,8 @@ public class DiffSenderTest {
                 .withRequestBody(containing("test.zip"))
                 .willReturn(
                         aResponse()
-                                .withBody("OK")
-                                .withStatus(200)
+                        .withBody("OK")
+                        .withStatus(200)
                 )
         );
     }

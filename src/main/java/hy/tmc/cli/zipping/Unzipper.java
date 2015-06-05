@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 
 import java.util.List;
 
-
 /**
  * Handles unpacking zip files downloaded from TMC.
  */
@@ -26,7 +25,8 @@ public class Unzipper {
      *
      * @param zipSourcePath for zip to unpack
      * @param unzipLocation place to unzip to
-     * @param movedecider a class which helps decide which files may be overwritten
+     * @param movedecider a class which helps decide which files may be
+     * overwritten
      */
     public Unzipper(String zipSourcePath, String unzipLocation, UnzipDecider movedecider) {
         this.zipPath = zipSourcePath;
@@ -50,10 +50,14 @@ public class Unzipper {
         this.zipPath = zipPath;
     }
 
+    /**
+     * Usage of generics <?> is because TMC-langs returns generic List-
+     * implementation. This makes the typecast much safer.
+     */
     private void extractYml(ZipFile zipFile) throws ZipException {
-        List<FileHeader> fileHeaders = zipFile.getFileHeaders();
-
-        for (FileHeader fileHeader : fileHeaders) {
+        List<?> fileHeaders = (List<?>) zipFile.getFileHeaders();
+        for (Object object : fileHeaders) {
+            FileHeader fileHeader = (FileHeader) object;
             if (fileHeader.getFileName().endsWith(specFileName)) {
                 zipFile.extractFile(fileHeader, unzipDestination);
                 Path tmcYmlPath = Paths.get(unzipDestination + "/" + fileHeader.getFileName());
@@ -63,7 +67,7 @@ public class Unzipper {
     }
 
     /**
-     * Unzips zip to specified location.
+     * Unzips zip to specified location. Uses generics because TMC-langs.
      *
      * @throws IOException if cannot write to file
      * @throws ZipException If specified zip is not found
@@ -73,9 +77,10 @@ public class Unzipper {
         ZipFile zipFile = new ZipFile(zipPath);
         extractYml(zipFile);
 
-        List<FileHeader> fileHeaders = zipFile.getFileHeaders();
+        List<?> fileHeaders = (List<?>) zipFile.getFileHeaders();
 
-        for (FileHeader fileHeader : fileHeaders) {
+        for (Object object : fileHeaders) {
+            FileHeader fileHeader = (FileHeader) object;
             String fullFileName = unzipDestination + "/" + fileHeader.getFileName();
             if (movedecider.canBeOverwritten(fullFileName)) {
                 zipFile.extractFile(fileHeader, unzipDestination);

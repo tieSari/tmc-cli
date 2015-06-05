@@ -123,6 +123,12 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <!--
+                    <compilerArguments>
+                        <Werror />
+                        <Xlint:all />
+                    </compilerArguments>
+                    -->
                 </configuration>
             </plugin>
 
