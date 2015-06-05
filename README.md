@@ -13,3 +13,5 @@ Current core functionality includes:
 * Downloading exercises from TMC-server
 * Submitting exerises
 * Running local tests
+
+[Installation instructions](Installation.md)
