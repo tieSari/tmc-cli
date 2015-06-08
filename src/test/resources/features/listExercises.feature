@@ -3,7 +3,7 @@ Feature: ListExercises command
 
     Scenario: List exercises with credentials
         Given user has logged in with username "test" and password "1234".
-        When user gives command listExercises.
+        When user gives command listExercises with path "/tmc-cli-client/testResources/2013_ohpeJaOhja/viikko1/Viikko1_002.HeiMaailma".
         Then output should contain more than one line
 
     Scenario: List exercises without credentials
