@@ -67,6 +67,7 @@ public class UrlCommunicator {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
         } catch (IOException e) {
+            // todo: don't catch
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
@@ -140,7 +141,6 @@ public class UrlCommunicator {
             throws IOException {
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();
-        System.out.println(jsonString);
         StringEntity feedbackJson = new StringEntity(jsonString);
         httppost.addHeader("content-type", "application/json");
         addCredentials(httppost, ClientData.getFormattedUserData());

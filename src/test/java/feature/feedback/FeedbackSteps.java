@@ -33,7 +33,7 @@ public class FeedbackSteps {
     private FrontendStub frontStub;
     private FeedbackHandler handler;
 
-    private String exercisePath = "/testResources/tmc-testcourse/trivial";
+    // private String exercisePath = ;
 
     private int port;
 
@@ -42,19 +42,22 @@ public class FeedbackSteps {
     private Server server;
 
     private ConfigHandler configHandler; // writes the test address
-    private final int serverPort = 7070;
+    private final String serverHost = "127.0.0.1";
+    private int serverPort;
     private WireMockServer wireMockServer;
+    private WireMock wireMock;
     private String wiremockAddress;
     private String feedbackAnswersUrl;
 
     @Before
     public void initializeServer() throws IOException {
-        System.out.println("doing before");
+        // System.out.println("doing before");
 
         configHandler = new ConfigHandler();
-        wiremockAddress = "http://127.0.0.1:" + serverPort;
-        configHandler.writeServerAddress(wiremockAddress);
         startWireMock();
+        wiremockAddress = "http://" + serverHost + ":" + serverPort;
+        configHandler.writeServerAddress(wiremockAddress);
+        System.out.println(wiremockAddress);
         frontStub = new FrontendStub();
         handler = new FeedbackHandler(frontStub);
         server = new Server(handler);
@@ -80,9 +83,17 @@ public class FeedbackSteps {
     }
 
     private void startWireMock() {
-        WireMock.configureFor("127.0.0.1", serverPort);
-        wireMockServer = new WireMockServer(wireMockConfig().port(serverPort));
+        wireMockServer = new WireMockServer();
         wireMockServer.start();
+        serverPort = wireMockServer.port();
+        WireMock.configureFor(serverHost, serverPort);
+
+        // this.wireMock = new WireMock(serverHost, serverPort);
+
+
+        /* while (!wireMockServer.isRunning()) {
+            System.out.println("starting");
+        } */
 
         wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         wiremockGET("/courses/27.json?api_version=7", ExampleJson.feedbackCourse.replace(
@@ -109,7 +120,7 @@ public class FeedbackSteps {
     }
 
     private void wiremockGET(final String urlToMock, final String returnBody) {
-        wireMockServer.stubFor(get(urlEqualTo(urlToMock))
+        stubFor(get(urlEqualTo(urlToMock))
                         .willReturn(aResponse()
                                         .withStatus(200)
                                         .withBody(returnBody)
@@ -118,7 +129,7 @@ public class FeedbackSteps {
     }
 
     private void wiremockPOST(final String urlToMock, final String returnBody) {
-        wireMockServer.stubFor(post(urlEqualTo(urlToMock))
+        stubFor(post(urlEqualTo(urlToMock))
                         .willReturn(aResponse()
                                         .withBody(returnBody)
                         )
@@ -142,8 +153,7 @@ public class FeedbackSteps {
 
     @When("^the exercise is submitted$")
     public void theExerciseIsSubmitted() throws Throwable {
-        System.out.println("kaksi");
-        sendExercise();
+        sendExercise("/testResources/tmc-testcourse/trivial");
     }
 
     @Then("^feedback questions will not be asked$")
@@ -167,14 +177,15 @@ public class FeedbackSteps {
 
     @Given("^the user has submitted a successful exercise$")
     public void theUserHasSubmittedASuccessfulExercise() throws ProtocolException, IOException {
-        sendExercise();
+        sendExercise("/testResources/tmc-testcourse/trivial");
     }
 
-    private void sendExercise() throws IOException {
+    private void sendExercise(String exercisePath) throws IOException {
         String submitCommand = "submit path ";
         String submitPath = System.getProperty("user.dir") + exercisePath;
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
+        testClient.reply();
     }
 
     @When("^the user has answered all feedback questions$")
@@ -196,7 +207,15 @@ public class FeedbackSteps {
     }
 
     @When("^the user gives some answer that's not in the correct range$")
-    public void theUserGivesSomeAnswerThatsNotInTheCorrectRange() {
+    public void theUserGivesSomeAnswerThatsNotInTheCorrectRange() throws IOException {
+        // intrange [0..10]
+        feedbackAnswer("12");
+        // intrange [10..100]
+        testClient = new TestClient(port);
+        feedbackAnswer("150");
+        // text
+        testClient = new TestClient(port);
+        feedbackAnswer("Hello world!");
     }
 
     @Given("^an exercise with no feedback$")
