@@ -4,12 +4,14 @@ import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
-
 import java.io.IOException;
+import java.text.ParseException;
+import static javax.swing.text.html.HTML.Tag.HEAD;
 
 /**
  * Submit command for submitting exercises to TMC
@@ -53,11 +55,14 @@ public class Submit extends Command {
                 frontend.printLine(interpreter.resultSummary(returnUrl, true));
             }
         }
-        catch (IllegalArgumentException ex) {
+        catch (IllegalArgumentException | ParseException ex) {
             frontend.printLine(ex.getMessage());
         }
         catch (IOException | InterruptedException ex) {
             frontend.printLine("Project not found with specified parameters or thread interrupted");
+        } 
+        catch(ExpiredException ex){
+            frontend.printLine("Exercise has expired.");
         }
     }
 

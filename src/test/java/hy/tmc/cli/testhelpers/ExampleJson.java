@@ -12,12 +12,14 @@ public class ExampleJson {
     public static String successfulSubmission = successfulSubmission();
     public static String failedSubmission = failedSubmission();
     public static String submitResponse = submitResponse();
+    public static String noDeadlineCourseExample = noDeadlineCourseExample();
+
     public static String failingCourse = failingCourse();
     public static String failedSubmitResponse = failedSubmitResponse();
     public static String pasteResponse = pasteResponse();
     public static String checkstyleFailed = checkstyleFailed();
     public static String valgrindFailed = valgrindFailed();
-
+    public static String expiredCourseExample = expiredCourseExample();
     
     private static String failingCourse() {
         return readFile("src/test/resources/failingCourse.json");
@@ -39,7 +41,15 @@ public class ExampleJson {
     private static String courseExample() {
         return readFile("src/test/resources/course.json");
     }
-
+    
+    private static String noDeadlineCourseExample(){
+        return readFile("src/test/resources/nodeadlinecourse.json");
+    }
+    
+    private static String expiredCourseExample(){
+        return readFile("src/test/resources/expiredCourse.json");
+    }
+   
     private static String allCoursesExample() {
         return readFile("src/test/resources/courses.json");
     }

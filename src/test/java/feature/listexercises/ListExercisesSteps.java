@@ -1,12 +1,10 @@
 package feature.listexercises;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -26,16 +24,14 @@ public class ListExercisesSteps {
 
     private Thread serverThread;
     private Server server;
-    private String path = "/tmc-cli-client/testResources/2013_ohpeJaOhja/viikko1/Viikko1_002.HeiMaailma";
 
     private TestClient testClient;
-    private boolean testThrown;
 
     private ConfigHandler configHandler; // writes the test address
     private WireMockServer wireMockServer;
 
     private static final String SERVER_URI = "127.0.0.1";
-    private static final int SERVER_PORT = 7777;
+    private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
 
     /**
@@ -48,7 +44,6 @@ public class ListExercisesSteps {
 
         server = new Server();
         port = configHandler.readPort();
-        System.out.println(port);
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
@@ -58,7 +53,6 @@ public class ListExercisesSteps {
 
     private void startWireMock() {
         wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
-        WireMock.configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
         wireMockServer.stubFor(get(urlEqualTo("/user"))
                 .willReturn(
@@ -66,7 +60,7 @@ public class ListExercisesSteps {
                         .withStatus(200)
                 )
         );
-        wireMockServer.stubFor(get(urlEqualTo(new ConfigHandler().coursesExtension))
+        wireMockServer.stubFor(get(urlEqualTo(configHandler.coursesExtension))
                 .willReturn(
                         aResponse()
                         .withStatus(200)
@@ -74,7 +68,7 @@ public class ListExercisesSteps {
                         .withBody(ExampleJson.allCoursesExample)
                 )
         );
-        wireMockServer.stubFor(get(urlEqualTo(new ConfigHandler().getCourseUrl(3)))
+        wireMockServer.stubFor(get(urlEqualTo("/courses/3.json?api_version=7"))
                 .willReturn(
                         aResponse()
                         .withStatus(200)
@@ -86,56 +80,46 @@ public class ListExercisesSteps {
     }
 
     @After
-    public void tearDown() {
+    public void closeServer() throws IOException {
+        server.close();
+        serverThread.interrupt();
+        wireMockServer.stop();
+        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
         ClientData.clearUserData();
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
-        ClientData.setUserData(username, password);
-        
+        testClient.sendMessage("login username " + username + " password " + password);
+        testClient.init();
     }
 
     @When("^user gives command listExercises with path \"(.*?)\"\\.$")
-    public void user_gives_command_listExercises_with_path(String arg1) throws Throwable {
+    public void user_gives_command_listExercises_with_path(String path) throws Throwable {
         testClient.sendMessage("listExercises path " + path);
     }
 
     @Then("^output should contain more than one line$")
     public void output_should_contain_more_than_one_line() throws Throwable {
         String reply = testClient.reply();
-        assertTrue(reply.contains("viikko1-Viikko1_000.Hiekkalaatikko"));
-        assertTrue(reply.contains("viikko1-Viikko1_001.Nimi [ ]"));
+        StringBuilder replybuffer = new StringBuilder();
+        while (reply != null) {
+            replybuffer.append(reply);
+            reply = testClient.reply();
+        }
+        String result = replybuffer.toString();
+        assertTrue(result.contains("viikko1-Viikko1_000.Hiekkalaatikko"));
+        assertTrue(result.contains("viikko1-Viikko1_001.Nimi"));
     }
 
     @Given("^user has not logged in$")
     public void user_has_not_logged_in() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
-    @When("^user writes listExercises\\.$")
-    public void user_writes_listExercises() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        ClientData.clearUserData();
     }
 
     @Then("^exception should be thrown$")
     public void exception_should_be_thrown() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        String result = testClient.reply();
+        assertTrue(result.contains("Please authorize first."));
     }
-
-    @Given("^user doesn't have a valid course in his path\\.$")
-    public void user_doesn_t_have_a_valid_course_in_his_path() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
-    @Then("^output should contain names of exercises\\.$")
-    public void output_should_contain_names_of_exercises() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
 }

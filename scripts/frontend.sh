@@ -57,7 +57,7 @@ function command_default () {
     return 0;
 }
 
-function command_listexercises () {
+function command_listExercises () {
   send_command "listExercises path `pwd`"
 }
 

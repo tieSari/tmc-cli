@@ -42,7 +42,7 @@ public class DiffSenderTest {
     private DiffSender sender;
     private String originalServerUrl;
     private ConfigHandler config;
-
+    
     /**
      * Logins the users and creates fake server.
      */
