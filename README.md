@@ -13,8 +13,6 @@ Current core functionality includes:
 * Downloading exercises from TMC-server
 * Submitting exerises
 * Running local tests
-<<<<<<< HEAD
-=======
 
 [Installation instructions](Installation.md)
 
@@ -45,4 +43,3 @@ Current core functionality includes:
 - listExercises
   - When a user is in a course directory, lists the exercises of that course
   - If the user has completed a certain exercise, it is shown that way
->>>>>>> 4d770603b91d13e818e99e2710c6deb9eddc9368
