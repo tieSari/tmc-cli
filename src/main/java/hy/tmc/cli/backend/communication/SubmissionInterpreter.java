@@ -25,6 +25,8 @@ public class SubmissionInterpreter {
      */
     private final int pollInterval = 1000;
     
+    private final String timeOutmessage = "Something went wrong. Please check your internet connection.";
+    
     private final SubmissionResultFormatter formatter = new CommandLineSubmissionResultFormatter();
 
     /**
@@ -36,16 +38,15 @@ public class SubmissionInterpreter {
      * out.
      * @throws InterruptedException if thread failed to sleep
      */
-    private SubmissionResult pollSubmissionUrl(String url) throws InterruptedException {
+    private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = TmcJsonParser.getSubmissionResult(url);
             if (result.getStatus() == null || !result.getStatus().equals("processing")) {
-                return result;
+                return Optional.of(result);
             }
-
             Thread.sleep(pollInterval);
         }
-        return null;
+        return Optional.absent();
     }
 
     /**
@@ -53,12 +54,16 @@ public class SubmissionInterpreter {
      *
      * @param url String of url to poll results from.
      * @param detailed true for stack trace, always show successful.
-     * @return a String containing human-readable information about tests.
+     * @return a String containing human-readable information about tests. TimeOutMessage
+     * if result is null.
      * @throws InterruptedException if thread was interrupted.
      */
     public String resultSummary(String url, boolean detailed) throws InterruptedException {
-        SubmissionResult result = pollSubmissionUrl(url);
-        return summarize(result, detailed);
+        Optional<SubmissionResult> result = pollSubmissionUrl(url);
+        if (result.isPresent()) {
+            return summarize(result.get(), detailed);
+        }
+        return timeOutmessage;
     }
 
     private String summarize(SubmissionResult result, boolean detailed) {

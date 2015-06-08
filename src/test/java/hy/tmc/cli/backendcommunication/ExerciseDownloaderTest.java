@@ -133,14 +133,14 @@ public class ExerciseDownloaderTest {
         try {
             ex1content = new String(Files.readAllBytes(Paths.get("Exercise1.zip")));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             ex1content = "";
         }
         String ex2content;
         try {
             ex2content = new String(Files.readAllBytes(Paths.get("Exercise2.zip")));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             ex2content = "";
         }
         assertEquals("<response>Exercise 1</response>", ex1content);

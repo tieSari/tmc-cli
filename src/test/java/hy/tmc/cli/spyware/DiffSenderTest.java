@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.io.Files;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.configuration.ClientData;
@@ -20,6 +19,8 @@ import hy.tmc.cli.domain.Course;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -29,9 +30,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
-
 public class DiffSenderTest {
-    
+
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
     
@@ -63,20 +63,22 @@ public class DiffSenderTest {
                 spywareUrl);
         assertEquals(200, res.getStatusCode());
     }
-    
+
     @Test
     public void testSendToAllUrlsWithFile() throws IOException {
         final File file = new File("testResources/test.zip");
         Course testCourse = new Course();
+        List<String> urls = new ArrayList<>();
+        urls.add(spywareUrl);
         testCourse.setSpywareUrls(
-                Arrays.asList(new String[]{spywareUrl})
+                urls
         );
         List<HttpResult> results = sender.sendToSpyware(file, testCourse);
         for (HttpResult res : results) {
             assertEquals(200, res.getStatusCode());
         }
     }
-    
+
     @Test
     public void testSendToSpywareWithByteArray() throws IOException {
         final File file = new File("testResources/test.zip");

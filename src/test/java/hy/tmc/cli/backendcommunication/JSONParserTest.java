@@ -1,5 +1,6 @@
 package hy.tmc.cli.backendcommunication;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
@@ -103,9 +104,9 @@ public class JSONParserTest {
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
 
-        Course course = TmcJsonParser.getCourse(3);
-        assertNotNull(course);
-        assertEquals("2013_ohpeJaOhja", course.getName());
+        Optional<Course> course = TmcJsonParser.getCourse(3);
+        assertTrue(course.isPresent());
+        assertEquals("2013_ohpeJaOhja", course.get().getName());
 
     }
 
