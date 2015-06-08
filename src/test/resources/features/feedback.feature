@@ -1,9 +1,9 @@
 Feature: students may give feedback on the exercises
 
-#    Scenario: Feedback will not be asked when the exercise is not complete
-#        Given an exercise where some tests fail
-#        When the exercise is submitted
-#        Then feedback questions will not be asked
+    Scenario: Feedback will not be asked when the exercise is not complete
+        Given an exercise where some tests fail
+        When the exercise is submitted
+        Then feedback questions will not be asked
 
     Scenario: The students feedback is sent to the server
         Given the user has submitted a successful exercise
@@ -18,4 +18,4 @@ Feature: students may give feedback on the exercises
     Scenario: If there are no feedback questions, the program does not try to ask any
         Given an exercise with no feedback
         When the user submits and all tests pass
-        Then no feedback questions are asked
+        Then feedback questions will not be asked

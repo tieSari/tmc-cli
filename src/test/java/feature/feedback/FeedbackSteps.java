@@ -2,6 +2,7 @@ package feature.feedback;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.fail;
 
@@ -48,6 +49,7 @@ public class FeedbackSteps {
     private WireMock wireMock;
     private String wiremockAddress;
     private String feedbackAnswersUrl;
+    private String lastReply = null;
 
     @Before
     public void initializeServer() throws IOException {
@@ -180,12 +182,12 @@ public class FeedbackSteps {
         sendExercise("/testResources/tmc-testcourse/trivial");
     }
 
-    private void sendExercise(String exercisePath) throws IOException {
+    private String sendExercise(String exercisePath) throws IOException {
         String submitCommand = "submit path ";
         String submitPath = System.getProperty("user.dir") + exercisePath;
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
-        testClient.reply();
+        return testClient.reply();
     }
 
     @When("^the user has answered all feedback questions$")
@@ -201,9 +203,12 @@ public class FeedbackSteps {
     }
 
     @Then("^feedback is sent to the server successfully$")
-    public void feedbackIsSentToTheServerSuccessfully() {
-        /*verify(postRequestedFor(urlEqualTo(feedbackAnswersUrl))
-        .withRequestBody(equalToJson("{ answers: [{ id: 30, answer: \"3\"}, { id: 31, answer: \"Hello world!\"}, { id: 32, answer: \"42\"} ]}")));*/
+    public void feedbackIsSentToTheServerSuccessfully() throws IOException {
+        while (testClient.hasNewMessages()) {
+            testClient.reply();
+        }
+        verify(postRequestedFor(urlEqualTo(feedbackAnswersUrl))
+        .withRequestBody(equalToJson("{ answers: [{ id: 30, answer: \"3\"}, { id: 31, answer: \"Hello world!\"}, { id: 32, answer: \"42\"} ]}")));
     }
 
     @When("^the user gives some answer that's not in the correct range$")
@@ -219,19 +224,33 @@ public class FeedbackSteps {
     }
 
     @Given("^an exercise with no feedback$")
-    public void anExerciseWithNoFeedback() {
+    public void anExerciseWithNoFeedback() throws IOException {
+        this.lastReply = sendExercise("/testResources/2014-mooc-no-deadline/viikko1/Viikko1_001.Nimi");
     }
 
     @When("^the user submits and all tests pass$")
-    public void theUserSubmitsAndAllTestsPass() {
+    public void theUserSubmitsAndAllTestsPass() throws IOException {
+        String reply = testClient.reply();
+        //System.out.println("vastaus: ");
+        //System.out.println(reply);
+        while(testClient.hasNewMessages()) {
+            //System.out.println("------------");
+            //System.out.println(reply);
+            if (reply.contains("tests failed")) {
+                //System.out.println("feilas");
+                fail("tests failed");
+            }
+            reply = testClient.reply();
+        }
     }
 
-    @Then("^no feedback questions are asked$")
+    /* @Then("^no feedback questions are asked$")
     public void noFeedbackQuestionsAreAsked() {
-    }
+    } */
 
     @After
     public void closeAll() throws IOException {
+        // System.out.println("doing after");
         server.close();
         serverThread.interrupt();
         WireMock.reset();
