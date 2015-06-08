@@ -127,9 +127,9 @@
         }, {
             "id": 21,
             "name": "k2015-tira",
-            "details_url": "https://tmc.mooc.fi/staging/courses/21.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/21/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/21/reviews.json",
+            "details_url": "http://127.0.0.1:8080/courses/21.json",
+            "unlock_url": "http://127.0.0.1:8080/courses/21/unlock.json",
+            "reviews_url": "http://127.0.0.1:8080/courses/21/reviews.json",
             "comet_url": "https://tmc.mooc.fi:8443/comet",
             "spyware_urls": ["http://staging.spyware.testmycode.net/"]
         }, {

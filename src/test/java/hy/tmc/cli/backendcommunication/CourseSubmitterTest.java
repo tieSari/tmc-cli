@@ -14,11 +14,14 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import org.apache.http.entity.mime.content.FileBody;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
@@ -46,9 +49,11 @@ public class CourseSubmitterTest {
 
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
+        mockUrlCommunicator("courses/19.json?api_version=7", ExampleJson.noDeadlineCourseExample);
+        mockUrlCommunicator("courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
-        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/287/submissions.json?api_version=7", ExampleJson.pasteResponse);
-
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.submitResponse);
+        mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.pasteResponse);
     }
 
     @After
@@ -75,17 +80,26 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testSubmitWithOneParam() throws IOException {
-        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_001.Nimi";
+    public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
+    
+    @Test(expected = ExpiredException.class)
+    public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/k2015-tira/viikko01/tira1.1";
 
+        rootFinder.setReturnValue(testPath);
+        String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
+        String result = courseSubmitter.submit(testPath);
+    }
+    
     @Test
-    public void submitWithPasteReturnsPasteUrl() throws IOException {
-        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/viikko1-Viikko1_003.Kuusi";
+    public void submitWithPasteReturnsPasteUrl() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
         String result = courseSubmitter.submitPaste(testPath);
@@ -93,27 +107,27 @@ public class CourseSubmitterTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void submitWithPasteFromBadPathThrowsException() throws IOException {
-        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikeintehtava";
+    public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikeintehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSubmitWithNonexistentExercise() throws IOException {
-        String testPath = "/home/test/2013_ohpeJaOhja/viikko_01/feikkitehtava";
+    public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException {
+        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void submitWithNonExistentCourseThrowsException() throws IOException {
+    public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
-    private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {
+     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
