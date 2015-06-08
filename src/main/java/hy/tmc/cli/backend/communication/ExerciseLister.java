@@ -9,7 +9,6 @@ import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
 import java.util.List;
-import static java.util.Objects.isNull;
 
 public class ExerciseLister {
 
@@ -46,7 +45,7 @@ public class ExerciseLister {
         }
         
         List<Exercise> exercises = TmcJsonParser.getExercises(course.get());
-        if (isNull(exercises) || exercises.isEmpty()) {
+        if (exercises == null || exercises.isEmpty()) {
             return "No exercises found";
         }
 
