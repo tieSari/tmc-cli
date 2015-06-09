@@ -1,6 +1,7 @@
 package hy.tmc.cli.backend;
 
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.Review;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,8 @@ public class Cache {
     private static Map<Integer, Course> courses;
     private static Date lastUpdated;
     
-    public static List<Change> update(Map<Integer, Course> freshData){
-        return null;
+    public static void update(Map<Integer, Course> freshData){
+        lastUpdated = new Date();
     }
     
     public static Date getLastUpdated() {

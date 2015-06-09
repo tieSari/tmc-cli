@@ -138,6 +138,11 @@ public class Review {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+    
+    @Override
+    public String toString() {
+        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody;
+    }
 
     public void markAs(boolean read) {
         Map<String, String> headers = new HashMap<>();

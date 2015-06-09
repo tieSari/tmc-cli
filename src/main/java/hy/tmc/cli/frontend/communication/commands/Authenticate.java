@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
@@ -44,10 +45,10 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(
-                new ConfigHandler().readAuthAddress(),
-                auth
-        ).getStatusCode();
+        int code = makeGetRequest(new ConfigHandler().readAuthAddress(), auth).getStatusCode();
+        if ((""+code).matches(httpOk)){
+            Mailbox.create();
+        }
         this.frontend.printLine(returnResponse(code));
     }
 }

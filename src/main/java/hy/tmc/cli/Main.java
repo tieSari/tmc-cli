@@ -1,5 +1,6 @@
 package hy.tmc.cli;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
@@ -21,14 +22,24 @@ public class Main {
         //  FrontendListener frontendListener = new Server();
         // frontendListener.start();
 
-        Course c = new Course();
+        /* Course c = new Course();
         c.setReviewsUrl("https://tmc.mooc.fi/staging/courses/13/reviews.json");
 
         ClientData.setCurrentCourse(c);
         ClientData.setUserData("test", "1234");
 
+        Mailbox.create();
+        
         StatusPoller poller = new StatusPoller();
         new TmcServiceScheduler().addService(poller).start();
-
+        
+        Thread.sleep(5000);
+        System.out.println("I wonder??");
+        if (Mailbox.getMailbox().reviewsWaiting()){
+            System.out.println("I have mail!!!");
+            System.out.println("main"+Mailbox.getMailbox().getUnreadReviews().get(0));
+        }else {
+            System.out.println("sadness :(");
+        }*/ 
     }
 }
