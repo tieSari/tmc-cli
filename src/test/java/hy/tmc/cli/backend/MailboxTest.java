@@ -3,6 +3,7 @@ package hy.tmc.cli.backend;
 import hy.tmc.cli.domain.Review;
 import java.util.ArrayList;
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -32,6 +33,7 @@ public class MailboxTest {
         boolean helloFound = false;
         boolean lelFound = false;
         for (Review r : mail.getUnreadReviews()) {
+            System.out.println(">"+r.getReviewBody());
             if (r.getReviewBody().equals("hello world")){
                 helloFound = true;
             }
@@ -53,7 +55,15 @@ public class MailboxTest {
 
     @Test
     public void afterFillingTwiceGetReturnsAll() {
-
+        mail.fill(reviews("first", "second"));
+        mail.fill(reviews("third", "duck", "fifth"));
+        List<Review> reviews = mail.getUnreadReviews();
+        assertEquals(5, reviews.size());
+        assertEquals("first", reviews.get(0).getReviewBody());
+        assertEquals("second", reviews.get(1).getReviewBody());
+        assertEquals("third", reviews.get(2).getReviewBody());
+        assertEquals("duck", reviews.get(3).getReviewBody());
+        assertEquals("fifth", reviews.get(4).getReviewBody());
     }
     
     private List<Review> reviews(String... reviewMsgs) {
@@ -61,6 +71,7 @@ public class MailboxTest {
         for (String review : reviewMsgs) {
             Review r = new Review();
             r.setReviewBody(review);
+            reviews.add(r);
         }
         return reviews;
     }
