@@ -10,6 +10,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import java.util.ArrayList;
 
@@ -58,9 +59,10 @@ public class TmcJsonParser {
 
     /**
      * Add
+     *
      * @param result
      * @param name
-     * @return 
+     * @return
      */
     public static StringBuilder addSpaces(StringBuilder result, String name) {
         int spaces = 50 - name.length();
@@ -85,6 +87,20 @@ public class TmcJsonParser {
     }
 
     /**
+     * Maps the JSON as review-objects.
+     *
+     * @param reviewUrl which is found from course-object
+     * @return List of reviews
+     */
+    public static List<Review> getReviews(String reviewUrl) {
+        JsonObject jsonObject = getJsonFrom(withApiVersion(reviewUrl));
+        Gson mapper = new Gson();
+        Review[] reviews = mapper
+                .fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);
+        return Arrays.asList(reviews);
+    }
+
+    /**
      * Get all exercise names of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
@@ -103,6 +119,7 @@ public class TmcJsonParser {
     /**
      * Get information about course specified by the course ID.
      *
+     * @param courseID
      * @return an course Object (parsed from JSON)
      */
     public static Optional<Course> getCourse(int courseID) {
@@ -148,8 +165,8 @@ public class TmcJsonParser {
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects. If no course is found, 
-     * empty list will be returned.
+     * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
+     * returned.
      */
     public static List<Exercise> getExercises(String courseUrl) {
         Optional<Course> course = getCourse(courseUrl);
@@ -180,21 +197,29 @@ public class TmcJsonParser {
     public static String getSubmissionUrl(HttpResult result) {
         return getPropertyFromResult(result, "submission_url");
     }
-    
+
     /**
      * Parses the submission result paste URL from a HttpResult with JSON.
-     * 
+     *
      * @param result HTTPResult containing JSON with paste url.
      * @return url where paste is located.
      */
-    
     public static String getPasteUrl(HttpResult result) {
         return getPropertyFromResult(result, "paste_url");
     }
-    
+
     private static String getPropertyFromResult(HttpResult result, String property) {
-        JsonElement jelement = new JsonParser().parse(result.getData());        
-        JsonObject  jobject = jelement.getAsJsonObject();
+        JsonElement jelement = new JsonParser().parse(result.getData());
+        JsonObject jobject = jelement.getAsJsonObject();
         return jobject.get(property).getAsString();
     }
+
+    private static String withApiVersion(String url) {
+        String postfix = "?api_version=" + ConfigHandler.apiVersion;
+        if (!url.endsWith(postfix)) {
+            url += postfix;
+        }
+        return url;
+    }
+
 }

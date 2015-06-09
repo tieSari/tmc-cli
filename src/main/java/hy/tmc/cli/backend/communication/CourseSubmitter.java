@@ -1,11 +1,13 @@
 package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.configuration.ClientData;
 
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
+import hy.tmc.cli.zipping.DefaultRootDetector;
+import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
 import java.io.File;
@@ -17,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import java.util.Map;
 
@@ -73,11 +74,7 @@ public class CourseSubmitter {
      * Compare two dates and tell if deadline has gone.
      */
     private boolean deadlineGone(Date current, Date deadline) {
-        if (current.getTime() > deadline.getTime()) {
-            return true;
-        } else {
-            return false;
-        }
+        return current.getTime() > deadline.getTime();
     }
 
     /**
@@ -86,6 +83,8 @@ public class CourseSubmitter {
      * @param currentPath path from which this was called.
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
     public String submit(String currentPath) throws IOException, ParseException, ExpiredException {
         Exercise currentExercise = initExercise(currentPath);
@@ -98,6 +97,8 @@ public class CourseSubmitter {
      * @param currentPath path from which this was called.
      * @return String with url from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
     public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException {
         Exercise currentExercise = initExercise(currentPath);
@@ -175,11 +176,13 @@ public class CourseSubmitter {
     }
 
     private List<Exercise> findCourseExercises(String currentPath) {
-        Optional<Course> currentCourse = getCurrentCourse(currentPath);
+        Optional<Course> currentCourse = new ProjectRootFinder(
+                new DefaultRootDetector()).getCurrentCourse(currentPath);
         if (!currentCourse.isPresent()) {
             deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");
-        };
+        }
+        ClientData.setCurrentCourse(currentCourse.get());
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.get().getId());
         return courseExercises;
     }
@@ -208,30 +211,6 @@ public class CourseSubmitter {
         for (Exercise exercise : courseExercises) {
             if (exercise.getName().contains(name)) {
                 return Optional.of(exercise);
-            }
-        }
-        return Optional.absent();
-    }
-
-    private Optional<Course> getCurrentCourse(String directoryPath) {
-        String[] foldersOfPwd = getExerciseName(directoryPath);
-        return findCourseByPath(foldersOfPwd);
-    }
-
-    /**
-     * Downloads all courses and iterates over them. Returns Course whose name matches with one
-     * folder in given path.
-     *
-     * @param foldersPath contains the names of the folders in path
-     * @return Course
-     */
-    public Optional<Course> findCourseByPath(String[] foldersPath) {
-        List<Course> courses = TmcJsonParser.getCourses();
-        for (Course course : courses) {
-            for (String folderName : foldersPath) {
-                if (course.getName().equals(folderName)) {
-                    return Optional.of(course);
-                }
             }
         }
         return Optional.absent();

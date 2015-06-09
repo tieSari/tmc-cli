@@ -17,7 +17,7 @@ public class ConfigHandler {
     private String configFilePath;
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
-    public final String apiVersion = "7";
+    public static final String apiVersion = "7";
     public final String coursesExtension = "/courses.json?api_version=" + apiVersion;
     public final String authExtension = "/user";
 

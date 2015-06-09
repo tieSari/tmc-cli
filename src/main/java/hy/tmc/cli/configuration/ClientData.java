@@ -1,22 +1,24 @@
 package hy.tmc.cli.configuration;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
 
 /**
- * This class will be initialized when Auth is successful. Use this to get data
- * of user
+ * This class will be initialized when Auth is successful. Use this to get data of user
  */
 public final class ClientData {
+
     private static int PID;
     private static String USERNAME = "";
     private static String PASSWORD = "";
     private static Course currentCourse;
 
-
     private ClientData() {
     }
+
     /**
      * Sets the data for current user.
+     *
      * @param username Username of the current user
      * @param password Password of the current user
      */
@@ -25,18 +27,18 @@ public final class ClientData {
         PASSWORD = password;
     }
 
-    public static Course getCurrentCourse() {
-        return currentCourse;
+    public static Optional<Course> getCurrentCourse() {
+        return Optional.of(currentCourse);
     }
 
-    public static void setCurrentCourse(Course currentCourse) {
-        ClientData.currentCourse = currentCourse;
+    public static void setCurrentCourse(Course course) {
+        currentCourse = course;
     }
 
     public static boolean userDataExists() {
         return !(USERNAME.isEmpty() || PASSWORD.isEmpty());
     }
-   
+
     public static void clearUserData() {
         USERNAME = "";
         PASSWORD = "";
