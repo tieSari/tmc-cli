@@ -1,18 +1,15 @@
 package hy.tmc.cli.backend;
 
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 
 public class CommandStub extends Command{
 
-    public CommandStub(FrontendListener front) {
-        super(front);
-    }
-
     @Override
-    protected void functionality() {     
+    protected Optional<String> functionality() {     
+        return Optional.absent();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
@@ -7,19 +8,12 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 public class StopProcess extends Command {
 
     /**
-     * StopProcess command. 
-     * @param front 
-     */
-    public StopProcess(FrontendListener front) {
-        super(front);
-    }
-
-    /**
      * Exit java virtual machine
      */
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         System.exit(0);
+        return Optional.absent();
     }
 
     /**
@@ -28,6 +22,5 @@ public class StopProcess extends Command {
      */
     @Override
     public void checkData() throws ProtocolException {
-        
     }
 }

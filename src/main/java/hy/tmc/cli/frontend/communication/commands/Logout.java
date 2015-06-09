@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -9,22 +10,20 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
  */
 public class Logout extends Command {
 
-    public Logout(FrontendListener front) {
-        super(front);
-    }
-
     /**
      * Doesn't need any data. If the user is logged in, they are logged out.
      * Otherwise nothing happens.
      */
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
+        String message = "";
         if (ClientData.userDataExists()) {
             ClientData.clearUserData();
-            this.frontend.printLine("User logged out. User data cleared.");
+            message = "User logged out. User data cleared.";
         } else {
-            this.frontend.printLine("Nobody is logged in!");
+            message = "Nobody is logged in!";
         }
+        return Optional.of(message);
     }
 
     @Override

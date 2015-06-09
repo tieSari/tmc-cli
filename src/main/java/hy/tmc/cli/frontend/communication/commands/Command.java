@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import java.util.HashMap;
@@ -8,10 +8,7 @@ import java.util.Map;
 
 public abstract class Command {
 
-    /**
-     * The frontend that this command responds to.
-     */
-    protected final FrontendListener frontend;
+
 
     protected Map<String, String> data;
 
@@ -20,8 +17,7 @@ public abstract class Command {
      *
      * @param front frontend
      */
-    public Command(FrontendListener front) {
-        this.frontend = front;
+    public Command() {
         data = new HashMap<>();
     }
 
@@ -32,15 +28,15 @@ public abstract class Command {
      *
      * @throws ProtocolException if the command has insufficient data to run
      */
-    public void execute() throws ProtocolException {
+    public String execute() throws ProtocolException {
         checkData();
-        functionality();
+        return functionality().or("");
     }
 
     /**
      * The functionality of the command. This method defines what the command does.
      */
-    protected abstract void functionality();
+    protected abstract Optional<String> functionality();
 
     /**
      * setParameter sets parameter data for command.

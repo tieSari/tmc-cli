@@ -1,14 +1,20 @@
 package hy.tmc.cli.backend;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 public class TmcCore {
 
     private Map<String, Command> commands;
+    private TmcServiceScheduler scheduler;
+    private ListeningExecutorService pool;
 
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
@@ -17,51 +23,48 @@ public class TmcCore {
      * @param frontend the client frontend, that the core will communicate with.
      */
     public TmcCore(FrontendListener frontend) {
+        scheduler = new TmcServiceScheduler();
         commands = CommandFactory.createCommandMap(frontend);
+        pool = MoreExecutors.listeningDecorator(Executors.newWorkStealingPool());
+
     }
 
-    public boolean login(String username, String password) {
+    public ListenableFuture<String> login(String username, String password) {
         return run("login", "username", username, "password", password);
     }
 
-    public boolean logout() {
+    public ListenableFuture<String> logout() {
         return run("logout");
     }
 
-    public boolean selectServer(String serverAddress) {
+    public ListenableFuture<String> selectServer(String serverAddress) {
         return run("setServer", "tmc-server", serverAddress);
     }
 
-    public boolean downloadExercises(String pwd, String courseId) {
+    public ListenableFuture<String> downloadExercises(String pwd, String courseId) {
         return run("downloadExercises", "pwd", pwd, "courseID", courseId);
     }
 
-    public boolean help() {
+    public ListenableFuture<String> help() {
         return run("help");
     }
 
-    public boolean listCourses() {
+    public ListenableFuture<String> listCourses() {
         return run("listCourses");
     }
 
-    public boolean listExercises() {
+    public ListenableFuture<String> listExercises() {
         return run("listExercises");
     }
 
-    private boolean run(String commandName, String... args) {
+    private ListenableFuture<String> run(String commandName, String... args) {
         if (!commands.containsKey(commandName)) {
-            return false;
+            return null;
         }
         Command command = commands.get(commandName);
         setParams(command, args);
-        try {
-            command.execute();
-        }
-        catch (ProtocolException ex) {
-            System.err.println(ex.getMessage());
-            return false;
-        }
-        return true;
+        //return pool.submit(command);
+        return null;
     }
 
     private void setParams(Command command, String... args) {

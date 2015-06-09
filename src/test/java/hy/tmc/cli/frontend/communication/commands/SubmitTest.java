@@ -34,7 +34,7 @@ public class SubmitTest {
         interpreter = Mockito.mock(SubmissionInterpreter.class);
 
         front = new FrontendStub();
-        submit = new Submit(front, submitterMock, interpreter);
+        submit = new Submit(submitterMock, interpreter);
         ClientData.setUserData("Bossman", "Samu");
     }
 
@@ -70,7 +70,7 @@ public class SubmitTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        Submit submitCommand = new Submit(front);
+        Submit submitCommand = new Submit();
         submitCommand.setParameter("path", "/home/tmccli/testi");
         try {
             submitCommand.checkData();
@@ -85,13 +85,13 @@ public class SubmitTest {
      */
     @Test(expected = ProtocolException.class)
     public void testCheckDataFail() throws ProtocolException {
-        Submit submitCommand = new Submit(front);
+        Submit submitCommand = new Submit();
         submitCommand.checkData();
     }
 
     @Test(expected = ProtocolException.class)
     public void checkDataFailIfNoAuth() throws ProtocolException {
-        Submit submitCommand = new Submit(front);
+        Submit submitCommand = new Submit();
         ClientData.clearUserData();
         submitCommand.checkData();
     }

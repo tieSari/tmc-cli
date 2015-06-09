@@ -1,8 +1,8 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -11,23 +11,22 @@ public class ChooseServer extends Command {
 
     private ConfigHandler handler;
 
-    public ChooseServer(FrontendListener front) {
-        super(front);
-        this.handler = new ConfigHandler();
-    }
-
-    public ChooseServer(ConfigHandler handler, FrontendListener front) {
-        super(front);
+    public ChooseServer(ConfigHandler handler) {
         this.handler = handler;
     }
 
+    public ChooseServer() {
+        handler = new ConfigHandler();
+    }
+
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         try {
             handler.writeServerAddress(data.get("tmc-server"));            
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
+        return Optional.absent();
     }
 
     @Override

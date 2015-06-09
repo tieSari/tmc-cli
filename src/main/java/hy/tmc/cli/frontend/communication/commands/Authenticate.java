@@ -1,10 +1,10 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 public class Authenticate extends Command {
@@ -13,10 +13,6 @@ public class Authenticate extends Command {
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
-
-    public Authenticate(FrontendListener front) {
-        super(front);
-    }
 
     private String returnResponse(int statusCode) {
         if (Integer.toString(statusCode).matches(httpOk)) {
@@ -42,12 +38,12 @@ public class Authenticate extends Command {
     }
 
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),
                 auth
         ).getStatusCode();
-        this.frontend.printLine(returnResponse(code));
+        return Optional.of(returnResponse(code));
     }
 }

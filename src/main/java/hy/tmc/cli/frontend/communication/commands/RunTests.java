@@ -18,23 +18,18 @@ import java.nio.file.Paths;
 
 public class RunTests extends Command {
 
-    public RunTests(FrontendListener front) {
-        super(front);
-    }
-
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         String path = this.data.get("filepath");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());   
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!exercise.isPresent()){
-            this.frontend.printLine("Not an exercise. (null)");
-            return;
+            return Optional.of("Not an exercise. (null)");
         }
         try {
-            runTests(exercise.get());
+            return Optional.of(runTests(exercise.get()));
         } catch (NoLanguagePluginFoundException ex) {
-            this.frontend.printLine("Not an exercise.");
+            return Optional.of("Not an exercise.");
         }
     }
 
@@ -43,16 +38,14 @@ public class RunTests extends Command {
      * @param exercise Path object
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
-    public void runTests(Path exercise) throws NoLanguagePluginFoundException {
+    public String runTests(Path exercise) throws NoLanguagePluginFoundException {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         RunResult result = taskExecutor.runTests(exercise);
         
         boolean showStackTrace = this.data.containsKey("verbose");
         CommandLineTestResultFormatter formatter = new CommandLineTestResultFormatter();
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
-        String res = resInt.interpret(showStackTrace);
-        
-        this.frontend.printLine(res);
+        return resInt.interpret(showStackTrace);
     }
 
     @Override

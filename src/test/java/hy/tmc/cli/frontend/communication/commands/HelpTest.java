@@ -21,7 +21,7 @@ public class HelpTest {
 
     @Before
     public void setup() {
-        this.help = new Help(this.frontendMock);
+        this.help = new Help();
     }
 
     @Test

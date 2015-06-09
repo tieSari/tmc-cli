@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
@@ -17,12 +18,9 @@ public class Paste extends Command {
 
     CourseSubmitter submitter;
     
-    public Paste(FrontendListener front) {
-        super(front);
+    public Paste() {
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(
-                        new DefaultRootDetector()
-                ),
+                new ProjectRootFinder( new DefaultRootDetector() ),
                 new Zipper()
         );
     }
@@ -34,8 +32,7 @@ public class Paste extends Command {
      * @param submitter can inject submitter mock.
      */
 
-    public Paste(FrontendListener front, CourseSubmitter submitter) {
-        super(front);
+    public Paste(CourseSubmitter submitter) {
         this.submitter = submitter;
     }
 
@@ -44,20 +41,13 @@ public class Paste extends Command {
      *
      */
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         try {
             String returnUrl = submitter.submitPaste(data.get("path"));
-            frontend.printLine("Paste submitted. Here it is: \n  " + returnUrl);
+            return Optional.of("Paste submitted. Here it is: \n  " + returnUrl);
+        } catch (Exception ex) {
+            return Optional.of(ex.getMessage());
         }
-        catch (IOException ex) {
-            frontend.printLine(ex.getMessage());
-        }
-        catch (ParseException ex) {
-            frontend.printLine(ex.getMessage());
-        }
-        catch (ExpiredException ex) {
-            frontend.printLine("Exercise has expired.");
-        } 
     }
 
     /**

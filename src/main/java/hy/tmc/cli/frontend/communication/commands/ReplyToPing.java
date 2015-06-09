@@ -1,21 +1,17 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.base.Optional;
 
 public class ReplyToPing extends Command {
 
     private final String answer = "pong";
 
-    public ReplyToPing(FrontendListener front) {
-        super(front);
-    }
-
     /**
      * print pong to the frontend.
      */
     @Override
-    protected void functionality() {
-        this.frontend.printLine(answer);
+    protected Optional<String> functionality() {
+        return Optional.of(answer);
     }
 
     /**

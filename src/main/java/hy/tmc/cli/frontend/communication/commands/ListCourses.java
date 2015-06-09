@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
@@ -7,16 +8,12 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 public class ListCourses extends Command {
 
-    public ListCourses(FrontendListener front) {
-        super(front);
-    }
-
     /**
      * use JSONParser to get a list of course names, and print it.
      */
     @Override
-    protected void functionality() {
-        this.frontend.printLine(TmcJsonParser.getCourseNames());
+    protected Optional<String> functionality() {
+        return Optional.of(TmcJsonParser.getCourseNames());
     }
 
     /**

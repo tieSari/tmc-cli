@@ -31,7 +31,7 @@ public class AuthenticateTest {
     @Before
     public void setUp() {
         this.serverMock = new FrontendStub();
-        this.auth = new Authenticate(serverMock);
+        this.auth = new Authenticate();
     }
 
     @Test
@@ -74,5 +74,4 @@ public class AuthenticateTest {
                         Mockito.eq(credentials)))
                 .thenReturn(fakeResult);
     }
-
 }

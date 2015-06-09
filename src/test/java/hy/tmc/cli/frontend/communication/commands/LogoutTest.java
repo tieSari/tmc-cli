@@ -20,7 +20,7 @@ public class LogoutTest {
     @Before
     public void setup() {
         front = new FrontendStub();
-        logout = new Logout(front);
+        logout = new Logout();
     }
 
     @Test

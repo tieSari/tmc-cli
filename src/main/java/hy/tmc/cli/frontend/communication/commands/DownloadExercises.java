@@ -15,7 +15,6 @@ public class DownloadExercises extends Command {
     private ExerciseDownloader exDl;
 
     public DownloadExercises(FrontendListener front) {
-        super(front);
         this.exDl = new ExerciseDownloader(front);
     }
 
@@ -23,12 +22,14 @@ public class DownloadExercises extends Command {
      * Parses the course JSON and executes downloading of the course exercises.
      */
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
             exDl.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
         }
+        //This should return, instead of writing it to somewhere
+        return Optional.absent();
     }
 
     /**

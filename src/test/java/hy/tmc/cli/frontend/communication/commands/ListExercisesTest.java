@@ -34,7 +34,7 @@ public class ListExercisesTest {
     @Before
     public void setup() {
         front = new FrontendStub();
-        list = new ListExercises(front);
+        list = new ListExercises();
 
         PowerMockito.mockStatic(UrlCommunicator.class);
 
@@ -49,7 +49,7 @@ public class ListExercisesTest {
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        ListExercises ls = new ListExercises(front);
+        ListExercises ls = new ListExercises();
         ls.setParameter("courseUrl", "legit");
         try {
             ls.checkData();
@@ -97,5 +97,4 @@ public class ListExercisesTest {
             fail("unexpected exception");
         }
     }
-
 }

@@ -18,9 +18,8 @@ public class StopProcessTest {
     public void functionalityStopsTheProcess() {
         PowerMockito.mockStatic(System.class);
         FrontendStub frontendStub = new FrontendStub();
-        StopProcess stop = new StopProcess(frontendStub);
+        StopProcess stop = new StopProcess();
         stop.functionality();
         PowerMockito.verifyStatic();
     }
-
 }

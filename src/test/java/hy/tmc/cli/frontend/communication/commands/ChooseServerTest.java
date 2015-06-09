@@ -31,8 +31,7 @@ public class ChooseServerTest {
 
     @Before
     public void setup() {
-        this.chooser = new ChooseServer(new ConfigHandler(path), 
-                this.frontendMock);
+        this.chooser = new ChooseServer(new ConfigHandler(path));
     }
     
     @After

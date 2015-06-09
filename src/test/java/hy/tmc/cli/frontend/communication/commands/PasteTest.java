@@ -33,7 +33,7 @@ public class PasteTest {
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
 
         front = new FrontendStub();
-        paste = new Paste(front, submitterMock);
+        paste = new Paste(submitterMock);
         ClientData.setUserData("Bossman", "Samu");
     }
 
@@ -56,7 +56,7 @@ public class PasteTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        Paste pasteCommand = new Paste(front);
+        Paste pasteCommand = new Paste();
         pasteCommand.setParameter("path", "/home/tmccli/uolevipuistossa");
         try {
             pasteCommand.checkData();
@@ -71,13 +71,13 @@ public class PasteTest {
      */
     @Test(expected = ProtocolException.class)
     public void testCheckDataFail() throws ProtocolException {
-        Paste pasteCommand = new Paste(front);
+        Paste pasteCommand = new Paste();
         pasteCommand.checkData();
     }
     
     @Test(expected = ProtocolException.class)
     public void checkDataFailIfNoAuth() throws ProtocolException {
-        Paste pasteCommand = new Paste(front);
+        Paste pasteCommand = new Paste();
         ClientData.clearUserData();
         pasteCommand.checkData();
     }

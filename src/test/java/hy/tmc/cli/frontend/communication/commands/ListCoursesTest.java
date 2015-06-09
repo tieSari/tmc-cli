@@ -34,7 +34,7 @@ public class ListCoursesTest {
     @Before
     public void setUp() {
         front = new FrontendStub();
-        list = new ListCourses(front);
+        list = new ListCourses();
         
         
         PowerMockito.mockStatic(UrlCommunicator.class);
@@ -51,7 +51,7 @@ public class ListCoursesTest {
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        ListCourses ls = new ListCourses(front);
+        ListCourses ls = new ListCourses();
         ClientData.setUserData("asdf", "bsdf");
         try {
             ls.checkData();

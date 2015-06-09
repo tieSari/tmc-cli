@@ -2,22 +2,19 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Joiner;
 
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.base.Optional;
 
 public class Help extends Command {
 
-    public Help(FrontendListener front) {
-        super(front);
-    }
 
     /**
      * List all available commands.
      */
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         String commands = "Available commands: \n";
         commands += Joiner.on(", ").join(CommandFactory.allCommandNames());
-        this.frontend.printLine(commands);
+        return Optional.of(commands);
     }
 
     /**
@@ -25,6 +22,5 @@ public class Help extends Command {
      */
     @Override
     public void checkData() {
-
     }
 }

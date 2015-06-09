@@ -23,7 +23,7 @@ public class RunTestsTest {
     @Before
     public void setup() {
         front = new FrontendStub();
-        runTests = new RunTests(front);
+        runTests = new RunTests();
     }
 
     /**
@@ -31,7 +31,7 @@ public class RunTestsTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        RunTests rt = new RunTests(front);
+        RunTests rt = new RunTests();
         rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
         try {
             rt.checkData();
@@ -45,7 +45,7 @@ public class RunTestsTest {
      */
     @Test
     public void testCheckDataFail() {
-        RunTests rt = new RunTests(front);
+        RunTests rt = new RunTests();
         try {
             rt.checkData();
             fail("testCheckDataFail should have failed");
@@ -59,7 +59,7 @@ public class RunTestsTest {
      */
     @Test(timeout = 15000)
     public void testFailedExercise() {
-        RunTests run = new RunTests(front);
+        RunTests run = new RunTests();
         String folders = "testResources" + File.separator + "failingExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
@@ -84,7 +84,7 @@ public class RunTestsTest {
      */
     @Test(timeout = 15000)
     public void testSuccessfulExercise() {
-        RunTests run = new RunTests(front);
+        RunTests run = new RunTests();
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);

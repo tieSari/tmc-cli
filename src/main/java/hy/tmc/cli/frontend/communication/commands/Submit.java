@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
@@ -16,12 +17,12 @@ import static javax.swing.text.html.HTML.Tag.HEAD;
 /**
  * Submit command for submitting exercises to TMC
  */
-public class Submit extends Command {   
+public class Submit extends Command {
+
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
 
-    public Submit(FrontendListener front) {
-        super(front);
+    public Submit() {
         submitter = new CourseSubmitter(
                 new ProjectRootFinder(new DefaultRootDetector()),
                 new Zipper()
@@ -36,33 +37,30 @@ public class Submit extends Command {
      * @param submitter can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(FrontendListener front, CourseSubmitter submitter, SubmissionInterpreter interpreter) {
-        super(front);
+    public Submit(CourseSubmitter submitter, SubmissionInterpreter interpreter) {
         this.submitter = submitter;
         this.interpreter = interpreter;
     }
 
     /**
-     * Takes a pwd command's output in "path" and optionally the exercise's name in "exerciseName".
+     * Takes a pwd command's output in "path" and optionally the exercise's name
+     * in "exerciseName".
      */
     @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         try {
             if (data.containsKey("exerciseName")) {
-                frontend.printLine("Doesnt work yet");
+                return Optional.of("Doesnt work yet");
             } else {
                 String returnUrl = submitter.submit(data.get("path"));
-                frontend.printLine(interpreter.resultSummary(returnUrl, true));
+                return Optional.of(interpreter.resultSummary(returnUrl, true));
             }
-        }
-        catch (IllegalArgumentException | ParseException ex) {
-            frontend.printLine(ex.getMessage());
-        }
-        catch (IOException | InterruptedException ex) {
-            frontend.printLine("Project not found with specified parameters or thread interrupted");
-        } 
-        catch(ExpiredException ex){
-            frontend.printLine("Exercise has expired.");
+        } catch (IllegalArgumentException | ParseException ex) {
+            return Optional.of(ex.getMessage());
+        } catch (IOException | InterruptedException ex) {
+            return Optional.of("Project not found with specified parameters or thread interrupted");
+        } catch (ExpiredException ex) {
+            return Optional.of("Exercise has expired.");
         }
     }
 
