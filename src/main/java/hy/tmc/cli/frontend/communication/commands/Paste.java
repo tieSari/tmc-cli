@@ -56,7 +56,7 @@ public class Paste extends Command {
             frontend.printLine(ex.getMessage());
         }
         catch (ExpiredException ex) {
-            frontend.printLine(ex.getMessage());
+            frontend.printLine("Exercise has expired.");
         } 
     }
 

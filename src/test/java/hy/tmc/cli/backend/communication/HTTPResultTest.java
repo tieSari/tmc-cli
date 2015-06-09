@@ -1,4 +1,4 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
 import hy.tmc.cli.backend.communication.HttpResult;
 import org.junit.Test;
