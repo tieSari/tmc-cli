@@ -18,6 +18,6 @@ build/*
 /scripts/config.properties
 /**/test.properties
 /**/build_log.*
-/**/build-jar.*
+/**/built-jar.*
 /**/config
 /testResources/successExercise/viikko1/Viikko1_001.Nimi/nbproject/private/
