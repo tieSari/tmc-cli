@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 public class PasteTest {
 
-    private FrontendStub front;
     private Paste paste;
     CourseSubmitter submitterMock;
     SubmissionInterpreter interpreter;
@@ -32,7 +31,6 @@ public class PasteTest {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
 
-        front = new FrontendStub();
         paste = new Paste(submitterMock);
         ClientData.setUserData("Bossman", "Samu");
     }
@@ -44,10 +42,8 @@ public class PasteTest {
 
     @Test
     public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
-        front.start();
         paste.setParameter("path", "/hieno/path");
-        paste.execute();
-        String result = front.getMostRecentLine();
+        String result = paste.call();
         assertTrue(result.contains(pasteUrl));
     }
 

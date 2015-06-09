@@ -61,9 +61,7 @@ public class AuthenticateTest {
         powerMockWithCredentials("test:1234", 200);
         powerMockWithCredentials("samu:salis", 400);
         
-        auth.execute();
-        String result = serverMock.getMostRecentLine();
-        return result;
+        return  auth.call();
     }
 
     private void powerMockWithCredentials(String credentials, int status) {

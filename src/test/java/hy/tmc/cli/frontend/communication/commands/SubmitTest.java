@@ -17,8 +17,6 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
 
 public class SubmitTest {
-
-    private FrontendStub front;
     private Submit submit;
     CourseSubmitter submitterMock;
     SubmissionInterpreter interpreter;
@@ -33,7 +31,6 @@ public class SubmitTest {
 
         interpreter = Mockito.mock(SubmissionInterpreter.class);
 
-        front = new FrontendStub();
         submit = new Submit(submitterMock, interpreter);
         ClientData.setUserData("Bossman", "Samu");
     }
@@ -45,23 +42,19 @@ public class SubmitTest {
 
     @Test
     public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
-        front.start();
         when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("No tests passed.");
 
         submit.setParameter("path", "/hieno/path");
-        submit.execute();
-        String result = front.getMostRecentLine();
+        String result = submit.call();
         assertTrue(result.contains("No tests passed."));
     }
 
     @Test
     public void submitPrintsAllTestsPassedWhenCodeIsCorrect() throws ProtocolException, InterruptedException {
-        front.start();
         when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("All tests passed.");
 
         submit.setParameter("path", "/hieno/path");
-        submit.execute();
-        String result = front.getMostRecentLine();
+        String result = submit.call();
         assertTrue(result.contains("All tests passed."));
     }
 

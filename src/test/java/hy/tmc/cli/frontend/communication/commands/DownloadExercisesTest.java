@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import static org.junit.Assert.fail;
 
-import hy.tmc.cli.frontend.communication.commands.DownloadExercises;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
@@ -27,7 +26,7 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        DownloadExercises de = new DownloadExercises(front);
+        DownloadExercises de = new DownloadExercises();
         de.setParameter("pwd", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         try {
@@ -42,7 +41,7 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataFail() {
-        DownloadExercises de = new DownloadExercises(front);
+        DownloadExercises de = new DownloadExercises();
         try {
             de.checkData();
             fail("testCheckDataFail should have failed");
@@ -56,7 +55,7 @@ public class DownloadExercisesTest {
      */
     @Test
     public void courseIdNotANumber() {
-        DownloadExercises de = new DownloadExercises(front);
+        DownloadExercises de = new DownloadExercises();
         de.setParameter("pwd", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "not a number");
         try {

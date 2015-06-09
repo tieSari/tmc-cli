@@ -15,11 +15,8 @@ public class TmcTestsSteps {
 
     private RunTests testRunner;
     private FrontendStub front;
-
-    public TmcTestsSteps() {
-        front = new FrontendStub();
-    }
-
+    private String output;
+    
     /**
      * Create RunTests command and set filepath parameter.
      * @param exerciseDirectory directory path
@@ -32,7 +29,7 @@ public class TmcTestsSteps {
 
     @When("^the user runs the tests$")
     public void theUserRunsTheTests() throws ProtocolException {
-        testRunner.execute();
+        output = testRunner.call();
     }
 
     /**
@@ -40,7 +37,6 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees that all tests have passed\\.$")
     public void theUserSeesAllTestsPassing() {
-        String output = front.getMostRecentLine();
         assertEquals("\u001B[32mAll tests passed.\u001B[0m You can now submit", output);
     }
 
@@ -49,7 +45,6 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees which tests have failed$")
     public void theUserSeesWhichTestsHaveFailed() {
-        String output = front.getMostRecentLine();
         assertEquals("Some tests failed:", output.substring(0, 18));
         assertTrue(output.contains("\u001B[31m1 tests failed:\n"));
         assertTrue(output.contains("  NimiTest test failed: Et tulostanut mitään!"));
@@ -60,9 +55,7 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees both passed and failed tests$")
     public void theUserSeesBothPassedAndFailedTests() {
-        String output = front.getMostRecentLine();
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
-
     }
 }

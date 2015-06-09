@@ -3,8 +3,6 @@ package hy.tmc.cli.backend;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
-import hy.tmc.cli.testhelpers.FrontendStub;
-import org.mockito.Mockito;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -37,12 +35,10 @@ public class TmcCoreTest {
         fakeCommandMap.put("downloadExercises", new CommandStub());
 
         PowerMockito
-                .when(CommandFactory.createCommandMap(Mockito.any(FrontendListener.class)))
+                .when(CommandFactory.createCommandMap())
                 .thenReturn(fakeCommandMap);
 
-        listener = new FrontendStub();
-        tmcCore = new TmcCore(listener);
-
+        tmcCore = new TmcCore();
     }
 
 //    @Test

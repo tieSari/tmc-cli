@@ -63,14 +63,13 @@ public class ListCoursesTest {
     @Test (expected = ProtocolException.class)
     public void testNoAuthThrowsException() throws ProtocolException {
         ClientData.setUserData("", "");
-        list.execute();   
+        list.call();   
     }
 
     @Test
     public void testWithAuthPrintsCourses() {
         try {
-            list.execute();
-            assertTrue(front.getMostRecentLine().contains("WEPAMOOC-STAGE"));
+            assertTrue(list.call().contains("WEPAMOOC-STAGE"));
         } catch (ProtocolException ex) {
             Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
@@ -80,8 +79,7 @@ public class ListCoursesTest {
     @Test
     public void testWithAuthPrintsSeveralCourses() {
         try {
-            list.execute();
-            assertTrue(front.getMostRecentLine().contains("WEPATEST"));
+            assertTrue(list.call().contains("WEPATEST"));
         } catch (ProtocolException ex) {
             Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");

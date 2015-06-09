@@ -1,7 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
-
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.FrontendStub;
@@ -47,7 +45,7 @@ public class ChooseServerTest {
     @Test
     public void testFunctionality() throws ProtocolException {
         chooser.setParameter("tmc-server", "http://tmc.ebin.fi");
-        chooser.execute();
+        chooser.call();
         try {
             String propFile = FileUtils.readFileToString(new File(path));
             assertTrue(propFile.contains("tmc.ebin.fi"));

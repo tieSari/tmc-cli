@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +13,6 @@ import java.io.File;
 
 public class RunTestsTest {
 
-    private FrontendStub front;
     private RunTests runTests;
 
     /**
@@ -22,7 +20,6 @@ public class RunTestsTest {
      */
     @Before
     public void setup() {
-        front = new FrontendStub();
         runTests = new RunTests();
     }
 
@@ -35,7 +32,8 @@ public class RunTestsTest {
         rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
         try {
             rt.checkData();
-        } catch (ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -49,11 +47,12 @@ public class RunTestsTest {
         try {
             rt.checkData();
             fail("testCheckDataFail should have failed");
-        } catch (ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             return;
         }
     }
-    
+
     /**
      * Test that failing exercise output is correct.
      */
@@ -64,21 +63,21 @@ public class RunTestsTest {
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("filepath", file.getAbsolutePath());
+        String result = null;
         try {
-            run.execute();
-        } catch (ProtocolException ex) {
+            result = run.call();
+        }
+        catch (ProtocolException ex) {
             fail("Test executing failed");
         }
-        
-        assertTrue(front.getMostRecentLine().contains("Some tests failed:"));
-        
-        assertTrue(front.getMostRecentLine().contains("No tests passed"));
-        assertTrue(front.getMostRecentLine().contains("1 tests failed:"));
-        
-        assertTrue(front.getMostRecentLine().contains("NimiTest"));
-        assertTrue(front.getMostRecentLine().contains("Et tulostanut"));
+
+        assertTrue(result.contains("Some tests failed:"));
+        assertTrue(result.contains("No tests passed"));
+        assertTrue(result.contains("1 tests failed:"));
+        assertTrue(result.contains("NimiTest"));
+        assertTrue(result.contains("Et tulostanut"));
     }
-    
+
     /**
      * Check that successfull exercise output is correct.
      */
@@ -89,14 +88,14 @@ public class RunTestsTest {
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("filepath", file.getAbsolutePath());
+        String result = null;
         try {
-            run.execute();
-        } catch (ProtocolException ex) {
+            result = run.call();
+        }
+        catch (ProtocolException ex) {
             fail("Test executing failed");
         }
-        
-        assertFalse(front.getMostRecentLine().contains("tests failed:"));
-        
-        assertTrue(front.getMostRecentLine().contains("All tests passed"));
+        assertFalse(result.contains("tests failed:"));
+        assertTrue(result.contains("All tests passed"));
     }
 }

@@ -63,12 +63,11 @@ public class ListExercisesTest {
     public void getsExerciseName() {
         list.setParameter("courseUrl", "any");
         try {
-            list.execute();
+            String result = list.call();
             front.getMostRecentLine();
-            assertTrue(front.getMostRecentLine().contains("viikko1-Viikko1_000.Hiekkalaatikko"));
-            assertTrue(front.getMostRecentLine().contains("viikko3-Viikko3_046.LukujenKeskiarvo"));
-        }
-        catch (ProtocolException ex) {
+            assertTrue(result.contains("viikko1-Viikko1_000.Hiekkalaatikko"));
+            assertTrue(result.contains("viikko3-Viikko3_046.LukujenKeskiarvo"));
+        } catch (ProtocolException ex) {
             fail("unexpected exception");
         }
 
@@ -78,20 +77,19 @@ public class ListExercisesTest {
     public void throwsErrorIfNoUser() throws ProtocolException {
         ClientData.clearUserData();
         list.setParameter("courseUrl", "any");
-        list.execute();
+        list.call();
     }
 
     @Test(expected = ProtocolException.class)
     public void throwsErrorIfNoCourseSpecified() throws ProtocolException {
-        list.execute();
+        list.call();
     }
 
     @Test
     public void doesntContainWeirdName() {
         list.setParameter("courseUrl", "any");
         try {
-            list.execute();
-            assertFalse(front.getMostRecentLine().contains("Ilari"));
+            assertFalse(list.call().contains("Ilari"));
         }
         catch (ProtocolException ex) {
             fail("unexpected exception");
