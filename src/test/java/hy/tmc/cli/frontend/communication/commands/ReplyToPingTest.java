@@ -14,7 +14,6 @@ public class ReplyToPingTest {
         ReplyToPing ping = new ReplyToPing(frontStub);
         ping.functionality();
         assertEquals("pong", frontStub.getMostRecentLine());
-
     }
 
 }

@@ -1,4 +1,4 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
