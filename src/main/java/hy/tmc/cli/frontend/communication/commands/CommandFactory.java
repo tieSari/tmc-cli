@@ -14,7 +14,7 @@ public class CommandFactory {
      * @param that the commands will use
      * @return A map of names to corresponding commands
      */
-    public static Map<String, Command> createCommandMap(FrontendListener front) {
+    public static Map<String, Command> createCommandMap() {
         HashMap<String, Command> commandsByName = new HashMap<>();
         commandsByName.put("auth", authenticate());
         commandsByName.put("help", help());
@@ -22,7 +22,7 @@ public class CommandFactory {
         commandsByName.put("ping", replyToPing());
         commandsByName.put("listCourses", listCourses());
         commandsByName.put("listExercises", listExercises());
-        commandsByName.put("downloadExercises", downloadExercises(front));
+        commandsByName.put("downloadExercises", downloadExercises());
         commandsByName.put("logout", logout());
         commandsByName.put("setServer", chooseServer());
         commandsByName.put("submit", submit());
@@ -108,8 +108,9 @@ public class CommandFactory {
      * @param that the command will use
      * @return a downloadExercises object
      */
-    public static Command downloadExercises(FrontendListener front) {
-        return new DownloadExercises(front);
+    public static Command downloadExercises() {
+        //return new DownloadExercises();
+       return null;
     }
 
     /**
@@ -168,17 +169,6 @@ public class CommandFactory {
      * @return a set of all available command names.
      */
     public static Set<String> allCommandNames() {
-        FrontendListener stub = new FrontendListener() {
-            @Override
-            public void start() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void printLine(String line) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        };
-        return createCommandMap(stub).keySet();
+        return createCommandMap().keySet();
     }
 }

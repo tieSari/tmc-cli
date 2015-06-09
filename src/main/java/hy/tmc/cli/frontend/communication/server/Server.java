@@ -1,5 +1,7 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import hy.tmc.cli.backend.TmcCore;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 
@@ -10,9 +12,7 @@ import java.io.PrintWriter;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutionException;
 
 public class Server implements FrontendListener, Runnable {
 
@@ -20,12 +20,13 @@ public class Server implements FrontendListener, Runnable {
     private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private boolean isRunning;
+    private TmcCore tmcCore;
 
     /**
      * Constructor for server.
+     *
      * @throws IOException if failed to write port to config file
      */
-    
     public Server() throws IOException {
         try {
             serverSocket = new ServerSocket(0);
@@ -35,12 +36,13 @@ public class Server implements FrontendListener, Runnable {
             System.err.println(ex.getMessage());
         }
         this.parser = new ProtocolParser(this);
+        tmcCore = new TmcCore();
     }
-    
+
     public int getCurrentPort() {
         return this.serverSocket.getLocalPort();
     }
-    
+
     /**
      * Start is general function to set up server listening for the frontend.
      */
@@ -55,10 +57,14 @@ public class Server implements FrontendListener, Runnable {
     @Override
     public final void run() {
         isRunning = true;
-        while (isRunning) {
-            if (!startClientProcess()) {
-                break;
+         while (true) {
+            try {
+                clientSocket = serverSocket.accept();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
+            // new threa for a client
+            new SocketThread(clientSocket, tmcCore).start();
         }
     }
 
@@ -68,7 +74,7 @@ public class Server implements FrontendListener, Runnable {
                 return false;
             }
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            System.err.println(ex.getMessage() + "lol");
             isRunning = false;
         }
         return true;
@@ -79,7 +85,7 @@ public class Server implements FrontendListener, Runnable {
         return canListenClient(clientSocket);
     }
 
-    private boolean canListenClient(Socket clientSocket) throws IOException {
+    private boolean canListenClient(final Socket clientSocket) throws IOException {
         String inputLine = readCommandFromClient(clientSocket);
 
         if (inputLine == null) {
@@ -87,7 +93,17 @@ public class Server implements FrontendListener, Runnable {
         }
 
         try {
-            parseAndExecuteCommand(inputLine);
+            final ListenableFuture<String> komento = parseAndExecuteCommand(inputLine);
+            komento.addListener(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        printLine(komento.get(), clientSocket);
+                    } catch (InterruptedException | ExecutionException ex) {
+                        System.out.println(ex.getMessage() + "chang");
+                    }
+                }
+            }, tmcCore.getPool());
         } catch (ProtocolException ex) {
             printLine(ex.getMessage());
         }
@@ -100,8 +116,9 @@ public class Server implements FrontendListener, Runnable {
         return in.readLine();
     }
 
-    private void parseAndExecuteCommand(String inputLine) throws ProtocolException {
-        parser.getCommand(inputLine).execute();
+    private ListenableFuture<String> parseAndExecuteCommand(String inputLine) throws ProtocolException {
+        ListenableFuture<String> output = tmcCore.runCommand(inputLine);
+        return output;
     }
 
     /**
@@ -129,7 +146,21 @@ public class Server implements FrontendListener, Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(outputLine);
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            System.err.println(ex.getMessage() + "lol123");
+        }
+        System.out.println(outputLine);
+    }
+
+    public void printLine(String outputLine, Socket socket) {
+        if (clientSocket == null) {
+            return;
+        }
+        PrintWriter out;
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(outputLine);
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage() + "lolasddsa");
         }
         System.out.println(outputLine);
     }

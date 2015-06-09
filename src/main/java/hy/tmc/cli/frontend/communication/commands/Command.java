@@ -5,8 +5,9 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public abstract class Command {
+public abstract class Command implements Callable<String> {
 
 
 
@@ -28,7 +29,8 @@ public abstract class Command {
      *
      * @throws ProtocolException if the command has insufficient data to run
      */
-    public String execute() throws ProtocolException {
+    @Override
+    public String call() throws ProtocolException {
         checkData();
         return functionality().or("");
     }

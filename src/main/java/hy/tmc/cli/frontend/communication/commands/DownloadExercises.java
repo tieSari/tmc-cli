@@ -14,8 +14,9 @@ public class DownloadExercises extends Command {
      */
     private ExerciseDownloader exDl;
 
-    public DownloadExercises(FrontendListener front) {
-        this.exDl = new ExerciseDownloader(front);
+    public DownloadExercises() {
+        //SAMU modify exercise downloader to not need frontend
+        this.exDl = new ExerciseDownloader(null);
     }
 
     /**

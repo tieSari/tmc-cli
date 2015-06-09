@@ -3,32 +3,35 @@ package hy.tmc.cli.backend;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.frontend.communication.server.ProtocolParser;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
 public class TmcCore {
 
     private Map<String, Command> commands;
-    private TmcServiceScheduler scheduler;
     private ListeningExecutorService pool;
-
+    private ProtocolParser parser = new ProtocolParser();
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
      * The TmcCore provides all the essential backend functionalities as public methods.
      *
      * @param frontend the client frontend, that the core will communicate with.
      */
-    public TmcCore(FrontendListener frontend) {
-        scheduler = new TmcServiceScheduler();
-        commands = CommandFactory.createCommandMap(frontend);
+    public TmcCore() {
+        commands = CommandFactory.createCommandMap();
         pool = MoreExecutors.listeningDecorator(Executors.newWorkStealingPool());
-
     }
 
+    public ListeningExecutorService getPool() {
+        return pool;
+    }
+
+    
+    
     public ListenableFuture<String> login(String username, String password) {
         return run("login", "username", username, "password", password);
     }
@@ -56,6 +59,10 @@ public class TmcCore {
     public ListenableFuture<String> listExercises() {
         return run("listExercises");
     }
+    
+    public ListenableFuture<String> runCommand(String inputLine) throws ProtocolException {
+        return pool.submit(parser.getCommand(inputLine));
+    }
 
     private ListenableFuture<String> run(String commandName, String... args) {
         if (!commands.containsKey(commandName)) {
@@ -63,8 +70,7 @@ public class TmcCore {
         }
         Command command = commands.get(commandName);
         setParams(command, args);
-        //return pool.submit(command);
-        return null;
+        return pool.submit(command);
     }
 
     private void setParams(Command command, String... args) {
