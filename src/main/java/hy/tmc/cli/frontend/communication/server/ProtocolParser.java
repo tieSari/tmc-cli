@@ -44,10 +44,19 @@ public class ProtocolParser {
     }
 
     private Command giveData(String[] userInput, Command command) {
-        for (int i = 1; i + 1 < userInput.length; i += 2) {
+        int i = 1;
+        while(i < userInput.length){
             String key = userInput[i];
-            String value = userInput[i + 1];
-            command.setParameter(key, value);
+            System.out.println("key: " + key);
+            if(userInput[i].charAt(0) == '-'){
+                command.setParameter(key, "");
+                i++;
+            } else {
+                String value = userInput[i + 1];
+                command.setParameter(key, value);
+                System.out.println("Asetetaan: " + key + " arvoon " + value);
+                i+= 2;
+            }
         }
         return command;
     }

@@ -17,6 +17,4 @@ if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
   echo $PID > $CONFIGPATH
   echo "Server started"
   sleep 1
-else
-  echo "Server is already running."
 fi

@@ -44,6 +44,7 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
+        System.out.println(new ConfigHandler().readAuthAddress());
         int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),
                 auth

@@ -4,16 +4,17 @@ import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mockito;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -31,7 +32,7 @@ public class SubmissionInterpreterTest {
 
         ClientData.setUserData("chang", "paras");
 
-        SI = new SubmissionInterpreter();
+        SI = new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
     }
 
     @After

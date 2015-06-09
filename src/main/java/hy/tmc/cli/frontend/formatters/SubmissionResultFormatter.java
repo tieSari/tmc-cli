@@ -3,6 +3,9 @@ package hy.tmc.cli.frontend.formatters;
 
 import hy.tmc.cli.domain.submission.TestCase;
 import hy.tmc.cli.domain.submission.SubmissionResult;
+import hy.tmc.cli.domain.submission.ValidationError;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SubmissionResultFormatter interface makes easier to attach new frontends to core. 
@@ -15,4 +18,6 @@ public interface SubmissionResultFormatter {
     public String allTestsPassed();
     public String viewModelSolution(String solutionUrl);
     public String getPointsInformation(SubmissionResult result);
+    public String someScenariosFailed();
+    public String parseValidationErrors(Map.Entry<String, List<ValidationError>> entry);
 }

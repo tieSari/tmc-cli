@@ -27,14 +27,14 @@ public class SubmitTest {
      * Mocks CourseSubmitter and injects it into Submit command.
      */
     @Before
-    public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException {
+    public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException, Exception {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(Mockito.anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
         interpreter = Mockito.mock(SubmissionInterpreter.class);
-
+        
         front = new FrontendStub();
-        submit = new Submit(front, submitterMock, interpreter);
+        submit = new Submit(front, submitterMock);
         ClientData.setUserData("Bossman", "Samu");
     }
 

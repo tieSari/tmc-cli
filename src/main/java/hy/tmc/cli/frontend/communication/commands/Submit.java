@@ -6,6 +6,8 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
@@ -26,7 +28,6 @@ public class Submit extends Command {
                 new ProjectRootFinder(new DefaultRootDetector()),
                 new Zipper()
         );
-        interpreter = new SubmissionInterpreter();
     }
 
     /**
@@ -36,10 +37,9 @@ public class Submit extends Command {
      * @param submitter can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(FrontendListener front, CourseSubmitter submitter, SubmissionInterpreter interpreter) {
+    public Submit(FrontendListener front, CourseSubmitter submitter) {
         super(front);
         this.submitter = submitter;
-        this.interpreter = interpreter;
     }
 
     /**
@@ -47,6 +47,7 @@ public class Submit extends Command {
      */
     @Override
     protected void functionality() {
+        interpreter = getInterpreter();
         try {
             if (data.containsKey("exerciseName")) {
                 frontend.printLine("Doesnt work yet");
@@ -63,6 +64,15 @@ public class Submit extends Command {
         } 
         catch(ExpiredException ex){
             frontend.printLine("Exercise has expired.");
+        }
+    }
+    
+    private SubmissionInterpreter getInterpreter(){
+        if(data.containsKey("--vim")){
+            System.out.println("Vim formatter");
+            return new SubmissionInterpreter(new VimSubmissionResultFormatter());
+        } else {
+            return new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
         }
     }
 
