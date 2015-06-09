@@ -12,11 +12,11 @@ public class DownloadExercises extends Command {
     /**
      * ExerciseDownloader that is used for downloading.
      */
-    private ExerciseDownloader exDl;
+    private ExerciseDownloader exerciseDownloader;
 
     public DownloadExercises() {
         //SAMU modify exercise downloader to not need frontend
-        this.exDl = new ExerciseDownloader(null);
+        this.exerciseDownloader = new ExerciseDownloader();
     }
 
     /**
@@ -27,9 +27,8 @@ public class DownloadExercises extends Command {
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            exDl.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
+            return exerciseDownloader.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
         }
-        //This should return, instead of writing it to somewhere
         return Optional.absent();
     }
 
@@ -49,6 +48,7 @@ public class DownloadExercises extends Command {
 
     /**
      * Check that user has given also course id.
+     *
      * @throws ProtocolException if course id is not a number
      */
     private void checkCourseId() throws ProtocolException {
@@ -57,7 +57,8 @@ public class DownloadExercises extends Command {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             throw new ProtocolException("Given course id is not a number");
         }
     }

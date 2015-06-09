@@ -1,11 +1,10 @@
 package hy.tmc.cli.backend.communication;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.FrontendListener;
 
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
@@ -19,77 +18,65 @@ import java.util.List;
 
 public class ExerciseDownloader {
 
-    private FrontendListener front;
-
-    /**
-     * Constructor for ExerciseDownloader.
-     *
-     * @param front component which implements frontend interface
-     */
-    public ExerciseDownloader(FrontendListener front) {
-        this.front = checkNotNull(front);
-    }
-
     /**
      * Download exercises by course url.
      *
      * @param courseUrl course url
+     * @return info about downloading.
      */
-    public void downloadExercises(String courseUrl) {
+    public Optional<String> downloadExercises(String courseUrl) {
         List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
         if (exercises.isEmpty()) {
-            this.front.printLine("No exercises to download.");
-            return;
+            return Optional.of("No exercises to download.");
         }
-        downloadFiles(exercises);
+        return downloadFiles(exercises);
     }
 
     /**
      * Method for downloading files if path is not defined.
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
+     * @return info about downloading.
      */
-    public void downloadFiles(List<Exercise> exercises) {
-        downloadFiles(exercises, "");
+    public Optional<String> downloadFiles(List<Exercise> exercises) {
+        return downloadFiles(exercises, "");
     }
 
     /**
      * Method for downloading files if path where to download is defined.
+     * @return info about downloading.
      */
-    public void downloadFiles(List<Exercise> exercises, String path) {
-        downloadFiles(exercises,path,null);
+    public Optional<String> downloadFiles(List<Exercise> exercises, String path) {
+        return downloadFiles(exercises, path, null);
     }
 
     /**
-     * Method for downloading files if path where to download is defined.
-     * Also requires seperate folder name that will be created to defined path.
+     * Method for downloading files if path where to download is defined. Also requires seperate
+     * folder name that will be created to defined path.
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
      * @param folderName folder name of where exercises will be extracted (for example course name)
+     * @return
      */
-    public void downloadFiles(List<Exercise> exercises, String path, String folderName) {
+    public Optional<String> downloadFiles(List<Exercise> exercises, String path, String folderName) {
+        StringBuilder exercisesListed = new StringBuilder();
         int exCount = 0;
         path = getCorrectPath(path);
-
         if (!isNullOrEmpty(folderName)) {
             path += folderName + File.separator;
         }
-
         File coursePath = new File(path);
-
         if (!coursePath.exists()) {
             coursePath.mkdirs();
         }
-
         for (Exercise exercise : exercises) {
-            handleSingleExercise(exercise, exCount, exercises, path);
+            exercisesListed.append(handleSingleExercise(exercise, exCount, exercises, path));
             exCount++;
         }
-
-        if (this.front != null) {
-            front.printLine(exercises.size() + " exercises downloaded.");
-        }
+        exercisesListed.append(exercises.size())
+                       .append(" exercises downloaded.");
+        return Optional.of(exercisesListed.toString());
     }
 
     /**
@@ -100,9 +87,9 @@ public class ExerciseDownloader {
      * @param exercises list of exercises which will be downloaded
      * @param path path where single exercise will be downloaded
      */
-    private void handleSingleExercise(Exercise exercise, int exCount,
+    private String handleSingleExercise(Exercise exercise, int exCount,
             List<Exercise> exercises, String path) {
-        tellStateForUser(exercise, exCount, exercises);
+        String exerciseInfo = tellStateForUser(exercise, exCount, exercises);
         String filePath = path + exercise.getName() + ".zip";
         downloadFile(exercise.getZipUrl(), filePath);
         try {
@@ -110,8 +97,9 @@ public class ExerciseDownloader {
             deleteZip(filePath);
         }
         catch (IOException | ZipException ex) {
-            this.front.printLine("Unzipping exercise failed.");
+            exerciseInfo = "Unzipping exercise failed.";
         }
+        return exerciseInfo;
     }
 
     /**
@@ -131,7 +119,7 @@ public class ExerciseDownloader {
      * @param destinationPath destination path
      */
     public void unzipFile(String unzipPath,
-                          String destinationPath) throws IOException, ZipException {
+            String destinationPath) throws IOException, ZipException {
         UnzipDecider decider = new DefaultUnzipDecider();
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
         zipHandler.unzip();
@@ -143,11 +131,11 @@ public class ExerciseDownloader {
      * @param exercise exercise to be showed
      * @param exCount order number of which exercise is in downloading
      */
-    private void tellStateForUser(Exercise exercise, int exCount,
+    private String tellStateForUser(Exercise exercise, int exCount,
             List<Exercise> exercises) {
         String output = "Downloading exercise " + exercise.getName()
                 + " " + (getPercents(exCount, exercises.size())) + "%";
-        this.front.printLine(output);
+        return output;
     }
 
     /**
