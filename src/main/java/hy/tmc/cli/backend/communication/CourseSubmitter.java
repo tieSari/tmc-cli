@@ -1,6 +1,7 @@
 package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.configuration.ClientData;
 
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
@@ -73,11 +74,7 @@ public class CourseSubmitter {
      * Compare two dates and tell if deadline has gone.
      */
     private boolean deadlineGone(Date current, Date deadline) {
-        if (current.getTime() > deadline.getTime()) {
-            return true;
-        } else {
-            return false;
-        }
+        return current.getTime() > deadline.getTime();
     }
 
     /**
@@ -86,6 +83,8 @@ public class CourseSubmitter {
      * @param currentPath path from which this was called.
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
     public String submit(String currentPath) throws IOException, ParseException, ExpiredException {
         Exercise currentExercise = initExercise(currentPath);
@@ -98,6 +97,8 @@ public class CourseSubmitter {
      * @param currentPath path from which this was called.
      * @return String with url from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
     public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException {
         Exercise currentExercise = initExercise(currentPath);
@@ -180,7 +181,8 @@ public class CourseSubmitter {
         if (!currentCourse.isPresent()) {
             deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");
-        };
+        }
+        ClientData.setCurrentCourse(currentCourse.get());
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.get().getId());
         return courseExercises;
     }

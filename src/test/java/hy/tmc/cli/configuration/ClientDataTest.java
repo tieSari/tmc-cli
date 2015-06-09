@@ -1,5 +1,6 @@
 package hy.tmc.cli.configuration;
 
+import com.google.common.base.Optional;
 import static hy.tmc.cli.configuration.ClientData.getFormattedUserData;
 import static hy.tmc.cli.configuration.ClientData.getPassword;
 import static hy.tmc.cli.configuration.ClientData.getUsername;
@@ -72,19 +73,10 @@ public class ClientDataTest {
      */
     @Test
     public final void testGetCurrentCourse() {
-        Course expResult = null;
-        Course result = ClientData.getCurrentCourse();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of setCurrentCourse method, of class ClientData.
-     */
-    @Test
-    public void testSetCurrentCourse() {
-        Course currentCourse = null;
-        ClientData.setCurrentCourse(currentCourse);
-        assertEquals(currentCourse, ClientData.getCurrentCourse());
+        Course expResult = new Course();
+        ClientData.setCurrentCourse(expResult);
+        Optional<Course> result = ClientData.getCurrentCourse();
+        assertEquals(expResult, result.get());
     }
 
     /**

@@ -22,17 +22,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.message.BasicNameValuePair;
 
 public class UrlCommunicator {
-
+    
     public static final int BAD_REQUEST = 400;
 
     /**
      * Creates and executes post-request to specified URL.
      *
-     * @param fileBody FileBody or ByteArrayBody that includes data to be sended.
+     * @param fileBody FileBody or ByteArrayBody that includes data to be
+     * sended.
      * @param destinationUrl destination of the url.
      * @param headers Headers to be added to httprequest.
      * @return HttpResult that contains response from the server.
@@ -47,7 +54,7 @@ public class UrlCommunicator {
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
     }
-
+    
     private static void addFileToRequest(ContentBody fileBody, HttpPost httppost) {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -61,19 +68,38 @@ public class UrlCommunicator {
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is always username:password
+     * @param params Any amount of parameters for the request. params[0] is
+     * always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
         try {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
-
+    
+    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> headers) {
+        try {
+            HttpPut httpPut = new HttpPut(url);
+            addCredentials(httpPut, ClientData.getFormattedUserData());
+            List<NameValuePair> params = new ArrayList<>();
+            
+            for (String key : headers.get().keySet()) {
+                String value = headers.get().get(key);
+                params.add(new BasicNameValuePair(key, value));
+            }
+            
+            httpPut.setEntity(new UrlEncodedFormEntity(params));
+            
+            return getResponseResult(httpPut);
+        } catch (IOException e) {
+            return new HttpResult("", BAD_REQUEST, false);
+        }
+    }
+    
     private static HttpGet createGet(String url, String[] params)
             throws IOException {
         HttpGet request = new HttpGet(url);
@@ -98,12 +124,11 @@ public class UrlCommunicator {
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
             return true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return false;
         }
     }
-
+    
     private static StringBuilder writeResponse(HttpResponse response)
             throws UnsupportedOperationException, IOException {
         BufferedReader rd = new BufferedReader(
@@ -115,16 +140,16 @@ public class UrlCommunicator {
         }
         return result;
     }
-
+    
     private static HttpClient createClient() {
         return HttpClientBuilder.create().build();
     }
-
+    
     private static HttpResponse executeRequest(HttpRequestBase request)
             throws IOException {
         return createClient().execute(request);
     }
-
+    
     private static void addCredentials(HttpRequestBase httpRequest, String credentials) {
         httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
         httpRequest.setHeader("User-Agent", USER_AGENT);
@@ -143,7 +168,7 @@ public class UrlCommunicator {
             }
         }
     }
-
+    
     private static HttpResult getResponseResult(HttpRequestBase httpRequest)
             throws UnsupportedOperationException, IOException {
         HttpResponse response = executeRequest(httpRequest);
