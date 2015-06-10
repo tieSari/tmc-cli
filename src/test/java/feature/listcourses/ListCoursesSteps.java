@@ -23,6 +23,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.configuration.ClientData;
 
 import java.io.IOException;
 
@@ -85,13 +86,22 @@ public class ListCoursesSteps {
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username,
                                                               String password) throws Throwable {
+        System.out.println(configHandler.readPort());
+        System.out.println(testClient.getSocket().getPort());
         testClient.sendMessage("login username " + username + " password " + password);
+        Thread.sleep(300);
         testClient.init();
     }
     
     @When("^user gives command listCourses\\.$")
     public void user_gives_command_listCourses() throws Throwable {
+        System.out.println(configHandler.readPort());
+        System.out.println(testClient.getSocket().getPort());
         testClient.sendMessage("listCourses");
+        
+        System.out.println(configHandler.readPort());
+        System.out.println(testClient.getSocket().getPort());
+        System.out.println(ClientData.getUsername());
         
     }
 

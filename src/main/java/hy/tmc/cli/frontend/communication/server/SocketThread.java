@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SocketThread extends Thread {
 
@@ -20,8 +22,8 @@ public class SocketThread extends Thread {
     }
 
     /**
-     * Reads the input from socket, starts command-object and when command is ready,
-     * prints the result back to socket.
+     * Reads the input from socket, starts command-object and when command is ready, prints the
+     * result back to socket.
      */
     @Override
     public void run() {
@@ -31,7 +33,8 @@ public class SocketThread extends Thread {
             inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             outputStream = new DataOutputStream(socket.getOutputStream());
             handleInput(inputReader, outputStream);
-        } catch (ProtocolException | IOException ex) {
+        }
+        catch (ProtocolException | IOException ex) {
             System.err.println(ex.getMessage());
         }
     }
@@ -39,10 +42,18 @@ public class SocketThread extends Thread {
     /**
      * Reads input and starts corresponding command-object.
      */
-    private ListenableFuture<String> parseCommand(BufferedReader inputReader)
-            throws ProtocolException, IOException {
+    private ListenableFuture<String> parseCommand(BufferedReader inputReader, DataOutputStream stream)
+            throws IOException {
         String input = inputReader.readLine();
-        return core.runCommand(input);
+        try {
+            return core.runCommand(input);
+        }
+        catch (ProtocolException ex) {
+            stream.writeUTF(ex.getMessage() + "\n");
+            socket.close();
+            this.interrupt();
+            return null;
+        }
     }
 
     /**
@@ -53,7 +64,7 @@ public class SocketThread extends Thread {
      */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException, ProtocolException {
-        final ListenableFuture<String> commandFuture = parseCommand(inputReader);
+        final ListenableFuture<String> commandFuture = parseCommand(inputReader, outputStream);
         final DataOutputStream output = outputStream;
         addListenerToFuture(commandFuture, output);
     }
@@ -74,14 +85,21 @@ public class SocketThread extends Thread {
                     final String commandOutput = commandResult.get();
                     writeToOutput(commandOutput);
                 }
-                catch (InterruptedException | ExecutionException | IOException ex) {
-                    System.out.println(ex.getMessage());
+                catch (InterruptedException | ExecutionException ex) {
+                    writeToOutput(ex.getCause().getMessage());
                 }
             }
-            private void writeToOutput(final String commandOutput) throws IOException {
-                output.writeUTF(commandOutput);
-                output.flush();
-                socket.close();
+
+            private void writeToOutput(final String commandOutput) {
+                try {
+                    output.writeUTF(commandOutput + "\n");
+                    output.flush();
+                    socket.close();
+                }
+                catch (IOException ex) {
+                    System.err.println("Failed to print error message: ");
+                    System.out.println(ex.getMessage());
+                }
             }
         }, core.getPool());
     }

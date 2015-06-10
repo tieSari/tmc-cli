@@ -63,62 +63,9 @@ public class Server implements FrontendListener, Runnable {
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
-            // new threa for a client
+            // new thread for a client
             new SocketThread(clientSocket, tmcCore).start();
         }
-    }
-
-    private boolean startClientProcess() {
-        try (final Socket cs = serverSocket.accept()) {
-            if (!introduceClientSuccessful(cs)) {
-                return false;
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage() + "lol");
-            isRunning = false;
-        }
-        return true;
-    }
-
-    private boolean introduceClientSuccessful(Socket client) throws IOException {
-        this.clientSocket = client;
-        return canListenClient(clientSocket);
-    }
-
-    private boolean canListenClient(final Socket clientSocket) throws IOException {
-        String inputLine = readCommandFromClient(clientSocket);
-
-        if (inputLine == null) {
-            return false;
-        }
-
-        try {
-            final ListenableFuture<String> komento = parseAndExecuteCommand(inputLine);
-            komento.addListener(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        printLine(komento.get(), clientSocket);
-                    } catch (InterruptedException | ExecutionException ex) {
-                        System.out.println(ex.getMessage() + "chang");
-                    }
-                }
-            }, tmcCore.getPool());
-        } catch (ProtocolException ex) {
-            printLine(ex.getMessage());
-        }
-        return true;
-    }
-
-    private String readCommandFromClient(Socket clientSocket) throws IOException {
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
-        return in.readLine();
-    }
-
-    private ListenableFuture<String> parseAndExecuteCommand(String inputLine) throws ProtocolException {
-        ListenableFuture<String> output = tmcCore.runCommand(inputLine);
-        return output;
     }
 
     /**
@@ -146,7 +93,7 @@ public class Server implements FrontendListener, Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(outputLine);
         } catch (IOException ex) {
-            System.err.println(ex.getMessage() + "lol123");
+            System.err.println(ex.getMessage());
         }
         System.out.println(outputLine);
     }
@@ -160,7 +107,7 @@ public class Server implements FrontendListener, Runnable {
             out = new PrintWriter(socket.getOutputStream(), true);
             out.println(outputLine);
         } catch (IOException ex) {
-            System.err.println(ex.getMessage() + "lolasddsa");
+            System.err.println(ex.getMessage());
         }
         System.out.println(outputLine);
     }

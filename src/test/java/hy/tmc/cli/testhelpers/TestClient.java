@@ -26,9 +26,7 @@ public class TestClient {
     public void init() throws IOException {
         this.socket = new Socket("localhost", portnumber);
         this.output = new PrintWriter(socket.getOutputStream(), true);
-        this.input = new BufferedReader(
-                new InputStreamReader(socket.getInputStream()));
-
+        this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
     public boolean isClosedFromServer() {
@@ -46,12 +44,15 @@ public class TestClient {
     }
 
     public void sendMessage(String message) throws IOException {
+        System.out.println("message" + message);
         output.println(message);
     }
 
     public String reply() {
         try {
-            return input.readLine();
+            String out = input.readLine();
+            System.out.println(out);
+            return out;
         }
         catch (IOException ex) {
             System.err.println(ex.getMessage());

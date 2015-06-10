@@ -18,8 +18,6 @@ public class TmcCore {
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
      * The TmcCore provides all the essential backend functionalities as public methods.
-     *
-     * @param frontend the client frontend, that the core will communicate with.
      */
     public TmcCore() {
         commands = CommandFactory.createCommandMap();
@@ -29,8 +27,6 @@ public class TmcCore {
     public ListeningExecutorService getPool() {
         return pool;
     }
-
-    
     
     public ListenableFuture<String> login(String username, String password) {
         return run("login", "username", username, "password", password);
