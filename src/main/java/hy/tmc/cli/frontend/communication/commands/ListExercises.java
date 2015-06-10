@@ -34,10 +34,8 @@ public class ListExercises extends MailCheckingCommand {
     @Override
     protected void functionality() {
         if (!ClientData.isPolling()) {
-            this.frontend.printLine("Started polling. <devmsg>");
             new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
         } else {
-            this.frontend.printLine("Polling in progress. <devmsg>");
         }
         this.frontend.printLine(lister.listExercises(data.get("path")));
         

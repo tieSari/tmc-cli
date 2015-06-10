@@ -47,10 +47,8 @@ public class Paste extends MailCheckingCommand {
     @Override
     protected void functionality() {
         if (!ClientData.isPolling()) {
-            this.frontend.printLine("Started polling. <devmsg>");
             new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
         } else {
-            this.frontend.printLine("Polling in progress. <devmsg>");
         }
         try {
             String returnUrl = submitter.submitPaste(data.get("path"));

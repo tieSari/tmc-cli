@@ -32,10 +32,8 @@ public class RunTests extends MailCheckingCommand {
         ClientData.setCurrentCourse(finder.getCurrentCourse(path));
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!ClientData.isPolling()) {
-            //this.frontend.printLine("Started polling. <devmsg>");
             new TmcServiceScheduler().addService(new StatusPoller(data.get("filepath"))).start();
         } else {
-            //this.frontend.printLine("Polling in progress. <devmsg>");
         }
         
         if (!exercise.isPresent()){
