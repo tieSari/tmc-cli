@@ -26,7 +26,8 @@ public class Server implements FrontendListener, Runnable {
         try {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.err.println("Server creation failed");
             System.err.println(ex.getMessage());
         }
@@ -56,19 +57,15 @@ public class Server implements FrontendListener, Runnable {
     @Override
     public final void run() {
         isRunning = true;
-         while (true) {
+        while (true) {
             try {
-                clientSocket = serverSocket.accept();
-            } catch (IOException e) {
+                if (!serverSocket.isClosed()) {
+                    clientSocket = serverSocket.accept();
+                    new SocketThread(clientSocket, tmcCore).start();
+                }
+            }
+            catch (IOException e) {
                 System.err.println(e.getMessage());
-            }
-            // new thread for a client
-            new SocketThread(clientSocket, tmcCore).start();
-            try {
-                Thread.sleep(200);
-            }
-            catch (InterruptedException ex) {
-               System.err.println(ex.getMessage());
             }
         }
     }

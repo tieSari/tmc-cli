@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SocketThread extends Thread {
 
@@ -27,12 +25,12 @@ public class SocketThread extends Thread {
      */
     @Override
     public void run() {
-        BufferedReader inputReader = null;
-        DataOutputStream outputStream = null;
         try {
-            inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            outputStream = new DataOutputStream(socket.getOutputStream());
-            handleInput(inputReader, outputStream);
+            if (!socket.isClosed()) {
+                BufferedReader inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+                handleInput(inputReader, outputStream);
+            }
         }
         catch (ProtocolException | IOException ex) {
             System.err.println(ex.getMessage());
@@ -67,6 +65,7 @@ public class SocketThread extends Thread {
         final ListenableFuture<String> commandFuture = parseCommand(inputReader, outputStream);
         final DataOutputStream output = outputStream;
         addListenerToFuture(commandFuture, output);
+        this.interrupt();
     }
 
     /**
@@ -93,7 +92,6 @@ public class SocketThread extends Thread {
             private void writeToOutput(final String commandOutput) {
                 try {
                     output.writeUTF(commandOutput + "\n");
-                    output.flush();
                     socket.close();
                 }
                 catch (IOException ex) {
