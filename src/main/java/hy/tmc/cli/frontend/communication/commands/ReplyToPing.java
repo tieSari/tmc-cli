@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 
 public class ReplyToPing extends Command {
 
-    private final String answer = "pong/n";
+    private final String answer = "pong";
 
     /**
      * print pong to the frontend.

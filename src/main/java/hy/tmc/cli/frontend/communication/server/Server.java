@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server implements FrontendListener, Runnable {
 
@@ -65,6 +67,12 @@ public class Server implements FrontendListener, Runnable {
             }
             // new thread for a client
             new SocketThread(clientSocket, tmcCore).start();
+            try {
+                Thread.sleep(200);
+            }
+            catch (InterruptedException ex) {
+               System.err.println(ex.getMessage());
+            }
         }
     }
 

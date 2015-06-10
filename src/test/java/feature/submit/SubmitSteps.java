@@ -115,6 +115,7 @@ public class SubmitSteps {
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
+        Thread.sleep(300);
     }
 
     @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
@@ -146,6 +147,7 @@ public class SubmitSteps {
     @Then("^user will see the some test passing$")
     public void user_will_see_the_some_test_passing() throws Throwable {
         final String result = testClient.reply();
+        System.out.println(result);
         assertTrue(result.contains("failed"));
     }
 

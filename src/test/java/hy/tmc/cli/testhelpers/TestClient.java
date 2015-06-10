@@ -44,15 +44,12 @@ public class TestClient {
     }
 
     public void sendMessage(String message) throws IOException {
-        System.out.println("message" + message);
         output.println(message);
     }
 
     public String reply() {
         try {
-            String out = input.readLine();
-            System.out.println(out);
-            return out;
+            return input.readLine();
         }
         catch (IOException ex) {
             System.err.println(ex.getMessage());
