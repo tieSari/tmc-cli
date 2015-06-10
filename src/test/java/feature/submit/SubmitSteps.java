@@ -147,7 +147,6 @@ public class SubmitSteps {
     @Then("^user will see the some test passing$")
     public void user_will_see_the_some_test_passing() throws Throwable {
         final String result = testClient.reply();
-        System.out.println(result);
         assertTrue(result.contains("failed"));
     }
 

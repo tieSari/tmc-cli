@@ -1,30 +1,47 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.backend.communication.ExerciseLister;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 public class ListExercises extends Command {
 
+    private ExerciseLister lister;
+
+    public ListExercises() {
+        lister = new ExerciseLister();
+    }
+
     /**
-     * use JSONParser to get a list of exercises names, and print it.
+     * For dependency injection for tests.
+     *
+     * @param front
+     * @param lister mocked lister object.
+     */
+    public ListExercises(ExerciseLister lister) {
+        this.lister = lister;
+    }
+
+    /**
+     * Get a list of the exercises of the course which the current directory belongs to.
      */
     @Override
+
     protected Optional<String> functionality() {
         return Optional.of(TmcJsonParser.getExerciseNames(data.get("courseUrl")));
     }
 
     /**
-     * Check the courseUrl and ClientData.
+     * Check the path and ClientData.
      *
      * @throws ProtocolException if some data not specified
      */
     @Override
     public void checkData() throws ProtocolException {
-        if (!data.containsKey("courseUrl")) {
-            throw new ProtocolException("Specify course url");
+        if (!data.containsKey("path")) {
+            throw new ProtocolException("Path not recieved");
         }
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("Please authorize first.");

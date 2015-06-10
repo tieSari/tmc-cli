@@ -1,6 +1,7 @@
 package hy.tmc.cli.testhelpers;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.zipping.RootFinder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,6 +25,11 @@ public class ProjectRootFinderStub implements RootFinder {
     @Override
     public Optional<Path> getRootDirectory(Path zipRoot) {
         return Optional.of(Paths.get(returnValue));
+    }
+
+    @Override
+    public Optional<Course> getCurrentCourse(String path) {
+        return Optional.absent();
     }
 
 }
