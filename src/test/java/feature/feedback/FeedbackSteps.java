@@ -2,37 +2,32 @@ package feature.feedback;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.fail;
 
+
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.RequestPatternBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.stubbing.ListStubMappingsResult;
-import com.github.tomakehurst.wiremock.stubbing.StubMapping;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import cucumber.api.java.After;
 
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import hy.tmc.cli.configuration.ClientData;
-
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FeedbackHandler;
-import hy.tmc.cli.frontend.communication.commands.Submit;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.testhelpers.TestClient;
-import org.junit.Test;
+
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class FeedbackSteps {
 
@@ -57,6 +52,10 @@ public class FeedbackSteps {
     private String lastReply = null;
     private List<String> output;
 
+    /**
+     * Starts the server and WireMock.
+     * Also logs into the mocked server.
+     */
     @Before
     public void initializeServer() throws IOException {
         // System.out.println("doing before");
@@ -90,6 +89,9 @@ public class FeedbackSteps {
 
     }
 
+    /**
+     * Configures WireMock.
+     */
     private void startWireMock() {
         wireMockServer = new WireMockServer(wireMockConfig().port(serverPort));
         wireMockServer.start();
@@ -108,27 +110,29 @@ public class FeedbackSteps {
                 wiremockAddress
         );
 
-        wiremockGET("/courses.json?api_version=7", allCoursesExample);
+        wiremockGet("/courses.json?api_version=7", allCoursesExample);
 
-        wiremockGET("/courses/27.json?api_version=7", ExampleJson.feedbackCourse.replace(
+        wiremockGet("/courses/27.json?api_version=7", ExampleJson.feedbackCourse.replace(
                 "https://tmc.mooc.fi/staging/exercises/1653/submissions.json",
                 wiremockAddress + "/submissions.json"
         ));
 
-        wiremockPOST("/submissions.json?" + configHandler.apiParam, ExampleJson.submitResponse.replace(
+        wiremockPost("/submissions.json?" + configHandler.apiParam,
+                ExampleJson.submitResponse.replace(
                 "8080", serverPort + ""
         ));
 
-        wiremockGET("/submissions/1781.json?" + configHandler.apiParam, ExampleJson.feedbackExample.replace(
+        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
+                ExampleJson.feedbackExample.replace(
                 "https://tmc.mooc.fi/staging/submissions/1933/feedback_answers.json",
                 wiremockAddress + "/feedback_answers.json"
         ));
 
         feedbackAnswersUrl = "/feedback_answers.json?" + configHandler.apiParam;
 
-        wiremockPOST(feedbackAnswersUrl, "{ status: \"ok\" }");
+        wiremockPost(feedbackAnswersUrl, "{ status: \"ok\" }");
 
-        wiremockGET("/user", "");
+        wiremockGet("/user", "");
 
 /*        System.out.println("here are mappings");
         ListStubMappingsResult listStubMappingsResult = listAllStubMappings();
@@ -138,7 +142,7 @@ public class FeedbackSteps {
 
     }
 
-    private void wiremockGET(final String urlToMock, final String returnBody) {
+    private void wiremockGet(final String urlToMock, final String returnBody) {
         stubFor(get(urlEqualTo(urlToMock))
                         .willReturn(aResponse()
                                         .withStatus(200)
@@ -147,7 +151,7 @@ public class FeedbackSteps {
         );
     }
 
-    private void wiremockPOST(final String urlToMock, final String returnBody) {
+    private void wiremockPost(final String urlToMock, final String returnBody) {
         stubFor(post(urlEqualTo(urlToMock))
                         .willReturn(aResponse()
                                         .withBody(returnBody)
@@ -157,14 +161,15 @@ public class FeedbackSteps {
 
     private String feedbackAnswer(String answer) {
         if (answer.contains(" ")) {
-            return "answerQuestion answer { "+ answer +" }";
+            return "answerQuestion answer { " + answer + " }";
         }
-        return "answerQuestion answer "+ answer;
+        return "answerQuestion answer " + answer;
     }
 
     @Given("^an exercise where some tests fail$")
     public void anExerciseWhereSomeTestsFail() throws IOException {
-        wiremockGET("/submissions/1781.json?" + configHandler.apiParam, ExampleJson.failedSubmission);
+        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
+                ExampleJson.failedSubmission);
         //System.out.println("nyt pitäisi tulla after");
     }
 
@@ -177,7 +182,7 @@ public class FeedbackSteps {
     public void feedbackQuestionsWillNotBeAsked() throws IOException, InterruptedException {
         String reply = testClient.reply();
         // System.out.println("hei: " + reply);
-        while(reply != null && !reply.equals("fail")) {
+        while (reply != null && !reply.equals("fail")) {
             System.out.println("hei: " + reply);
             if (reply.contains("feedback")) {
                 fail("asked for feedback, even though tests failed");
@@ -238,11 +243,10 @@ public class FeedbackSteps {
 
     @Then("^feedback is sent to the server successfully$")
     public void feedbackIsSentToTheServerSuccessfully() throws IOException {
-        for (LoggedRequest loggedRequest : wireMockServer.findAll(RequestPatternBuilder.allRequests())) {
-            System.out.println(loggedRequest.getUrl());
-        }
         verify(postRequestedFor(urlEqualTo(feedbackAnswersUrl)));
-        // .withRequestBody(equalToJson("{ answers: [{ id: 30, answer: \"3\"}, { id: 31, answer: \"Hello world!\"}, { id: 32, answer: \"42\"} ]}")));
+        /* .withRequestBody(equalToJson(
+                "{ answers: [{ id: 30, answer: \"3\"}, { id: 31, answer: \"Hello world!\"}, { id: 32, answer: \"42\"} ]}")
+        )); */
     }
 
     @When("^the user gives some answer that's not in the correct range$")
@@ -265,10 +269,10 @@ public class FeedbackSteps {
 
     @Given("^an exercise with no feedback$")
     public void anExerciseWithNoFeedback() throws IOException {
-        wiremockGET("/submissions/1781.json?" + configHandler.apiParam, ExampleJson.trivialNoFeedback);
+        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
+                ExampleJson.trivialNoFeedback);
         sendExercise("/testResources/tmc-testcourse/trivial");
-        // checkForMessages();
-        // this.lastReply = sendExercise("/testResources/2014-mooc-no-deadline/viikko1/Viikko1_001.Nimi");
+
     }
 
     @When("^the user submits$")
