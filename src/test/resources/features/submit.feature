@@ -6,10 +6,10 @@ Feature: Submit command
         When user gives command submit with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
         Then user will see all test passing
 
-    Scenario: submit works from exercises source folder
+    Scenario: submit works with vim too
         Given user has logged in with username "test" and password "1234"
-        When user gives command submit with valid path "/testResources/failingExercise/viikko1" and exercise "Viikko1_001.Nimi/src"
-        Then user will see the some test passing
+        When user gives command submit with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
+        Then user will see all test passing
 
     Scenario: submit doesn't work if exercise is expired
         Given user has logged in with username "test" and password "1234"

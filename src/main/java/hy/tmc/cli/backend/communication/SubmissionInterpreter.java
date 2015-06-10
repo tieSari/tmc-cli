@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
 import hy.tmc.cli.domain.submission.ValidationError;
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,6 +28,10 @@ public class SubmissionInterpreter {
     
     public SubmissionInterpreter(SubmissionResultFormatter formatter){
         this.formatter = formatter;
+    }
+    
+    public static SubmissionInterpreter createSubmissionInterpreter(){
+        return new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
     }
 
     /**

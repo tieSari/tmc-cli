@@ -15,9 +15,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -27,19 +29,20 @@ public class SubmitTest {
     private FrontendStub front;
     private Submit submit;
     CourseSubmitter submitterMock;
-    SubmissionInterpreter interpreter;
     SubmissionResultFormatter formatter;
+    private SubmissionInterpreter interpreter;
 
     /**
      * Mocks CourseSubmitter and injects it into Submit command.
      */
+    
     @Before
     public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException, Exception {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(Mockito.anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
         formatter = Mockito.mock(CommandLineSubmissionResultFormatter.class);
-        interpreter = spy(new SubmissionInterpreter(formatter));
+        interpreter = Mockito.mock(SubmissionInterpreter.class);
         
         front = new FrontendStub();
         submit = new Submit(front, submitterMock);
@@ -72,7 +75,8 @@ public class SubmitTest {
         String result = front.getMostRecentLine();
         assertTrue(result.contains("All tests passed."));
     }
-
+    
+    
     /**
      * Check that data checking success.
      */
