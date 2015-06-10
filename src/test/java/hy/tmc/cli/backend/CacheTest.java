@@ -10,7 +10,7 @@ public class CacheTest {
 
     @Test
     public void timestampTest() {
-        Date date = Cache.getLastUpdated();
+        Date date = new Date();
         Cache.update(new HashMap<Integer, Course>());
         assertNotEquals(Cache.getLastUpdated().getTime(), date.getTime());
 

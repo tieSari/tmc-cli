@@ -138,13 +138,16 @@ public class Review {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
-    
-    @Override
-    public String toString() {
-        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody;
-    }
 
     public void markAs(boolean read) {
+        Map<String, String> headers = addHeaders(read);
+        HttpResult result = UrlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
+        if (result.getData().contains("OK")) {
+            this.markedAsRead = read;
+        }
+    }
+
+    private Map<String, String> addHeaders(boolean read) {
         Map<String, String> headers = new HashMap<>();
         String readUpdate = "mark_as_";
         if (read) {
@@ -153,15 +156,16 @@ public class Review {
             readUpdate += "unread";
         }
         headers.put(readUpdate, "1");
-        HttpResult result = UrlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
-        if (result.getData().contains("OK")) {
-            this.markedAsRead = read;
-        }
-        System.out.println(result.getData());
+        return headers;
     }
 
     private String putUrl() {
         return this.updateUrl + ".json?api_version=7";
+    }
+
+    @Override
+    public String toString() {
+        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody;
     }
 
 }
