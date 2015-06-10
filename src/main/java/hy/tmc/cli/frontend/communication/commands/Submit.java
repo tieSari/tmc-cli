@@ -51,7 +51,6 @@ public class Submit extends MailCheckingCommand {
     protected void functionality() {
         if (!ClientData.isPolling()) {
             new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
-        } else {
         }
         try {
             if (data.containsKey("exerciseName")) {

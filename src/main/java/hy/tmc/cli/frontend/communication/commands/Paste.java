@@ -12,8 +12,6 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Paste extends MailCheckingCommand {
 
@@ -48,16 +46,12 @@ public class Paste extends MailCheckingCommand {
     protected void functionality() {
         if (!ClientData.isPolling()) {
             new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
-        } else {
         }
         try {
             String returnUrl = submitter.submitPaste(data.get("path"));
             frontend.printLine("Paste submitted. Here it is: \n  " + returnUrl);
         }
-        catch (IOException ex) {
-            frontend.printLine(ex.getMessage());
-        }
-        catch (ParseException ex) {
+        catch (IOException | ParseException ex) {
             frontend.printLine(ex.getMessage());
         }
         catch (ExpiredException ex) {

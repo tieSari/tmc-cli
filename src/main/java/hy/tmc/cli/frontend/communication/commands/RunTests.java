@@ -15,7 +15,6 @@ import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -28,39 +27,40 @@ public class RunTests extends MailCheckingCommand {
     @Override
     protected void functionality() {
         String path = this.data.get("filepath");
-        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector()); 
+        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
         ClientData.setCurrentCourse(finder.getCurrentCourse(path));
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!ClientData.isPolling()) {
             new TmcServiceScheduler().addService(new StatusPoller(data.get("filepath"))).start();
-        } else {
         }
-        
-        if (!exercise.isPresent()){
+
+        if (!exercise.isPresent()) {
             this.frontend.printLine("Not an exercise. (null)");
             return;
         }
         try {
             runTests(exercise.get());
-        } catch (NoLanguagePluginFoundException ex) {
+        }
+        catch (NoLanguagePluginFoundException ex) {
             this.frontend.printLine("Not an exercise.");
-        } 
+        }
     }
 
     /**
      * Runs tests for exercise.
+     *
      * @param exercise Path object
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
     public void runTests(Path exercise) throws NoLanguagePluginFoundException {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         RunResult result = taskExecutor.runTests(exercise);
-        
+
         boolean showStackTrace = this.data.containsKey("verbose");
         CommandLineTestResultFormatter formatter = new CommandLineTestResultFormatter();
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         String res = resInt.interpret(showStackTrace);
-        
+
         this.frontend.printLine(res);
     }
 

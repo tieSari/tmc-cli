@@ -1,5 +1,6 @@
 package feature.runtests;
 
+import cucumber.api.java.Before;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +11,7 @@ import hy.tmc.cli.testhelpers.FrontendStub;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.configuration.ClientData;
 
 public class TmcTestsSteps {
 
@@ -18,6 +20,11 @@ public class TmcTestsSteps {
 
     public TmcTestsSteps() {
         front = new FrontendStub();
+    }
+    
+    @Before
+    public void setUp(){
+        ClientData.clearUserData();
     }
 
     /**
