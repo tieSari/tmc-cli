@@ -28,19 +28,15 @@ public class ListExercises extends MailCheckingCommand {
     }
 
     /**
-     * Get a list of the exercises of the course which the current directory
-     * belongs to.
+     * Get a list of the exercises of the course which the current directory belongs to.
      */
     @Override
     protected void functionality() {
         if (!ClientData.isPolling()) {
-            this.frontend.printLine("Started polling. <devmsg>");
             new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
-        } else {
-            this.frontend.printLine("Polling in progress. <devmsg>");
         }
         this.frontend.printLine(lister.listExercises(data.get("path")));
-        
+
     }
 
     /**

@@ -62,7 +62,6 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course
      */
     public Optional<Course> findCourseByPath(String[] foldersPath) {
-        
         List<Course> courses = TmcJsonParser.getCourses();
         for (Course course : courses) {
             for (String folderName : foldersPath) {

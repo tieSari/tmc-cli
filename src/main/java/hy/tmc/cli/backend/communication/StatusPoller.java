@@ -30,7 +30,6 @@ public class StatusPoller extends AbstractScheduledService {
             Mailbox.getMailbox().fill(reviews.get());
         }
         
-        System.out.println("polled @"+System.currentTimeMillis());
     }
 
     @Override

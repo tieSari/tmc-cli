@@ -43,7 +43,7 @@ public class SubmitSteps {
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress("http://127.0.0.1:8080");
-
+        ClientData.clearUserData();
         server = new Server();
         port = configHandler.readPort();
         serverThread = new Thread(server);

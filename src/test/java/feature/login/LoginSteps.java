@@ -21,6 +21,7 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.configuration.ClientData;
 
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class LoginSteps {
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
-
+        ClientData.clearUserData();
         server = new Server();
         port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
