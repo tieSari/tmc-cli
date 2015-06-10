@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseDownloader;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 public class DownloadExercises extends Command {
@@ -15,7 +14,6 @@ public class DownloadExercises extends Command {
     private ExerciseDownloader exerciseDownloader;
 
     public DownloadExercises() {
-        //SAMU modify exercise downloader to not need frontend
         this.exerciseDownloader = new ExerciseDownloader();
     }
 

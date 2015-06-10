@@ -6,19 +6,16 @@ import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class LogoutTest {
 
-    private FrontendStub front;
     private Command logout;
 
     @Before
     public void setup() {
-        front = new FrontendStub();
         logout = new Logout();
     }
 

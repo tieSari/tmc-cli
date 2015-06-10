@@ -1,24 +1,20 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.ExerciseLister;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
 public class ListExercisesTest {
 
-    private FrontendStub front;
     private Command list;
     private ExerciseLister lister;
     private String example = "viikko1-Viikko1_000.Hiekkalaatikko[ ]\n"
@@ -28,10 +24,6 @@ public class ListExercisesTest {
 
     @Before
     public void setup() {
-        list = new ListExercises();
-
-        PowerMockito.mockStatic(UrlCommunicator.class);
-
         ClientData.setUserData("Chang", "Jamo");
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
@@ -55,11 +47,11 @@ public class ListExercisesTest {
 
     @Test
     public void getsExerciseName() {
-        list.setParameter("courseUrl", "any");
+        list.setParameter("path", "any");
         try {
             String result = list.call();
-            assertTrue(result.contains("viikko1-Viikko1_000.Hiekkalaatikko"));
-            assertTrue(result.contains("viikko3-Viikko3_046.LukujenKeskiarvo"));
+            assertTrue(result.contains("Viikko1_000.Hiekkalaatikko"));
+            assertTrue(result.contains("viikko1-Viikko1_002.HeiMaailma"));
         }
         catch (ProtocolException ex) {
             fail("unexpected exception");
@@ -80,7 +72,6 @@ public class ListExercisesTest {
     @Test(expected = ProtocolException.class)
     public void throwsErrorIfNoUser() throws ProtocolException {
         ClientData.clearUserData();
-        list.setParameter("courseUrl", "any");
         list.setParameter("path", "any");
         list.call();
     }

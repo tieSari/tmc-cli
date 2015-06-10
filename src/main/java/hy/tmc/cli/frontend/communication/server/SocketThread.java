@@ -98,7 +98,7 @@ public class SocketThread extends Thread {
                 }
                 catch (IOException ex) {
                     System.err.println("Failed to print error message: ");
-                    System.out.println(ex.getMessage());
+                    System.err.println(ex.getMessage());
                 }
             }
         }, core.getPool());

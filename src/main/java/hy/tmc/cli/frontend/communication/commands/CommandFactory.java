@@ -109,8 +109,7 @@ public class CommandFactory {
      * @return a downloadExercises object
      */
     public static Command downloadExercises() {
-        //return new DownloadExercises();
-       return null;
+       return new DownloadExercises();
     }
 
     /**

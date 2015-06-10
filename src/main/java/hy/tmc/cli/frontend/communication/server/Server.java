@@ -34,7 +34,7 @@ public class Server implements FrontendListener, Runnable {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
         } catch (IOException ex) {
-            System.out.println("Server creation failed");
+            System.err.println("Server creation failed");
             System.err.println(ex.getMessage());
         }
         this.parser = new ProtocolParser(this);
@@ -63,7 +63,7 @@ public class Server implements FrontendListener, Runnable {
             try {
                 clientSocket = serverSocket.accept();
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
             }
             // new thread for a client
             new SocketThread(clientSocket, tmcCore).start();
@@ -84,39 +84,5 @@ public class Server implements FrontendListener, Runnable {
     public void close() throws IOException {
         isRunning = false;
         this.serverSocket.close();
-    }
-
-    /**
-     * Prints line to server output.
-     *
-     * @param outputLine string to print in server out
-     */
-    @Override
-    public void printLine(String outputLine) {
-        if (clientSocket == null) {
-            return;
-        }
-        PrintWriter out;
-        try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(outputLine);
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
-        System.out.println(outputLine);
-    }
-
-    public void printLine(String outputLine, Socket socket) {
-        if (clientSocket == null) {
-            return;
-        }
-        PrintWriter out;
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(outputLine);
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
-        System.out.println(outputLine);
     }
 }

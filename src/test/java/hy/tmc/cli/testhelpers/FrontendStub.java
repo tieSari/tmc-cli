@@ -3,6 +3,7 @@ package hy.tmc.cli.testhelpers;
 import hy.tmc.cli.frontend.FrontendListener;
 
 
+@Deprecated
 public class FrontendStub implements FrontendListener {
     
     String line;
@@ -11,12 +12,6 @@ public class FrontendStub implements FrontendListener {
     public void start() {
         
     }
-
-    @Override
-    public void printLine(String line) {
-        this.line = line;
-    }
-    
     public String getMostRecentLine() {
         return line;
     }

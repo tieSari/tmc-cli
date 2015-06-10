@@ -3,24 +3,11 @@ package hy.tmc.cli.frontend.communication.commands;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
-
-import org.junit.Before;
 import org.junit.Test;
 
 
 public class DownloadExercisesTest {
-    
-    private FrontendStub front;
 
-    /**
-     * Create FrontendStub. 
-     */
-    @Before
-    public void setup() {
-        front = new FrontendStub();
-    }
-    
     /**
      * Check that data checking success.
      */

@@ -22,12 +22,13 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
      */
     @Override
     public String testCaseDescription(TestCase testCase) {
-        StringBuilder des = new StringBuilder();
+        StringBuilder destination = new StringBuilder();
         if (testCase.isSuccessful()) {
-            des.append(" PASSED: ").append(testCase.getName());
+            destination.append(" PASSED: ").append(testCase.getName());
+            return destination.toString();
         }
-        des.append(" FAILED: ").append(testCase.getName()).append("\n  ").append(testCase.getMessage());
-        return des.toString();
+        destination.append(" FAILED: ").append(testCase.getName()).append("\n  ").append(testCase.getMessage());
+        return destination.toString();
     }
 
     @Override

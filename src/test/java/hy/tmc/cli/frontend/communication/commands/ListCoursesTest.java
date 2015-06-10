@@ -5,7 +5,6 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,6 @@ import static org.junit.Assert.fail;
 @PrepareForTest(UrlCommunicator.class)
 public class ListCoursesTest {
 
-    private FrontendStub front;
     private Command list;
 
     /**
@@ -33,9 +31,7 @@ public class ListCoursesTest {
      */
     @Before
     public void setUp() {
-        front = new FrontendStub();
-        list = new ListCourses();
-        
+        list = new ListCourses();     
         
         PowerMockito.mockStatic(UrlCommunicator.class);
 

@@ -5,7 +5,6 @@ import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.IOException;
 import java.text.ParseException;
 import org.junit.After;

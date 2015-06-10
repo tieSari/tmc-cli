@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -14,7 +13,6 @@ import cucumber.api.java.en.When;
 public class TmcTestsSteps {
 
     private RunTests testRunner;
-    private FrontendStub front;
     private String output;
     
     /**

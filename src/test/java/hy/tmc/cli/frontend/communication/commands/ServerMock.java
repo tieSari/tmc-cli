@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.frontend.FrontendListener;
 
+@Deprecated
 public class ServerMock implements FrontendListener{
 
     private StringBuilder printedLines;
@@ -14,12 +15,6 @@ public class ServerMock implements FrontendListener{
     public void start() {
         
     }
-
-    @Override
-    public void printLine(String line) {
-        this.printedLines.append(line);
-    }
-
     public String getPrintedLine() {
         return printedLines.toString();
     }

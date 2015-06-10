@@ -103,7 +103,6 @@ public class SubmitSteps {
     /*
     * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
     */
-
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -138,7 +137,6 @@ public class SubmitSteps {
     }
 
     @Then("^user will see all test passing$")
-
     public void user_will_see_all_test_passing() throws Throwable {
         String result = testClient.reply();
         assertTrue(result.contains("All tests passed"));

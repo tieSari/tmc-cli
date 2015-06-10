@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.apache.commons.io.FileUtils;
 
@@ -20,12 +19,7 @@ import static org.junit.Assert.fail;
 public class ChooseServerTest {
 
     private ChooseServer chooser;
-    private final FrontendStub frontendMock;
     private final String path = "testResources/test.properties";
-
-    public ChooseServerTest() {
-        this.frontendMock = new FrontendStub();
-    }
 
     @Before
     public void setup() {

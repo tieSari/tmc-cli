@@ -10,10 +10,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
-import hy.tmc.cli.backend.communication.ExerciseDownloader;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,14 +30,12 @@ public class ExerciseDownloaderTest {
     public WireMockRule wireMockRule = new WireMockRule();
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
-    private FrontendStub front;
 
     /**
      * Creates required stubs and example data for downloader.
      */
     @Before
     public void setup() {
-        front = new FrontendStub();
         exDl = new ExerciseDownloader();
         exercises = new ArrayList<>();
 

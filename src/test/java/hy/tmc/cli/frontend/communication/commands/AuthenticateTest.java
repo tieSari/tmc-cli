@@ -4,7 +4,6 @@ import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.backend.communication.authorization.Authorization;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,14 +22,12 @@ public class AuthenticateTest {
     private final String testUsername = "test";
     private final String testPassword = "1234";
     private Authenticate auth;
-    private FrontendStub serverMock;
 
     /**
      * Set up server mock and Authenticate command.
      */
     @Before
     public void setUp() {
-        this.serverMock = new FrontendStub();
         this.auth = new Authenticate();
     }
 
