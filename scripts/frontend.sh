@@ -5,12 +5,13 @@ function command_submit () {
   #submit [<exercise name>]
   echo "Submitting exercise..."
   if [ $# -eq 0 ]
-    then
+   then
+    #echo "submit path `pwd`"
     send_command_wait_output "submit path `pwd`"
-  else
-    echo "submit path `pwd` exerciseName $1"
-    send_command_wait_output "submit path `pwd` exerciseName $1"
-  fi
+   else
+     #echo "submit path `pwd` $1"
+     send_command_wait_output "submit path `pwd` $1"
+fi
 
   if [[ $OUTPUT =~ All\ tests\ passed.* ]]
   then
@@ -49,7 +50,13 @@ function command_paste () {
 }
 
 function command_test () {
-  send_command "runTests filepath `pwd`"
+  #send_command "runTests filepath `pwd`"
+  if [ $# -eq 0 ]
+  then
+    send_command "runTests filepath `pwd`"
+  else
+    send_command "runTests filepath `pwd` $1"
+  fi
 }
 
 function command_default () {
@@ -122,7 +129,7 @@ case "$1" in
     "login") command_login;;
     "submit") command_submit $2;;
     "download") command_download $2;;
-    "test") command_test;;
-    "paste") command_paste;;
+    "test") command_test $2;;
+    "paste") command_paste $2;;
     *) command_default $@;;
 esac

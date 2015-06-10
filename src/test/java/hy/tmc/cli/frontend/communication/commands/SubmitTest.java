@@ -5,15 +5,21 @@ import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.IOException;
 import java.text.ParseException;
 import org.junit.After;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class SubmitTest {
@@ -22,6 +28,7 @@ public class SubmitTest {
     private Submit submit;
     CourseSubmitter submitterMock;
     SubmissionInterpreter interpreter;
+    SubmissionResultFormatter formatter;
 
     /**
      * Mocks CourseSubmitter and injects it into Submit command.
@@ -31,7 +38,8 @@ public class SubmitTest {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(Mockito.anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
-        interpreter = Mockito.mock(SubmissionInterpreter.class);
+        formatter = Mockito.mock(CommandLineSubmissionResultFormatter.class);
+        interpreter = spy(new SubmissionInterpreter(formatter));
         
         front = new FrontendStub();
         submit = new Submit(front, submitterMock);

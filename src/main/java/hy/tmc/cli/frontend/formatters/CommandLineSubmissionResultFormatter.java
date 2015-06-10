@@ -30,6 +30,7 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
         StringBuilder des = new StringBuilder();
         if (testCase.isSuccessful()) {
             des.append(" PASSED: ").append(testCase.getName());
+            return des.toString();
         }
         des.append(" FAILED: ").append(testCase.getName()).append("\n  ").append(testCase.getMessage());
         return des.toString();

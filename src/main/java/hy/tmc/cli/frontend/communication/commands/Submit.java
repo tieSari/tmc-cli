@@ -13,7 +13,6 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
 import java.text.ParseException;
-import static javax.swing.text.html.HTML.Tag.HEAD;
 
 /**
  * Submit command for submitting exercises to TMC
@@ -69,7 +68,6 @@ public class Submit extends Command {
     
     private SubmissionInterpreter getInterpreter(){
         if(data.containsKey("--vim")){
-            System.out.println("Vim formatter");
             return new SubmissionInterpreter(new VimSubmissionResultFormatter());
         } else {
             return new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
