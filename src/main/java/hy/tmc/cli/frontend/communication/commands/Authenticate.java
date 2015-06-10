@@ -1,12 +1,14 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.backend.communication.StatusPoller;
 import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 
 public class Authenticate extends Command {
 
@@ -20,8 +22,7 @@ public class Authenticate extends Command {
     }
 
     private String returnResponse(int statusCode) {
-        if (Integer.toString(statusCode).matches(httpOk)) {
-            ClientData.setUserData(data.get("username"), data.get("password"));
+        if (ok(statusCode)) {
             return "Auth successful. Saved userdata in session";
         }
         return "Auth unsuccessful. Check your connection and/or credentials";
@@ -45,10 +46,25 @@ public class Authenticate extends Command {
     @Override
     protected void functionality() {
         String auth = data.get("username") + ":" + data.get("password");
+        
+        if (ClientData.getFormattedUserData().equals(auth)) {
+            this.frontend.printLine("You are already logged in with these credentials");
+            return;
+        }
+        
         int code = makeGetRequest(new ConfigHandler().readAuthAddress(), auth).getStatusCode();
-        if ((""+code).matches(httpOk)){
-            Mailbox.create();
+        if (ok(code)){
+            initializeUserState();
         }
         this.frontend.printLine(returnResponse(code));
+    }
+    
+    private boolean ok(int code) {
+        return Integer.toString(code).matches(httpOk);
+    }
+    
+    private void initializeUserState() {
+        ClientData.setUserData(data.get("username"), data.get("password"));
+        Mailbox.create();
     }
 }

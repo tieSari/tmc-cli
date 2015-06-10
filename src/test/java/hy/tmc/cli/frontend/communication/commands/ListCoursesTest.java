@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
@@ -68,12 +69,13 @@ public class ListCoursesTest {
 
     @Test
     public void testWithAuthPrintsCourses() {
+        Mailbox.create();
         try {
             list.execute();
             assertTrue(front.getMostRecentLine().contains("WEPAMOOC-STAGE"));
         } catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("unexpected exception");
+            System.err.println(ex.getMessage());
+            fail("unexpected exception" + ex.getMessage());
         }
     }
 

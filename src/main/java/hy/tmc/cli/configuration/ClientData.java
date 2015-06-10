@@ -11,7 +11,8 @@ public final class ClientData {
     private static int PID;
     private static String USERNAME = "";
     private static String PASSWORD = "";
-    private static Course currentCourse;
+    private static Optional<Course> currentCourse = Optional.absent();
+    private static boolean polling = false;
 
     private ClientData() {
     }
@@ -27,11 +28,26 @@ public final class ClientData {
         PASSWORD = password;
     }
 
+    public static boolean isPolling() {
+        return polling;
+    }
+
+    public static void setPolling(boolean setpolling) {
+        polling = setpolling;
+    }
+
     public static Optional<Course> getCurrentCourse() {
-        return Optional.of(currentCourse);
+        return currentCourse;
     }
 
     public static void setCurrentCourse(Course course) {
+        if (course == null) {
+            currentCourse = Optional.absent();
+        }
+        currentCourse = Optional.of(course);
+    }
+    
+    public static void setCurrentCourse(Optional<Course> course) {
         currentCourse = course;
     }
 

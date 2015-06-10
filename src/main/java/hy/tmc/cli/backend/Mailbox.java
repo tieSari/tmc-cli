@@ -61,7 +61,11 @@ public class Mailbox {
         mailbox = new Mailbox();
     }
     
+    public static void destroy() {
+        mailbox = null;
+    }
+    
     public static Mailbox getMailbox() {
         return mailbox;
-    }
+    }   
 }

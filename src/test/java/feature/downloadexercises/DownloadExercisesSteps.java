@@ -27,6 +27,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.backend.Mailbox;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,12 +57,12 @@ public class DownloadExercisesSteps {
      */
     @Before
     public void setUpServer() throws IOException {
+        Mailbox.create();
         wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         config = new ConfigHandler();
         originalServerAddress = config.readServerAddress();
         config.writeServerAddress(SERVER_ADDRESS);
         server = new Server();
-        ClientData.setUserData("pihla", "juuh");
         port = server.getCurrentPort();
         serverThread = new Thread(server);
         output = new ArrayList<>();

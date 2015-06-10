@@ -14,7 +14,7 @@ public abstract class Command {
     protected final FrontendListener frontend;
 
     protected Map<String, String> data;
-
+    
     /**
      * Constructor sets frontend and backend.
      *

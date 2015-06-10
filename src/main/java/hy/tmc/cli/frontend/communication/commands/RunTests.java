@@ -4,11 +4,14 @@ import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+import hy.tmc.cli.backend.communication.StatusPoller;
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import hy.tmc.cli.frontend.formatters.CommandLineTestResultFormatter;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
@@ -16,7 +19,7 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RunTests extends Command {
+public class RunTests extends MailCheckingCommand {
 
     public RunTests(FrontendListener front) {
         super(front);
@@ -25,8 +28,16 @@ public class RunTests extends Command {
     @Override
     protected void functionality() {
         String path = this.data.get("filepath");
-        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());   
+        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector()); 
+        ClientData.setCurrentCourse(finder.getCurrentCourse(path));
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
+        if (!ClientData.isPolling()) {
+            //this.frontend.printLine("Started polling. <devmsg>");
+            new TmcServiceScheduler().addService(new StatusPoller(data.get("filepath"))).start();
+        } else {
+            //this.frontend.printLine("Polling in progress. <devmsg>");
+        }
+        
         if (!exercise.isPresent()){
             this.frontend.printLine("Not an exercise. (null)");
             return;
@@ -35,7 +46,7 @@ public class RunTests extends Command {
             runTests(exercise.get());
         } catch (NoLanguagePluginFoundException ex) {
             this.frontend.printLine("Not an exercise.");
-        }
+        } 
     }
 
     /**

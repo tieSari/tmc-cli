@@ -1,22 +1,24 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
 import java.text.ParseException;
-import static javax.swing.text.html.HTML.Tag.HEAD;
 
 /**
  * Submit command for submitting exercises to TMC
  */
-public class Submit extends Command {   
+public class Submit extends MailCheckingCommand {
+
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
 
@@ -47,6 +49,12 @@ public class Submit extends Command {
      */
     @Override
     protected void functionality() {
+        if (!ClientData.isPolling()) {
+            this.frontend.printLine("Started polling. <devmsg>");
+            new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
+        } else {
+            this.frontend.printLine("Polling in progress. <devmsg>");
+        }
         try {
             if (data.containsKey("exerciseName")) {
                 frontend.printLine("Doesnt work yet");
@@ -60,8 +68,8 @@ public class Submit extends Command {
         }
         catch (IOException | InterruptedException ex) {
             frontend.printLine("Project not found with specified parameters or thread interrupted");
-        } 
-        catch(ExpiredException ex){
+        }
+        catch (ExpiredException ex) {
             frontend.printLine("Exercise has expired.");
         }
     }

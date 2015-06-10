@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -21,6 +22,8 @@ public class Logout extends Command {
     protected void functionality() {
         if (ClientData.userDataExists()) {
             ClientData.clearUserData();
+            ClientData.setPolling(false);
+            Mailbox.destroy();
             this.frontend.printLine("User logged out. User data cleared.");
         } else {
             this.frontend.printLine("Nobody is logged in!");

@@ -7,7 +7,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class DownloadExercises extends Command {
+public class DownloadExercises extends MailCheckingCommand {
 
     /**
      * ExerciseDownloader that is used for downloading.

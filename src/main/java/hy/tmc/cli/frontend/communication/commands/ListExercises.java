@@ -1,11 +1,13 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.ExerciseLister;
+import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 
-public class ListExercises extends Command {
+public class ListExercises extends MailCheckingCommand {
 
     private ExerciseLister lister;
 
@@ -31,7 +33,14 @@ public class ListExercises extends Command {
      */
     @Override
     protected void functionality() {
+        if (!ClientData.isPolling()) {
+            this.frontend.printLine("Started polling. <devmsg>");
+            new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
+        } else {
+            this.frontend.printLine("Polling in progress. <devmsg>");
+        }
         this.frontend.printLine(lister.listExercises(data.get("path")));
+        
     }
 
     /**

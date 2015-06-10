@@ -1,10 +1,12 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
@@ -13,10 +15,10 @@ import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Paste extends Command {
+public class Paste extends MailCheckingCommand {
 
     CourseSubmitter submitter;
-    
+
     public Paste(FrontendListener front) {
         super(front);
         submitter = new CourseSubmitter(
@@ -33,7 +35,6 @@ public class Paste extends Command {
      * @param front frontend.
      * @param submitter can inject submitter mock.
      */
-
     public Paste(FrontendListener front, CourseSubmitter submitter) {
         super(front);
         this.submitter = submitter;
@@ -45,6 +46,12 @@ public class Paste extends Command {
      */
     @Override
     protected void functionality() {
+        if (!ClientData.isPolling()) {
+            this.frontend.printLine("Started polling. <devmsg>");
+            new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
+        } else {
+            this.frontend.printLine("Polling in progress. <devmsg>");
+        }
         try {
             String returnUrl = submitter.submitPaste(data.get("path"));
             frontend.printLine("Paste submitted. Here it is: \n  " + returnUrl);
@@ -57,7 +64,7 @@ public class Paste extends Command {
         }
         catch (ExpiredException ex) {
             frontend.printLine("Exercise has expired.");
-        } 
+        }
     }
 
     /**
