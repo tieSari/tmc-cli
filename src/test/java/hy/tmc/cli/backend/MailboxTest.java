@@ -54,10 +54,15 @@ public class MailboxTest {
 
     @Test
     public void afterFillingTwiceGetReturnsAll() {
-        mail.fill(reviews("nice job", "lol", "hello world"));
-        mail.fill(reviews("asd"));
-
-        assertEquals(4, mail.getUnreadReviews().size());
+        mail.fill(reviews("first", "second"));
+        mail.fill(reviews("third", "duck", "fifth"));
+        List<Review> reviews = mail.getUnreadReviews();
+        assertEquals(5, reviews.size());
+        assertEquals("first", reviews.get(0).getReviewBody());
+        assertEquals("second", reviews.get(1).getReviewBody());
+        assertEquals("third", reviews.get(2).getReviewBody());
+        assertEquals("duck", reviews.get(3).getReviewBody());
+        assertEquals("fifth", reviews.get(4).getReviewBody());
     }
 
     private List<Review> reviews(String... reviewMsgs) {

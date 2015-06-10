@@ -81,14 +81,22 @@ public class UrlCommunicator {
         }
     }
     
-    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> headers) {
+    
+    /**
+     * Makes PUT-request to wanted Url. Key-Value parameters gets added to body. 
+     * 
+     * @param url where the request is sent. 
+     * @param body contains key-value -pairs.
+     * @return Result which contains the result.
+     */
+    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> body) {
         try {
             HttpPut httpPut = new HttpPut(url);
             addCredentials(httpPut, ClientData.getFormattedUserData());
             List<NameValuePair> params = new ArrayList<>();
             
-            for (String key : headers.get().keySet()) {
-                String value = headers.get().get(key);
+            for (String key : body.get().keySet()) {
+                String value = body.get().get(key);
                 params.add(new BasicNameValuePair(key, value));
             }
             

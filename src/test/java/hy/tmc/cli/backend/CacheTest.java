@@ -9,8 +9,9 @@ import org.junit.Test;
 public class CacheTest {
 
     @Test
-    public void timestampTest() {
+    public void timestampTest() throws InterruptedException {
         Date date = new Date();
+        Thread.sleep(10);
         Cache.update(new HashMap<Integer, Course>());
         assertNotEquals(Cache.getLastUpdated().getTime(), date.getTime());
 
