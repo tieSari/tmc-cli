@@ -5,7 +5,7 @@ public class Nimi {
       
         // Mikäli et vielä ole vastannut vielä kyselyyn, tee se HETI
         // osoitteessa: http://laatu.mooc.fi/ 
-	System.out.println("Moi :)");
+        System.out.println("AAPO");
     }
 
 }

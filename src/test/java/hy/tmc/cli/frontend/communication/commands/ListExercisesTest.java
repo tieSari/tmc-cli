@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.ExerciseLister;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -26,6 +27,8 @@ public class ListExercisesTest {
 
     @Before
     public void setup() {
+        Mailbox.create();
+        ClientData.setPolling(true);
         ClientData.setUserData("Chang", "Jamo");
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
@@ -41,7 +44,8 @@ public class ListExercisesTest {
         ls.setParameter("path", "legit");
         try {
             ls.checkData();
-        } catch (ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -52,11 +56,11 @@ public class ListExercisesTest {
         list.execute();
         assertTrue(front.getMostRecentLine().contains("Viikko1"));
     }
-    
+
     @Test
     public void returnsFailIfBadPath() throws ProtocolException {
         String found = "No course found";
-         Mockito.when(lister.listExercises(Mockito.anyString()))
+        Mockito.when(lister.listExercises(Mockito.anyString()))
                 .thenReturn(found);
         list.setParameter("path", "any");
         list.execute();
@@ -81,7 +85,8 @@ public class ListExercisesTest {
         try {
             list.execute();
             assertFalse(front.getMostRecentLine().contains("Ilari"));
-        } catch (ProtocolException ex) {
+        }
+        catch (ProtocolException ex) {
             fail("unexpected exception");
         }
     }

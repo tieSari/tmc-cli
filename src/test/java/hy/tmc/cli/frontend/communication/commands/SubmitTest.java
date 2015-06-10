@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
@@ -28,11 +29,13 @@ public class SubmitTest {
      */
     @Before
     public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException {
+        Mailbox.create();
+        ClientData.setPolling(true);
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(Mockito.anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
         interpreter = Mockito.mock(SubmissionInterpreter.class);
-
+        
         front = new FrontendStub();
         submit = new Submit(front, submitterMock, interpreter);
         ClientData.setUserData("Bossman", "Samu");

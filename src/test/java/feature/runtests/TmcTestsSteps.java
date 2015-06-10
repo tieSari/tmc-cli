@@ -21,14 +21,16 @@ public class TmcTestsSteps {
     public TmcTestsSteps() {
         front = new FrontendStub();
     }
-    
+
     @Before
-    public void setUp(){
+    public void setUp() {
         ClientData.clearUserData();
+        ClientData.setUserData("test", "1234");
     }
 
     /**
      * Create RunTests command and set filepath parameter.
+     *
      * @param exerciseDirectory directory path
      */
     @Given("^the user is in the exercise directory \"(.*?)\"$")
@@ -61,7 +63,7 @@ public class TmcTestsSteps {
         assertTrue(output.contains("\u001B[31m1 tests failed:\n"));
         assertTrue(output.contains("  NimiTest test failed: Et tulostanut mitään!"));
     }
-    
+
     /**
      * User should get both information about passed tests and failed tests.
      */

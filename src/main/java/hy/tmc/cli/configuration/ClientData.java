@@ -46,9 +46,11 @@ public final class ClientData {
         }
         currentCourse = Optional.of(course);
     }
-    
+
     public static void setCurrentCourse(Optional<Course> course) {
-        currentCourse = course;
+        if (course.isPresent()) {
+            currentCourse = course;
+        }
     }
 
     public static boolean userDataExists() {

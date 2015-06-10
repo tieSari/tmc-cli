@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.configuration.ClientData;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -22,8 +23,11 @@ public class RunTestsTest {
      */
     @Before
     public void setup() {
+        ClientData.setPolling(true);
+        ClientData.setUserData("test", "1234");
         front = new FrontendStub();
         runTests = new RunTests(front);
+
     }
 
     /**
@@ -35,7 +39,8 @@ public class RunTestsTest {
         rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
         try {
             rt.checkData();
-        } catch (ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -49,11 +54,12 @@ public class RunTestsTest {
         try {
             rt.checkData();
             fail("testCheckDataFail should have failed");
-        } catch (ProtocolException p) {
+        }
+        catch (ProtocolException p) {
             return;
         }
     }
-    
+
     /**
      * Test that failing exercise output is correct.
      */
@@ -66,19 +72,20 @@ public class RunTestsTest {
         run.setParameter("filepath", file.getAbsolutePath());
         try {
             run.execute();
-        } catch (ProtocolException ex) {
+        }
+        catch (ProtocolException ex) {
             fail("Test executing failed");
         }
-        
+
         assertTrue(front.getMostRecentLine().contains("Some tests failed:"));
-        
+
         assertTrue(front.getMostRecentLine().contains("No tests passed"));
         assertTrue(front.getMostRecentLine().contains("1 tests failed:"));
-        
+
         assertTrue(front.getMostRecentLine().contains("NimiTest"));
         assertTrue(front.getMostRecentLine().contains("Et tulostanut"));
     }
-    
+
     /**
      * Check that successfull exercise output is correct.
      */
@@ -91,12 +98,12 @@ public class RunTestsTest {
         run.setParameter("filepath", file.getAbsolutePath());
         try {
             run.execute();
-        } catch (ProtocolException ex) {
+        }
+        catch (ProtocolException ex) {
             fail("Test executing failed");
         }
-        
         assertFalse(front.getMostRecentLine().contains("tests failed:"));
-        
+
         assertTrue(front.getMostRecentLine().contains("All tests passed"));
     }
 }

@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
@@ -23,12 +24,14 @@ public class PasteTest {
     CourseSubmitter submitterMock;
     SubmissionInterpreter interpreter;
     String pasteUrl = "http://legit.paste.url.fi";
-    
+
     /**
      * Mocks CourseSubmitter and injects it into Paste command.
      */
     @Before
     public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException {
+        Mailbox.create();
+        ClientData.setPolling(true);
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
 
@@ -74,7 +77,7 @@ public class PasteTest {
         Paste pasteCommand = new Paste(front);
         pasteCommand.checkData();
     }
-    
+
     @Test(expected = ProtocolException.class)
     public void checkDataFailIfNoAuth() throws ProtocolException {
         Paste pasteCommand = new Paste(front);

@@ -28,7 +28,6 @@ public class RunTests extends MailCheckingCommand {
     protected void functionality() {
         String path = this.data.get("filepath");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
-        ClientData.setCurrentCourse(finder.getCurrentCourse(path));
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!ClientData.isPolling()) {
             new TmcServiceScheduler().addService(new StatusPoller(data.get("filepath"))).start();
