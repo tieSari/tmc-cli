@@ -28,8 +28,11 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.testhelpers.TestClient;
+import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FeedbackSteps {
 
@@ -52,6 +55,7 @@ public class FeedbackSteps {
     private String wiremockAddress;
     private String feedbackAnswersUrl;
     private String lastReply = null;
+    private List<String> output;
 
     @Before
     public void initializeServer() throws IOException {
@@ -160,9 +164,7 @@ public class FeedbackSteps {
 
     @Given("^an exercise where some tests fail$")
     public void anExerciseWhereSomeTestsFail() throws IOException {
-        //wiremockGET("/submissions/1781.json?" + configHandler.apiParam, ExampleJson.feedbackExample.replace(
-        //        "https://tmc.mooc.fi/staging/submissions/1933/feedback_answers.json",
-        //        wiremockAddress + "/feedback_answers.json"));
+        wiremockGET("/submissions/1781.json?" + configHandler.apiParam, ExampleJson.failedSubmission);
         //System.out.println("nyt pitäisi tulla after");
     }
 
@@ -174,7 +176,9 @@ public class FeedbackSteps {
     @Then("^feedback questions will not be asked$")
     public void feedbackQuestionsWillNotBeAsked() throws IOException, InterruptedException {
         String reply = testClient.reply();
-        while(testClient.hasNewMessages()) {
+        // System.out.println("hei: " + reply);
+        while(reply != null && !reply.equals("fail")) {
+            System.out.println("hei: " + reply);
             if (reply.contains("feedback")) {
                 fail("asked for feedback, even though tests failed");
             }
@@ -182,15 +186,21 @@ public class FeedbackSteps {
         }
     }
 
-    private void checkForMessages() throws IOException {
-        System.out.println("check: " + testClient.reply());
+    private List<String> checkForMessages() throws IOException {
+        ArrayList<String> output = new ArrayList<String>();
+        takeOutput(output);
         // testClient.reply();
         while (testClient.hasNewMessages()) {
-            System.out.println("check: " + testClient.reply());
-            //testClient.reply();
+            takeOutput(output);
         }
-        System.out.println("check: " + testClient.reply());
-        // testClient.reply();
+        takeOutput(output);
+        return output;
+    }
+
+    private void takeOutput(ArrayList<String> output) {
+        String reply = testClient.reply();
+        output.add(reply);
+        System.out.println("check: " + reply);
     }
 
 
@@ -257,19 +267,19 @@ public class FeedbackSteps {
     public void anExerciseWithNoFeedback() throws IOException {
         wiremockGET("/submissions/1781.json?" + configHandler.apiParam, ExampleJson.trivialNoFeedback);
         sendExercise("/testResources/tmc-testcourse/trivial");
-        checkForMessages();
+        // checkForMessages();
         // this.lastReply = sendExercise("/testResources/2014-mooc-no-deadline/viikko1/Viikko1_001.Nimi");
     }
 
-    @When("^the user submits and all tests pass$")
+    @When("^the user submits$")
     public void theUserSubmitsAndAllTestsPass() throws IOException {
-        String reply = testClient.reply();
+        /*String reply = testClient.reply();
         while(testClient.hasNewMessages()) {
             if (reply.contains("tests failed")) {
                 fail("tests failed");
             }
             reply = testClient.reply();
-        }
+        }*/
     }
 
     /* @Then("^no feedback questions are asked$")
@@ -279,7 +289,7 @@ public class FeedbackSteps {
     @After
     public void closeAll() throws IOException {
         // System.out.println("doing after");
-        checkForMessages();
+        // checkForMessages();
         server.close();
         serverThread.interrupt();
         WireMock.reset();

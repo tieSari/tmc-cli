@@ -17,5 +17,5 @@ Feature: students may give feedback on the exercises
 
     Scenario: If there are no feedback questions, the program does not try to ask any
         Given an exercise with no feedback
-        When the user submits and all tests pass
+        When the user submits
         Then feedback questions will not be asked
