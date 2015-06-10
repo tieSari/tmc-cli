@@ -1,20 +1,13 @@
 package hy.tmc.cli.frontend.communication.server;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.backend.TmcCore;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Server implements FrontendListener, Runnable {
 
@@ -51,6 +44,10 @@ public class Server implements FrontendListener, Runnable {
     @Override
     public void start() {
         this.run();
+    }
+
+    public boolean isIsRunning() {
+        return isRunning;
     }
 
     /**

@@ -21,7 +21,7 @@ public class TmcCore {
      */
     public TmcCore() {
         commands = CommandFactory.createCommandMap();
-        pool = MoreExecutors.listeningDecorator(Executors.newWorkStealingPool());
+        pool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 
     public ListeningExecutorService getPool() {
