@@ -75,7 +75,7 @@ public class FeedbackHandler {
             return "text";
         }
         String range = kind.replace("intrange", "");
-        return "Please give your answer as an integer between " + range + " (inclusive)";
+        return "Please give your answer as an integer within " + range + " (inclusive)";
     }
 
     /**
