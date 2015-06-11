@@ -13,24 +13,6 @@ function command_submit () {
      send_command_wait_output "submit path `pwd` $1"
 fi
 
-  if [[ $OUTPUT =~ All\ tests\ passed.* ]]
-  then
-    TIMESTAMP=`date +%s`
-    FEEDBACK="/tmp/feedback-$TIMESTAMP"
-    echo "" >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "#############" >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "Please enter feedback above the bar." >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "$OUTPUT" >> $FEEDBACK
-    nano $FEEDBACK
-
-    PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
-    # TODO: send output to server
-  else
-    echo "$OUTPUT"
-  fi
 }
 
 function command_login () {
