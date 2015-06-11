@@ -41,11 +41,13 @@ public class RunTestsTest {
     }
 
     private void mock() {
-
+        Course c = new Course();
+        c.setName("OhPe");
+        c.setId(0);
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito.
                 when(ClientData.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.<Course>of(new Course()));
+                .thenReturn(Optional.<Course>of(c));
         PowerMockito
                 .when(ClientData.getFormattedUserData())
                 .thenReturn("test:1234");

@@ -14,8 +14,9 @@ import hy.tmc.cli.frontend.formatters.CommandLineTestResultFormatter;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
-
 import java.nio.file.Path;
+
+
 import java.nio.file.Paths;
 
 public class RunTests extends MailCheckingCommand {
@@ -54,7 +55,7 @@ public class RunTests extends MailCheckingCommand {
     public void runTests(Path exercise) throws NoLanguagePluginFoundException {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         RunResult result = taskExecutor.runTests(exercise);
-
+        
         boolean showStackTrace = this.data.containsKey("verbose");
         CommandLineTestResultFormatter formatter = new CommandLineTestResultFormatter();
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
@@ -69,7 +70,7 @@ public class RunTests extends MailCheckingCommand {
             throw new ProtocolException("File path to exercise required.");
         }
 
-        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("filepath"));
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {
