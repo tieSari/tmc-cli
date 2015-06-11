@@ -17,8 +17,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -85,8 +83,7 @@ public class ListCoursesTest {
             list.execute();
             assertTrue(front.getMostRecentLine().contains("WEPATEST"));
         } catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("unexpected exception");
+            fail("unexpected exception: " + ex.getMessage());
         }
     }
 

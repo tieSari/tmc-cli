@@ -19,6 +19,10 @@ public abstract class MailCheckingCommand extends Command {
     }
 
     private void checkMail() throws ProtocolException {
+        if (!data.containsKey("path")) {
+            throw new ProtocolException("must specify path");
+        }
+        mail.setParameter("path", data.get("path"));
         mail.execute();
     }
 

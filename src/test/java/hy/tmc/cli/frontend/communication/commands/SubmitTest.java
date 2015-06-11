@@ -1,9 +1,11 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
@@ -40,6 +42,7 @@ public class SubmitTest {
         Mailbox.create();
         TmcServiceScheduler.disablePolling();
         mock();
+        System.out.println("CLIENT in before " + ClientData.getFormattedUserData());
         front = new FrontendStub();
         submit = new Submit(front, submitterMock, interpreter);
     }
@@ -49,7 +52,14 @@ public class SubmitTest {
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito.
                 when(ClientData.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(null);
+                .thenReturn(Optional.<Course>of(new Course()));
+        PowerMockito
+                .when(ClientData.getFormattedUserData())
+                .thenReturn("Bossman:Samu");
+        PowerMockito
+                .when(ClientData.userDataExists())
+                .thenReturn(true);
+        
 
         when(submitterMock.submit(Mockito.anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
@@ -67,6 +77,7 @@ public class SubmitTest {
         when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("No tests passed.");
 
         submit.setParameter("path", "/hieno/path");
+        System.out.println("CLIENT just before calling submit.exe "+ ClientData.getFormattedUserData());
         submit.execute();
         String result = front.getMostRecentLine();
         assertTrue(result.contains("No tests passed."));

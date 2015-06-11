@@ -24,7 +24,7 @@ public class TmcServiceScheduler {
     }
 
     public static void startIfNotRunning(Course course) {
-        if (!TmcServiceScheduler.isRunning()) {
+        if (!isRunning()) {
             TmcServiceScheduler.getScheduler().addService(
                     new StatusPoller(course, new PollScheduler(5, TimeUnit.SECONDS))
             );

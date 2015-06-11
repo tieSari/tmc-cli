@@ -5,7 +5,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class ListCourses extends MailCheckingCommand {
+public class ListCourses extends Command {
 
     public ListCourses(FrontendListener front) {
         super(front);

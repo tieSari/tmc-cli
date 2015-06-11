@@ -28,7 +28,7 @@ public class DownloadExercisesTest {
     @Test
     public void testCheckDataSuccess() {
         DownloadExercises de = new DownloadExercises(front);
-        de.setParameter("pwd", "/home/tmccli/uolevipuistossa");
+        de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         try {
             de.checkData();

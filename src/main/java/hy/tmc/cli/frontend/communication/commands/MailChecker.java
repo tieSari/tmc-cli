@@ -36,7 +36,10 @@ public class MailChecker extends Command {
         if (mailbox == null) {
             throw new ProtocolException("No mailbox found. Are you logged in?");
         }
-        course = ClientData.getCachedCourse();
+        if (!data.containsKey("path")) {
+            throw new ProtocolException("must specfiy path");
+        }
+        course = ClientData.getCurrentCourse(data.get("path"));
         if (!course.isPresent()) {
             String errorMsg = "Unable to determine the course. Are you sure this is a tmc course subdirectory?";
             throw new ProtocolException(errorMsg);

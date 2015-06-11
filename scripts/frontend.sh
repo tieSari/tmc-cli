@@ -41,7 +41,7 @@ function command_login () {
 }
 
 function command_download () {
-  send_command "downloadExercises pwd `pwd` courseID $1"
+  send_command "downloadExercises path `pwd` courseID $1"
 }
 
 function command_paste () {

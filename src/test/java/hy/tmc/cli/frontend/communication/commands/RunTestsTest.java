@@ -1,6 +1,8 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -13,7 +15,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ClientData.class)
 public class RunTestsTest {
 
     private FrontendStub front;
@@ -28,7 +37,21 @@ public class RunTestsTest {
         ClientData.setUserData("test", "1234");
         front = new FrontendStub();
         runTests = new RunTests(front);
+        mock();
+    }
 
+    private void mock() {
+
+        PowerMockito.mockStatic(ClientData.class);
+        PowerMockito.
+                when(ClientData.getCurrentCourse(Mockito.anyString()))
+                .thenReturn(Optional.<Course>of(new Course()));
+        PowerMockito
+                .when(ClientData.getFormattedUserData())
+                .thenReturn("test:1234");
+        PowerMockito
+                .when(ClientData.userDataExists())
+                .thenReturn(true);
     }
 
     /**
@@ -40,8 +63,7 @@ public class RunTestsTest {
         rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
         try {
             rt.checkData();
-        }
-        catch (ProtocolException p) {
+        } catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -55,8 +77,7 @@ public class RunTestsTest {
         try {
             rt.checkData();
             fail("testCheckDataFail should have failed");
-        }
-        catch (ProtocolException p) {
+        } catch (ProtocolException p) {
             return;
         }
     }
@@ -73,9 +94,8 @@ public class RunTestsTest {
         run.setParameter("filepath", file.getAbsolutePath());
         try {
             run.execute();
-        }
-        catch (ProtocolException ex) {
-            fail("Test executing failed");
+        } catch (ProtocolException ex) {
+            fail("Test executing failed cause: " + ex.getMessage());
         }
 
         assertTrue(front.getMostRecentLine().contains("Some tests failed:"));
@@ -99,8 +119,7 @@ public class RunTestsTest {
         run.setParameter("filepath", file.getAbsolutePath());
         try {
             run.execute();
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             fail("Test executing failed");
         }
         assertFalse(front.getMostRecentLine().contains("tests failed:"));

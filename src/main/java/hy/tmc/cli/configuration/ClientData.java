@@ -15,7 +15,6 @@ public final class ClientData {
     private static String USERNAME = "";
     private static String PASSWORD = "";
     private static ProjectRootFinder rootFinder;
-    private static Optional<Course> cachedCourse;
 
     private ClientData() {
     }
@@ -26,58 +25,53 @@ public final class ClientData {
      * @param username Username of the current user
      * @param password Password of the current user
      */
-    public static void setUserData(String username, String password) {
+    public synchronized static void setUserData(String username, String password) {
         USERNAME = username;
         PASSWORD = password;
     }
 
-    private static ProjectRootFinder getProjectRootFinder() {
+    private synchronized static ProjectRootFinder getProjectRootFinder() {
         if (rootFinder == null) {
             rootFinder = new ProjectRootFinder(new DefaultRootDetector());
         }
         return rootFinder;
     }
 
-    public static Optional<Course> getCurrentCourse(String currentPath) {
-        cachedCourse = getProjectRootFinder().getCurrentCourse(currentPath);
-        return cachedCourse;
+    public synchronized static Optional<Course> getCurrentCourse(String currentPath) {
+        return getProjectRootFinder().getCurrentCourse(currentPath);
     }
 
-    public static Optional<Course> getCachedCourse() {
-        return cachedCourse;
-    }
-
-    public static boolean userDataExists() {
+    public synchronized static boolean userDataExists() {
         return !(USERNAME.isEmpty() || PASSWORD.isEmpty());
     }
 
-    public static void clearUserData() {
+    public synchronized static void clearUserData() {
         USERNAME = "";
         PASSWORD = "";
     }
 
-    public static String getFormattedUserData() {
+    public synchronized static String getFormattedUserData() {
         return USERNAME + ":" + PASSWORD;
     }
 
-    public static void logOutCurrentUser() {
+    public synchronized static void logOutCurrentUser() {
         USERNAME = "";
         PASSWORD = "";
     }
 
-    public static int getPid() {
+    public synchronized static int getPid() {
         return PID;
     }
 
-    public static void setPid(int pid) {
+    public synchronized static void setPid(int pid) {
         ClientData.PID = pid;
     }
 
-    public static String getUsername() {
+    public synchronized static String getUsername() {
         return USERNAME;
     }
 
-    public static String getPassword() {
+    public synchronized static String getPassword() {
         return PASSWORD;
     }
 }

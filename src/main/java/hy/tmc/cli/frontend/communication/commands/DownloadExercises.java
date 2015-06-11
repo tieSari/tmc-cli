@@ -27,7 +27,7 @@ public class DownloadExercises extends MailCheckingCommand {
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            exDl.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
+            exDl.downloadFiles(course.getExercises(), this.data.get("path"), course.getName());
         }
     }
 
@@ -40,8 +40,8 @@ public class DownloadExercises extends MailCheckingCommand {
     @Override
     public void checkData() throws ProtocolException {
         checkCourseId();
-        if (!this.data.containsKey("pwd")) {
-            throw new ProtocolException("Pwd required");
+        if (!this.data.containsKey("path")) {
+            throw new ProtocolException("Path required");
         }
     }
 
