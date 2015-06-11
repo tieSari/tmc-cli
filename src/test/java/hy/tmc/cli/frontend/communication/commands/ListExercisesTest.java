@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,7 +29,7 @@ public class ListExercisesTest {
     @Before
     public void setup() {
         Mailbox.create();
-        ClientData.setPolling(true);
+        TmcServiceScheduler.disablePolling();
         ClientData.setUserData("Chang", "Jamo");
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
@@ -44,8 +45,7 @@ public class ListExercisesTest {
         ls.setParameter("path", "legit");
         try {
             ls.checkData();
-        }
-        catch (ProtocolException p) {
+        } catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -85,8 +85,7 @@ public class ListExercisesTest {
         try {
             list.execute();
             assertFalse(front.getMostRecentLine().contains("Ilari"));
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             fail("unexpected exception");
         }
     }

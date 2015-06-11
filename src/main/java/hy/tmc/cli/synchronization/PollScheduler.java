@@ -1,0 +1,30 @@
+package hy.tmc.cli.synchronization;
+
+import com.google.common.util.concurrent.AbstractScheduledService.CustomScheduler;
+import java.util.concurrent.TimeUnit;
+
+public class PollScheduler extends CustomScheduler {
+
+    private long interval;
+    private TimeUnit timeunit;
+
+    private Schedule schedule;
+
+    public PollScheduler(long interval, TimeUnit timeunit) {
+        this.interval = interval;
+        this.timeunit = timeunit;
+        this.schedule = new Schedule(interval, timeunit);
+    }
+
+    @Override
+    protected Schedule getNextSchedule() throws Exception {
+        return schedule;
+    }
+
+    public void changeSchedule(long interval, TimeUnit timeunit) {
+        this.schedule = new Schedule(interval, timeunit);
+    }
+    
+    
+
+}

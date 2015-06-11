@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
@@ -16,9 +15,7 @@ public abstract class MailCheckingCommand extends Command {
     @Override
     public void execute() throws ProtocolException {
         super.execute();
-        if (ClientData.getCurrentCourse().isPresent()) {
-            checkMail();
-        }
+        checkMail();
     }
 
     private void checkMail() throws ProtocolException {

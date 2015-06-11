@@ -6,6 +6,7 @@ import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.IOException;
 import java.text.ParseException;
@@ -31,7 +32,7 @@ public class PasteTest {
     @Before
     public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException {
         Mailbox.create();
-        ClientData.setPolling(true);
+        TmcServiceScheduler.disablePolling();
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
 

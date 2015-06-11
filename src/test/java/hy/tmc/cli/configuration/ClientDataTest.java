@@ -1,6 +1,5 @@
 package hy.tmc.cli.configuration;
 
-import com.google.common.base.Optional;
 import static hy.tmc.cli.configuration.ClientData.getFormattedUserData;
 import static hy.tmc.cli.configuration.ClientData.getPassword;
 import static hy.tmc.cli.configuration.ClientData.getUsername;
@@ -12,12 +11,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import hy.tmc.cli.domain.Course;
 
 import org.junit.Before;
 import org.junit.Test;
-
-
 
 public class ClientDataTest {
 
@@ -66,17 +62,6 @@ public class ClientDataTest {
         String password = "";
         ClientData.setUserData(username, password);
         assertEquals("", ClientData.getUsername());
-    }
-
-    /**
-     * Test of getCurrentCourse method, of class ClientData.
-     */
-    @Test
-    public final void testGetCurrentCourse() {
-        Course expResult = new Course();
-        ClientData.setCurrentCourse(expResult);
-        Optional<Course> result = ClientData.getCurrentCourse();
-        assertEquals(expResult, result.get());
     }
 
     /**

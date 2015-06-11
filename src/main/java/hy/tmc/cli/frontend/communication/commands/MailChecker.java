@@ -10,11 +10,11 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-
 public class MailChecker extends Command {
 
     private Mailbox mailbox;
-    
+    private Optional<Course> course;
+
     public MailChecker(FrontendListener front) {
         super(front);
         mailbox = Mailbox.getMailbox();
@@ -26,10 +26,6 @@ public class MailChecker extends Command {
             frontend.printLine(format(mailbox.getUnreadReviews()));
         }
         if (mailbox.updatesWaiting()) {
-            Optional<Course> course = ClientData.getCurrentCourse();
-            if (!course.isPresent()) {
-                return;
-            }
             frontend.printLine(format(mailbox.getExerciseUpdates(course.get())));
         }
     }
@@ -39,6 +35,11 @@ public class MailChecker extends Command {
         mailbox = Mailbox.getMailbox();
         if (mailbox == null) {
             throw new ProtocolException("No mailbox found. Are you logged in?");
+        }
+        course = ClientData.getCachedCourse();
+        if (!course.isPresent()) {
+            String errorMsg = "Unable to determine the course. Are you sure this is a tmc course subdirectory?";
+            throw new ProtocolException(errorMsg);
         }
     }
 

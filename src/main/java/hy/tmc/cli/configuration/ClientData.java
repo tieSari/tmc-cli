@@ -2,17 +2,20 @@ package hy.tmc.cli.configuration;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.zipping.DefaultRootDetector;
+import hy.tmc.cli.zipping.ProjectRootFinder;
 
 /**
- * This class will be initialized when Auth is successful. Use this to get data of user
+ * This class will be initialized when Auth is successful. Use this to get data
+ * of user
  */
 public final class ClientData {
 
     private static int PID;
     private static String USERNAME = "";
     private static String PASSWORD = "";
-    private static Optional<Course> currentCourse = Optional.absent();
-    private static boolean polling = false;
+    private static ProjectRootFinder rootFinder;
+    private static Optional<Course> cachedCourse;
 
     private ClientData() {
     }
@@ -28,29 +31,20 @@ public final class ClientData {
         PASSWORD = password;
     }
 
-    public static boolean isPolling() {
-        return polling;
-    }
-
-    public static void setPolling(boolean setpolling) {
-        polling = setpolling;
-    }
-
-    public static Optional<Course> getCurrentCourse() {
-        return currentCourse;
-    }
-
-    public static void setCurrentCourse(Course course) {
-        if (course == null) {
-            currentCourse = Optional.absent();
+    private static ProjectRootFinder getProjectRootFinder() {
+        if (rootFinder == null) {
+            rootFinder = new ProjectRootFinder(new DefaultRootDetector());
         }
-        currentCourse = Optional.of(course);
+        return rootFinder;
     }
 
-    public static void setCurrentCourse(Optional<Course> course) {
-        if (course.isPresent()) {
-            currentCourse = course;
-        }
+    public static Optional<Course> getCurrentCourse(String currentPath) {
+        cachedCourse = getProjectRootFinder().getCurrentCourse(currentPath);
+        return cachedCourse;
+    }
+
+    public static Optional<Course> getCachedCourse() {
+        return cachedCourse;
     }
 
     public static boolean userDataExists() {

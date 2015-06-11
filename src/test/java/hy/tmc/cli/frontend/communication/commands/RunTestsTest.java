@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class RunTestsTest {
      */
     @Before
     public void setup() {
-        ClientData.setPolling(true);
+        TmcServiceScheduler.disablePolling();
         ClientData.setUserData("test", "1234");
         front = new FrontendStub();
         runTests = new RunTests(front);

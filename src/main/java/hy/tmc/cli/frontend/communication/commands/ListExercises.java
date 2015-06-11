@@ -1,8 +1,9 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseLister;
-import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
@@ -10,6 +11,7 @@ import hy.tmc.cli.synchronization.TmcServiceScheduler;
 public class ListExercises extends MailCheckingCommand {
 
     private ExerciseLister lister;
+    private Course current;
 
     public ListExercises(FrontendListener front) {
         super(front);
@@ -28,13 +30,12 @@ public class ListExercises extends MailCheckingCommand {
     }
 
     /**
-     * Get a list of the exercises of the course which the current directory belongs to.
+     * Get a list of the exercises of the course which the current directory
+     * belongs to.
      */
     @Override
     protected void functionality() {
-        if (!ClientData.isPolling()) {
-            new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
-        }
+        TmcServiceScheduler.startIfNotRunning(this.current);
         this.frontend.printLine(lister.listExercises(data.get("path")));
 
     }
@@ -51,6 +52,12 @@ public class ListExercises extends MailCheckingCommand {
         }
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("Please authorize first.");
+        }
+        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        if (currentCourse.isPresent()) {
+            this.current = currentCourse.get();
+        } else {
+            throw new ProtocolException("No course resolved from the path.");
         }
     }
 }

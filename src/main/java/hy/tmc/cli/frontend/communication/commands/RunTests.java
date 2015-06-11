@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -20,6 +20,8 @@ import java.nio.file.Paths;
 
 public class RunTests extends MailCheckingCommand {
 
+    private Course course;
+
     public RunTests(FrontendListener front) {
         super(front);
     }
@@ -29,9 +31,8 @@ public class RunTests extends MailCheckingCommand {
         String path = this.data.get("filepath");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
-        if (!ClientData.isPolling()) {
-            new TmcServiceScheduler().addService(new StatusPoller(data.get("filepath"))).start();
-        }
+
+        TmcServiceScheduler.startIfNotRunning(course);
 
         if (!exercise.isPresent()) {
             this.frontend.printLine("Not an exercise. (null)");
@@ -39,8 +40,7 @@ public class RunTests extends MailCheckingCommand {
         }
         try {
             runTests(exercise.get());
-        }
-        catch (NoLanguagePluginFoundException ex) {
+        } catch (NoLanguagePluginFoundException ex) {
             this.frontend.printLine("Not an exercise.");
         }
     }
@@ -67,6 +67,13 @@ public class RunTests extends MailCheckingCommand {
     public void checkData() throws ProtocolException {
         if (!this.data.containsKey("filepath")) {
             throw new ProtocolException("File path to exercise required.");
+        }
+
+        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        if (currentCourse.isPresent()) {
+            course = currentCourse.get();
+        } else {
+            throw new ProtocolException("Unable to determine course");
         }
     }
 }

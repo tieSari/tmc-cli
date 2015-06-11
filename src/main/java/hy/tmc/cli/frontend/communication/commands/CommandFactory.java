@@ -29,6 +29,7 @@ public class CommandFactory {
         commandsByName.put("runTests", runTests(frontend));
         commandsByName.put("paste", paste(frontend));
         commandsByName.put("stopProcess", stopProcess(frontend));
+        commandsByName.put("getMail", getMail(frontend));
         return commandsByName;
     }
 
@@ -159,6 +160,10 @@ public class CommandFactory {
      */
     public static Command paste(FrontendListener front) {
         return new Paste(front);
+    }
+    
+    public static Command getMail(FrontendListener front) {
+        return new MailChecker(front);
     }
 
     /**

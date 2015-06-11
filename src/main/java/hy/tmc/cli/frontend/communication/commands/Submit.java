@@ -1,9 +1,10 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
-import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -19,8 +20,9 @@ import java.text.ParseException;
  */
 public class Submit extends MailCheckingCommand {
 
-    CourseSubmitter submitter;
-    SubmissionInterpreter interpreter;
+    private CourseSubmitter submitter;
+    private SubmissionInterpreter interpreter;
+    private Course course;
 
     public Submit(FrontendListener front) {
         super(front);
@@ -45,13 +47,14 @@ public class Submit extends MailCheckingCommand {
     }
 
     /**
-     * Takes a pwd command's output in "path" and optionally the exercise's name in "exerciseName".
+     * Takes a pwd command's output in "path" and optionally the exercise's name
+     * in "exerciseName".
      */
     @Override
     protected void functionality() {
-        if (!ClientData.isPolling()) {
-            new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
-        }
+
+        TmcServiceScheduler.startIfNotRunning(course);
+
         try {
             if (data.containsKey("exerciseName")) {
                 frontend.printLine("Doesnt work yet");
@@ -59,14 +62,11 @@ public class Submit extends MailCheckingCommand {
                 String returnUrl = submitter.submit(data.get("path"));
                 frontend.printLine(interpreter.resultSummary(returnUrl, true));
             }
-        }
-        catch (IllegalArgumentException | ParseException ex) {
+        } catch (IllegalArgumentException | ParseException ex) {
             frontend.printLine(ex.getMessage());
-        }
-        catch (IOException | InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             frontend.printLine("Project not found with specified parameters or thread interrupted");
-        }
-        catch (ExpiredException ex) {
+        } catch (ExpiredException ex) {
             frontend.printLine("Exercise has expired.");
         }
     }
@@ -83,6 +83,13 @@ public class Submit extends MailCheckingCommand {
         }
         if (!this.data.containsKey("path")) {
             throw new ProtocolException("pwd not supplied");
+        }
+        
+        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        if (currentCourse.isPresent()) {
+            course = currentCourse.get();
+        } else {
+            throw new ProtocolException("Unable to determine course");
         }
     }
 }

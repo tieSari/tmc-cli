@@ -1,7 +1,6 @@
 package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.configuration.ClientData;
 
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
@@ -182,7 +181,6 @@ public class CourseSubmitter {
             deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");
         }
-        ClientData.setCurrentCourse(currentCourse.get());
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.get().getId());
         return courseExercises;
     }

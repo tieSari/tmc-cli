@@ -2,26 +2,23 @@ package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
-import static com.google.common.util.concurrent.AbstractScheduledService.Scheduler.newFixedRateSchedule;
 import hy.tmc.cli.backend.Mailbox;
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Review;
-import hy.tmc.cli.zipping.DefaultRootDetector;
-import hy.tmc.cli.zipping.ProjectRootFinder;
+import hy.tmc.cli.synchronization.PollScheduler;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class StatusPoller extends AbstractScheduledService {
 
-    String path;
-    
-    public StatusPoller(String path) {
-        this.path = path;
+    private Course currentCourse;
+    private PollScheduler pollScheduler;
+
+    public StatusPoller(Course currentCourse, PollScheduler schedule) {
+        this.currentCourse = currentCourse;
+        this.pollScheduler = schedule;
     }
-    
-    
+
     @Override
     protected void runOneIteration() throws Exception {
         Optional<List<Review>> reviews = checkReviews();
@@ -29,29 +26,16 @@ public class StatusPoller extends AbstractScheduledService {
             System.out.println(reviews);
             Mailbox.getMailbox().fill(reviews.get());
         }
-        
+
     }
 
     @Override
     protected Scheduler scheduler() {
-        Scheduler rate = newFixedRateSchedule(0, 15, TimeUnit.SECONDS);
-        return rate;
+        return this.pollScheduler;
     }
 
     private Optional<List<Review>> checkReviews() {
-        Course course;
-        Optional<Course> current = ClientData.getCurrentCourse();
-        if (current.isPresent()) {
-            course = current.get();
-        } else {
-            current = findCourse();
-            if (current.isPresent()) {
-                course = current.get();
-            } else {
-                return Optional.absent();
-            }
-        }
-        List<Review> currentReviews = TmcJsonParser.getReviews(course.getReviewsUrl());
+        List<Review> currentReviews = TmcJsonParser.getReviews(this.currentCourse.getReviewsUrl());
         currentReviews = filter(currentReviews);
 
         if (currentReviews.isEmpty()) {
@@ -68,11 +52,6 @@ public class StatusPoller extends AbstractScheduledService {
             }
         }
         return filtered;
-    }
-
-    private Optional<Course> findCourse() {
-        ProjectRootFinder prf = new ProjectRootFinder(new DefaultRootDetector());
-        return prf.getCurrentCourse(this.path);
     }
 
 }

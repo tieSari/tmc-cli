@@ -1,8 +1,9 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
-import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -16,6 +17,7 @@ import java.text.ParseException;
 public class Paste extends MailCheckingCommand {
 
     CourseSubmitter submitter;
+    Course course;
 
     public Paste(FrontendListener front) {
         super(front);
@@ -39,22 +41,19 @@ public class Paste extends MailCheckingCommand {
     }
 
     /**
-     * Takes a pwd command's output in "path" and prints out the URL for the paste.
+     * Takes a pwd command's output in "path" and prints out the URL for the
+     * paste.
      *
      */
     @Override
     protected void functionality() {
-        if (!ClientData.isPolling()) {
-            new TmcServiceScheduler().addService(new StatusPoller(data.get("path"))).start();
-        }
+        TmcServiceScheduler.startIfNotRunning(course);
         try {
             String returnUrl = submitter.submitPaste(data.get("path"));
             frontend.printLine("Paste submitted. Here it is: \n  " + returnUrl);
-        }
-        catch (IOException | ParseException ex) {
+        } catch (IOException | ParseException ex) {
             frontend.printLine(ex.getMessage());
-        }
-        catch (ExpiredException ex) {
+        } catch (ExpiredException ex) {
             frontend.printLine("Exercise has expired.");
         }
     }
@@ -71,6 +70,12 @@ public class Paste extends MailCheckingCommand {
         }
         if (!this.data.containsKey("path")) {
             throw new ProtocolException("pwd not supplied");
+        }
+        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        if (currentCourse.isPresent()) {
+            course = currentCourse.get();
+        } else {
+            throw new ProtocolException("Unable to determine course");
         }
     }
 }
