@@ -9,12 +9,12 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
 
-public class SocketThread extends Thread {
+public class SocketRunnable implements Runnable {
 
     protected Socket socket;
     private TmcCore core;
 
-    public SocketThread(Socket clientSocket, TmcCore core) {
+    public SocketRunnable(Socket clientSocket, TmcCore core) {
         this.socket = clientSocket;
         this.core = core;
     }
@@ -43,13 +43,15 @@ public class SocketThread extends Thread {
     private ListenableFuture<String> parseCommand(BufferedReader inputReader, DataOutputStream stream)
             throws IOException {
         String input = inputReader.readLine();
+        if (input == null) {
+            return null;
+        }
         try {
             return core.runCommand(input);
         }
         catch (ProtocolException ex) {
             stream.writeUTF(ex.getMessage() + "\n");
             socket.close();
-            this.interrupt();
             return null;
         }
     }
@@ -63,9 +65,10 @@ public class SocketThread extends Thread {
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException, ProtocolException {
         final ListenableFuture<String> commandFuture = parseCommand(inputReader, outputStream);
-        final DataOutputStream output = outputStream;
-        addListenerToFuture(commandFuture, output);
-        this.interrupt();
+        if (commandFuture != null) {
+            final DataOutputStream output = outputStream;
+            addListenerToFuture(commandFuture, output);
+        }
     }
 
     /**

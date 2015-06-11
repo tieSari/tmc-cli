@@ -55,8 +55,8 @@ public class Server implements FrontendListener, Runnable {
     }
 
     /**
-     * Run is loop that accepts new client connection and handles it.
-     * Submits the new socket task into a thread pool that executes is with a thread that is free.
+     * Run is loop that accepts new client connection and handles it. Submits the new socket task
+     * into a thread pool that executes is with a thread that is free.
      */
     @Override
     public final void run() {
@@ -65,8 +65,7 @@ public class Server implements FrontendListener, Runnable {
             try {
                 if (!serverSocket.isClosed()) {
                     clientSocket = serverSocket.accept();
-                    socketThreadPool.submit(new SocketThread(clientSocket, tmcCore));
-                    //new SocketThread(clientSocket, tmcCore).start();
+                    socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore));
                 }
             }
             catch (IOException e) {
@@ -76,12 +75,13 @@ public class Server implements FrontendListener, Runnable {
     }
 
     /**
-     * Closes serverSocket.
+     * Closes serverSocket. Destroys the Socket pool.
      *
      * @throws IOException if failed to close socket
      */
     public void close() throws IOException {
         isRunning = false;
-        this.serverSocket.close();
+        serverSocket.close();
+        socketThreadPool.shutdown();
     }
 }
