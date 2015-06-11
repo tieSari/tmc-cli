@@ -60,7 +60,6 @@ public class SubmissionInterpreter {
      * @throws InterruptedException if thread was interrupted.
      */
     public String resultSummary(String url, boolean detailed) throws InterruptedException {
-        System.out.println("Url: " + url);
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (result.isPresent()) {
             return summarize(result.get(), detailed);
