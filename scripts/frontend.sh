@@ -64,6 +64,10 @@ function command_default () {
     return 0;
 }
 
+function command_listExercises () {
+  send_command "listExercises path `pwd`"
+}
+
 # Backend login
 function login () {
     # login username <kayttajatunnus> password <pw>
@@ -131,5 +135,6 @@ case "$1" in
     "download") command_download $2;;
     "test") command_test $2;;
     "paste") command_paste $2;;
+    "listExercises") command_listExercises;;
     *) command_default $@;;
 esac
