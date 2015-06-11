@@ -50,7 +50,7 @@ public class RangeFeedbackHandlerTest {
         assertTrue(frontend.getAllLines().contains("how cold is it"));
     }
 
-    @Test
+/*    @Test
     public void checkQuestionOrder() {
         builder.withSimpleTextQuestion()
                .withBasicIntRangeQuestion()
@@ -64,7 +64,7 @@ public class RangeFeedbackHandlerTest {
         assertFalse(frontend.getAllLines().contains("hello world"));
         handler.askQuestion();
         assertTrue(frontend.getAllLines().contains("hello world"));
-    }
+    }*/
     
     @Test
     public void validateIntRange() {
