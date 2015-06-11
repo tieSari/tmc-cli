@@ -1,7 +1,7 @@
+
 package hy.tmc.cli.frontend.formatters;
 
 import fi.helsinki.cs.tmc.langs.RunResult;
-import fi.helsinki.cs.tmc.langs.RunResult.Status;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.COMPILE_FAILED;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.GENERIC_ERROR;
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.PASSED;
@@ -10,23 +10,22 @@ import fi.helsinki.cs.tmc.langs.TestResult;
 import hy.tmc.cli.testhelpers.testresults.RunResultBuilder;
 import hy.tmc.cli.testhelpers.testresults.TestResultFactory;
 import java.util.List;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.powermock.core.spi.testresult.Result;
 
-public class CommandLineFormatterTest {
 
+public class VimTestResultFormatterTest {
     RunResult allPassed;
     RunResult allFailed;
     RunResult someFailed;
     RunResult compileError;
     RunResult genericError;
     RunResultBuilder builder;
-    CommandLineTestResultFormatter formatter;
+    VimTestResultFormatter formatter;
     List<TestResult> passed;
-
-    public CommandLineFormatterTest() {
-
+    
+    public VimTestResultFormatterTest(){
         allPassed = new RunResultBuilder().withStatus(PASSED).build();
         compileError = new RunResultBuilder().withStatus(COMPILE_FAILED).build();
         genericError = new RunResultBuilder().withStatus(GENERIC_ERROR).build();
@@ -34,20 +33,33 @@ public class CommandLineFormatterTest {
                 .withStatus(TESTS_FAILED)
                 .withTests(TestResultFactory.failedTests())
                 .build();
-        formatter = new CommandLineTestResultFormatter();
+        formatter = new VimTestResultFormatter();
         passed = TestResultFactory.passedTests();
     }
-
+    
     @Test
     public void testInterpretStatus() {
         String explanation = formatter.interpretStatus(allPassed);
-        assertTrue(explanation.contains("\u001B[32mAll tests passed.\u001B[0m You can now submit"));
+        assertTrue(explanation.contains("All tests passed"));
+    }
+    
+    @Test
+    public void ensureThatThereAreNoColorsWhenAllArePassed() {
+        String explanation = formatter.interpretStatus(allPassed);
+        assertFalse(explanation.contains("\u001B[32m"));
     }
 
     @Test
     public void interpretGenericError() {
         String explanation = formatter.interpretStatus(genericError);
         assertTrue(explanation.contains("Failed due to an internal error"));
+    }
+    
+    @Test
+    public void getFailedTestsOutput(){
+        String explanation = formatter.getFailedTestOutput(allFailed.testResults.get(0));
+        System.out.println("Explanation: " + explanation);
+        assertTrue(explanation.contains("KuusiTest test failed: Ohjelmasi pitäisi tulostaa"));
     }
 
     @Test
@@ -71,7 +83,13 @@ public class CommandLineFormatterTest {
     @Test
     public void testHowMuchTestsFailed() {
         String explanation = formatter.howMuchTestsFailed(5);
-        assertTrue(explanation.contains("\u001B"));
+        assertTrue(explanation.contains("5 tests failed:\n"));
+    }
+    
+    @Test
+    public void ensureThatThereAreNoColorsWhenSomeFail() {
+        String explanation = formatter.howMuchTestsFailed(5);
+        assertFalse(explanation.contains("\u001B[31m"));
     }
 
     @Test
@@ -79,6 +97,12 @@ public class CommandLineFormatterTest {
         String explanation = formatter.getPassedTests(passed);
         String shouldBe = "  Muuttujat testaaKanat";
         assertTrue(explanation.contains(shouldBe));
+    }
+    
+    @Test
+    public void testgetStackTrace(){
+        String explanation = formatter.getStackTrace(allFailed.testResults.get(0));
+        assertTrue(explanation.contains("org.junit.ComparisonFailure: Kuusen toinen rivi on väärin expected:< [ *]**"));
     }
 
     @Test

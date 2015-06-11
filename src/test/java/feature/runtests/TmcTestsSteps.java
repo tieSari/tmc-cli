@@ -22,6 +22,7 @@ public class TmcTestsSteps {
 
     /**
      * Create RunTests command and set filepath parameter.
+     *
      * @param exerciseDirectory directory path
      */
     @Given("^the user is in the exercise directory \"(.*?)\"$")
@@ -54,7 +55,7 @@ public class TmcTestsSteps {
         assertTrue(output.contains("\u001B[31m1 tests failed:\n"));
         assertTrue(output.contains("  NimiTest test failed: Et tulostanut mitään!"));
     }
-    
+
     /**
      * User should get both information about passed tests and failed tests.
      */
@@ -64,5 +65,16 @@ public class TmcTestsSteps {
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
 
+    }
+
+    @Given("^the user gives the vim flag$")
+    public void gives_the_vim_flag() throws Throwable {
+        testRunner.setParameter("--vim", "");
+    }
+
+    @Then("^the user sees that all tests have passed formatted with vim formatter\\.$")
+    public void the_user_sees_that_all_tests_have_passed_formatted_with_vim_formatter() throws Throwable {
+        String output = front.getMostRecentLine();
+        assertEquals("All tests passed. You can now submit", output);
     }
 }

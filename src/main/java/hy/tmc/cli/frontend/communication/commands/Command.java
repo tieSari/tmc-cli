@@ -37,6 +37,10 @@ public abstract class Command {
         functionality();
         cleanData();
     }
+    
+    public Map<String, String> getData() {
+        return data;
+    }
 
     /**
      * The functionality of the command. This method defines what the command does.
