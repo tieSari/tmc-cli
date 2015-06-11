@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server implements FrontendListener, Runnable {
 
@@ -16,6 +18,7 @@ public class Server implements FrontendListener, Runnable {
     private ServerSocket serverSocket;
     private boolean isRunning;
     private TmcCore tmcCore;
+    private ExecutorService socketThreadPool = Executors.newCachedThreadPool();
 
     /**
      * Constructor for server.
@@ -53,6 +56,7 @@ public class Server implements FrontendListener, Runnable {
 
     /**
      * Run is loop that accepts new client connection and handles it.
+     * Submits the new socket task into a thread pool that executes is with a thread that is free.
      */
     @Override
     public final void run() {
@@ -61,7 +65,8 @@ public class Server implements FrontendListener, Runnable {
             try {
                 if (!serverSocket.isClosed()) {
                     clientSocket = serverSocket.accept();
-                    new SocketThread(clientSocket, tmcCore).start();
+                    socketThreadPool.submit(new SocketThread(clientSocket, tmcCore));
+                    //new SocketThread(clientSocket, tmcCore).start();
                 }
             }
             catch (IOException e) {
