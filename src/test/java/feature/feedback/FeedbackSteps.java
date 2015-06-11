@@ -10,7 +10,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.FeedbackHandler;
+import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
@@ -32,7 +32,7 @@ import java.util.List;
 public class FeedbackSteps {
 
     private FrontendStub frontStub;
-    private FeedbackHandler handler;
+    private RangeFeedbackHandler handler;
 
     // private String exercisePath = ;
 
@@ -66,7 +66,7 @@ public class FeedbackSteps {
         configHandler.writeServerAddress(wiremockAddress);
         System.out.println(wiremockAddress);
         frontStub = new FrontendStub();
-        handler = new FeedbackHandler(frontStub);
+        handler = new RangeFeedbackHandler(frontStub);
         server = new Server(handler);
 
 

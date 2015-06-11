@@ -6,8 +6,9 @@ import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
-import hy.tmc.cli.frontend.FeedbackHandler;
+import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.TextFeedbackHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,8 @@ public class Server implements FrontendListener, Runnable {
     private boolean isRunning;
     private BufferedReader in;
     private JsonArray feedbackAnswers = new JsonArray();
-    private FeedbackHandler feedbackHandler;
+    private RangeFeedbackHandler rangeFeedbackHandler;
+    private TextFeedbackHandler textFeedbackHandler;
 
     /**
      * Constructor for server.
@@ -49,15 +51,16 @@ public class Server implements FrontendListener, Runnable {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.parser = new ProtocolParser(this);
-        this.feedbackHandler = new FeedbackHandler(this);
+        this.rangeFeedbackHandler = new RangeFeedbackHandler(this);
+        this.textFeedbackHandler = new TextFeedbackHandler(this);
     }
 
     /**
      * Dependency injection for tests.
      */
-    public Server(FeedbackHandler handler) throws IOException {
+    public Server(RangeFeedbackHandler handler) throws IOException {
         this();
-        this.feedbackHandler = handler;
+        this.rangeFeedbackHandler = handler;
     }
 
     public int getCurrentPort() {
@@ -161,25 +164,48 @@ public class Server implements FrontendListener, Runnable {
 
     @Override
     public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
-        this.feedbackHandler.feedback(feedbackQuestions, feedbackUrl);
+        List<FeedbackQuestion> rangeQuestions = new ArrayList<>();
+        List<FeedbackQuestion> textQuestions = new ArrayList<>();
+        for (FeedbackQuestion feedbackQuestion : feedbackQuestions) {
+            if (feedbackQuestion.getKind().equals("text")) {
+                textQuestions.add(feedbackQuestion);
+            } else {
+                rangeQuestions.add(feedbackQuestion);
+            }
+        }
+
+        this.rangeFeedbackHandler.feedback(rangeQuestions, feedbackUrl);
+        this.textFeedbackHandler.feedback(textQuestions, feedbackUrl);
+
+        rangeFeedbackHandler.askQuestion(); // ask first questions
     }
 
-    public void feedbackAnswer(String answer) {
+    public void rangeFeedbackAnswer(String answer) {
         JsonObject jsonAnswer = new JsonObject();
-        jsonAnswer.addProperty("question_id", feedbackHandler.getLastId());
-        String validAnswer = feedbackHandler.validateAnswer(answer);
+        jsonAnswer.addProperty("question_id", rangeFeedbackHandler.getLastId());
+        String validAnswer = rangeFeedbackHandler.validateAnswer(answer);
         jsonAnswer.addProperty("answer", validAnswer);
-        System.out.println("vastaus: ");
-        System.out.println(answer);
         feedbackAnswers.add(jsonAnswer);
 
-        //printLine("accepted answer");
-        if (this.feedbackHandler.allQuestionsAsked()) {
+        if (this.rangeFeedbackHandler.allQuestionsAsked()) {
+            textFeedbackHandler.askQuestion(); // start asking text questions
+        } else {
+            rangeFeedbackHandler.askQuestion();
+        }
+    }
+
+    public void textFeedbackAnswer(String answer) {
+        JsonObject jsonAnswer = new JsonObject();
+        jsonAnswer.addProperty("question_id", textFeedbackHandler.getLastId());
+        jsonAnswer.addProperty("answer", answer);
+        feedbackAnswers.add(jsonAnswer);
+
+        if (this.textFeedbackHandler.allQuestionsAsked()) {
             printLine("end");
             sendToTmcServer();
             this.feedbackAnswers = new JsonArray();
         } else {
-            feedbackHandler.askQuestion();
+            textFeedbackHandler.askQuestion();
         }
     }
 
@@ -195,7 +221,7 @@ public class Server implements FrontendListener, Runnable {
     }
 
     private String getFeedbackUrl() {
-        return feedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam;
+        return rangeFeedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam;
     }
 
     private JsonObject getAnswersJson() {

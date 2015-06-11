@@ -11,13 +11,22 @@ public class AnswerQuestion extends Command {
 
     @Override
     protected void functionality() {
-        ((Server) frontend).feedbackAnswer(data.get("answer"));
+        Server server = (Server) frontend;
+        if (data.get("kind").equals("text")) {
+            server.textFeedbackAnswer(data.get("answer"));
+        } else {
+            server.rangeFeedbackAnswer(data.get("answer"));
+        }
     }
 
     @Override
     public void checkData() throws ProtocolException {
         if (!data.containsKey("answer")) {
             throw new ProtocolException("give question answer");
+        }
+
+        if (!data.containsKey("kind")) {
+            throw new ProtocolException("type of answer must be specified");
         }
     }
 }
