@@ -33,7 +33,7 @@ public class ServerTest {
         reset(tmcCore, socketThreadPool);
     }
 
-    private void sendMessageToServer(String message) {
+    private void sendMessageToServer(TestClient client, String message) {
         try {
             client.sendMessage(message);
             Thread.sleep(100);
@@ -52,7 +52,7 @@ public class ServerTest {
 
     @Test
     public void poolIsGivenTasksEvenIfCommandIsBad() throws ProtocolException {
-        sendMessageToServer("samu");
+        sendMessageToServer(client, "samu");
         verify(socketThreadPool).submit(Mockito.any(SocketRunnable.class));
     }
 
@@ -63,14 +63,24 @@ public class ServerTest {
 
     @Test
     public void socketPoolIsGivenATaskWhenACommandIsSent() {
-        sendMessageToServer("help");
+        sendMessageToServer(client, "help");
         verify(socketThreadPool).submit(Mockito.any(SocketRunnable.class));
     }
 
-    //@Test
-    public void twoSocketThreadsAreCreatedWhenTwoCommandsAreSent() {
-        sendMessageToServer("help");
-        sendMessageToServer("ping");
+    @Test
+    public void twoSocketThreadsAreCreatedWhenTwoCommandsAreSent() throws IOException {
+        sendMessageToServer(client, "help");
+        client.init();
+        sendMessageToServer(client, "ping");
+        verify(socketThreadPool, times(2)).submit(Mockito.any(SocketRunnable.class));
+    }
+
+    @Test
+    public void twoClientsSendMessagesAndBothAreIntercepted() throws IOException {
+        TestClient clientB = new TestClient(server.getCurrentPort());
+        sendMessageToServer(client, "help");
+        sendMessageToServer(clientB, "help");
+        
         verify(socketThreadPool, times(2)).submit(Mockito.any(SocketRunnable.class));
     }
 
