@@ -15,6 +15,7 @@ public class TmcCore {
     private Map<String, Command> commands;
     private ListeningExecutorService pool;
     private ProtocolParser parser = new ProtocolParser();
+
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
      * The TmcCore provides all the essential backend functionalities as public methods.
@@ -24,10 +25,20 @@ public class TmcCore {
         pool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 
+    /**
+     * For dependency injection of pool.
+     *
+     * @param pool
+     */
+    public TmcCore(ListeningExecutorService pool) {
+        commands = CommandFactory.createCommandMap();
+        this.pool = pool;
+    }
+
     public ListeningExecutorService getPool() {
         return pool;
     }
-    
+
     public ListenableFuture<String> login(String username, String password) {
         return run("login", "username", username, "password", password);
     }
@@ -55,7 +66,7 @@ public class TmcCore {
     public ListenableFuture<String> listExercises() {
         return run("listExercises");
     }
-    
+
     public ListenableFuture<String> runCommand(String inputLine) throws ProtocolException {
         return pool.submit(parser.getCommand(inputLine));
     }

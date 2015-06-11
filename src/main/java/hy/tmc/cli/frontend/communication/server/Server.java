@@ -12,18 +12,36 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server implements FrontendListener, Runnable {
-    private final ProtocolParser parser;
+
     private ServerSocket serverSocket;
     private boolean isRunning;
     private TmcCore tmcCore;
-    private ExecutorService socketThreadPool = Executors.newCachedThreadPool();
+    private ExecutorService socketThreadPool;
 
     /**
-     * Constructor for server.
+     * Constructor for server. It finds a free port to be listened to.
      *
-     * @throws IOException if failed to write port to config file
+     * @throws IOException if failed to write port to configuration file
      */
     public Server() throws IOException {
+        tmcCore = new TmcCore();
+        socketThreadPool = Executors.newCachedThreadPool();
+        initServerSocket();
+    }
+
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param tmcCore
+     * @param socketThreadPool
+     */
+    public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
+        this.tmcCore = tmcCore;
+        this.socketThreadPool = socketThreadPool;
+        initServerSocket();
+    }
+
+    private void initServerSocket() {
         try {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
@@ -32,8 +50,6 @@ public class Server implements FrontendListener, Runnable {
             System.err.println("Server creation failed");
             System.err.println(ex.getMessage());
         }
-        this.parser = new ProtocolParser(this);
-        tmcCore = new TmcCore();
     }
 
     public int getCurrentPort() {
@@ -48,7 +64,7 @@ public class Server implements FrontendListener, Runnable {
         this.run();
     }
 
-    public boolean isIsRunning() {
+    public boolean isRunning() {
         return isRunning;
     }
 
@@ -65,7 +81,8 @@ public class Server implements FrontendListener, Runnable {
                     Socket clientSocket = serverSocket.accept();
                     socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore));
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
