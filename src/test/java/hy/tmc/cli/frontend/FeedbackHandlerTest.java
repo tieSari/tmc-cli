@@ -70,7 +70,7 @@ public class FeedbackHandlerTest {
     public void instructionMessage() {
         builder.withBasicIntRangeQuestion();
         handler.feedback(builder.build(), "");
-        String expected = "Please give your answer as an integer between [0..10] (inclusive)";
+        String expected = "Please give your answer as an integer within [0..10] (inclusive)";
         assertEquals(expected, frontend.getMostRecentLine());
     }
     
@@ -78,7 +78,7 @@ public class FeedbackHandlerTest {
     public void instructionMessageTest2() {
         builder.withNegativeIntRange();
         handler.feedback(builder.build(), "");
-        String expected = "Please give your answer as an integer between [-10..10] (inclusive)";
+        String expected = "Please give your answer as an integer within [-10..10] (inclusive)";
         assertEquals(expected, frontend.getMostRecentLine());
     }
     
