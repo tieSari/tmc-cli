@@ -19,19 +19,6 @@ function command_submit () {
     OUTPUT=""
     feedback
   fi
-  # read -p x
-  # send_command answerQuestion x y
-  # if [[ output = "end" ]] then quit else send_command answerQuestion z w
-
-
-  #if [[ $OUTPUT =~ All\ tests\ passed.* ]]
-  #then
-
-    #give_feedback
-    # TODO: send output to server
-  #else
-  #  echo "$OUTPUT"
-  #fi
 }
 
 function feedback () {
@@ -119,8 +106,6 @@ function login () {
 
 # Backend cmd send
 function send_command () {
-#    OUTPUT=$(echo $@ | nc localhost 1234)
-#    echo $OUTPUT
     DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
     CONFIGPATH="$DIR/config.properties"
@@ -132,8 +117,6 @@ function send_command () {
 }
 
 function send_command_wait_output () {
-#    OUTPUT=$(echo $@ | nc localhost 1234)
-#    echo $OUTPUT
     DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
     CONFIGPATH="$DIR/config.properties"
@@ -155,15 +138,12 @@ control_c()
 # catch crtl_c and run function control_c if user hits ctrl-c
 trap control_c SIGINT
 
-#echo "Servu paalle"
-
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"
 bash $STARTUP
 
 case "$1" in
-#    "help") command_help;;
     "login") command_login;;
     "submit") command_submit $2;;
     "download") command_download $2;;
