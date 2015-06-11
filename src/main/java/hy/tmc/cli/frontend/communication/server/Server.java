@@ -52,7 +52,7 @@ public class Server implements FrontendListener, Runnable {
     }
 
     /**
-     * Run is loop that accepts new client connection and handles it.
+     * Run is loop that accepts new client connection and starts new socketThred for it.
      */
     @Override
     public final void run() {
