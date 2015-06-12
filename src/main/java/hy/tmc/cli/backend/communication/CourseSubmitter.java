@@ -87,7 +87,7 @@ public class CourseSubmitter {
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
      */
-    public String submit(String currentPath) throws IOException, ParseException, ExpiredException {
+    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -109,7 +109,7 @@ public class CourseSubmitter {
      * @throws ParseException to frontend
      * @throws ExpiredException to frontend
      */
-    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException{
+    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException {
         Exercise currentExercise = searchExercise(currentPath);
         if(isExpired(currentExercise) || !currentExercise.isReturnable()){
             deleteZipIfExists();
@@ -170,11 +170,11 @@ public class CourseSubmitter {
         return TmcJsonParser.getSubmissionUrl(result);
     }
 
-    private Optional<Exercise> findExercise(String currentPath) {
+    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException {
         return findCurrentExercise(findCourseExercises(currentPath), currentPath);
     }
 
-    private List<Exercise> findCourseExercises(String currentPath) {
+    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException {
         Optional<Course> currentCourse = new ProjectRootFinder(
                 new DefaultRootDetector()).getCurrentCourse(currentPath);
         if (!currentCourse.isPresent()) {
@@ -194,7 +194,7 @@ public class CourseSubmitter {
         }
     }
 
-    private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, String currentDir) {
+    private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, String currentDir) throws IllegalArgumentException {
         Optional<Path> rootDir = rootFinder.getRootDirectory(Paths.get(currentDir));
         if (!rootDir.isPresent()) {
             deleteZipIfExists();
