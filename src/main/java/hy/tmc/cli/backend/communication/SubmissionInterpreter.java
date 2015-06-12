@@ -25,7 +25,6 @@ public class SubmissionInterpreter {
 
     private SubmissionResult latestResult;
 
-
     /**
      * Returns a ready SubmissionResult with all fields complete after
      * processing.

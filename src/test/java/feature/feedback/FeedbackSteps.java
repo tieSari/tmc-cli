@@ -4,7 +4,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.Assert.fail;
 
-
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
@@ -23,11 +22,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class FeedbackSteps {
 
@@ -69,13 +66,10 @@ public class FeedbackSteps {
         handler = new RangeFeedbackHandler(frontStub);
         server = new Server(handler);
 
-
         serverThread = new Thread(server);
         serverThread.start();
         port = configHandler.readPort();
         testClient = new TestClient(port);
-
-
 
         testClient.sendMessage("auth username test password lolxd");
 
@@ -96,13 +90,6 @@ public class FeedbackSteps {
         wireMockServer = new WireMockServer(wireMockConfig().port(serverPort));
         wireMockServer.start();
         WireMock.configureFor(serverHost, serverPort);
-
-        // this.wireMock = new WireMock(serverHost, serverPort);
-
-
-        /* while (!wireMockServer.isRunning()) {
-            System.out.println("starting");
-        } */
 
         String allCoursesExample = ExampleJson.allCoursesExample;
         allCoursesExample = allCoursesExample.replace(
@@ -134,12 +121,6 @@ public class FeedbackSteps {
 
         wiremockGet("/user", "");
 
-/*        System.out.println("here are mappings");
-        ListStubMappingsResult listStubMappingsResult = listAllStubMappings();
-        for (StubMapping stubMapping : listStubMappingsResult.getMappings()) {
-            System.out.println(stubMapping);
-        }*/
-
     }
 
     private void wiremockGet(final String urlToMock, final String returnBody) {
@@ -170,7 +151,6 @@ public class FeedbackSteps {
     public void anExerciseWhereSomeTestsFail() throws IOException {
         wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
                 ExampleJson.failedSubmission);
-        //System.out.println("nyt pitäisi tulla after");
     }
 
     @When("^the exercise is submitted$")
@@ -194,7 +174,6 @@ public class FeedbackSteps {
     private List<String> checkForMessages() throws IOException {
         ArrayList<String> output = new ArrayList<String>();
         takeOutput(output);
-        // testClient.reply();
         while (testClient.hasNewMessages()) {
             takeOutput(output);
         }
@@ -292,8 +271,6 @@ public class FeedbackSteps {
 
     @After
     public void closeAll() throws IOException {
-        // System.out.println("doing after");
-        // checkForMessages();
         server.close();
         serverThread.interrupt();
         WireMock.reset();

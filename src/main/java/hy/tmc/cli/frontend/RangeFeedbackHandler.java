@@ -5,9 +5,6 @@ import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import java.util.ArrayDeque;
 import java.util.List;
 
-/**
- *
- */
 public class RangeFeedbackHandler extends FeedbackHandlerAbstract {
 
     private int lowerbound;
@@ -48,7 +45,6 @@ public class RangeFeedbackHandler extends FeedbackHandlerAbstract {
             return "" + lowerbound;
         }
         return answer;
-
     }
 
 }
