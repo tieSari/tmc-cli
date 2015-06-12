@@ -25,6 +25,4 @@ public class ProtocolParserTest {
         Command command = parser.getCommand("submit path /asd/lmao --vim");
         Assert.assertNotNull(command.getData().get("--vim"));
     }
-    
-    
 }

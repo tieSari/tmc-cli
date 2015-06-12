@@ -5,13 +5,11 @@ function command_submit () {
   #submit [<exercise name>]
   echo "Submitting exercise..."
   if [ $# -eq 0 ]
-   then
-    #echo "submit path `pwd`"
-    send_command_wait_output "submit path `pwd`"
+  then
+     send_command_wait_output "submit path `pwd`"
    else
-     #echo "submit path `pwd` $1"
      send_command_wait_output "submit path `pwd` $1"
-fi
+   fi
 
 }
 

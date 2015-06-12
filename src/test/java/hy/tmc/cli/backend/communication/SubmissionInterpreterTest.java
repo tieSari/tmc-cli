@@ -23,7 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(UrlCommunicator.class)
 public class SubmissionInterpreterTest {
 
-    SubmissionInterpreter SI;
+    SubmissionInterpreter sI;
     String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
 
     @Before
@@ -32,7 +32,7 @@ public class SubmissionInterpreterTest {
 
         ClientData.setUserData("chang", "paras");
 
-        SI = new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
+        sI = new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
     }
 
     @After
@@ -76,7 +76,7 @@ public class SubmissionInterpreterTest {
     public void passedResultOutputsPassed() throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, false);
+        String output = sI.resultSummary(url, false);
         assertTrue(output.contains("passed"));
     }
 
@@ -84,7 +84,7 @@ public class SubmissionInterpreterTest {
     public void failedResultOutputsFailed() throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, false);
+        String output = sI.resultSummary(url, false);
         assertTrue(output.contains("failed"));
 
     }
@@ -94,7 +94,7 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, false);
+        String output = sI.resultSummary(url, false);
         assertTrue(output.contains("et tulosta mitään!"));
     }
 
@@ -103,7 +103,7 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, true);
+        String output = sI.resultSummary(url, true);
         assertTrue(output.contains("PASSED"));
         assertTrue(output.contains("KayttajatunnuksetTest sopivatKayvat"));
 
@@ -114,7 +114,7 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, false);
+        String output = sI.resultSummary(url, false);
         assertFalse(output.contains("PASSED"));
         assertFalse(output.contains("KayttajatunnuksetTest sopivatKayvat"));
 
@@ -124,7 +124,7 @@ public class SubmissionInterpreterTest {
     public void resultWithCheckstyleContainsCheckstyleErrors() throws InterruptedException {
         initFailedCheckstyle();
 
-        String output = SI.resultSummary(url, true);
+        String output = sI.resultSummary(url, true);
         assertTrue(output.contains("checkstyle"));
         assertTrue(output.contains("Class length is 478 lines (max allowed is 300)"));
         assertTrue(output.contains("',' is not followed by whitespace."));
@@ -134,7 +134,7 @@ public class SubmissionInterpreterTest {
     public void resultWithCheckstyleContainsLineNumberMarkings() throws InterruptedException {
         initFailedCheckstyle();
 
-        String output = SI.resultSummary(url, true);
+        String output = sI.resultSummary(url, true);
         assertTrue(output.contains("On line: 421 Column: 24"));
         assertTrue(output.contains("On line: 202 Column: 18"));
     }
@@ -143,7 +143,7 @@ public class SubmissionInterpreterTest {
     public void resultWithNoCheckstyleDoesntContainCheckstyleErrors() throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, true);
+        String output = sI.resultSummary(url, true);
         assertFalse(output.contains("checkstyle"));
     }
 
@@ -151,7 +151,7 @@ public class SubmissionInterpreterTest {
     public void resultWithValgridShowsValgrind() throws InterruptedException {
         initFailedValgrind();
 
-        String output = SI.resultSummary(url, true);
+        String output = sI.resultSummary(url, true);
         assertTrue(output.contains(": srunner_run_all (in /tmc/t"));
         assertTrue(output.contains("stack size used in this run was 8388608."));
     }
@@ -160,7 +160,7 @@ public class SubmissionInterpreterTest {
     public void resultWithNoValgrindShowsNoValgrind() throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, true);
+        String output = sI.resultSummary(url, true);
         assertFalse(output.contains("Access not within mapped region at address"));
 
     }

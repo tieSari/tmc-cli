@@ -64,7 +64,6 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
 
     @Override
     public String parseValidationErrors(Entry<String, List<ValidationError>> entry) {
-        ValidationError v = new ValidationError();
         StringBuilder builder = new StringBuilder();
         builder.append("\nFile: ").append(entry.getKey());
         for (ValidationError error : entry.getValue()) {

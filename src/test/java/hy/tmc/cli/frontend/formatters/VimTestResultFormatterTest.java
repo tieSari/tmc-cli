@@ -16,14 +16,14 @@ import org.junit.Test;
 
 
 public class VimTestResultFormatterTest {
-    RunResult allPassed;
-    RunResult allFailed;
-    RunResult someFailed;
-    RunResult compileError;
-    RunResult genericError;
-    RunResultBuilder builder;
-    VimTestResultFormatter formatter;
-    List<TestResult> passed;
+    private RunResult allPassed;
+    private RunResult allFailed;
+    private RunResult someFailed;
+    private RunResult compileError;
+    private RunResult genericError;
+    private RunResultBuilder builder;
+    private VimTestResultFormatter formatter;
+    private List<TestResult> passed;
     
     public VimTestResultFormatterTest(){
         allPassed = new RunResultBuilder().withStatus(PASSED).build();
@@ -43,6 +43,9 @@ public class VimTestResultFormatterTest {
         assertTrue(explanation.contains("All tests passed"));
     }
     
+    /**
+     * \u001B[32m is success color code
+     */
     @Test
     public void ensureThatThereAreNoColorsWhenAllArePassed() {
         String explanation = formatter.interpretStatus(allPassed);
@@ -86,6 +89,9 @@ public class VimTestResultFormatterTest {
         assertTrue(explanation.contains("5 tests failed:\n"));
     }
     
+    /**
+     * \u001B[31m is fail color code
+     */
     @Test
     public void ensureThatThereAreNoColorsWhenSomeFail() {
         String explanation = formatter.howMuchTestsFailed(5);

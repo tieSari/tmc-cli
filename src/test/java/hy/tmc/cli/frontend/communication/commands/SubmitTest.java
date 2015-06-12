@@ -45,15 +45,10 @@ public class SubmitTest {
     public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException, Exception {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(Mockito.anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
-
         formatter = Mockito.mock(CommandLineSubmissionResultFormatter.class);
         interpreter = Mockito.mock(SubmissionInterpreter.class);
-
-        // wireMockStart();
-        
         front = new FrontendStub();
         submit = new Submit(front, submitterMock);
-
         ClientData.setUserData("Bossman", "Samu");
     }
     
@@ -72,8 +67,6 @@ public class SubmitTest {
     public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
         front.start();
         wireMockStart(ExampleJson.failedSubmission);
-        // when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("No tests passed.");
-
         submit.setParameter("path", "/hieno/path");
         submit.execute();
         String result = front.getMostRecentLine();
@@ -85,8 +78,6 @@ public class SubmitTest {
     public void submitPrintsAllTestsPassedWhenCodeIsCorrect() throws ProtocolException, InterruptedException {
         front.start();
         wireMockStart(ExampleJson.successfulSubmission);
-        // when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("All tests passed.");
-
         submit.setParameter("path", "/hieno/path");
         submit.execute();
         String result = front.getMostRecentLine();
