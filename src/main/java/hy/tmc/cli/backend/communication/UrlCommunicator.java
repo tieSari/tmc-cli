@@ -65,7 +65,6 @@ public class UrlCommunicator {
      * @return A Result-object with some data and a state of success or fail
      */
     public static HttpResult makeGetRequest(String url, String... params) {
-        System.out.println("doing get: " + url);
         try {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
@@ -77,7 +76,6 @@ public class UrlCommunicator {
 
     private static HttpGet createGet(String url, String[] params)
             throws IOException {
-        System.out.println("doing get: " + url);
         HttpGet request = new HttpGet(url);
         addCredentials(request, params[0]);
         return request;

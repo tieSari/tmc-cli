@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.lingala.zip4j.exception.ZipException;
 
 public class Paste extends Command {
 
@@ -57,6 +58,12 @@ public class Paste extends Command {
         }
         catch (ExpiredException ex) {
             frontend.printLine("Exercise has expired.");
+        }
+        catch (IllegalArgumentException ex) {
+            frontend.printLine(ex.getMessage());
+        }
+        catch (ZipException ex) {
+            frontend.printLine(ex.getMessage());
         } 
     }
 

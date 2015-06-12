@@ -87,7 +87,7 @@ public class CourseSubmitter {
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
      */
-    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException {
+    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -99,7 +99,7 @@ public class CourseSubmitter {
      * @return String with url from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
      */
-    public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException {
+    public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -139,7 +139,7 @@ public class CourseSubmitter {
         return TmcJsonParser.getPasteUrl(result);
     }
 
-    private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException {
+    private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException {
         final String submissionExtension = "/submission.zip";
         this.submissionZipPath = currentPath + submissionExtension;
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
@@ -185,12 +185,12 @@ public class CourseSubmitter {
         return courseExercises;
     }
 
-    private void zip(String exerciseFolderToZip, String currentPath) {
+    private void zip(String exerciseFolderToZip, String currentPath) throws ZipException {
         try {
             this.zipper.zip(exerciseFolderToZip, currentPath);
         }
         catch (ZipException ex) {
-            System.err.println(ex.getMessage());
+            throw new ZipException("Zipping failed because of " + ex.getMessage());
         }
     }
 
