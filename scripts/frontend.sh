@@ -52,7 +52,13 @@ function text_feedback () {
   echo "Please enter feedback above the bar." >> $FEEDBACK
   echo "" >> $FEEDBACK
   echo "$OUTPUT" >> $FEEDBACK
-  nano $FEEDBACK
+
+  if [[ -z "$EDITOR" ]]
+  then
+    $EDITOR $FEEDBACK
+  else
+    nano $FEEDBACK
+  fi
 
   PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
   send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/<newline>} }"
