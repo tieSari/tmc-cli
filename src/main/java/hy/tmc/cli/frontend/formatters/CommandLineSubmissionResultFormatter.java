@@ -1,10 +1,12 @@
 package hy.tmc.cli.frontend.formatters;
 
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
+import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
+
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
 import hy.tmc.cli.domain.submission.ValidationError;
-import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
-import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;

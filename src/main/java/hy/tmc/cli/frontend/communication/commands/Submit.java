@@ -17,7 +17,8 @@ import java.text.ParseException;
 /**
  * Submit command for submitting exercises to TMC
  */
-public class Submit extends Command {   
+public class Submit extends Command {
+
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
 
@@ -60,14 +61,14 @@ public class Submit extends Command {
         }
         catch (IOException | InterruptedException ex) {
             frontend.printLine("Project not found with specified parameters or thread interrupted");
-        } 
-        catch(ExpiredException ex){
+        }
+        catch (ExpiredException ex) {
             frontend.printLine("Exercise has expired.");
         }
     }
-    
-    private SubmissionInterpreter getInterpreter(){
-        if(data.containsKey("--vim")){
+
+    private SubmissionInterpreter getInterpreter() {
+        if (data.containsKey("--vim")) {
             return new SubmissionInterpreter(new VimSubmissionResultFormatter());
         } else {
             return new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());

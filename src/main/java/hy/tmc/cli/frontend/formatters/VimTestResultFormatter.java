@@ -39,8 +39,6 @@ public class VimTestResultFormatter implements TestResultFormatter {
 
     /**
      * Some tests failed -explanation
-     *
-     * @return
      */
     @Override
     public String someTestsFailed() {
@@ -49,8 +47,6 @@ public class VimTestResultFormatter implements TestResultFormatter {
 
     /**
      * No tests passed -explanation
-     *
-     * @return
      */
     @Override
     public String noTestsPassed() {
@@ -59,9 +55,6 @@ public class VimTestResultFormatter implements TestResultFormatter {
 
     /**
      * How much tests passed.
-     *
-     * @param amount
-     * @return
      */
     @Override
     public String howMuchTestsPassed(int amount) {
@@ -71,7 +64,6 @@ public class VimTestResultFormatter implements TestResultFormatter {
 
     /**
      * Get how much tests failed.
-     * @param amount
      */
     @Override
     public String howMuchTestsFailed(int amount) {
@@ -81,7 +73,6 @@ public class VimTestResultFormatter implements TestResultFormatter {
 
     /**
      * Get explanation of passed tests
-     * @param passed
      */
     @Override
     public String getPassedTests(List<TestResult> passed) {
@@ -94,7 +85,6 @@ public class VimTestResultFormatter implements TestResultFormatter {
 
     /**
      * Get explanation of a single failed testResult. Expects that result is failed.
-     * @param failed
      */
     @Override
     public String getFailedTestOutput(TestResult failed) {
@@ -109,8 +99,6 @@ public class VimTestResultFormatter implements TestResultFormatter {
 
     /**
      * Get stack trace of test result.
-     * @param result
-     * @return 
      */
     @Override
     public String getStackTrace(TestResult result) {
