@@ -15,6 +15,7 @@ import hy.tmc.cli.testhelpers.Wiremocker;
 import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Rule;
 
 public class ConcurrencySteps {
@@ -30,7 +31,7 @@ public class ConcurrencySteps {
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
     private final String defaultWiremockAddress = "http://127.0.0.1:8080";
-    
+
     @Before
     public void setup() throws IOException {
         configHandler = new ConfigHandler();
@@ -56,15 +57,25 @@ public class ConcurrencySteps {
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
         final String submitMessage = submitCommand + submitPath;
         testClientA.sendMessage(submitMessage);
-        testClientB.sendMessage("help");     
+        testClientB.sendMessage("help");
     }
 
-    @Then("^user sees first output of help and after that submit$")
-    public void user_sees_first_output_of_help_and_after_that_submit() throws Throwable {
+    @Then("^user A gets output of submit and user B gets output of help$")
+    public void user_A_gets_output_of_submit_and_user_B_gets_output_of_help() throws Throwable {
         final String replyA = testClientA.reply();
         assertTrue(replyA.contains("All tests passed"));
         final String replyB = testClientB.reply();
         assertTrue(replyB.contains("Available commands"));
+    }
+
+    @Then("^user A gets output after user B$")
+    public void user_A_gets_output_after_user_B() throws Throwable {
+        for (int i = 0; i < 10; i++) {
+           if (testClientA.isReadyToBeRead() && !testClientB.isReadyToBeRead()) {
+               fail("Test client A was ready first, in other words no concurrency");
+           }
+            Thread.sleep(50);
+        }    
     }
 
     @After

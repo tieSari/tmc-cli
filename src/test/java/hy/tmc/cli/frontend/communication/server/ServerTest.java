@@ -30,18 +30,15 @@ public class ServerTest {
         serverThread = new Thread(server);
         serverThread.start();
         client = new TestClient(server.getCurrentPort());
-        reset(tmcCore, socketThreadPool);
     }
 
     private void sendMessageToServer(TestClient client, String message) {
         try {
             client.sendMessage(message);
-            Thread.sleep(100);
-        }
-        catch (IOException | InterruptedException e) {
+            Thread.sleep(300);
+        } catch (IOException | InterruptedException e) {
             fail("Failed to send message to server or sleep interrupted");
         }
-
     }
 
     @After
@@ -58,7 +55,7 @@ public class ServerTest {
 
     @Test
     public void whenNoCommandIsSentNeitherPoolIsCalled() throws ProtocolException {
-        verify(socketThreadPool, times(0)).submit(Mockito.any(SocketRunnable.class));
+        verify(socketThreadPool, times(0)).submit(any(SocketRunnable.class));
     }
 
     @Test
@@ -68,20 +65,19 @@ public class ServerTest {
     }
 
     @Test
-    public void twoSocketThreadsAreCreatedWhenTwoCommandsAreSent() throws IOException {
-        sendMessageToServer(client, "help");
-        client.init();
-        sendMessageToServer(client, "ping");
-        verify(socketThreadPool, times(2)).submit(Mockito.any(SocketRunnable.class));
-    }
-
-    @Test
     public void twoClientsSendMessagesAndBothAreIntercepted() throws IOException {
         TestClient clientB = new TestClient(server.getCurrentPort());
         sendMessageToServer(client, "help");
         sendMessageToServer(clientB, "help");
-        
-        verify(socketThreadPool, times(2)).submit(Mockito.any(SocketRunnable.class));
+        verify(socketThreadPool, times(2)).submit(any(SocketRunnable.class));
+    }
+
+    @Test
+    public void twoClientsSendMessagesAndOneIsBadAndBothAreIntercepted() throws IOException {
+        TestClient clientB = new TestClient(server.getCurrentPort());
+        sendMessageToServer(client, "help");
+        sendMessageToServer(clientB, "lol");
+        verify(socketThreadPool, times(2)).submit(any(SocketRunnable.class));
     }
 
     @Test

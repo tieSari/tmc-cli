@@ -56,4 +56,9 @@ public class TestClient {
             return "fail";
         }
     }
+    
+    public boolean isReadyToBeRead() throws IOException {
+        return input.ready();
+    }
+    
 }

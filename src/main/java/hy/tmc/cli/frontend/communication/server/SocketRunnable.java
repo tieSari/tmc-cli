@@ -30,9 +30,23 @@ public class SocketRunnable implements Runnable {
                 DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 handleInput(inputReader, outputStream);
             }
-        }
-        catch (ProtocolException | IOException ex) {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
+        }
+    }
+    
+    /**
+     * Finds command-future and attach listener to it.
+     *
+     * @param inputReader
+     * @param outputStream
+     */
+    private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
+            throws IOException {
+        final ListenableFuture<String> commandFuture = parseCommand(inputReader, outputStream);
+        if (commandFuture != null) {
+            final DataOutputStream output = outputStream;
+            addListenerToFuture(commandFuture, output);
         }
     }
 
@@ -52,21 +66,6 @@ public class SocketRunnable implements Runnable {
             stream.writeUTF(ex.getMessage() + "\n");
             socket.close();
             return null;
-        }
-    }
-
-    /**
-     * Finds command-future and attach listener to it.
-     *
-     * @param inputReader
-     * @param outputStream
-     */
-    private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException, ProtocolException {
-        final ListenableFuture<String> commandFuture = parseCommand(inputReader, outputStream);
-        if (commandFuture != null) {
-            final DataOutputStream output = outputStream;
-            addListenerToFuture(commandFuture, output);
         }
     }
 
