@@ -13,6 +13,9 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.exception.ZipException;
 
 /**
  * Submit command for submitting exercises to TMC
@@ -64,6 +67,9 @@ public class Submit extends Command {
         }
         catch (ExpiredException ex) {
             frontend.printLine("Exercise has expired.");
+        }
+        catch (ZipException ex) {
+            frontend.printLine("Zipping exercise failed.");
         }
     }
 
