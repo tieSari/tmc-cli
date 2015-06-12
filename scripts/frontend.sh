@@ -33,7 +33,7 @@ function feedback () {
 function int_feedback () {
   echo "$OUTPUT"
   read -p "> " answer
-  send_command_wait_output "answerQuestion answer $answer"
+  send_command_wait_output "answerQuestion answer $answer kind integer"
   if [[ $OUTPUT =~ end ]]
     then
     echo "Thank you for your answers!"
@@ -55,7 +55,7 @@ function text_feedback () {
   nano $FEEDBACK
 
   PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
-  send_command_wait_output "answerQuestion answer { ${PARSEDOUTPUT//$'\n'/<newline>} }"
+  send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/<newline>} }"
   if [[ $OUTPUT =~ end ]]
     then
     echo "Thank you for your answers!"

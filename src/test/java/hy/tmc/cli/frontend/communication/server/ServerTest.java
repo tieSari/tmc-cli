@@ -91,14 +91,14 @@ public class ServerTest {
 
         assertEquals("Hello", reply);
         assertEquals("text", client.reply());
-        answerQuestion(client, "yo");
+        answerQuestion(client, "yo", "text");
 
         reply = waitForInput(client);
         assertEquals("who are you", reply);
         assertEquals("text", client.reply());
 
         client = createTestClient();
-        answerQuestion(client, "sup");
+        answerQuestion(client, "sup", "text");
 
         assertEquals("end", waitForInput(client));
 
@@ -110,8 +110,8 @@ public class ServerTest {
                 + "{\"question_id\":2,\"answer\":\"sup\"}]}")));
     }
 
-    private void answerQuestion(TestClient client, String answer) throws IOException {
-        client.sendMessage("answerQuestion answer " + answer);
+    private void answerQuestion(TestClient client, String answer, String kind) throws IOException {
+        client.sendMessage("answerQuestion answer " + answer + " kind " + kind);
     }
 
     private String waitForInput(TestClient client) {

@@ -164,6 +164,11 @@ public class Server implements FrontendListener, Runnable {
 
     @Override
     public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
+        if (feedbackQuestions.isEmpty()) {
+            return;
+        }
+
+
         List<FeedbackQuestion> rangeQuestions = new ArrayList<>();
         List<FeedbackQuestion> textQuestions = new ArrayList<>();
         for (FeedbackQuestion feedbackQuestion : feedbackQuestions) {
@@ -177,7 +182,12 @@ public class Server implements FrontendListener, Runnable {
         this.rangeFeedbackHandler.feedback(rangeQuestions, feedbackUrl);
         this.textFeedbackHandler.feedback(textQuestions, feedbackUrl);
 
+        if (!rangeQuestions.isEmpty()) {
         rangeFeedbackHandler.askQuestion(); // ask first questions
+
+        } else {
+            textFeedbackHandler.askQuestion();
+        }
     }
 
     public void rangeFeedbackAnswer(String answer) {
@@ -188,7 +198,13 @@ public class Server implements FrontendListener, Runnable {
         feedbackAnswers.add(jsonAnswer);
 
         if (this.rangeFeedbackHandler.allQuestionsAsked()) {
-            textFeedbackHandler.askQuestion(); // start asking text questions
+            if (textFeedbackHandler.allQuestionsAsked()) {
+                printLine("end");
+                sendToTmcServer();
+                this.feedbackAnswers = new JsonArray();
+            } else {
+                textFeedbackHandler.askQuestion(); // start asking text questions
+            }
         } else {
             rangeFeedbackHandler.askQuestion();
         }

@@ -159,11 +159,11 @@ public class FeedbackSteps {
         );
     }
 
-    private String feedbackAnswer(String answer) {
+    private String feedbackAnswer(String answer, String kind) {
         if (answer.contains(" ")) {
-            return "answerQuestion answer { " + answer + " }";
+            return "answerQuestion kind " + kind + " answer { " + answer + " }";
         }
-        return "answerQuestion answer " + answer;
+        return "answerQuestion kind " + kind + " answer " + answer;
     }
 
     @Given("^an exercise where some tests fail$")
@@ -227,17 +227,17 @@ public class FeedbackSteps {
     public void theUserHasAnsweredAllFeedbackQuestions() throws IOException {
         // intrange [0..10]
         testClient = new TestClient(port);
-        testClient.sendMessage(feedbackAnswer("3"));
+        testClient.sendMessage(feedbackAnswer("3", "int"));
         checkForMessages();
 
         // intrange [10..100]
         testClient = new TestClient(port);
-        testClient.sendMessage(feedbackAnswer("42"));
+        testClient.sendMessage(feedbackAnswer("42", "int"));
         checkForMessages();
 
         // text
         testClient = new TestClient(port);
-        testClient.sendMessage(feedbackAnswer("Hello world!"));
+        testClient.sendMessage(feedbackAnswer("Hello world!", "text"));
         checkForMessages();
     }
 
@@ -253,17 +253,17 @@ public class FeedbackSteps {
     public void theUserGivesSomeAnswerThatsNotInTheCorrectRange() throws IOException {
         // intrange [0..10]
         testClient = new TestClient(port);
-        testClient.sendMessage(feedbackAnswer("12"));
+        testClient.sendMessage(feedbackAnswer("12", "int"));
         checkForMessages();
 
         // intrange [10..100]
         testClient = new TestClient(port);
-        testClient.sendMessage(feedbackAnswer("150"));
+        testClient.sendMessage(feedbackAnswer("150", "int"));
         checkForMessages();
 
         // text
         testClient = new TestClient(port);
-        testClient.sendMessage(feedbackAnswer("Hello world!"));
+        testClient.sendMessage(feedbackAnswer("Hello world!", "text"));
         checkForMessages();
     }
 
