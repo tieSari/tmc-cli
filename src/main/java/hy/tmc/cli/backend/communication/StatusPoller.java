@@ -54,4 +54,14 @@ public class StatusPoller extends AbstractScheduledService {
         return filtered;
     }
 
+    @Override
+    protected void startUp() throws Exception {
+        
+    }
+
+    @Override
+    protected void shutDown() throws Exception {
+        
+    }
+
 }
