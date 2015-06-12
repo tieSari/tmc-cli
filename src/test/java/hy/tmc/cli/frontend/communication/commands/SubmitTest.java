@@ -1,30 +1,33 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.submission.SubmissionResult;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.FrontendStub;
+
 import java.io.IOException;
 import java.text.ParseException;
+
 import org.junit.After;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 public class SubmitTest {
 
@@ -48,7 +51,7 @@ public class SubmitTest {
         formatter = Mockito.mock(CommandLineSubmissionResultFormatter.class);
         interpreter = Mockito.mock(SubmissionInterpreter.class);
         front = new FrontendStub();
-        submit = new Submit(front, submitterMock);
+        submit = new Submit(front, submitterMock, interpreter);
         ClientData.setUserData("Bossman", "Samu");
     }
     
@@ -65,6 +68,10 @@ public class SubmitTest {
 
     @Test
     public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
+        SubmissionResult submissionResult = new SubmissionResult();
+        submissionResult.setAllTestsPassed(false);
+        when(interpreter.getSubmissionResult(Mockito.anyString())).thenReturn(submissionResult);
+        when(interpreter.resultSummary(Mockito.anyBoolean())).thenReturn("No tests passed.");
         front.start();
         wireMockStart(ExampleJson.failedSubmission);
         submit.setParameter("path", "/hieno/path");

@@ -1,8 +1,10 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +29,7 @@ public class CommandFactory {
         commandsByName.put("setServer", chooseServer(frontend));
         commandsByName.put("submit", submit(frontend));
         commandsByName.put("runTests", runTests(frontend));
+        commandsByName.put("answerQuestion", answerQuestion(frontend));
         commandsByName.put("paste", paste(frontend));
         commandsByName.put("stopProcess", stopProcess(frontend));
         return commandsByName;
@@ -161,6 +164,10 @@ public class CommandFactory {
         return new Paste(front);
     }
 
+    public static Command answerQuestion(FrontendListener front) {
+        return new AnswerQuestion(front);
+    }
+
     /**
      * Takes the command map and returns a set of command names.
      *
@@ -172,8 +179,14 @@ public class CommandFactory {
             public void start() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
             @Override
             public void printLine(String line) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };

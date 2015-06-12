@@ -49,6 +49,10 @@ public class TestClient {
         output.println(message);
     }
 
+    public boolean hasNewMessages() throws IOException {
+        return input.ready();
+    }
+
     public String reply() {
         try {
             return input.readLine();

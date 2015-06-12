@@ -1,8 +1,12 @@
 package hy.tmc.cli.backend.communication;
 
-import com.google.common.base.Optional;
 import static hy.tmc.cli.backend.communication.authorization.Authorization.encode;
 import static org.apache.http.HttpHeaders.USER_AGENT;
+
+import com.google.common.base.Optional;
+import com.google.gson.JsonObject;
+
+import hy.tmc.cli.configuration.ClientData;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,24 +14,24 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-
-import hy.tmc.cli.configuration.ClientData;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.Map;
-import org.apache.http.entity.mime.content.ContentBody;
 
 public class UrlCommunicator {
 
     public static final int BAD_REQUEST = 400;
+
 
     /**
      * Creates and executes post-request to specified URL.
@@ -68,8 +72,7 @@ public class UrlCommunicator {
         try {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
@@ -136,7 +139,8 @@ public class UrlCommunicator {
      * @param httpRequest where to put headers.
      * @param headers to be included.
      */
-    private static void addHeadersTo(HttpRequestBase httpRequest, Optional<Map<String, String>> headers) {
+    private static void addHeadersTo(HttpRequestBase httpRequest,
+                                     Optional<Map<String, String>> headers) {
         if (headers.isPresent()) {
             for (String header : headers.get().keySet()) {
                 httpRequest.addHeader(header, headers.get().get(header));
@@ -150,5 +154,19 @@ public class UrlCommunicator {
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();
         return new HttpResult(result.toString(), status, true);
+    }
+
+    /**
+     * Makes a POST HTTP request.
+     */
+    public static HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
+            throws IOException {
+        HttpPost httppost = new HttpPost(feedbackUrl);
+        String jsonString = req.toString();
+        StringEntity feedbackJson = new StringEntity(jsonString);
+        httppost.addHeader("content-type", "application/json");
+        addCredentials(httppost, ClientData.getFormattedUserData());
+        httppost.setEntity(feedbackJson);
+        return getResponseResult(httppost);
     }
 }
