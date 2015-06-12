@@ -36,7 +36,7 @@ public class TmcTestsSteps {
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
         testRunner = new RunTests(front);
-        testRunner.setParameter("filepath", exerciseDirectory);
+        testRunner.setParameter("path", exerciseDirectory);
     }
 
     @When("^the user runs the tests$")

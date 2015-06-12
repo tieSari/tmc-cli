@@ -4,8 +4,8 @@ public class Nimi {
         // Kirjoita ohjelmasi tähän alle
       
         // Mikäli et vielä ole vastannut vielä kyselyyn, tee se HETI
-        // osoitteessa: http://laatu.mooc.fi/ 
-        System.out.println("AAPO");
+        // osoitteessa: http://laatu.jamo.fi/ 
+        System.out.println("yay");
     }
 
 }

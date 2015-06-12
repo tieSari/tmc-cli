@@ -49,7 +49,7 @@ function command_paste () {
 }
 
 function command_test () {
-  send_command "runTests filepath `pwd`"
+  send_command "runTests path `pwd`"
 }
 
 function command_default () {

@@ -29,7 +29,7 @@ public class RunTests extends MailCheckingCommand {
 
     @Override
     protected void functionality() {
-        String path = this.data.get("filepath");
+        String path = this.data.get("path");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
 
@@ -66,11 +66,11 @@ public class RunTests extends MailCheckingCommand {
 
     @Override
     public void checkData() throws ProtocolException {
-        if (!this.data.containsKey("filepath")) {
+        if (!this.data.containsKey("path")) {
             throw new ProtocolException("File path to exercise required.");
         }
 
-        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("filepath"));
+        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {

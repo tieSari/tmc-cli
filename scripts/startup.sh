@@ -12,7 +12,7 @@ CONFIGPATH+="/config"
 
 CLIENTPATH=$DIR
 if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
-  eval "(cd $CLIENTPATH && nohup java -jar tmc-client.jar &> /dev/null) &"
+  eval "(cd $CLIENTPATH && nohup java -jar tmc-client.jar &> /dev/null &) &"
   PID=$!
   echo $PID > $CONFIGPATH
   echo "Server started"

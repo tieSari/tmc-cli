@@ -3,6 +3,7 @@ package hy.tmc.cli.frontend.communication.commands;
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.Exercise;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -15,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -42,8 +44,13 @@ public class RunTestsTest {
 
     private void mock() {
         Course c = new Course();
-        c.setName("OhPe");
+        c.setName("2014-mooc-no-deadline");
         c.setId(0);
+        c.setDetailsUrl("www.asd.com");
+        c.setExercises(new ArrayList<Exercise>());
+        c.setReviewsUrl("www.asd.com");
+        c.setSpywareUrls(new ArrayList<String>());
+
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito.
                 when(ClientData.getCurrentCourse(Mockito.anyString()))
@@ -62,26 +69,25 @@ public class RunTestsTest {
     @Test
     public void testCheckDataSuccess() {
         RunTests rt = new RunTests(front);
-        rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
+        rt.setParameter("path", "/home/tmccli/uolevipuistossa");
         try {
             rt.checkData();
-        } catch (ProtocolException p) {
-            fail("testCheckDataSuccess failed");
+        }
+        catch (ProtocolException p) {
+            fail("testCheckDataSuccess failed" + p.getMessage());
         }
     }
 
     /**
      * Check that if user didn't give correct data, data checking fails.
+     *
+     * @throws hy.tmc.cli.frontend.communication.server.ProtocolException
      */
-    @Test
-    public void testCheckDataFail() {
+    @Test(expected = ProtocolException.class)
+    public void testCheckDataFail() throws ProtocolException {
         RunTests rt = new RunTests(front);
-        try {
-            rt.checkData();
-            fail("testCheckDataFail should have failed");
-        } catch (ProtocolException p) {
-            return;
-        }
+        rt.checkData();
+
     }
 
     /**
@@ -93,10 +99,11 @@ public class RunTestsTest {
         String folders = "testResources" + File.separator + "failingExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
-        run.setParameter("filepath", file.getAbsolutePath());
+        run.setParameter("path", file.getAbsolutePath());
         try {
             run.execute();
-        } catch (ProtocolException ex) {
+        }
+        catch (ProtocolException ex) {
             fail("Test executing failed cause: " + ex.getMessage());
         }
 
@@ -118,10 +125,11 @@ public class RunTestsTest {
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
-        run.setParameter("filepath", file.getAbsolutePath());
+        run.setParameter("path", file.getAbsolutePath());
         try {
             run.execute();
-        } catch (ProtocolException ex) {
+        }
+        catch (ProtocolException ex) {
             fail("Test executing failed");
         }
         assertFalse(front.getMostRecentLine().contains("tests failed:"));

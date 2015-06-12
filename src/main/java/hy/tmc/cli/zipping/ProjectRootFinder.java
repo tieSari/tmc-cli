@@ -3,6 +3,7 @@ package hy.tmc.cli.zipping;
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -51,6 +52,12 @@ public class ProjectRootFinder implements RootFinder {
     @Override
     public Optional<Course> getCurrentCourse(String path) {
         String[] foldersOfPwd = path.split("/");
+        try {
+            checkPwd(foldersOfPwd);
+        }
+        catch (ProtocolException ex) {
+            return Optional.absent();
+        }
         return findCourseByPath(foldersOfPwd);
     }
 
@@ -71,5 +78,11 @@ public class ProjectRootFinder implements RootFinder {
             }
         }
         return Optional.absent();
+    }
+
+    private void checkPwd(String[] foldersOfPwd) throws ProtocolException {
+        if (foldersOfPwd.length == 0) {
+            throw new ProtocolException("No folders found from the path.");
+        }
     }
 }

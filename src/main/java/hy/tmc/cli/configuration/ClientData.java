@@ -6,8 +6,7 @@ import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
 /**
- * This class will be initialized when Auth is successful. Use this to get data
- * of user
+ * This class will be initialized when Auth is successful. Use this to get data of user
  */
 public final class ClientData {
 
@@ -38,6 +37,9 @@ public final class ClientData {
     }
 
     public synchronized static Optional<Course> getCurrentCourse(String currentPath) {
+        if (!userDataExists()) {
+            throw new IllegalStateException("Not logged in.");
+        }
         return getProjectRootFinder().getCurrentCourse(currentPath);
     }
 
