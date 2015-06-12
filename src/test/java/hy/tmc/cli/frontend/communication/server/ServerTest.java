@@ -14,6 +14,7 @@ import static org.junit.Assert.assertNotEquals;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
+import hy.tmc.cli.testhelpers.FeedbackBuilder;
 import hy.tmc.cli.testhelpers.TestClient;
 import org.junit.After;
 import org.junit.Before;
@@ -77,26 +78,15 @@ public class ServerTest {
     }
 
     @Test(timeout = 15000)
-    public void feedbackAnswerSendsCorrectJson() throws IOException {
-        List<FeedbackQuestion> questions = getFeedbackQuestions();
+    public void feedbackAnswerSendsCorrectJsonWithOnlyTextQuestions() throws IOException {
+        List<FeedbackQuestion> questions = getTextFeedbackQuestions();
 
-        stubFor(post(urlEqualTo(feedbackStubEndpoint))
-            .willReturn(aResponse().withStatus(200)));
-
-        TestClient client = createTestClient();
-
-        server.feedback(questions, wiremockAddress + feedbackEndpoint);
-
-        String reply = waitForInput(client);
-
-        assertEquals("Hello", reply);
-        assertEquals("text", client.reply());
+        TestClient client = prepareClientAndServer(questions);
+        
+        verifyQuestion(client, "Hello", "text");
         answerQuestion(client, "yo", "text");
-
-        reply = waitForInput(client);
-        assertEquals("who are you", reply);
-        assertEquals("text", client.reply());
-
+        
+        verifyQuestion(client, "who are you", "text");
         client = createTestClient();
         answerQuestion(client, "sup", "text");
 
@@ -109,8 +99,94 @@ public class ServerTest {
                 + "\":[{\"question_id\":1,\"answer\":\"yo\"},"
                 + "{\"question_id\":2,\"answer\":\"sup\"}]}")));
     }
+    
+    @Test(timeout = 15000)
+    public void feedbackAnswerSendsCorrectJsonWithOnlyRangeQuestions() throws IOException {
+        List<FeedbackQuestion> questions = getRangeFeedbackQuestions();
+
+        TestClient client = prepareClientAndServer(questions);
+        
+        verifyQuestion(client, "how many points",
+                "Please give your answer as an integer within [0..10] (inclusive)");
+        answerQuestion(client, "8", "int");
+        
+        verifyQuestion(client, "plus or minus",
+                "Please give your answer as an integer within [-10..10] (inclusive)");
+        client = createTestClient();
+        answerQuestion(client, "-2", "int");
+        
+        verifyQuestion(client, "how enlightening was the exercise?",
+                "Please give your answer as an integer within [0..10] (inclusive)");
+        client = createTestClient();
+        answerQuestion(client, "5", "int");
+
+        assertEquals("end", waitForInput(client));
+
+        waitForInput(client);
+
+        verify(postRequestedFor(urlEqualTo(feedbackStubEndpoint))
+            .withRequestBody(equalTo("{\"answers"
+                + "\":[{\"question_id\":4,\"answer\":\"8\"},"
+                + "{\"question_id\":5,\"answer\":\"-2\"},"
+                + "{\"question_id\":6,\"answer\":\"5\"}]}")));
+    }
+    
+    @Test(timeout = 15000)
+    public void feedbackAnswerSendsCorrectJsonWithBothKindsOfQuestions() throws IOException {
+        List<FeedbackQuestion> questions = getFeedbackQuestions();
+
+        TestClient client = prepareClientAndServer(questions);
+        
+        verifyQuestion(client, "what is your powerlevel?", 
+                "Please give your answer as an integer within [-10..10] (inclusive)");
+        answerQuestion(client, "10", "int");
+        
+        verifyQuestion(client, "how many points",
+                "Please give your answer as an integer within [0..10] (inclusive)");
+        client = createTestClient();
+        answerQuestion(client, "7", "int");
+        
+        verifyQuestion(client, "Pizza or Kebab?", "text");
+        client = createTestClient();
+        answerQuestion(client, "sushi", "text");
+        
+        verifyQuestion(client, "feels of the day", "text");
+        client = createTestClient();
+        answerQuestion(client, "the sun is shining, yay!", "text");
+
+        assertEquals("end", waitForInput(client));
+
+        waitForInput(client);
+
+        verify(postRequestedFor(urlEqualTo(feedbackStubEndpoint))
+            .withRequestBody(equalTo("{\"answers"
+                + "\":[{\"question_id\":48,\"answer\":\"10\"},"
+                + "{\"question_id\":50,\"answer\":\"7\"},"
+                + "{\"question_id\":47,\"answer\":\"sushi\"},"
+                + "{\"question_id\":49,\"answer\":\"the sun is shining, yay!\"}]}")));
+    }
+    
+    private void verifyQuestion(TestClient client, String question, String type) {
+        String reply = waitForInput(client);
+
+        assertEquals(question, reply);
+        assertEquals(type, client.reply());
+    }
+    
+    private TestClient prepareClientAndServer(List<FeedbackQuestion> questions) throws IOException {
+        stubFor(post(urlEqualTo(feedbackStubEndpoint))
+            .willReturn(aResponse().withStatus(200)));
+
+        TestClient client = createTestClient();
+
+        server.feedback(questions, wiremockAddress + feedbackEndpoint);
+        return client;
+    }
 
     private void answerQuestion(TestClient client, String answer, String kind) throws IOException {
+        if (answer.contains(" ")) {
+            answer = "{ " + answer + " }";
+        }
         client.sendMessage("answerQuestion answer " + answer + " kind " + kind);
     }
 
@@ -126,36 +202,26 @@ public class ServerTest {
         return new TestClient(server.getCurrentPort());
     }
 
+    private List<FeedbackQuestion> getTextFeedbackQuestions() {
+        FeedbackBuilder feedback = new FeedbackBuilder();
+        feedback.withSimpleTextQuestion("Hello").withSimpleTextQuestion("who are you");
+        return feedback.build();
+    }
+    
+    private List<FeedbackQuestion> getRangeFeedbackQuestions() {
+        FeedbackBuilder feedback = new FeedbackBuilder(4)
+            .withBasicIntRangeQuestion("how many points")
+            .withNegativeIntRange("plus or minus")
+            .withBasicIntRangeQuestion("how enlightening was the exercise?");
+        return feedback.build();
+    }
+    
     private List<FeedbackQuestion> getFeedbackQuestions() {
-        List<FeedbackQuestion> questions = new ArrayList<>();
-
-        FeedbackQuestion q1 = new FeedbackQuestion();
-        FeedbackQuestion q2 = new FeedbackQuestion();
-
-        q1.setId(1);
-        q1.setQuestion("Hello");
-        q1.setKind("text");
-        q2.setId(2);
-        q2.setQuestion("who are you");
-        q2.setKind("text");
-
-        questions.add(q1);
-        questions.add(q2);
-        return questions;
+        FeedbackBuilder feedback = new FeedbackBuilder(47)
+                .withSimpleTextQuestion("Pizza or Kebab?")
+                .withNegativeIntRange("what is your powerlevel?")
+                .withSimpleTextQuestion("feels of the day")
+                .withBasicIntRangeQuestion("how many points");
+        return feedback.build();
     }
-
-    /* @Test
-    public void testFeedback() throws Exception {
-
-    }
-
-    @Test
-    public void testAskQuestion() throws Exception {
-
-    }
-
-    @Test
-    public void testFeedbackAnswer() throws Exception {
-
-    } */
 }
