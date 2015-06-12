@@ -1,4 +1,4 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

@@ -5,7 +5,6 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-
 public class ListCourses extends Command {
 
     public ListCourses(FrontendListener front) {
@@ -31,5 +30,4 @@ public class ListCourses extends Command {
             throw new ProtocolException("User must be authorized first");
         }
     }
-
 }

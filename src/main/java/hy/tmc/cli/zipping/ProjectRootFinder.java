@@ -1,21 +1,21 @@
 package hy.tmc.cli.zipping;
 
-import java.io.File;
+import com.google.common.base.Optional;
+import hy.tmc.cli.backend.communication.TmcJsonParser;
+import hy.tmc.cli.domain.Course;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
+import java.util.List;
 
 public class ProjectRootFinder implements RootFinder {
 
     private final ProjectRootDetector detector;
 
     /**
-     * A helper class that searches for a project root directory. It must be
-     * given a ProjectRootDetector that corresponds with the project in
-     * question. For example, for a Maven project a DefaultRootDetector can be
-     * used.
+     * A helper class that searches for a project root directory. It must be given a
+     * ProjectRootDetector that corresponds with the project in question. For example, for a Maven
+     * project a DefaultRootDetector can be used.
      *
-     * @param detector the RootDetector that specifies if a directory is a
-     * project root
+     * @param detector the RootDetector that specifies if a directory is a project root
      */
     public ProjectRootFinder(ProjectRootDetector detector) {
         this.detector = detector;
@@ -28,18 +28,49 @@ public class ProjectRootFinder implements RootFinder {
      * @return path of the root, of null if no root was found
      */
     @Override
-    public Path getRootDirectory(Path start) {
+    public Optional<Path> getRootDirectory(Path start) {
         return search(start);
     }
 
-    private Path search(Path path) {
+    private Optional<Path> search(Path path) {
         while (path.getParent() != null) {
-            System.out.println(path.toString());
             if (detector.isRootDirectory(path)) {
-                return path;
+                return Optional.of(path);
             }
             path = path.getParent();
         }
-        return null;
+        return Optional.absent();
+    }
+
+    /**
+     * Returns a course object. Finds it from the current path.
+     *
+     * @param path Path to look up course from.
+     * @return Course-object containing information of the course found.
+     */
+    @Override
+    public Optional<Course> getCurrentCourse(String path) {
+        String[] foldersOfPwd = path.split("/");
+        return findCourseByPath(foldersOfPwd);
+    }
+
+    /**
+     * Downloads all courses and iterates over them. Returns Course whose name matches with one
+     * folder in given path.
+     *
+     * @param foldersPath contains the names of the folders in path
+     * @return Course
+     */
+    public Optional<Course> findCourseByPath(String[] foldersPath) {
+        
+        List<Course> courses = TmcJsonParser.getCourses();
+        for (Course course : courses) {
+            for (String folderName : foldersPath) {
+                if (course.getName().equals(folderName)) {
+                    return Optional.of(course);
+                }
+            }
+        }
+        return Optional.absent();
     }
 }

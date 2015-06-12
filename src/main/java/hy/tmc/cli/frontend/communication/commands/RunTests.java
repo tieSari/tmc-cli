@@ -1,40 +1,50 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-
-import hy.tmc.cli.frontend.formatters.CommandLineFormatter;
+import hy.tmc.cli.frontend.formatters.CommandLineTestResultFormatter;
+import hy.tmc.cli.frontend.formatters.TestResultFormatter;
+import hy.tmc.cli.frontend.formatters.VimTestResultFormatter;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
-
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import static javax.swing.text.html.HTML.Tag.HEAD;
 
 public class RunTests extends Command {
 
+    private TestResultFormatter formatter;
+    
     public RunTests(FrontendListener front) {
         super(front);
     }
 
     @Override
     protected void functionality() {
+        formatter = getFormatter();
         String path = this.data.get("filepath");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());   
-        Path exercise = finder.getRootDirectory(Paths.get(path));
-        if (exercise == null){
+        Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
+        if (!exercise.isPresent()){
             this.frontend.printLine("Not an exercise. (null)");
             return;
         }
         try {
-            runTests(exercise);
+            runTests(exercise.get());
         } catch (NoLanguagePluginFoundException ex) {
             this.frontend.printLine("Not an exercise.");
+        }
+    }
+    
+    private TestResultFormatter getFormatter(){
+        if(data.containsKey("--vim")){
+            return new VimTestResultFormatter();
+        } else {
+            return new CommandLineTestResultFormatter();
         }
     }
 
@@ -48,7 +58,6 @@ public class RunTests extends Command {
         RunResult result = taskExecutor.runTests(exercise);
         
         boolean showStackTrace = this.data.containsKey("verbose");
-        CommandLineFormatter formatter = new CommandLineFormatter();
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         String res = resInt.interpret(showStackTrace);
         
@@ -61,5 +70,4 @@ public class RunTests extends Command {
             throw new ProtocolException("File path to exercise required.");
         }
     }
-
 }

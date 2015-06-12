@@ -12,12 +12,12 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import gherkin.deps.com.google.gson.Gson;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
+import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
@@ -32,6 +32,7 @@ public class PasteSteps {
 
     private ConfigHandler configHandler; // writes the test address
     private WireMockServer wireMockServer;
+    private String pasteCommand;
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
@@ -47,7 +48,7 @@ public class PasteSteps {
         serverThread.start();
         testClient = new TestClient(port);
         ClientData.setUserData("Chuck", "Norris");
-        
+
         startWireMock();
     }
 
@@ -91,18 +92,34 @@ public class PasteSteps {
     }
 
     @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
-    public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
-        testClient.init();
-        String pasteCommand = "paste path ";
-        String pastePath = System.getProperty("user.dir") + path + "/" + exercise;
-        final String message = pasteCommand + pastePath;
-        testClient.sendMessage(message);
+    public void user_gives_command_paste_with_valid_path_and_exercise(String path) throws Throwable {
+        //testClient.init();
+        this.pasteCommand = "paste path ";
+        String pastePath = System.getProperty("user.dir") + path + File.separator;
+        this.pasteCommand = pasteCommand + pastePath;
+       //  testClient.sendMessage(message);
     }
 
     @Then("^user will see the paste url$")
     public void user_will_see_the_paste_url() throws Throwable {
         String result = testClient.reply();
         assertTrue(result.contains("Paste submitted"));
+    }
+
+    @When("^exercise \"(.*?)\"$")
+    public void exercise(String exercise) throws Throwable {
+        this.pasteCommand += exercise;
+    }
+
+    @When("^user executes the command$")
+    public void user_executes_the_command() throws Throwable {
+        testClient.init();
+        testClient.sendMessage(pasteCommand);
+    }
+
+    @When("^flag \"(.*?)\"$")
+    public void flag(String flag) throws Throwable {
+        this.pasteCommand += " " + flag;
     }
 
     @After

@@ -1,4 +1,4 @@
-package hy.tmc.cli.backendcommunication;
+package hy.tmc.cli.backend.communication;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
@@ -6,13 +6,18 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import java.io.File;
 import java.io.IOException;
-import static org.junit.Assert.assertEquals;
+import java.util.Map;
+import org.apache.http.entity.mime.content.FileBody;
+
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -69,7 +74,10 @@ public class URLCommunicatorTest {
                 )
         );
         File testFile = new File("testResources/test.zip");
-        HttpResult result = UrlCommunicator.makePostWithFile(testFile, "http://127.0.0.1:8080/kivaurl");
+        HttpResult result = UrlCommunicator.makePostWithFile(
+                new FileBody(testFile),
+                "http://127.0.0.1:8080/kivaurl",
+                Optional.<Map<String,String>>absent());
         ClientData.clearUserData();
         assertEquals("All tests passed", result.getData());
     }

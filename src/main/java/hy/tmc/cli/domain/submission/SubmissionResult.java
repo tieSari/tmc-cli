@@ -8,36 +8,62 @@ public class SubmissionResult {
 
     @SerializedName("api_version")
     private int apiVersion;
+    
     @SerializedName("all_tests_passed")
     private boolean allTestsPassed;
+    
     @SerializedName("user_id")
     private int userId;
+    
     private String course;
+    
     @SerializedName("exercise_name")
     private String exerciseName;
+    
     private String status;
+    
     private String[] points;
+    
     @SerializedName("processing_time")
     private int processingTime;
+    
     @SerializedName("message_for_paste")
     private String messageForPaste;
+    
     @SerializedName("missing_review_points")
     private String[] missingReviewPoints;
+    
     @SerializedName("test_cases")
     private TestCase[] testCases;
+    
     @SerializedName("feedback_questions")
     private List<FeedbackQuestion> feedbackQuestions;
+
     @SerializedName("feedback_answer_url")
     private String feedbackAnswerUrl;
+    
     @SerializedName("solution_url")
     private String solutionUrl;
-//private String[] validations;
+    
+    private Validations validations;
+    
     private String valgrind;
+    
     private boolean reviewed;
+    
     @SerializedName("requests_review")
     private boolean requestsReview;
+    
     @SerializedName("submitted_at")
     private String submittedAt;
+
+    public Validations getValidations() {
+        return validations;
+    }
+
+    public void setValidations(Validations validations) {
+        this.validations = validations;
+    }
 
     public TestCase[] getTestCases() {
         return testCases;

@@ -8,14 +8,14 @@ import hy.tmc.cli.frontend.communication.commands.Command;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 /**
  * ProtocolParser parses user input to executable command.
  */
 public class ProtocolParser {
 
     private FrontendListener server;
-    private HashMap<String, Command> commandsByName = new HashMap<>();
+    private Map<String, Command> commandsByName = new HashMap<>();
 
     /**
      * Constructor for Protocol Parser.
@@ -82,10 +82,17 @@ public class ProtocolParser {
     }
 
     private Command giveData(String[] userInput, Command command) {
-        for (int i = 1; i + 1 < userInput.length; i += 2) {
-            String key = userInput[i];
-            String value = userInput[i + 1].replace("<newline>", "\n");
-            command.setParameter(key, value);
+        int index = 1;
+        while (index < userInput.length) {
+            String key = userInput[index];
+            if (userInput[index].charAt(0) == '-') {
+                command.setParameter(key, "");
+                index++;
+            } else {
+                String value = userInput[index + 1].replace("<newline>", "\n");
+                command.setParameter(key, value);
+                index += 2;
+            }
         }
         return command;
     }

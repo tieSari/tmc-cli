@@ -11,11 +11,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
 public class TestClient {
 
     private Socket socket;
-    private String reply;
     private PrintWriter output;
     private BufferedReader input;
     private final int portnumber;
@@ -26,17 +24,18 @@ public class TestClient {
     }
 
     public void init() throws IOException {
-            this.socket = new Socket("localhost", portnumber);
-            this.output = new PrintWriter(socket.getOutputStream(), true);
-            this.input = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
+        this.socket = new Socket("localhost", portnumber);
+        this.output = new PrintWriter(socket.getOutputStream(), true);
+        this.input = new BufferedReader(
+                new InputStreamReader(socket.getInputStream()));
 
     }
-    
+
     public boolean isClosedFromServer() {
         try {
             input.read();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             return false;
         }
         return true;
@@ -45,8 +44,6 @@ public class TestClient {
     public Socket getSocket() {
         return socket;
     }
-    
-    
 
     public void sendMessage(String message) throws IOException {
         output.println(message);
@@ -59,7 +56,9 @@ public class TestClient {
     public String reply() {
         try {
             return input.readLine();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
+            System.err.println(ex.getMessage());
             return "fail";
         }
     }

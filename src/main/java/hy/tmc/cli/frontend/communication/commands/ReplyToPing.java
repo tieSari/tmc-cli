@@ -23,7 +23,5 @@ public class ReplyToPing extends Command {
      */
     @Override
     public void checkData() {
-
     }
-
 }

@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Writes data to config file and reads from it.
@@ -55,7 +53,7 @@ public class ConfigHandler {
             InputStream inputStream = new FileInputStream(new File(configFilePath));
             prop.load(inputStream);
         } catch (IOException e) {
-            Logger.getLogger(ConfigHandler.class.getName()).log(Level.SEVERE, null, e);
+            System.err.println(e.getMessage());
         }
         return prop;
     }

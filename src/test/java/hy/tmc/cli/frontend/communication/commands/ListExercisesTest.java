@@ -1,60 +1,44 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
-import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.ExerciseLister;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.FrontendStub;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import org.mockito.Mockito;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UrlCommunicator.class)
 public class ListExercisesTest {
 
     private FrontendStub front;
     private Command list;
+    private ExerciseLister lister;
+    private String example = "viikko1-Viikko1_000.Hiekkalaatikko[ ]\n"
+            + "viikko1-Viikko1_001.Nimi[x]\n"
+            + "viikko1-Viikko1_002.HeiMaailma[ ]\n"
+            + "viikko1-Viikko1_003.Kuusi[ ]";
 
-    /**
-     * Set up frontend stub, list exercises command, fake http result, client data & power mockito.
-     */
     @Before
     public void setup() {
+        ClientData.setUserData("Chang", "Jamo");
+        lister = Mockito.mock(ExerciseLister.class);
+        Mockito.when(lister.listExercises(Mockito.anyString()))
+                .thenReturn(example);
+
         front = new FrontendStub();
-        list = new ListExercises(front);
-
-        PowerMockito.mockStatic(UrlCommunicator.class);
-
-        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
-
-        ClientData.setUserData("chang", "paras");
-        PowerMockito
-                .when(UrlCommunicator.makeGetRequest(
-                                Mockito.anyString(), Mockito.anyString()))
-                .thenReturn(fakeResult);
+        list = new ListExercises(front, lister);
     }
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
         ListExercises ls = new ListExercises(front);
-        ls.setParameter("courseUrl", "legit");
+        ls.setParameter("path", "legit");
         try {
             ls.checkData();
         } catch (ProtocolException p) {
@@ -63,22 +47,37 @@ public class ListExercisesTest {
     }
 
     @Test
-    public void getsExerciseName() {
-        list.setParameter("courseUrl", "any");
-        try {
-            list.execute();
-            System.out.println(front.getMostRecentLine());
-            assertTrue(front.getMostRecentLine().contains("viikko1-Viikko1_000.Hiekkalaatikko"));
-            assertTrue(front.getMostRecentLine().contains("viikko3-Viikko3_046.LukujenKeskiarvo"));
-        } catch (ProtocolException ex) {
-            fail("unexpected exception");
-        }
+    public void getsExerciseName() throws ProtocolException {
+        list.setParameter("path", "any");
+        list.execute();
+        assertTrue(front.getMostRecentLine().contains("Viikko1"));
+    }
+    
+    @Test
+    public void returnsFailIfBadPath() throws ProtocolException {
+        String found = "No course found";
+         Mockito.when(lister.listExercises(Mockito.anyString()))
+                .thenReturn(found);
+        list.setParameter("path", "any");
+        list.execute();
+        assertEquals(found, front.getMostRecentLine());
+    }
 
+    @Test(expected = ProtocolException.class)
+    public void throwsErrorIfNoUser() throws ProtocolException {
+        ClientData.clearUserData();
+        list.setParameter("path", "any");
+        list.execute();
+    }
+
+    @Test(expected = ProtocolException.class)
+    public void throwsErrorIfNoCourseSpecified() throws ProtocolException {
+        list.execute();
     }
 
     @Test
     public void doesntContainWeirdName() {
-        list.setParameter("courseUrl", "any");
+        list.setParameter("path", "any");
         try {
             list.execute();
             assertFalse(front.getMostRecentLine().contains("Ilari"));
@@ -86,5 +85,4 @@ public class ListExercisesTest {
             fail("unexpected exception");
         }
     }
-
 }

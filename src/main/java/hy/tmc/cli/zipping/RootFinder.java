@@ -1,9 +1,11 @@
 package hy.tmc.cli.zipping;
 
+import com.google.common.base.Optional;
+import hy.tmc.cli.domain.Course;
 import java.nio.file.Path;
 
 public interface RootFinder {
 
-    public Path getRootDirectory(Path zipRoot);
-
+    Optional<Path> getRootDirectory(Path zipRoot);
+    Optional<Course> getCurrentCourse(String path);
 }

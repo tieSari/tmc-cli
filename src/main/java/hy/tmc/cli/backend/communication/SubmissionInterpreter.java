@@ -1,15 +1,17 @@
 package hy.tmc.cli.backend.communication;
 
-import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
-import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
-import static hy.tmc.cli.frontend.CommandLineColor.RED;
+import com.google.common.base.Optional;
 
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
+import hy.tmc.cli.domain.submission.ValidationError;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class SubmissionInterpreter {
 
@@ -22,6 +24,15 @@ public class SubmissionInterpreter {
      * Milliseconds to sleep between each poll attempt.
      */
     private final int pollInterval = 1000;
+    
+    private final String timeOutmessage = "Something went wrong. "
+            + "Please check your internet connection.";
+    
+    private final SubmissionResultFormatter formatter ;
+    
+    public SubmissionInterpreter(SubmissionResultFormatter formatter) {
+        this.formatter = formatter;
+    }
 
     private SubmissionResult latestResult;
 
@@ -30,20 +41,18 @@ public class SubmissionInterpreter {
      * processing.
      *
      * @param url url to make request to
-     * @return SubmissionResult containing details of submission. Null if timed
-     * out.
+     * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
-    private SubmissionResult pollSubmissionUrl(String url) throws InterruptedException {
+    private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = TmcJsonParser.getSubmissionResult(url);
-            if (!result.getStatus().equals("processing")) {
-                return result;
+            if (result.getStatus() == null || !result.getStatus().equals("processing")) {
+                return Optional.of(result);
             }
-
             Thread.sleep(pollInterval);
         }
-        return null;
+        return Optional.absent();
     }
 
     /**
@@ -54,63 +63,102 @@ public class SubmissionInterpreter {
     }
 
     /**
+     * Get a new submissionResult. This will update the classes state so that calls to methods
+     * like resultSummary will be based on the submissionResult fetched by this method.
+     *
+     * @param url the submission url
+     */
+    public SubmissionResult getSubmissionResult(String url) throws InterruptedException,
+            ProtocolException {
+        Optional<SubmissionResult> result = pollSubmissionUrl(url);
+        if (!result.isPresent()) {
+            throw new ProtocolException("Failed to receive response to submit.");
+        }
+        latestResult = result.get();
+        return latestResult;
+    }
+
+    /**
+     * Organizes SubmissionResult into human-readable form from the URL.
+     *
+     */
+    public String resultSummary(String url, boolean detailed) throws InterruptedException {
+        Optional<SubmissionResult> result = pollSubmissionUrl(url);
+        if (result.isPresent()) {
+            return summarize(result.get(), detailed);
+        }
+        return timeOutmessage;
+    }
+
+    /**
      * Organizes SubmissionResult into human-readable form.
      *
      * @param detailed true for stack trace, always show successful.
-     * @return a String containing human-readable information about tests.
+     * @return a String containing human-readable information about tests. TimeOutMessage
+    if result is null.
      * @throws InterruptedException if thread was interrupted.
      */
     public String resultSummary(boolean detailed) throws InterruptedException {
         return summarize(latestResult, detailed);
     }
 
-    /**
-     * Get a new submissionResult. This will update the classes state so that calls to methods
-     * like resultSummary will be based on the submissionResult fetched by this method.
-     *
-     * @param url the submission url
-     */
-    public SubmissionResult getSubmissionResult(String url) throws InterruptedException {
-        latestResult = pollSubmissionUrl(url);
-        return latestResult;
-    }
-    
     private String summarize(SubmissionResult result, boolean detailed) {
         if (result.isAllTestsPassed()) {
             return buildSuccessMessage(result, detailed);
         } else {
-            return coloredString("Some tests failed on server.", RED) + " Summary: \n"
-                    + testCaseResults(result.getTestCases(), detailed);
+            return formatter.someTestsFailed()
+                    + testCaseResults(result.getTestCases(), detailed)
+                    + valgridErrors(result).or("")
+                    + checkStyleErrors(result);
         }
+    }
+
+    private String checkStyleErrors(SubmissionResult result) {
+        if (result.getValidations() == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+
+        Map<String, List<ValidationError>> errors = result.getValidations().getValidationErrors();
+        if (!errors.isEmpty()) {
+            builder.append(formatter.someScenariosFailed());
+        }
+
+        for (Entry<String, List<ValidationError>> entry : errors.entrySet()) {
+            parseValidationErrors(builder, entry);
+        }
+        return builder.toString();
+    }
+
+    private void parseValidationErrors(StringBuilder builder,
+                                       Entry<String, List<ValidationError>> entry) {
+        builder.append(formatter.parseValidationErrors(entry));
+    }
+
+    private Optional<String> valgridErrors(SubmissionResult result) {
+        return Optional.of(result.getValgrind());
     }
 
     private String buildSuccessMessage(SubmissionResult result, boolean detailed) {
         StringBuilder builder = new StringBuilder();
-        String successMessage = coloredString("All tests passed.", GREEN);
-        builder.append(successMessage)
-                .append( " Points awarded: ")
-                .append(Arrays.toString(result.getPoints()))
-                .append("\n")
+        builder.append(formatter.allTestsPassed())
+                .append(formatter.getPointsInformation(result))
                 .append(testCaseResults(result.getTestCases(), detailed))
-                .append("View model solution: \n")
-                .append(result.getSolutionUrl());
+                .append(formatter.viewModelSolution(result.getSolutionUrl()));
         return builder.toString();
     }
 
     private String testCaseResults(TestCase[] cases, boolean showSuccessful) {
         StringBuilder result = new StringBuilder();
-        for (TestCase aCase : cases) {
-            if (showSuccessful || !aCase.isSuccessful()) {
-                result.append(failOrSuccess(aCase)).append("\n");
+        for (TestCase testCase : cases) {
+            if (showSuccessful || !testCase.isSuccessful()) {
+                result.append(failOrSuccess(testCase));
             }
         }
         return result.toString();
     }
 
     private String failOrSuccess(TestCase testCase) {
-        if (testCase.isSuccessful()) {
-            return coloredString("  PASSED: ", GREEN) + testCase.getName();
-        }
-        return coloredString("  FAILED: ", RED) + testCase.getName() + "\n  " + testCase.getMessage();
+        return formatter.testCaseDescription(testCase);
     }
 }

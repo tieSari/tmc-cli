@@ -61,7 +61,7 @@ function text_feedback () {
   fi
 
   PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
-  send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/<newline>} }"
+  send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/\<newline\>} }"
   if [[ $OUTPUT =~ end ]]
     then
     echo "Thank you for your answers!"
@@ -87,12 +87,22 @@ function command_paste () {
 }
 
 function command_test () {
-  send_command "runTests filepath `pwd`"
+  #send_command "runTests filepath `pwd`"
+  if [ $# -eq 0 ]
+  then
+    send_command "runTests filepath `pwd`"
+  else
+    send_command "runTests filepath `pwd` $1"
+  fi
 }
 
 function command_default () {
     send_command $@
     return 0;
+}
+
+function command_listExercises () {
+  send_command "listExercises path `pwd`"
 }
 
 # Backend login
@@ -153,7 +163,8 @@ case "$1" in
     "login") command_login;;
     "submit") command_submit $2;;
     "download") command_download $2;;
-    "test") command_test;;
-    "paste") command_paste;;
+    "test") command_test $2;;
+    "paste") command_paste $2;;
+    "listExercises") command_listExercises;;
     *) command_default $@;;
 esac

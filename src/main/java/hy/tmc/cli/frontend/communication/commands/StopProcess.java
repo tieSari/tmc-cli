@@ -24,10 +24,10 @@ public class StopProcess extends Command {
 
     /**
      * Does nothing, this command does not require data.
+     * @throws ProtocolException 
      */
     @Override
     public void checkData() throws ProtocolException {
         
     }
-
 }

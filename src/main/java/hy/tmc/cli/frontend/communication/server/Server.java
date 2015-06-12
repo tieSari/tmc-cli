@@ -48,7 +48,7 @@ public class Server implements FrontendListener, Runnable {
             System.out.println("Listening on port " + serverPort);
         } catch (IOException ex) {
             System.out.println("Server creation failed");
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         }
         this.parser = new ProtocolParser(this);
         this.rangeFeedbackHandler = new RangeFeedbackHandler(this);
@@ -156,8 +156,7 @@ public class Server implements FrontendListener, Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(outputLine);
         } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Printlinessa");
+            System.err.println(ex.getMessage());
         }
         System.out.println(outputLine);
     }

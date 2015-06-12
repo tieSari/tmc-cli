@@ -33,7 +33,6 @@ public enum CommandLineColor {
             this.foregroundCode = "3";
             this.backgroundCode = "4";
         }
-
     }
 
     /**

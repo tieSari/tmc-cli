@@ -12,11 +12,25 @@ public class ExampleJson {
     public static String successfulSubmission = successfulSubmission();
     public static String failedSubmission = failedSubmission();
     public static String submitResponse = submitResponse();
+    public static String noDeadlineCourseExample = noDeadlineCourseExample();
+    public static String failingCourse = failingCourse();
+    public static String failedSubmitResponse = failedSubmitResponse();
     public static String pasteResponse = pasteResponse();
     public static String feedbackExample = feedbackExample();
     public static String noFeedbackExample = noFeedbackExample();
     public static String feedbackCourse = feedbackCourseExample();
     public static String trivialNoFeedback = trivialNoFeedback();
+    public static String checkstyleFailed = checkstyleFailed();
+    public static String valgrindFailed = valgrindFailed();
+    public static String expiredCourseExample = expiredCourseExample();
+    
+    private static String failingCourse() {
+        return readFile("src/test/resources/failingCourse.json");
+    }
+    
+    private static String failedSubmitResponse() {
+        return readFile("src/test/resources/failedSubmitResponse.json");
+    }
 
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");
@@ -42,7 +56,15 @@ public class ExampleJson {
     private static String courseExample() {
         return readFile("src/test/resources/course.json");
     }
-
+    
+    private static String noDeadlineCourseExample(){
+        return readFile("src/test/resources/nodeadlinecourse.json");
+    }
+    
+    private static String expiredCourseExample(){
+        return readFile("src/test/resources/expiredCourse.json");
+    }
+   
     private static String allCoursesExample() {
         return readFile("src/test/resources/courses.json");
     }
@@ -57,6 +79,14 @@ public class ExampleJson {
 
     private static String pasteResponse() {
         return readFile("src/test/resources/pasteResponse.json");
+    }
+
+    private static String checkstyleFailed() {
+        return readFile("src/test/resources/checkstyleFailed.json");
+    }
+
+    private static String valgrindFailed() {
+        return readFile("src/test/resources/valgrindFailed.json");
     }
 
     private static String readFile(final String path) {

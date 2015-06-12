@@ -1,10 +1,12 @@
 package hy.tmc.cli.frontend;
 
+
 import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
 
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
-import hy.tmc.cli.frontend.formatters.ResultFormatter;
+
+import hy.tmc.cli.frontend.formatters.TestResultFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,9 @@ import java.util.List;
 public class ResultInterpreter {
 
     private final RunResult result;
-    private final ResultFormatter formatter;
+    private final TestResultFormatter formatter;
 
-    public ResultInterpreter(RunResult result, ResultFormatter formatter) {
+    public ResultInterpreter(RunResult result, TestResultFormatter formatter) {
         this.result = result;
         this.formatter = formatter;
     }
@@ -27,7 +29,6 @@ public class ResultInterpreter {
      * @return a String representation of a RunResult
      */
     public String interpret(boolean showStackTrace) {
-
         if (result.status == TESTS_FAILED) {
             return testFailureReport(showStackTrace);
         } else {
@@ -50,11 +51,9 @@ public class ResultInterpreter {
         if (passedTests.isEmpty()) {
             builder.append(formatter.noTestsPassed());
             return;
-
         }
         builder.append(formatter.howMuchTestsPassed(passedTests.size()));
         builder.append(formatter.getPassedTests(passedTests));
-
     }
 
     private void failedTests(StringBuilder builder, boolean showStackTrace) {
