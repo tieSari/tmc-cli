@@ -18,6 +18,8 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 
 import hy.tmc.cli.testhelpers.TestClient;
+import hy.tmc.cli.testhelpers.Wiremocker;
+import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
@@ -50,65 +52,11 @@ public class SubmitSteps {
         serverThread.start();
         testClient = new TestClient(port);
 
-        startWireMock();
-    }
-
-    /*
-     * Starts wiremock and defines routes.
-     */
-    private void startWireMock() {
-        wireMockServer = new WireMockServer();
-        wireMockServer.start();
-
-        wireMockServer.stubFor(get(urlEqualTo("/user"))
-                .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
-                .willReturn(
-                        aResponse()
-                        .withStatus(200)
-                )
-        );
-        wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
-        wireMockSuccesfulScenario();
-        wiremockFailingScenario();
-        wireMockExpiredScenario();
-    }
-
-    private void wiremockFailingScenario() {
-        wiremockGET("/courses/313.json?api_version=7", ExampleJson.failingCourse);
-        wiremockPOST("/exercises/285/submissions.json?api_version=7", ExampleJson.failedSubmitResponse);
-        wiremockGET("/submissions/7777.json?api_version=7", ExampleJson.failedSubmission);
-    }
-
-    private void wireMockSuccesfulScenario() {
-        wiremockGET("/courses/3.json?api_version=7", ExampleJson.courseExample);
-        wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
-        wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
-    }
-
-    private void wireMockExpiredScenario() {
-        wiremockGET("/courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
-    }
-
-    /*
-     * When httpGet-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-     */
-    private void wiremockGET(final String urlToMock, final String returnBody) {
-        wireMockServer.stubFor(get(urlEqualTo(urlToMock))
-                .willReturn(aResponse()
-                        .withBody(returnBody)
-                )
-        );
-    }
-    
-    /*
-    * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-    */
-    private void wiremockPOST(final String urlToMock, final String returnBody) {
-        wireMockServer.stubFor(post(urlEqualTo(urlToMock))
-                .willReturn(aResponse()
-                        .withBody(returnBody)
-                )
-        );
+        Wiremocker mocker = new Wiremocker();
+        wireMockServer = mocker.wiremockSubmitPaths();
+        mocker.wireMockSuccesfulSubmit(wireMockServer);
+        mocker.wireMockExpiredSubmit(wireMockServer);
+        mocker.wiremockFailingSubmit(wireMockServer);
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
@@ -121,7 +69,7 @@ public class SubmitSteps {
     public void user_gives_command_submit_with_valid_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
         testClient.init();
         String submitCommand = "submit path ";
-        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
+        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
     }

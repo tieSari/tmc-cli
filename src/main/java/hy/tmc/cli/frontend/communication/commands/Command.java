@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 public abstract class Command implements Callable<String> {
 
 
+    private String defaultErrorMessage = "Unexpected exception.";
 
     protected Map<String, String> data;
 
@@ -32,7 +33,7 @@ public abstract class Command implements Callable<String> {
     @Override
     public String call() throws ProtocolException {
         checkData();
-        return functionality().or("");
+        return functionality().or(defaultErrorMessage);
     }
 
     /**
