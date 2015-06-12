@@ -24,6 +24,8 @@ public class MailChecker extends Command {
     protected void functionality() {
         if (mailbox.reviewsWaiting()) {
             frontend.printLine(format(mailbox.getUnreadReviews()));
+        } else {
+            //frontend.printLine("No mail for you :(");
         }
         if (mailbox.updatesWaiting()) {
             frontend.printLine(format(mailbox.getExerciseUpdates(course.get())));
