@@ -4,7 +4,9 @@ import static hy.tmc.cli.backend.communication.authorization.Authorization.encod
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
 import com.google.gson.JsonObject;
-import org.apache.http.Header;
+
+import hy.tmc.cli.configuration.ClientData;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -12,17 +14,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
-import hy.tmc.cli.configuration.ClientData;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class UrlCommunicator {
 
@@ -137,6 +140,9 @@ public class UrlCommunicator {
         return new HttpResult(result.toString(), status, true);
     }
 
+    /**
+     * Makes a POST HTTP request.
+     */
     public static HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
             throws IOException {
         HttpPost httppost = new HttpPost(feedbackUrl);

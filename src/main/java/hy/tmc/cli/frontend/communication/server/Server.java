@@ -2,17 +2,18 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
-import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.TextFeedbackHandler;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.net.ServerSocket;
@@ -45,8 +46,7 @@ public class Server implements FrontendListener, Runnable {
             int serverPort = serverSocket.getLocalPort();
             new ConfigHandler().writePort(serverPort);
             System.out.println("Listening on port " + serverPort);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.out.println("Server creation failed");
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -183,13 +183,15 @@ public class Server implements FrontendListener, Runnable {
         this.textFeedbackHandler.feedback(textQuestions, feedbackUrl);
 
         if (!rangeQuestions.isEmpty()) {
-        rangeFeedbackHandler.askQuestion(); // ask first questions
-
+            rangeFeedbackHandler.askQuestion(); // ask first questions
         } else {
             textFeedbackHandler.askQuestion();
         }
     }
 
+    /**
+     * Takes the answer from a range feedback question.
+     */
     public void rangeFeedbackAnswer(String answer) {
         JsonObject jsonAnswer = new JsonObject();
         jsonAnswer.addProperty("question_id", rangeFeedbackHandler.getLastId());
@@ -210,6 +212,9 @@ public class Server implements FrontendListener, Runnable {
         }
     }
 
+    /**
+     * Takes the answer from a text feedback question.
+     */
     public void textFeedbackAnswer(String answer) {
         JsonObject jsonAnswer = new JsonObject();
         jsonAnswer.addProperty("question_id", textFeedbackHandler.getLastId());
@@ -230,8 +235,7 @@ public class Server implements FrontendListener, Runnable {
         try {
             HttpResult httpResult = UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
             printLine(httpResult.getData());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             printLine(e.getMessage());
         }
     }

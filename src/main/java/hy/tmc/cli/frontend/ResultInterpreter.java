@@ -1,10 +1,11 @@
 package hy.tmc.cli.frontend;
 
+import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
 
 import fi.helsinki.cs.tmc.langs.RunResult;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
 import fi.helsinki.cs.tmc.langs.TestResult;
 import hy.tmc.cli.frontend.formatters.ResultFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,8 @@ public class ResultInterpreter {
         }
     }
 
-    private void failedTestOutput(StringBuilder builder, TestResult testResult, boolean showStackTrace) {
+    private void failedTestOutput(StringBuilder builder,
+                                  TestResult testResult, boolean showStackTrace) {
         builder.append(formatter.getFailedTestOutput(testResult));
         if (showStackTrace) {
             builder.append(formatter.getStackTrace(testResult));

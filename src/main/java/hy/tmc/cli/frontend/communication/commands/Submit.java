@@ -16,13 +16,17 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Submit command for submitting exercises to TMC
+ * Submit command for submitting exercises to TMC.
  */
 public class Submit extends Command {
     
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
-    
+
+    /**
+     * Constructor for Submit command.
+     * @param front FrontendListener that command will use for printing
+     */
     public Submit(FrontendListener front) {
         super(front);
         submitter = new CourseSubmitter(
@@ -42,7 +46,8 @@ public class Submit extends Command {
      * @param interpreter can inject interpreter mock.
      */
     
-    public Submit(FrontendListener front, CourseSubmitter submitter, SubmissionInterpreter interpreter) {
+    public Submit(FrontendListener front, CourseSubmitter submitter,
+                  SubmissionInterpreter interpreter) {
         super(front);
         this.submitter = submitter;
         this.interpreter = interpreter;
@@ -70,11 +75,9 @@ public class Submit extends Command {
                     }
                 }
             }
-        }
-        catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             frontend.printLine(ex.getMessage());
-        }
-        catch (IOException | InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             frontend.printLine("Project not found with specified parameters or thread interrupted");
         }
     }
