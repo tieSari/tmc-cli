@@ -7,7 +7,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.concurrent.ExecutionException;
 
 public class SocketRunnable implements Runnable {
 
@@ -78,30 +77,8 @@ public class SocketRunnable implements Runnable {
      * @param commandResult Command-object that has been started.
      * @param output stream where to write result.
      */
-    private void addListenerToFuture(final ListenableFuture<String> commandResult,
+    private void addListenerToFuture(ListenableFuture<String> commandResult,
             final DataOutputStream output) {
-        commandResult.addListener(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final String commandOutput = commandResult.get();
-                    writeToOutput(commandOutput);
-                }
-                catch (InterruptedException | ExecutionException ex) {
-                    writeToOutput(ex.getCause().getMessage());
-                }
-            }
-
-            private void writeToOutput(final String commandOutput) {
-                try {
-                    output.writeUTF(commandOutput + "\n");
-                    socket.close();
-                }
-                catch (IOException ex) {
-                    System.err.println("Failed to print error message: ");
-                    System.err.println(ex.getMessage());
-                }
-            }
-        }, core.getPool());
+        commandResult.addListener(new SocketListener(commandResult, output, socket), core.getPool());
     }
 }

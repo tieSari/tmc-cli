@@ -14,6 +14,7 @@ import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
 import java.io.File;
 import java.io.IOException;
+import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 
 public class ConcurrencySteps {
@@ -28,11 +29,12 @@ public class ConcurrencySteps {
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
-
+    private final String defaultWiremockAddress = "http://127.0.0.1:8080";
+    
     @Before
     public void setup() throws IOException {
         configHandler = new ConfigHandler();
-        configHandler.writeServerAddress("http://127.0.0.1:8080");
+        configHandler.writeServerAddress(defaultWiremockAddress);
         server = new Server();
         port = configHandler.readPort();
         serverThread = new Thread(server);
@@ -45,32 +47,24 @@ public class ConcurrencySteps {
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         startWireMock();
         testClientA.sendMessage("login username " + username + " password " + password);
-        System.out.println("Login tulostus: " + testClientA.reply());
+        assertTrue(testClientA.reply().contains("Auth successful"));
         testClientA.init();
-        Thread.sleep(1200);
     }
 
     @When("^user starts command \"(.*?)\" and path \"(.*?)\" and exercise \"(.*?)\" and then user starts command help$")
     public void user_starts_command_and_path_and_exercise_and_then_user_starts_command_help(String submitCommand, String pathFromProjectRoot, String exercise) throws Throwable {
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
-        final String message = submitCommand + submitPath;
-        System.out.println(message);
-        testClientA.sendMessage(message);
-        testClientB.sendMessage("help");
-        final String firstA = testClientA.reply();
-        final String firstB = testClientB.reply();
-        testClientA.init();
-        System.out.println("A tulostus: " + firstA);
-        System.out.println("B tulostus: " + firstB);
-        
+        final String submitMessage = submitCommand + submitPath;
+        testClientA.sendMessage(submitMessage);
+        testClientB.sendMessage("help");     
     }
 
     @Then("^user sees first output of help and after that submit$")
     public void user_sees_first_output_of_help_and_after_that_submit() throws Throwable {
-        System.out.println("hei");
-        String result = testClientA.reply();
-        System.out.println("hei");
-        System.out.println(result);
+        final String replyA = testClientA.reply();
+        assertTrue(replyA.contains("All tests passed"));
+        final String replyB = testClientB.reply();
+        assertTrue(replyB.contains("Available commands"));
     }
 
     @After
