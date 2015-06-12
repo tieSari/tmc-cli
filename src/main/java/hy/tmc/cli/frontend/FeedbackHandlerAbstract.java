@@ -5,9 +5,6 @@ import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import java.util.ArrayDeque;
 import java.util.List;
 
-/**
- * Created by jani on 11.6.15.
- */
 public abstract class FeedbackHandlerAbstract {
     protected final FrontendListener server;
     protected final ArrayDeque<FeedbackQuestion> feedbackQueue;

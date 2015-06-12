@@ -31,8 +31,6 @@ public class FeedbackSteps {
     private FrontendStub frontStub;
     private RangeFeedbackHandler handler;
 
-    // private String exercisePath = ;
-
     private int port;
 
     private Thread serverThread;
@@ -55,8 +53,6 @@ public class FeedbackSteps {
      */
     @Before
     public void initializeServer() throws IOException {
-        // System.out.println("doing before");
-
         configHandler = new ConfigHandler();
         wiremockAddress = "http://" + serverHost + ":" + serverPort;
         startWireMock();
@@ -161,7 +157,6 @@ public class FeedbackSteps {
     @Then("^feedback questions will not be asked$")
     public void feedbackQuestionsWillNotBeAsked() throws IOException, InterruptedException {
         String reply = testClient.reply();
-        // System.out.println("hei: " + reply);
         while (reply != null && !reply.equals("fail")) {
             System.out.println("hei: " + reply);
             if (reply.contains("feedback")) {
@@ -253,21 +248,6 @@ public class FeedbackSteps {
         sendExercise("/testResources/tmc-testcourse/trivial");
 
     }
-
-    @When("^the user submits$")
-    public void theUserSubmitsAndAllTestsPass() throws IOException {
-        /*String reply = testClient.reply();
-        while(testClient.hasNewMessages()) {
-            if (reply.contains("tests failed")) {
-                fail("tests failed");
-            }
-            reply = testClient.reply();
-        }*/
-    }
-
-    /* @Then("^no feedback questions are asked$")
-    public void noFeedbackQuestionsAreAsked() {
-    } */
 
     @After
     public void closeAll() throws IOException {
