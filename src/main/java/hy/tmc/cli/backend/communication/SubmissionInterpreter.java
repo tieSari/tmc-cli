@@ -4,11 +4,8 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
 import hy.tmc.cli.domain.submission.ValidationError;
-import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
-import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,7 +24,11 @@ public class SubmissionInterpreter {
     
     private final String timeOutmessage = "Something went wrong. Please check your internet connection.";
     
-    private final SubmissionResultFormatter formatter = new CommandLineSubmissionResultFormatter();
+    private final SubmissionResultFormatter formatter ;
+    
+    public SubmissionInterpreter(SubmissionResultFormatter formatter){
+        this.formatter = formatter;
+    }
 
     /**
      * Returns a ready SubmissionResult with all fields complete after
@@ -85,7 +86,7 @@ public class SubmissionInterpreter {
 
         Map<String, List<ValidationError>> errors = result.getValidations().getValidationErrors();
         if (!errors.isEmpty()) {
-            builder.append(coloredString("Some checkstyle scenarios failed.", YELLOW));
+            builder.append(formatter.someScenariosFailed());
         }
 
         for (Entry<String, List<ValidationError>> entry : errors.entrySet()) {
@@ -95,12 +96,7 @@ public class SubmissionInterpreter {
     }
 
     private void parseValidationErrors(StringBuilder builder, Entry<String, List<ValidationError>> entry) {
-        builder.append("\nFile: ").append(entry.getKey());
-        for (ValidationError error : entry.getValue()) {
-            String errorLine = "\n  On line: " + error.getLine() + " Column: " + error.getColumn();
-            builder.append(coloredString(errorLine, YELLOW));
-            builder.append("\n    ").append(error.getMessage());
-        }
+        builder.append(formatter.parseValidationErrors(entry));
     }
 
     private Optional<String> valgridErrors(SubmissionResult result) {

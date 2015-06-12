@@ -35,6 +35,11 @@ public abstract class Command {
     public void execute() throws ProtocolException {
         checkData();
         functionality();
+        cleanData();
+    }
+    
+    public Map<String, String> getData() {
+        return data;
     }
 
     /**
@@ -59,4 +64,8 @@ public abstract class Command {
      * @throws ProtocolException if the command lacks some necessary data
      */
     public abstract void checkData() throws ProtocolException;
+
+    private void cleanData() {
+        data.clear();
+    }
 }

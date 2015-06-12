@@ -18,6 +18,7 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 
 import hy.tmc.cli.testhelpers.TestClient;
+import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
@@ -35,6 +36,7 @@ public class SubmitSteps {
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
+    private String submitCommand;
 
     /*
      * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
@@ -99,11 +101,10 @@ public class SubmitSteps {
                 )
         );
     }
-    
-    /*
-    * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-    */
 
+    /*
+     * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
+     */
     private void wiremockPOST(final String urlToMock, final String returnBody) {
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
@@ -117,13 +118,13 @@ public class SubmitSteps {
         testClient.sendMessage("login username " + username + " password " + password);
     }
 
-    @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
-    public void user_gives_command_submit_with_valid_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
-        testClient.init();
-        String submitCommand = "submit path ";
-        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
-        final String message = submitCommand + submitPath;
-        testClient.sendMessage(message);
+    @When("^user gives command submit with valid path \"(.*?)\"$")
+    public void user_gives_command_submit_with_valid_path(String pathFromProjectRoot) throws Throwable {
+        // testClient.init();
+        this.submitCommand = "submit path ";
+        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot;
+        this.submitCommand = submitCommand + submitPath;
+        // testClient.sendMessage(message);
     }
 
     @When("^user gives command submit with expired path \"(.*?)\" and exercise \"(.*?)\"$")
@@ -135,9 +136,14 @@ public class SubmitSteps {
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
     }
+    
+    @When("^user executes the command$")
+    public void user_executes_the_command() throws IOException {
+        testClient.init();
+        testClient.sendMessage(submitCommand);
+    }
 
     @Then("^user will see all test passing$")
-
     public void user_will_see_all_test_passing() throws Throwable {
         String result = testClient.reply();
         assertTrue(result.contains("All tests passed"));
@@ -153,6 +159,16 @@ public class SubmitSteps {
     public void user_will_see_a_message_which_tells_that_exercise_is_expired() throws Throwable {
         final String result = testClient.reply();
         assertTrue(result.contains("expired"));
+    }
+
+    @When("^exercise \"(.*?)\"$")
+    public void exercise(String exercise) throws Throwable {
+        this.submitCommand += File.separatorChar + exercise;
+    }
+
+    @When("^flag \"(.*?)\"$")
+    public void flag(String flag) throws Throwable {
+        this.submitCommand += " " + flag;
     }
 
     /*
