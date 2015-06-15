@@ -54,10 +54,7 @@ public class DefaultUnzipDecider implements UnzipDecider {
             return;
         }
         Yaml yaml = new Yaml();
-
-        @SuppressWarnings("unchecked")
         Map<String, List<String>> map = (Map<String, List<String>>) yaml.load(contents);
-
         this.additionalStudentFiles = map.get("extra_student_files");
     }
 }

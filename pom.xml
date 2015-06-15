@@ -125,6 +125,7 @@
                     <compilerArguments>
                         <Werror />
                         <Xlint />
+                        <Xlint:-unchecked />
                     </compilerArguments>
                 </configuration>
             </plugin>
