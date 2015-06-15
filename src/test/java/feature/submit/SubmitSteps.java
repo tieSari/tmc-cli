@@ -74,7 +74,7 @@ public class SubmitSteps {
         wireMockServer.stop();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
         ClientData.clearUserData();
-        Mailbox.destroy();
+       // Mailbox.destroy();
     }
 
     /*
@@ -85,7 +85,7 @@ public class SubmitSteps {
         wireMockServer.start();
 
         wireMockServer.stubFor(get(urlEqualTo("/user"))
-                        .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
+                        .withHeader("Authorization", containing("Basic "))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
@@ -138,6 +138,7 @@ public class SubmitSteps {
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
+        System.out.println(username + "  " + password);
         testClient.sendMessage("login username " + username + " password " + password);
     }
 
@@ -181,15 +182,17 @@ public class SubmitSteps {
 
     @Given("^the user has mail in the mailbox$")
     public void the_user_has_mail_in_the_mailbox() throws Throwable {
+        testClient.sendMessage("login username " + "test" + " password " + "1234");
         Mailbox.getMailbox().fill(MailExample.reviewExample());
     }
+
+
+
 
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
         final String result = testClient.reply();
-        String more  = testClient.reply();
-        assertTrue(Mailbox.getMailbox().reviewsWaiting());
-        //assertTrue(result.contains("mail"));
+        assertTrue(result.contains("mail"));
     }
 
     @Given("^polling for reviews is not in progress$")

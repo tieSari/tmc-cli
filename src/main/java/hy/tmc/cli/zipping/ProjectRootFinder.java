@@ -54,8 +54,7 @@ public class ProjectRootFinder implements RootFinder {
         String[] foldersOfPwd = path.split("/");
         try {
             checkPwd(foldersOfPwd);
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             return Optional.absent();
         }
         return findCourseByPath(foldersOfPwd);
@@ -73,7 +72,9 @@ public class ProjectRootFinder implements RootFinder {
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {
-                    return Optional.of(course);
+                    Optional<Course> courseOptional = Optional.of(course);
+                    System.out.println("kurssi: " + courseOptional.get());
+                    return courseOptional;
                 }
             }
         }

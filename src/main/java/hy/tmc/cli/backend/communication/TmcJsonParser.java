@@ -29,6 +29,7 @@ public class TmcJsonParser {
      * @return JSON-object
      */
     private static JsonObject getJsonFrom(String url) {
+        System.out.println("url: " + url);
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
                 url, ClientData.getFormattedUserData()
         );
@@ -78,8 +79,9 @@ public class TmcJsonParser {
      * @return List of Course-objects
      */
     public static List<Course> getCourses() {
-        JsonObject jsonObject = getJsonFrom(new ConfigHandler()
-                .readCoursesAddress());
+        String courseAddress = new ConfigHandler()
+                .readCoursesAddress();
+        JsonObject jsonObject = getJsonFrom(courseAddress);
         Gson mapper = new Gson();
         Course[] courses = mapper
                 .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);

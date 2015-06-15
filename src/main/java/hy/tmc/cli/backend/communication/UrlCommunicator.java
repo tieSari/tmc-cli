@@ -33,7 +33,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class UrlCommunicator {
     
-    public static final int BAD_REQUEST = 400;
+    public static final int BAD_REQUEST = 407;
 
     /**
      * Creates and executes post-request to specified URL.
@@ -77,6 +77,9 @@ public class UrlCommunicator {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
         } catch (IOException e) {
+            System.out.println("Bad request");
+            System.out.println(e.getMessage());
+            System.out.println(url);
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
