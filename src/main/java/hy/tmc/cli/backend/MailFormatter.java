@@ -2,18 +2,21 @@ package hy.tmc.cli.backend;
 
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.Review;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MailFormatter {
 
+    /**
+     *
+     * */
     public static String format(List<?> elements) {
-        if (elements.isEmpty()) {
-            return "";
-        }
+        if (elements.isEmpty()) return "";
         if (elements.get(0) instanceof Review) {
             return formatReviews((List<Review>) elements);
-        } 
+        }
         return formatExercises((List<Exercise>) elements);
     }
     
