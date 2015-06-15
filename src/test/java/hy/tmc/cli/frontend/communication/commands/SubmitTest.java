@@ -1,6 +1,10 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.base.Optional;
+
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
@@ -10,11 +14,11 @@ import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
+
 import java.io.IOException;
 import java.text.ParseException;
+
 import org.junit.After;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,8 +54,8 @@ public class SubmitTest {
     private void mock() throws ParseException, ExpiredException, IOException {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         PowerMockito.mockStatic(ClientData.class);
-        PowerMockito.
-                when(ClientData.getCurrentCourse(Mockito.anyString()))
+        PowerMockito
+                .when(ClientData.getCurrentCourse(Mockito.anyString()))
                 .thenReturn(Optional.<Course>of(new Course()));
         PowerMockito
                 .when(ClientData.getFormattedUserData())
