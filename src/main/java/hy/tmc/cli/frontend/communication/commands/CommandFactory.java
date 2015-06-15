@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend.FrontendListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +15,7 @@ public class CommandFactory {
      */
     public static Map<String, Command> createCommandMap() {
         HashMap<String, Command> commandsByName = new HashMap<>();
+
         commandsByName.put("auth", authenticate());
         commandsByName.put("help", help());
         commandsByName.put("login", login());
@@ -29,6 +29,8 @@ public class CommandFactory {
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
         commandsByName.put("stopProcess", stopProcess());
+        commandsByName.put("answerQuestion", answerQuestion());
+
         return commandsByName;
     }
 
@@ -109,7 +111,7 @@ public class CommandFactory {
      * @return a downloadExercises object
      */
     public static Command downloadExercises() {
-       return new DownloadExercises();
+        return new DownloadExercises();
     }
 
     /**
@@ -160,6 +162,10 @@ public class CommandFactory {
      */
     public static Command paste() {
         return new Paste();
+    }
+
+    public static Command answerQuestion() {
+        return new AnswerQuestion();
     }
 
     /**

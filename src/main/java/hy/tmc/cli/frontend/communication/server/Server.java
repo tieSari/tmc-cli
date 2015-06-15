@@ -1,15 +1,16 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.gson.JsonArray;
 import hy.tmc.cli.backend.TmcCore;
-import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.FrontendListener;
-
+import hy.tmc.cli.frontend.RangeFeedbackHandler;
+import hy.tmc.cli.frontend.TextFeedbackHandler;
+import java.io.BufferedReader;
 import java.io.IOException;
-
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 public class Server implements FrontendListener, Runnable {
 
@@ -17,12 +18,18 @@ public class Server implements FrontendListener, Runnable {
     private boolean isRunning;
     private TmcCore tmcCore;
     private ExecutorService socketThreadPool;
+    private BufferedReader in;
+    private JsonArray feedbackAnswers = new JsonArray();
+    private RangeFeedbackHandler rangeFeedbackHandler;
+    private TextFeedbackHandler textFeedbackHandler;
 
     /**
      * Constructor for server. It finds a free port to be listened to.
      *
      * @throws IOException if failed to write port to configuration file
-     */
+    */
+    
+
     public Server() throws IOException {
         tmcCore = new TmcCore();
         socketThreadPool = Executors.newCachedThreadPool();
@@ -44,6 +51,7 @@ public class Server implements FrontendListener, Runnable {
     private void initServerSocket() {
         try {
             serverSocket = new ServerSocket(0);
+<<<<<<< HEAD
             new ConfigHandler().writePort(serverSocket.getLocalPort());
         }
         catch (IOException ex) {
@@ -52,6 +60,28 @@ public class Server implements FrontendListener, Runnable {
         }
     }
 
+=======
+            int serverPort = serverSocket.getLocalPort();
+            new ConfigHandler().writePort(serverPort);
+            System.out.println("Listening on port " + serverPort);
+        } catch (IOException ex) {
+            System.out.println("Server creation failed");
+            System.err.println(ex.getMessage());
+        }
+        this.parser = new ProtocolParser(this);
+        this.rangeFeedbackHandler = new RangeFeedbackHandler(this);
+        this.textFeedbackHandler = new TextFeedbackHandler(this);
+    }
+
+    /**
+     * Dependency injection for tests.
+     */
+    public Server(RangeFeedbackHandler handler) throws IOException {
+        this();
+        this.rangeFeedbackHandler = handler;
+    }
+
+>>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
     public int getCurrentPort() {
         return this.serverSocket.getLocalPort();
     }
@@ -86,6 +116,41 @@ public class Server implements FrontendListener, Runnable {
                 System.err.println(e.getMessage());
             }
         }
+<<<<<<< HEAD
+=======
+        return true;
+    }
+
+    private boolean introduceClientSuccessful(Socket client) throws IOException {
+        this.clientSocket = client;
+        return canListenClient(clientSocket);
+    }
+
+    private boolean canListenClient(Socket clientSocket) throws IOException {
+        in = new BufferedReader(
+                new InputStreamReader(clientSocket.getInputStream()));
+        String inputLine = readCommandFromClient(clientSocket);
+
+        if (inputLine == null) {
+            return false;
+        }
+
+        try {
+            parseAndExecuteCommand(inputLine);
+        } catch (ProtocolException ex) {
+            printLine(ex.getMessage());
+        }
+        return true;
+    }
+
+    private String readCommandFromClient(Socket clientSocket) throws IOException {
+        // BufferedReader in = ;
+        return in.readLine();
+    }
+
+    private void parseAndExecuteCommand(String inputLine) throws ProtocolException {
+        parser.getCommand(inputLine).execute();
+>>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
     }
 
     /**
@@ -97,5 +162,93 @@ public class Server implements FrontendListener, Runnable {
         isRunning = false;
         serverSocket.close();
         socketThreadPool.shutdown();
+    }
+
+    @Override
+    public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
+        if (feedbackQuestions.isEmpty()) {
+            return;
+        }
+
+
+        List<FeedbackQuestion> rangeQuestions = new ArrayList<>();
+        List<FeedbackQuestion> textQuestions = new ArrayList<>();
+        for (FeedbackQuestion feedbackQuestion : feedbackQuestions) {
+            if (feedbackQuestion.getKind().equals("text")) {
+                textQuestions.add(feedbackQuestion);
+            } else {
+                rangeQuestions.add(feedbackQuestion);
+            }
+        }
+
+        this.rangeFeedbackHandler.feedback(rangeQuestions, feedbackUrl);
+        this.textFeedbackHandler.feedback(textQuestions, feedbackUrl);
+
+        if (!rangeQuestions.isEmpty()) {
+            rangeFeedbackHandler.askQuestion(); // ask first questions
+        } else {
+            textFeedbackHandler.askQuestion();
+        }
+    }
+
+    /**
+     * Takes the answer from a range feedback question.
+     */
+    public void rangeFeedbackAnswer(String answer) {
+        JsonObject jsonAnswer = new JsonObject();
+        jsonAnswer.addProperty("question_id", rangeFeedbackHandler.getLastId());
+        String validAnswer = rangeFeedbackHandler.validateAnswer(answer);
+        jsonAnswer.addProperty("answer", validAnswer);
+        feedbackAnswers.add(jsonAnswer);
+
+        if (this.rangeFeedbackHandler.allQuestionsAsked()) {
+            if (textFeedbackHandler.allQuestionsAsked()) {
+                printLine("end");
+                sendToTmcServer();
+                this.feedbackAnswers = new JsonArray();
+            } else {
+                textFeedbackHandler.askQuestion(); // start asking text questions
+            }
+        } else {
+            rangeFeedbackHandler.askQuestion();
+        }
+    }
+
+    /**
+     * Takes the answer from a text feedback question.
+     */
+    public void textFeedbackAnswer(String answer) {
+        JsonObject jsonAnswer = new JsonObject();
+        jsonAnswer.addProperty("question_id", textFeedbackHandler.getLastId());
+        jsonAnswer.addProperty("answer", answer);
+        feedbackAnswers.add(jsonAnswer);
+
+        if (this.textFeedbackHandler.allQuestionsAsked()) {
+            printLine("end");
+            sendToTmcServer();
+            this.feedbackAnswers = new JsonArray();
+        } else {
+            textFeedbackHandler.askQuestion();
+        }
+    }
+
+    protected void sendToTmcServer() {
+        JsonObject req = getAnswersJson();
+        try {
+            HttpResult httpResult = UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
+            printLine(httpResult.getData());
+        } catch (IOException e) {
+            printLine(e.getMessage());
+        }
+    }
+
+    private String getFeedbackUrl() {
+        return rangeFeedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam;
+    }
+
+    private JsonObject getAnswersJson() {
+        JsonObject req = new JsonObject();
+        req.add("answers", feedbackAnswers);
+        return req;
     }
 }

@@ -41,7 +41,7 @@ public class CommandLineFormatterTest {
     @Test
     public void testInterpretStatus() {
         String explanation = formatter.interpretStatus(allPassed);
-        assertTrue(explanation.contains("All tests passed"));
+        assertTrue(explanation.contains("\u001B[32mAll tests passed.\u001B[0m You can now submit"));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class CommandLineFormatterTest {
     @Test
     public void testHowMuchTestsFailed() {
         String explanation = formatter.howMuchTestsFailed(5);
-        assertTrue(explanation.contains("5 tests failed:\n"));
+        assertTrue(explanation.contains("\u001B"));
     }
 
     @Test

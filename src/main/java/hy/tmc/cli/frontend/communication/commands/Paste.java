@@ -3,7 +3,6 @@ package hy.tmc.cli.frontend.communication.commands;
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
@@ -11,8 +10,7 @@ import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import net.lingala.zip4j.exception.ZipException;
 
 public class Paste extends Command {
 
@@ -45,7 +43,7 @@ public class Paste extends Command {
         try {
             String returnUrl = submitter.submitPaste(data.get("path"));
             return Optional.of("Paste submitted. Here it is: \n  " + returnUrl);
-        } catch (Exception ex) {
+        } catch (IOException | ParseException | ExpiredException | IllegalArgumentException | ZipException ex) {
             return Optional.of(ex.getMessage());
         }
     }

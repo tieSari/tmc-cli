@@ -22,7 +22,7 @@ public abstract class Command implements Callable<String> {
     public Command() {
         data = new HashMap<>();
     }
-
+    
     /**
      * First uses checkData() to verify that the command has been given sufficient information. Then
      * runs functionality() to perform this command. This method should not be overriden, the
@@ -34,6 +34,10 @@ public abstract class Command implements Callable<String> {
     public String call() throws ProtocolException {
         checkData();
         return functionality().or(defaultErrorMessage);
+    }
+    
+    public Map<String, String> getData() {
+        return data;
     }
 
     /**
@@ -58,4 +62,8 @@ public abstract class Command implements Callable<String> {
      * @throws ProtocolException if the command lacks some necessary data
      */
     public abstract void checkData() throws ProtocolException;
+
+    private void cleanData() {
+        data.clear();
+    }
 }
