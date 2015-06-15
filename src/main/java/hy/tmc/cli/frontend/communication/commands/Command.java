@@ -5,46 +5,24 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public abstract class Command implements Callable<String> {
-
+public abstract class Command {
 
     private String defaultErrorMessage = "Unexpected exception.";
 
     protected Map<String, String> data;
+    private Class returnType;
 
     /**
-     * Constructor sets frontend and backend.
-     *
-     * @param front frontend
+     * Command can return any type of object. For example SubmissionResult etc.
      */
     public Command() {
         data = new HashMap<>();
     }
     
-    /**
-     * First uses checkData() to verify that the command has been given sufficient information. Then
-     * runs functionality() to perform this command. This method should not be overriden, the
-     * functionality should be written in the functionality-method.
-     *
-     * @throws ProtocolException if the command has insufficient data to run
-     */
-    @Override
-    public String call() throws ProtocolException {
-        checkData();
-        return functionality().or(defaultErrorMessage);
-    }
-    
     public Map<String, String> getData() {
         return data;
     }
-
-    /**
-     * The functionality of the command. This method defines what the command does.
-     */
-    protected abstract Optional<String> functionality();
-
     /**
      * setParameter sets parameter data for command.
      *
@@ -62,6 +40,16 @@ public abstract class Command implements Callable<String> {
      * @throws ProtocolException if the command lacks some necessary data
      */
     public abstract void checkData() throws ProtocolException;
+    
+    /**
+     * Command should define, how to format data when result is ready. 
+     * This is ONLY for TMC-cli-client. Other (G)UI's like TMC-Netbeans 
+     * define themselves, how to parse ready commandResult.
+     * 
+     * @param data SubmissionResult or String for example
+     * @return String to be printed to user
+     */
+    public abstract Optional<String> parseData(Object data);
 
     private void cleanData() {
         data.clear();

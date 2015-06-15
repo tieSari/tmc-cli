@@ -13,16 +13,18 @@ import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
-import net.lingala.zip4j.exception.ZipException;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.exception.ZipException;
 
 /**
  * Submit command for submitting exercises to TMC.
  */
-public class Submit extends Command {
+public class Submit extends Command implements Callable<SubmissionResult> {
 
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
@@ -40,7 +42,6 @@ public class Submit extends Command {
     /**
      * Constructor for mocking.
      *
-     * @param front frontend.
      * @param submitter can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
@@ -50,46 +51,13 @@ public class Submit extends Command {
     }
 
     /**
-     * Takes a pwd command's output in "path" and optionally the exercise's name in "exerciseName".
+     * Takes a pwd command's output in "path" and optionally the exercise's name
+     * in "exerciseName".
      */
-    @Override
-    protected Optional<String> functionality() {
+    private Optional<SubmissionResult> functionality() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException, ProtocolException {
         interpreter = getInterpreter();
-        try {
-            if (data.containsKey("exerciseName")) {
-                return Optional.of("Doesnt work yet");
-            } else {
-                String returnUrl = submitter.submit(data.get("path"));
-
-                SubmissionResult submissionResult = interpreter.getSubmissionResult(returnUrl);
-                String output = "";
-                output = interpreter.resultSummary(true);
-
-                if (submissionResult.isAllTestsPassed()) {
-                    List<FeedbackQuestion> feedback = submissionResult.getFeedbackQuestions();
-                    if (feedback != null && !feedback.isEmpty()) {
-                        output += "Please give feedback:";
-                        output += feedback + submissionResult.getFeedbackAnswerUrl();
-                    }
-                }
-                return Optional.of(output);
-            }
-        }
-        catch (IllegalArgumentException | ParseException ex) {
-            return Optional.of(ex.getMessage());
-        }
-        catch (IOException | InterruptedException ex) {
-            return Optional.of("Project not found with specified parameters or thread interrupted");
-        }
-        catch (ExpiredException ex) {
-            return Optional.of("Exercise has expired.");
-        }
-        catch (ZipException ex) {
-            return Optional.of("Zipping exercise failed.");
-        }
-        catch (ProtocolException e) {
-            return Optional.of("Failed to receive submit response.");
-        }
+        String returnUrl = submitter.submit(data.get("path"));
+        return Optional.of(interpreter.getSubmissionResult(returnUrl));
     }
 
     private SubmissionInterpreter getInterpreter() {
@@ -112,6 +80,32 @@ public class Submit extends Command {
         }
         if (!this.data.containsKey("path")) {
             throw new ProtocolException("pwd not supplied");
+        }
+    }
+
+    @Override
+    public SubmissionResult call() throws Exception {
+        checkData();
+        return functionality().or(new SubmissionResult());
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        try {
+            SubmissionResult submissionResult = (SubmissionResult) data;
+            String output = "";
+            output = interpreter.resultSummary(true);
+            
+            if (submissionResult.isAllTestsPassed()) {
+                List<FeedbackQuestion> feedback = submissionResult.getFeedbackQuestions();
+                if (feedback != null && !feedback.isEmpty()) {
+                    output += "Please give feedback:";
+                    output += feedback + submissionResult.getFeedbackAnswerUrl();
+                }
+            }
+            return Optional.of(output);
+        } catch (InterruptedException ex) {
+            return Optional.of("Error while parsing submissionResult.");
         }
     }
 }
