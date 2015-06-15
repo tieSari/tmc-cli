@@ -1,16 +1,23 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import hy.tmc.cli.backend.TmcCore;
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
+import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.TextFeedbackHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 
 public class Server implements FrontendListener, Runnable {
 
@@ -27,13 +34,13 @@ public class Server implements FrontendListener, Runnable {
      * Constructor for server. It finds a free port to be listened to.
      *
      * @throws IOException if failed to write port to configuration file
-    */
-    
-
+     */
     public Server() throws IOException {
         tmcCore = new TmcCore();
         socketThreadPool = Executors.newCachedThreadPool();
         initServerSocket();
+        this.rangeFeedbackHandler = new RangeFeedbackHandler(this);
+        this.textFeedbackHandler = new TextFeedbackHandler(this);
     }
 
     /**
@@ -42,16 +49,17 @@ public class Server implements FrontendListener, Runnable {
      * @param tmcCore
      * @param socketThreadPool
      */
-    public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
+    public Server(TmcCore tmcCore, ExecutorService socketThreadPool, RangeFeedbackHandler handler) throws IOException {
         this.tmcCore = tmcCore;
         this.socketThreadPool = socketThreadPool;
         initServerSocket();
+        this.rangeFeedbackHandler = handler;
+
     }
 
     private void initServerSocket() {
         try {
             serverSocket = new ServerSocket(0);
-<<<<<<< HEAD
             new ConfigHandler().writePort(serverSocket.getLocalPort());
         }
         catch (IOException ex) {
@@ -60,28 +68,6 @@ public class Server implements FrontendListener, Runnable {
         }
     }
 
-=======
-            int serverPort = serverSocket.getLocalPort();
-            new ConfigHandler().writePort(serverPort);
-            System.out.println("Listening on port " + serverPort);
-        } catch (IOException ex) {
-            System.out.println("Server creation failed");
-            System.err.println(ex.getMessage());
-        }
-        this.parser = new ProtocolParser(this);
-        this.rangeFeedbackHandler = new RangeFeedbackHandler(this);
-        this.textFeedbackHandler = new TextFeedbackHandler(this);
-    }
-
-    /**
-     * Dependency injection for tests.
-     */
-    public Server(RangeFeedbackHandler handler) throws IOException {
-        this();
-        this.rangeFeedbackHandler = handler;
-    }
-
->>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
     public int getCurrentPort() {
         return this.serverSocket.getLocalPort();
     }
@@ -116,41 +102,6 @@ public class Server implements FrontendListener, Runnable {
                 System.err.println(e.getMessage());
             }
         }
-<<<<<<< HEAD
-=======
-        return true;
-    }
-
-    private boolean introduceClientSuccessful(Socket client) throws IOException {
-        this.clientSocket = client;
-        return canListenClient(clientSocket);
-    }
-
-    private boolean canListenClient(Socket clientSocket) throws IOException {
-        in = new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
-        String inputLine = readCommandFromClient(clientSocket);
-
-        if (inputLine == null) {
-            return false;
-        }
-
-        try {
-            parseAndExecuteCommand(inputLine);
-        } catch (ProtocolException ex) {
-            printLine(ex.getMessage());
-        }
-        return true;
-    }
-
-    private String readCommandFromClient(Socket clientSocket) throws IOException {
-        // BufferedReader in = ;
-        return in.readLine();
-    }
-
-    private void parseAndExecuteCommand(String inputLine) throws ProtocolException {
-        parser.getCommand(inputLine).execute();
->>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
     }
 
     /**
@@ -169,7 +120,6 @@ public class Server implements FrontendListener, Runnable {
         if (feedbackQuestions.isEmpty()) {
             return;
         }
-
 
         List<FeedbackQuestion> rangeQuestions = new ArrayList<>();
         List<FeedbackQuestion> textQuestions = new ArrayList<>();
@@ -203,7 +153,7 @@ public class Server implements FrontendListener, Runnable {
 
         if (this.rangeFeedbackHandler.allQuestionsAsked()) {
             if (textFeedbackHandler.allQuestionsAsked()) {
-                printLine("end");
+//                printLine("end");
                 sendToTmcServer();
                 this.feedbackAnswers = new JsonArray();
             } else {
@@ -224,7 +174,7 @@ public class Server implements FrontendListener, Runnable {
         feedbackAnswers.add(jsonAnswer);
 
         if (this.textFeedbackHandler.allQuestionsAsked()) {
-            printLine("end");
+//            printLine("end");
             sendToTmcServer();
             this.feedbackAnswers = new JsonArray();
         } else {
@@ -236,9 +186,10 @@ public class Server implements FrontendListener, Runnable {
         JsonObject req = getAnswersJson();
         try {
             HttpResult httpResult = UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
-            printLine(httpResult.getData());
-        } catch (IOException e) {
-            printLine(e.getMessage());
+//            printLine(httpResult.getData());
+        }
+        catch (IOException e) {
+//            printLine(e.getMessage());
         }
     }
 

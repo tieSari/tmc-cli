@@ -29,7 +29,7 @@ public class CommandFactory {
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
         commandsByName.put("stopProcess", stopProcess());
-        commandsByName.put("answerQuestion", answerQuestion());
+//        commandsByName.put("answerQuestion", answerQuestion());
 
         return commandsByName;
     }
@@ -164,9 +164,9 @@ public class CommandFactory {
         return new Paste();
     }
 
-    public static Command answerQuestion() {
-        return new AnswerQuestion();
-    }
+//    public static Command answerQuestion() {
+//        return new AnswerQuestion();
+//    }
 
     /**
      * Takes the command map and returns a set of command names.

@@ -7,7 +7,7 @@ public class Feedback extends Command {
 
     @Override
     protected Optional<String> functionality() {
-        
+        return null;
     }
 
     @Override

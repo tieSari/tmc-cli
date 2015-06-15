@@ -56,10 +56,10 @@ public abstract class FeedbackHandlerAbstract {
         FeedbackQuestion nextQuestion = this.feedbackQueue.remove();
         lastQuestionId = nextQuestion.getId();
         lastKind = nextQuestion.getKind();
-        server.printLine(nextQuestion.getQuestion());
+//        server.printLine(nextQuestion.getQuestion());
         String instructions = instructions(nextQuestion.getKind());
         if (!instructions.isEmpty()) {
-            server.printLine(instructions);
+//            server.printLine(instructions);
         }
     }
 

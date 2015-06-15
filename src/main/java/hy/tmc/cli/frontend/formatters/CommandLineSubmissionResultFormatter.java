@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- * CommandLineSubmissionResultFormatter gives submissionresult explainings for command line user interface.
- * ResultInterpreter class uses this class.
+ * CommandLineSubmissionResultFormatter gives submissionresult explainings for command line user
+ * interface. ResultInterpreter class uses this class.
  */
 public class CommandLineSubmissionResultFormatter implements SubmissionResultFormatter {
 
@@ -24,20 +24,16 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
 
     /**
      * Tells if TestCase object is passed or failed, if failed, also information about failures.
-     * @param testCase 
+     *
+     * @param testCase
      * @return toString of StrinBuilder content
      */
     @Override
     public String testCaseDescription(TestCase testCase) {
         StringBuilder destination = new StringBuilder();
         if (testCase.isSuccessful()) {
-<<<<<<< HEAD
             destination.append(" PASSED: ").append(testCase.getName());
             return destination.toString();
-=======
-            des.append(" PASSED: ").append(testCase.getName());
-            return des.toString();
->>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
         }
         destination.append(" FAILED: ").append(testCase.getName()).append("\n  ").append(testCase.getMessage());
         return destination.toString();
@@ -57,7 +53,7 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
     }
 
     /**
-     * Gives information about result points. 
+     * Gives information about result points.
      */
     @Override
     public String getPointsInformation(SubmissionResult result) {
