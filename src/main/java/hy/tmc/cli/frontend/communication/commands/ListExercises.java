@@ -22,14 +22,6 @@ public class ListExercises extends Command<String> {
     public ListExercises(ExerciseLister lister) {
         this.lister = lister;
     }
-
-    /**
-     * Get a list of the exercises of the course which the current directory belongs to.
-     */
-    protected Optional<String> functionality() {
-        return Optional.of(lister.listExercises(data.get("path")));
-    }
-
     /**
      * Check the path and ClientData.
      *
@@ -47,11 +39,11 @@ public class ListExercises extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Optional.of((String) data);
     }
 
     @Override
     public String call() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return lister.listExercises(data.get("path"));
     }
 }

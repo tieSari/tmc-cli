@@ -6,16 +6,6 @@ import com.google.common.base.Optional;
 
 public class Help extends Command<String> {
 
-
-    /**
-     * List all available commands.
-     */
-    protected Optional<String> functionality() {
-        String commands = "Available commands: \n";
-        commands += Joiner.on(", ").join(CommandFactory.allCommandNames());
-        return Optional.of(commands);
-    }
-
     /**
      * Does nothing, this command does not require data.
      */
@@ -25,11 +15,13 @@ public class Help extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Optional.of((String)data);
     }
 
     @Override
     public String call() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String commands = "Available commands: \n";
+        commands += Joiner.on(", ").join(CommandFactory.allCommandNames());
+        return commands;
     }
 }
