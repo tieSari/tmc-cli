@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -32,8 +33,7 @@ public class RunTestsTest {
         rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
         try {
             rt.checkData();
-        }
-        catch (ProtocolException p) {
+        } catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -47,8 +47,7 @@ public class RunTestsTest {
         try {
             rt.checkData();
             fail("testCheckDataFail should have failed");
-        }
-        catch (ProtocolException p) {
+        } catch (ProtocolException p) {
             return;
         }
     }
@@ -57,19 +56,14 @@ public class RunTestsTest {
      * Test that failing exercise output is correct.
      */
     @Test(timeout = 15000)
-    public void testFailedExercise() {
+    public void testFailedExercise() throws NoLanguagePluginFoundException, ProtocolException {
         RunTests run = new RunTests();
         String folders = "testResources" + File.separator + "failingExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("filepath", file.getAbsolutePath());
         String result = null;
-        try {
-            result = run.call();
-        }
-        catch (ProtocolException ex) {
-            fail("Test executing failed");
-        }
+        result = run.parseData(run.call()).get();
 
         assertTrue(result.contains("Some tests failed:"));
         assertTrue(result.contains("No tests passed"));
@@ -82,19 +76,14 @@ public class RunTestsTest {
      * Check that successfull exercise output is correct.
      */
     @Test(timeout = 15000)
-    public void testSuccessfulExercise() {
+    public void testSuccessfulExercise() throws ProtocolException, NoLanguagePluginFoundException {
         RunTests run = new RunTests();
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("filepath", file.getAbsolutePath());
         String result = null;
-        try {
-            result = run.call();
-        }
-        catch (ProtocolException ex) {
-            fail("Test executing failed");
-        }
+        result = run.parseData(run.call()).get();
         assertFalse(result.contains("tests failed:"));
         assertTrue(result.contains("All tests passed"));
     }

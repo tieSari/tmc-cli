@@ -81,7 +81,7 @@ public class Submit extends Command<SubmissionResult> {
     }
 
     @Override
-    public SubmissionResult call() throws Exception {
+    public SubmissionResult call() throws ProtocolException, IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException {
         checkData();
         return functionality().or(new SubmissionResult());
     }

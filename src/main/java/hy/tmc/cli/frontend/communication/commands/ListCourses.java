@@ -5,7 +5,7 @@ import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class ListCourses extends Command<String>  {
+public class ListCourses extends Command<String> {
     /**
      * Checks that the user has authenticated, by verifying ClientData.
      *
@@ -25,6 +25,7 @@ public class ListCourses extends Command<String>  {
 
     @Override
     public String call() throws Exception {
+        checkData();
         return TmcJsonParser.getCourseNames();
     }
 }

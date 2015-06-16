@@ -14,7 +14,7 @@ public class ReplyToPing extends Command<String> {
     }
 
     @Override
-    public String call() throws Exception {
+    public String call() {
         return answer;
     }
 

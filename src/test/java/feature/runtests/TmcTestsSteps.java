@@ -9,6 +9,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 
 public class TmcTestsSteps {
 
@@ -27,8 +28,8 @@ public class TmcTestsSteps {
     }
 
     @When("^the user runs the tests$")
-    public void theUserRunsTheTests() throws ProtocolException {
-        output = testRunner.call();
+    public void theUserRunsTheTests() throws ProtocolException, NoLanguagePluginFoundException {
+        output = testRunner.parseData(testRunner.call()).get();
     }
 
     /**
@@ -65,7 +66,6 @@ public class TmcTestsSteps {
 
     @Then("^the user sees that all tests have passed formatted with vim formatter\\.$")
     public void the_user_sees_that_all_tests_have_passed_formatted_with_vim_formatter() throws Throwable {
-        String output = front.getMostRecentLine();
         assertEquals("All tests passed. You can now submit", output);
     }
 }

@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend;
 
+import hy.tmc.cli.testhelpers.CommandStub;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;

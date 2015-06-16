@@ -37,7 +37,7 @@ public class ChooseServerTest {
     }
 
     @Test
-    public void testFunctionality() throws ProtocolException {
+    public void testFunctionality() throws ProtocolException, Exception {
         chooser.setParameter("tmc-server", "http://tmc.ebin.fi");
         chooser.call();
         try {

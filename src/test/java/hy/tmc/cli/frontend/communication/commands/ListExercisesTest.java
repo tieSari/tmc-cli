@@ -15,7 +15,7 @@ import org.mockito.Mockito;
 
 public class ListExercisesTest {
 
-    private Command list;
+    private ListExercises list;
     private ExerciseLister lister;
     private String example = "viikko1-Viikko1_000.Hiekkalaatikko[ ]\n"
             + "viikko1-Viikko1_001.Nimi[x]\n"
@@ -46,10 +46,10 @@ public class ListExercisesTest {
     }
 
     @Test
-    public void getsExerciseName() {
+    public void getsExerciseName() throws Exception {
         list.setParameter("path", "any");
         try {
-            String result = list.call();
+            String result = list.parseData(list.call()).get();
             assertTrue(result.contains("Viikko1_000.Hiekkalaatikko"));
             assertTrue(result.contains("viikko1-Viikko1_002.HeiMaailma"));
         }
@@ -59,25 +59,25 @@ public class ListExercisesTest {
     }
 
     @Test
-    public void returnsFailIfBadPath() throws ProtocolException {
+    public void returnsFailIfBadPath() throws ProtocolException, Exception {
         String found = "No course found";
         Mockito.when(lister.listExercises(Mockito.anyString()))
                 .thenReturn(found);
         list.setParameter("path", "any");
-        String result = list.call();
+        String result = list.parseData(list.call()).get();
         assertEquals(found, result);
 
     }
 
     @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoUser() throws ProtocolException {
+    public void throwsErrorIfNoUser() throws ProtocolException, Exception {
         ClientData.clearUserData();
         list.setParameter("path", "any");
         list.call();
     }
 
     @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoCourseSpecified() throws ProtocolException {
+    public void throwsErrorIfNoCourseSpecified() throws ProtocolException, Exception {
         list.call();
     }
 
@@ -85,7 +85,8 @@ public class ListExercisesTest {
     public void doesntContainWeirdName() {
         list.setParameter("path", "any");
         try {
-            assertFalse(list.call().contains("Ilari"));
+            String result = list.parseData(list.call()).get();
+            assertFalse(result.contains("Ilari"));
         }
         catch (ProtocolException ex) {
             fail("unexpected exception");

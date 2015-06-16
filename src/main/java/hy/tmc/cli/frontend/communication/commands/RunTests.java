@@ -58,7 +58,7 @@ public class RunTests extends Command<RunResult> {
 
     @Override
     public RunResult call() throws ProtocolException, NoLanguagePluginFoundException {
-
+        checkData();
         formatter = getFormatter();
         String path = (String) this.data.get("path");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());

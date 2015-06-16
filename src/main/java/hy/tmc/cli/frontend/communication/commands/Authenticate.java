@@ -7,7 +7,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class Authenticate extends Command {
+public class Authenticate extends Command<String> {
 
     /**
      * Regex for HTTP OK codes.
@@ -47,13 +47,14 @@ public class Authenticate extends Command {
     }
 
     @Override
-    public Optional parseData(Object data) {
+    public Optional<String> parseData(Object data) {
         String result = (String) data;
         return Optional.of(result);
     }
 
     @Override
     public String call() throws Exception {
+        checkData();
         return functionality().get();
     }
 }

@@ -4,6 +4,8 @@ import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.backend.communication.authorization.Authorization;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,13 +54,17 @@ public class AuthenticateTest {
     private String executeWithParams(String key1, String param1,
             String key2, String param2) throws ProtocolException {
         
-        auth.setParameter(key1, param1);
-        auth.setParameter(key2, param2);
-        PowerMockito.mockStatic(UrlCommunicator.class);
-        powerMockWithCredentials("test:1234", 200);
-        powerMockWithCredentials("samu:salis", 400);
-        
-        return  auth.call();
+        try {
+            auth.setParameter(key1, param1);
+            auth.setParameter(key2, param2);
+            PowerMockito.mockStatic(UrlCommunicator.class);
+            powerMockWithCredentials("test:1234", 200);
+            powerMockWithCredentials("samu:salis", 400);
+            
+            return auth.parseData(auth.call()).get();
+        } catch (Exception ex) {
+            return "tämä feilaa testit";
+        }
     }
 
     private void powerMockWithCredentials(String credentials, int status) {

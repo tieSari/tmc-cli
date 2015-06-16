@@ -62,9 +62,11 @@ public class Paste extends Command<String> {
      * @throws java.text.ParseException
      * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      * @throws net.lingala.zip4j.exception.ZipException
+     * @throws hy.tmc.cli.frontend.communication.server.ProtocolException
      */
     @Override
-    public String call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public String call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+        checkData();
         return submitter.submitPaste(data.get("path"));
     }
 }

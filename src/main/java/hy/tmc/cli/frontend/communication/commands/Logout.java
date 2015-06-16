@@ -19,7 +19,8 @@ public class Logout extends Command<String> {
     }
 
     @Override
-    public String call() throws Exception {
+    public String call() throws ProtocolException {
+        checkData();
          String message = "";
         if (ClientData.userDataExists()) {
             ClientData.clearUserData();

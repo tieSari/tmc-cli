@@ -18,10 +18,7 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 
 import hy.tmc.cli.testhelpers.TestClient;
-<<<<<<< HEAD
 import hy.tmc.cli.testhelpers.Wiremocker;
-=======
->>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
 import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
@@ -56,13 +53,13 @@ public class SubmitSteps {
         serverThread.start();
         testClient = new TestClient(port);
 
-<<<<<<< HEAD
+
         Wiremocker mocker = new Wiremocker();
         wireMockServer = mocker.wiremockSubmitPaths();
         mocker.wireMockSuccesfulSubmit(wireMockServer);
         mocker.wireMockExpiredSubmit(wireMockServer);
         mocker.wiremockFailingSubmit(wireMockServer);
-=======
+
         startWireMock();
     }
 
@@ -122,7 +119,6 @@ public class SubmitSteps {
                         .withBody(returnBody)
                 )
         );
->>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
@@ -131,7 +127,6 @@ public class SubmitSteps {
         Thread.sleep(300);
     }
 
-<<<<<<< HEAD
     @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
     public void user_gives_command_submit_with_valid_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
         testClient.init();
@@ -139,19 +134,10 @@ public class SubmitSteps {
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
-=======
-    @When("^user gives command submit with valid path \"(.*?)\"$")
-    public void user_gives_command_submit_with_valid_path(String pathFromProjectRoot) throws Throwable {
-        // testClient.init();
-        this.submitCommand = "submit path ";
-        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot;
-        this.submitCommand = submitCommand + submitPath;
-        // testClient.sendMessage(message);
->>>>>>> b4daca84b62f91a2ea5ea563447fb900c9db9f5a
+
     }
 
     @When("^user gives command submit with expired path \"(.*?)\" and exercise \"(.*?)\"$")
-
     public void user_gives_command_submit_with_expired_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
         testClient.init();
         String submitCommand = "submit path ";

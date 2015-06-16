@@ -36,13 +36,24 @@ public class Server implements FrontendListener, Runnable {
      * @throws IOException if failed to write port to configuration file
      */
     public Server() throws IOException {
-        tmcCore = new TmcCore();
-        socketThreadPool = Executors.newCachedThreadPool();
-        initServerSocket();
-        this.rangeFeedbackHandler = new RangeFeedbackHandler(this);
-        this.textFeedbackHandler = new TextFeedbackHandler(this);
+        this(new TmcCore(), Executors.newCachedThreadPool(), new RangeFeedbackHandler(null)); //NULL NULL NULL
+    }
+    
+    /**
+     * Constructor for dependency injection.
+     *
+     * @throws IOException if failed to write port to configuration file
+     */
+    public Server(RangeFeedbackHandler handler) throws IOException {
+        this(new TmcCore(), Executors.newCachedThreadPool(), handler);
     }
 
+    
+    public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
+        this(tmcCore, socketThreadPool, new RangeFeedbackHandler(null));
+    }
+    
+    
     /**
      * Constructor for dependency injection.
      *
@@ -54,6 +65,7 @@ public class Server implements FrontendListener, Runnable {
         this.socketThreadPool = socketThreadPool;
         initServerSocket();
         this.rangeFeedbackHandler = handler;
+        this.textFeedbackHandler = new TextFeedbackHandler(this);
 
     }
 

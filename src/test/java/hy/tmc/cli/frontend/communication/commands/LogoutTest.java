@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -12,7 +11,7 @@ import org.junit.Test;
 
 public class LogoutTest {
 
-    private Command logout;
+    private Logout logout;
 
     @Before
     public void setup() {
@@ -20,35 +19,23 @@ public class LogoutTest {
     }
 
     @Test
-    public void clearsUserData() {
+    public void clearsUserData() throws ProtocolException {
         ClientData.setUserData("Chang", "Samu");
-        try {
-            logout.call();
-            assertFalse(ClientData.userDataExists());
-        } catch (ProtocolException ex) {
-            fail("Something went wrong");
-        }
+        logout.call();
+        assertFalse(ClientData.userDataExists());
     }
 
     @Test
-    public void messageCorrectIfLoggedOut() {
+    public void messageCorrectIfLoggedOut() throws ProtocolException {
         ClientData.setUserData("Chang", "Paras");
-        try {
-            String response = logout.call();
-            assertTrue(response.contains("clear"));
-        } catch (ProtocolException ex) {
-            fail("Something went wrong");
-        }
+        String response = logout.call();
+        assertTrue(response.contains("clear"));
     }
 
     @Test
-    public void messageCorrectIfNobodyLoggedIn() {
+    public void messageCorrectIfNobodyLoggedIn() throws ProtocolException {
         ClientData.clearUserData();
-        try {
-            String response = logout.call();
-            assertTrue(response.contains("Nobody"));
-        } catch (ProtocolException e) {
-            fail("Something went wrong");
-        }
+        String response = logout.call();
+        assertTrue(response.contains("Nobody"));
     }
 }

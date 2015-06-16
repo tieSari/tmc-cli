@@ -41,10 +41,10 @@ public class SetServerSteps {
      * @param serverName server name
      */
     @When ("^the user changes the server to \"(.*)\"$")
-    public void serverChanged(String serverName) {
+    public void serverChanged(String serverName) throws Exception {
         try {
             command.setParameter("tmc-server", serverName);
-            output = command.call();
+            output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
         }
     }
@@ -53,9 +53,9 @@ public class SetServerSteps {
      * User user command without parameters.
      */
     @When ("^the user uses the command without parameters$")
-    public void noParamsGiven() {
+    public void noParamsGiven() throws Exception {
         try {
-            output = command.call();
+            output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
             return;
         }

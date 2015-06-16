@@ -24,7 +24,7 @@ import static org.junit.Assert.fail;
 @PrepareForTest(UrlCommunicator.class)
 public class ListCoursesTest {
 
-    private Command list;
+    private ListCourses list;
 
     /**
      * Set up FrontendStub, ListCourses command, power mockito and fake http result.
@@ -57,15 +57,16 @@ public class ListCoursesTest {
     }
     
     @Test (expected = ProtocolException.class)
-    public void testNoAuthThrowsException() throws ProtocolException {
+    public void testNoAuthThrowsException() throws ProtocolException, Exception {
         ClientData.setUserData("", "");
         list.call();   
     }
 
     @Test
-    public void testWithAuthPrintsCourses() {
+    public void testWithAuthPrintsCourses() throws Exception {
         try {
-            assertTrue(list.call().contains("WEPAMOOC-STAGE"));
+            String testResult = list.parseData(list.call()).get();
+            assertTrue(testResult.contains("WEPAMOOC-STAGE"));
         } catch (ProtocolException ex) {
             Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
@@ -73,9 +74,10 @@ public class ListCoursesTest {
     }
 
     @Test
-    public void testWithAuthPrintsSeveralCourses() {
+    public void testWithAuthPrintsSeveralCourses() throws Exception {
         try {
-            assertTrue(list.call().contains("WEPATEST"));
+             String testResult = list.parseData(list.call()).get();
+            assertTrue(testResult.contains("WEPATEST"));
         } catch (ProtocolException ex) {
             Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");

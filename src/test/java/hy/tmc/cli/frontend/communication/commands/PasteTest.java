@@ -3,13 +3,8 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import java.io.IOException;
-import java.text.ParseException;
-import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -28,7 +23,7 @@ public class PasteTest {
      * Mocks CourseSubmitter and injects it into Paste command.
      */
     @Before
-    public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException, IOException, ZipException {
+    public void setup() throws Exception {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
 
@@ -42,7 +37,7 @@ public class PasteTest {
     }
 
     @Test
-    public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
+    public void submitReturnsBadOutputWhenCodeIsBad() throws Exception {
         paste.setParameter("path", "/hieno/path");
         String result = paste.call();
         assertTrue(result.contains(pasteUrl));

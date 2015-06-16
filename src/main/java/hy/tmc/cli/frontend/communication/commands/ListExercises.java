@@ -43,7 +43,8 @@ public class ListExercises extends Command<String> {
     }
 
     @Override
-    public String call() throws Exception {
+    public String call() throws ProtocolException {
+        checkData();
         return lister.listExercises(data.get("path"));
     }
 }

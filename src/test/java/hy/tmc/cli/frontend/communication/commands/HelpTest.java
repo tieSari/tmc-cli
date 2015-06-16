@@ -23,8 +23,8 @@ public class HelpTest {
     }
 
     @Test
-    public void testFunctionality() throws ProtocolException {
-        String output = help.call();
+    public void testFunctionality() throws ProtocolException, Exception {
+        String output = help.parseData(help.call()).get();
         assertTrue(output.contains("help"));
         assertTrue(output.contains("auth"));
     }
