@@ -12,8 +12,8 @@ public class TmcServiceScheduler {
 
     private static TmcServiceScheduler instance;
     private static boolean isRunningTasks = false;
-    private boolean started = false;
-    private Set<Service> tasks;
+    private static boolean isDisabled;
+    private final Set<Service> tasks;
     private ServiceManager serviceManager;
 
     public static TmcServiceScheduler getScheduler() {
@@ -24,10 +24,15 @@ public class TmcServiceScheduler {
     }
 
     public static void startIfNotRunning(Course course) {
+       startIfNotRunning(course, 5, TimeUnit.SECONDS);
+    }
+    
+    public static void startIfNotRunning(Course course, long interval, TimeUnit timeunit) {
         if (!isRunning()) {
             TmcServiceScheduler.getScheduler().addService(
-                    new StatusPoller(course, new PollScheduler(5, TimeUnit.SECONDS))
-            );
+                    new StatusPoller(course, new PollScheduler(interval, timeunit))
+            ).start();
+            isRunningTasks = true;
         }
     }
 
@@ -43,14 +48,22 @@ public class TmcServiceScheduler {
             getScheduler().stop();
         }
         isRunningTasks = true;
+        isDisabled = true;
     }
-
+    
+    public static void enablePolling() {
+        if (isDisabled) {
+            isDisabled = false;
+            isRunningTasks = false;
+        }
+    }
+    
     private TmcServiceScheduler() {
         tasks = new HashSet<>();
     }
 
     public TmcServiceScheduler addService(Service service) {
-        if (started) {
+        if (isRunningTasks) {
             return this;
         }
         tasks.add(service);
