@@ -1,25 +1,30 @@
 package feature.paste;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertTrue;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.junit.Rule;
+
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
+
 import java.io.IOException;
-import static org.junit.Assert.assertTrue;
-import org.junit.Rule;
+
 
 public class PasteSteps {
 
@@ -104,6 +109,9 @@ public class PasteSteps {
         assertTrue(result.contains("Paste submitted"));
     }
 
+    /**
+     * Closes server and removes userdata.
+     */
     @After
     public void closeAll() throws IOException {
         server.close();

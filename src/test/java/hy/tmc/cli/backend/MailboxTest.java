@@ -17,7 +17,6 @@ public class MailboxTest {
     public void setup() {
         Mailbox.create();
         mail = Mailbox.getMailbox();
-
     }
 
     @Test
