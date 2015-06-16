@@ -21,9 +21,9 @@ public class StatusPoller extends AbstractScheduledService {
 
     @Override
     protected void runOneIteration() throws Exception {
+        
         Optional<List<Review>> reviews = checkReviews();
         if (reviews.isPresent()) {
-            System.out.println(reviews);
             Mailbox.getMailbox().fill(reviews.get());
         }
 

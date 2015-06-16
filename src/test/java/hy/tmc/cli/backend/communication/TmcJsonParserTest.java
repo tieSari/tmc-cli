@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import static org.junit.Assert.assertEquals;
 
@@ -42,7 +43,8 @@ public class TmcJsonParserTest {
     @Test
     public void parsesCourseNamesCorrectly() {
         new TmcJsonParser();
-        String courses = TmcJsonParser.getCourseNames();
+        String courses = TmcJsonParser.getCourseNames(new ConfigHandler()
+                .readCoursesAddress());
         assertTrue(courses.contains("s2014-tira"));
         assertTrue(courses.contains("k2015-ohpe"));
         assertTrue(courses.contains("checkstyle-demo"));
@@ -52,7 +54,8 @@ public class TmcJsonParserTest {
 
     @Test
     public void coursesDontContainWeirdNames() {
-        String courses = TmcJsonParser.getCourseNames();
+        String courses = TmcJsonParser.getCourseNames(new ConfigHandler()
+                .readCoursesAddress());
         assertFalse(courses.contains("Chang"));
         assertFalse(courses.contains("Ilari"));
         assertFalse(courses.contains("Pihla"));

@@ -33,7 +33,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class UrlCommunicator {
     
-    public static final int BAD_REQUEST = 400;
+    public static final int BAD_REQUEST = 407;
 
     /**
      * Creates and executes post-request to specified URL.

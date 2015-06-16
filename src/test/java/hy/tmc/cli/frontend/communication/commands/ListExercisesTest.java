@@ -1,18 +1,21 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.base.Optional;
+
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.ExerciseLister;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,9 +54,9 @@ public class ListExercisesTest {
     private void mock() {
 
         PowerMockito.mockStatic(ClientData.class);
-        PowerMockito.
-                when(ClientData.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.<Course>of(new Course()));
+        PowerMockito
+                .when(ClientData.getCurrentCourse(Mockito.anyString()))
+                .thenReturn(Optional.of(new Course()));
         PowerMockito
                 .when(ClientData.getFormattedUserData())
                 .thenReturn("Chang:Jamo");
@@ -77,6 +80,7 @@ public class ListExercisesTest {
     public void getsExerciseName() throws ProtocolException {
         list.setParameter("path", "any");
         list.execute();
+        System.out.println(front.getMostRecentLine());
         assertTrue(front.getMostRecentLine().contains("Viikko1"));
     }
 

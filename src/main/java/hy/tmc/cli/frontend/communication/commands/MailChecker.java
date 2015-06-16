@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.backend.MailFormatter.format;
+import static hy.tmc.cli.backend.MailFormatter.formatExercises;
+import static hy.tmc.cli.backend.MailFormatter.formatReviews;
 
 import com.google.common.base.Optional;
 
@@ -23,10 +24,12 @@ public class MailChecker extends Command {
     @Override
     protected void functionality() {
         if (mailbox.reviewsWaiting()) {
-            frontend.printLine(format(mailbox.getUnreadReviews()));
+            frontend.printLine(formatReviews(mailbox.getUnreadReviews()));
+        } else {
+            //frontend.printLine("No mail for you :(");
         }
         if (mailbox.updatesWaiting()) {
-            frontend.printLine(format(mailbox.getExerciseUpdates(course.get())));
+            frontend.printLine(formatExercises(mailbox.getExerciseUpdates(course.get())));
         }
     }
 
@@ -39,7 +42,8 @@ public class MailChecker extends Command {
         if (!data.containsKey("path")) {
             throw new ProtocolException("must specfiy path");
         }
-        course = ClientData.getCurrentCourse(data.get("path"));
+        String path = data.get("path");
+        course = ClientData.getCurrentCourse(path);
         if (!course.isPresent()) {
             String errorMsg = "Unable to determine the course. Are you sure this is a tmc course subdirectory?";
             throw new ProtocolException(errorMsg);
