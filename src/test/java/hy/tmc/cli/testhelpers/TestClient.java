@@ -51,7 +51,12 @@ public class TestClient {
 
     public String reply() {
         try {
-            return input.readLine();
+            String reply = input.readLine();
+            if (reply == null) {
+                this.init();
+                return input.readLine();
+            }
+            return reply;
         }
         catch (IOException ex) {
             System.err.println(ex.getMessage());

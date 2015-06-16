@@ -1,9 +1,13 @@
 package hy.tmc.cli;
 
+import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.Server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 

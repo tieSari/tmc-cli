@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
