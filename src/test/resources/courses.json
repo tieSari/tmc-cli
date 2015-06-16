@@ -24,6 +24,28 @@
             ]
         },
         {
+            "id": 9000,
+            "name": "successExercise",
+            "details_url": "http://127.0.0.1:8080/courses/9000.json",
+            "unlock_url": "http://127.0.0.1:8080/courses/9000/unlock.json",
+            "reviews_url": "http://127.0.0.1:8080/courses/9000/reviews.json",
+            "comet_url": "TÄMÄ KURSSI ON TESTEJÄ VARTEN",
+            "spyware_urls": [
+                "http://staging.spyware.testmycode.net/"
+            ]
+        },
+        {
+            "id": 9001,
+            "name": "halfdoneExercise",
+            "details_url": "http://127.0.0.1:8080/courses/9001.json",
+            "unlock_url": "http://127.0.0.1:8080/courses/9001/unlock.json",
+            "reviews_url": "http://127.0.0.1:8080/courses/9001/reviews.json",
+            "comet_url": "TÄMÄ KURSSI ON TESTEJÄ VARTEN",
+            "spyware_urls": [
+                "http://staging.spyware.testmycode.net/"
+            ]
+        },
+        {
             "id": 13,
             "name": "2013-OOProgrammingWithJava-PART1",
             "details_url": "https://tmc.mooc.fi/staging/courses/13.json",

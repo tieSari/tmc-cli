@@ -1,17 +1,19 @@
 package feature.runtests;
 
 import cucumber.api.java.Before;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import hy.tmc.cli.frontend.communication.commands.RunTests;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.communication.commands.RunTests;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.testhelpers.FrontendStub;
+import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 public class TmcTestsSteps {
 
@@ -24,7 +26,9 @@ public class TmcTestsSteps {
 
     @Before
     public void setUp() {
+        ClientData.setProjectRootFinder(new ProjectRootFinderStub());
         ClientData.clearUserData();
+        Mailbox.create();
         ClientData.setUserData("test", "1234");
     }
 
@@ -73,5 +77,11 @@ public class TmcTestsSteps {
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
 
+    }
+    
+    @After
+    public void clean(){
+        Mailbox.destroy();
+        ClientData.clearUserData();
     }
 }

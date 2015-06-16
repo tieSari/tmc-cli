@@ -190,7 +190,7 @@ public class SubmitSteps {
 
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
-        final String result = testClient.reply();
+        String result = testClient.reply();
         assertTrue(result.contains("mail"));
     }
 
