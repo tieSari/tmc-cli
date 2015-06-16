@@ -53,7 +53,7 @@ public class Authenticate extends Command<String> {
     }
 
     @Override
-    public String call() throws Exception {
+    public String call() throws ProtocolException {
         checkData();
         return functionality().get();
     }

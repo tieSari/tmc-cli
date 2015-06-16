@@ -45,6 +45,7 @@ public class ChooseServer extends Command<String> {
 
     @Override
     public String call() throws Exception {
+        checkData();
         String address = data.get("tmc-server");           
         try { 
             handler.writeServerAddress(address);            

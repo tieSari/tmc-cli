@@ -28,28 +28,19 @@ public class RunTestsTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() {
+    public void testCheckDataSuccess() throws ProtocolException {
         RunTests rt = new RunTests();
-        rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
-        try {
-            rt.checkData();
-        } catch (ProtocolException p) {
-            fail("testCheckDataSuccess failed");
-        }
+        rt.setParameter("path", "/home/tmccli/uolevipuistossa");
+        rt.checkData();
     }
 
     /**
      * Check that if user didn't give correct data, data checking fails.
      */
-    @Test
-    public void testCheckDataFail() {
+    @Test(expected = ProtocolException.class)
+    public void testCheckDataFail() throws ProtocolException {
         RunTests rt = new RunTests();
-        try {
-            rt.checkData();
-            fail("testCheckDataFail should have failed");
-        } catch (ProtocolException p) {
-            return;
-        }
+        rt.checkData();
     }
 
     /**
@@ -61,7 +52,7 @@ public class RunTestsTest {
         String folders = "testResources" + File.separator + "failingExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
-        run.setParameter("filepath", file.getAbsolutePath());
+        run.setParameter("path", file.getAbsolutePath());
         String result = null;
         result = run.parseData(run.call()).get();
 
@@ -73,7 +64,7 @@ public class RunTestsTest {
     }
 
     /**
-     * Check that successfull exercise output is correct.
+     * Check that successful exercise output is correct.
      */
     @Test(timeout = 15000)
     public void testSuccessfulExercise() throws ProtocolException, NoLanguagePluginFoundException {
@@ -81,7 +72,7 @@ public class RunTestsTest {
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
-        run.setParameter("filepath", file.getAbsolutePath());
+        run.setParameter("path", file.getAbsolutePath());
         String result = null;
         result = run.parseData(run.call()).get();
         assertFalse(result.contains("tests failed:"));

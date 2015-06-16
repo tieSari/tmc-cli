@@ -26,8 +26,8 @@ public class SocketListener implements Runnable {
     @Override
     public void run() {
         try {
-            Object get = commandResult.get();
-            Optional<String> output = this.command.parseData(get);
+            Object result = commandResult.get();
+            Optional<String> output = this.command.parseData(result);
             if (output.isPresent()) {
                 writeToOutput(output.get());
             }

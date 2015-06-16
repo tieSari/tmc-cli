@@ -5,6 +5,7 @@ import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Callable;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,10 +38,8 @@ public class SocketRunnableTest {
     @Test
     public void whenCommandHelpIsSentThroughSocketTmcCoreIsInvokedWithCorrectCommandName() throws IOException, ProtocolException {
         testClient.sendMessage("help");
-
         socketRunnable.run();
-
-        verify(tmcCore).runCommand(eq("help"));
+        verify(tmcCore).submitTask(any(Callable.class));
     }
 
     @Test
@@ -58,13 +57,13 @@ public class SocketRunnableTest {
             testClient.sendMessage("ping");
             socketRunnable.run();
         }
-        verify(tmcCore, times(3)).runCommand(eq("ping"));
+        verify(tmcCore, times(3)).submitTask(any(Callable.class));
     }
 
     @Test
     public void whenGivenInvalidCommandSocketIsClosed() throws ProtocolException, IOException {
         assertFalse(socket.isClosed());
-        when(tmcCore.runCommand(eq("invalid"))).thenThrow(ProtocolException.class);
+        when(tmcCore.getCommand(eq("invalid"))).thenThrow(ProtocolException.class);
         testClient.sendMessage("invalid");
         socketRunnable.run();
         assertTrue(socket.isClosed());

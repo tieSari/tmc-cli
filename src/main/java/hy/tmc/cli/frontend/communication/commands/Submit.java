@@ -47,17 +47,10 @@ public class Submit extends Command<SubmissionResult> {
         this.submitter = submitter;
     }
 
-    /**
-     * Takes a pwd command's output in "path" and optionally the exercise's name
-     * in "exerciseName".
-     */
-    private Optional<SubmissionResult> functionality() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException, ProtocolException {
-        interpreter = getInterpreter();
-        String returnUrl = submitter.submit((String)data.get("path"));
-        return Optional.of(interpreter.getSubmissionResult(returnUrl));
-    }
-
     private SubmissionInterpreter getInterpreter() {
+        if (interpreter != null) {
+            return interpreter;
+        }
         if (data.containsKey("--vim")) {
             return new SubmissionInterpreter(new VimSubmissionResultFormatter());
         } else {
@@ -83,7 +76,9 @@ public class Submit extends Command<SubmissionResult> {
     @Override
     public SubmissionResult call() throws ProtocolException, IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException {
         checkData();
-        return functionality().or(new SubmissionResult());
+        interpreter = getInterpreter();
+        String returnUrl = submitter.submit((String) data.get("path"));
+        return interpreter.getSubmissionResult(returnUrl);
     }
 
     @Override
@@ -92,7 +87,6 @@ public class Submit extends Command<SubmissionResult> {
             SubmissionResult submissionResult = (SubmissionResult) data;
             String output = "";
             output = interpreter.resultSummary(true);
-            
             if (submissionResult.isAllTestsPassed()) {
                 List<FeedbackQuestion> feedback = submissionResult.getFeedbackQuestions();
                 if (feedback != null && !feedback.isEmpty()) {

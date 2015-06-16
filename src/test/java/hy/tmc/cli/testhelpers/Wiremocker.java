@@ -34,7 +34,7 @@ public class Wiremocker {
 
     public void wireMockSuccesfulSubmit(WireMockServer server) {
         wiremockGET(server, "/courses/3.json?api_version=7", ExampleJson.courseExample);
-        wiremockPOST(server, "/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
+        wiremockPOST(server, "/exercises/286/submissions.json?api_version=7", ExampleJson.pasteResponse);
         wiremockGET(server, "/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
     }
 

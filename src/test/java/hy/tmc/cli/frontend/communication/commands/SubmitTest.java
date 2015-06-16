@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -8,8 +7,8 @@ import static org.mockito.Mockito.when;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -21,8 +20,8 @@ import java.text.ParseException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import static org.mockito.Matchers.*;
 import org.mockito.Mockito;
 
 public class SubmitTest {
@@ -32,9 +31,6 @@ public class SubmitTest {
     SubmissionResultFormatter formatter;
     private SubmissionInterpreter interpreter;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
-
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8080);
 
     /**
      * Mocks CourseSubmitter and injects it into Submit command.
@@ -49,12 +45,6 @@ public class SubmitTest {
         ClientData.setUserData("Bossman", "Samu");
     }
 
-    private void wireMockStart(String json) {
-        stubFor(get(urlEqualTo(submissionUrl))
-                .willReturn(aResponse()
-                        .withBody(json)));
-    }
-
     @After
     public void clean() {
         ClientData.clearUserData();
@@ -62,7 +52,8 @@ public class SubmitTest {
 
     @Test
     public void submitReturnsBadOutputWhenCodeIsBad() throws Exception {
-        when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("No tests passed.");
+        when(interpreter.getSubmissionResult(anyString())).thenReturn(new SubmissionResult());
+        when(interpreter.resultSummary(Mockito.anyBoolean())).thenReturn("No tests passed.");
         submit.setParameter("path", "/hieno/path");
         String result = submit.parseData(submit.call()).get();
         assertTrue(result.contains("No tests passed."));
@@ -70,7 +61,8 @@ public class SubmitTest {
 
     @Test
     public void submitPrintsAllTestsPassedWhenCodeIsCorrect() throws Exception {
-        when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("All tests passed.");
+        when(interpreter.getSubmissionResult(anyString())).thenReturn(new SubmissionResult());
+        when(interpreter.resultSummary(Mockito.anyBoolean())).thenReturn("All tests passed.");
         submit.setParameter("path", "/hieno/path");
         String result = submit.parseData(submit.call()).get();
 

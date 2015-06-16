@@ -17,14 +17,14 @@ public class TmcTestsSteps {
     private String output;
     
     /**
-     * Create RunTests command and set filepath parameter.
+     * Create RunTests command and set path parameter.
      *
      * @param exerciseDirectory directory path
      */
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
         testRunner = new RunTests();
-        testRunner.setParameter("filepath", exerciseDirectory);
+        testRunner.setParameter("path", exerciseDirectory);
     }
 
     @When("^the user runs the tests$")

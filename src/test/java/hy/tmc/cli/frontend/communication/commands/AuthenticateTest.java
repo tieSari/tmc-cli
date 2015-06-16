@@ -46,33 +46,30 @@ public class AuthenticateTest {
         assertTrue(result.contains("Auth unsuccessful."));
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = ProtocolException.class)
     public void failsWithWrongKeys() throws ProtocolException {
         executeWithParams("usernamee", testUsername, "passwordi", testPassword);
     }
 
     private String executeWithParams(String key1, String param1,
             String key2, String param2) throws ProtocolException {
-        
-        try {
-            auth.setParameter(key1, param1);
-            auth.setParameter(key2, param2);
-            PowerMockito.mockStatic(UrlCommunicator.class);
-            powerMockWithCredentials("test:1234", 200);
-            powerMockWithCredentials("samu:salis", 400);
-            
-            return auth.parseData(auth.call()).get();
-        } catch (Exception ex) {
-            return "tämä feilaa testit";
-        }
+
+        auth.setParameter(key1, param1);
+        auth.setParameter(key2, param2);
+        PowerMockito.mockStatic(UrlCommunicator.class);
+        powerMockWithCredentials("test:1234", 200);
+        powerMockWithCredentials("samu:salis", 400);
+
+        return auth.parseData(auth.call()).get();
+
     }
 
     private void powerMockWithCredentials(String credentials, int status) {
         HttpResult fakeResult = new HttpResult("", status, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(
-                        Mockito.anyString(),
-                        Mockito.eq(credentials)))
+                                Mockito.anyString(),
+                                Mockito.eq(credentials)))
                 .thenReturn(fakeResult);
     }
 }

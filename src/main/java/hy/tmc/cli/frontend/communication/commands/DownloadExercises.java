@@ -18,20 +18,8 @@ public class DownloadExercises extends Command<String> {
     }
 
     /**
-     * Parses the course JSON and executes downloading of the course exercises.
-     */
-    protected Optional<String> functionality() {
-        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt((String)this.data.get("courseID")));
-        if (courseResult.isPresent()) {
-            Course course = courseResult.get();
-            return exerciseDownloader.downloadFiles(course.getExercises(),(String) this.data.get("pwd"), course.getName());
-        }
-        return Optional.absent();
-    }
-
-    /**
-     * Checks that command has required parameters courseID is the id of the course and pwd is the
-     * path of where files are downloaded and extracted.
+     * Checks that command has required parameters courseID is the id of the
+     * course and pwd is the path of where files are downloaded and extracted.
      *
      * @throws ProtocolException if pwd isnt supplied
      */
@@ -53,20 +41,36 @@ public class DownloadExercises extends Command<String> {
             throw new ProtocolException("Course ID required");
         }
         try {
-   //         int courseId = Integer.parseInt(this.data.get("courseID"));
-        }
-        catch (NumberFormatException e) {
+            int courseId = Integer.parseInt(this.data.get("courseID"));
+        } catch (NumberFormatException e) {
             throw new ProtocolException("Given course id is not a number");
         }
     }
 
     @Override
     public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Optional.of((String) data);
     }
 
+    /**
+     * Parses the course JSON and executes downloading of the course exercises.
+     *
+     * @return
+     */
     @Override
-    public String call() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String call() throws ProtocolException {
+        checkData();
+
+        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt((String) this.data.get("courseID")));
+        if (courseResult.isPresent()) {
+            Course course = courseResult.get();
+            Optional<String> downloadFiles = exerciseDownloader.downloadFiles(course.getExercises(),
+                    data.get("pwd"),
+                    course.getName());
+            if (downloadFiles.isPresent()) {
+                return downloadFiles.get();
+            }
+        }
+        throw new ProtocolException("Failed to fetch exercises. Check your internet connection.");
     }
 }

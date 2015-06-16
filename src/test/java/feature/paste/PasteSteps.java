@@ -86,29 +86,52 @@ public class PasteSteps {
         );
     }
 
+//    @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
+//    public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
+//        testClient.sendMessage("login username " + username + " password " + password);
+//    }
+//
+//    @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
+//    public void user_gives_command_paste_with_valid_path_and_exercise(String path) throws Throwable {
+//        //testClient.init();
+//        this.pasteCommand = "paste path ";
+//        String pastePath = System.getProperty("user.dir") + path + File.separator;
+//        this.pasteCommand = pasteCommand + pastePath;
+//        //  testClient.sendMessage(message);
+//    }
+//
+//    @Then("^user will see the paste url$")
+//    public void user_will_see_the_paste_url() throws Throwable {
+//        String result = testClient.reply();
+//        assertTrue(result.contains("Paste submitted"));
+//    }
+//
+//
+//    @When("^user executes the command$")
+//    public void user_executes_the_command() throws Throwable {
+//        testClient.init();
+//        testClient.sendMessage(pasteCommand);
+//    }
+//
+//    @When("^flag \"(.*?)\"$")
+//    public void flag(String flag) throws Throwable {
+//        this.pasteCommand += " " + flag;
+//    }
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
     }
 
     @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
-    public void user_gives_command_paste_with_valid_path_and_exercise(String path) throws Throwable {
-        //testClient.init();
+    public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
         this.pasteCommand = "paste path ";
-        String pastePath = System.getProperty("user.dir") + path + File.separator;
+        String pastePath = System.getProperty("user.dir") + path + File.separator + exercise;
         this.pasteCommand = pasteCommand + pastePath;
-       //  testClient.sendMessage(message);
     }
 
-    @Then("^user will see the paste url$")
-    public void user_will_see_the_paste_url() throws Throwable {
-        String result = testClient.reply();
-        assertTrue(result.contains("Paste submitted"));
-    }
-
-    @When("^exercise \"(.*?)\"$")
-    public void exercise(String exercise) throws Throwable {
-        this.pasteCommand += exercise;
+    @When("^flag \"(.*?)\"$")
+    public void flag(String flag) throws Throwable {
+        this.pasteCommand += " " + flag;
     }
 
     @When("^user executes the command$")
@@ -117,9 +140,10 @@ public class PasteSteps {
         testClient.sendMessage(pasteCommand);
     }
 
-    @When("^flag \"(.*?)\"$")
-    public void flag(String flag) throws Throwable {
-        this.pasteCommand += " " + flag;
+    @Then("^user will see the paste url$")
+    public void user_will_see_the_paste_url() throws Throwable {
+        String result = testClient.reply();
+        assertTrue(result.contains("Paste submitted"));
     }
 
     @After
