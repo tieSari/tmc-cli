@@ -16,6 +16,7 @@ public class CommandStub extends Command<String> {
     }    
 
     @Override
+    @SuppressWarnings("unchecked")
     public Optional parseData(Object data) {
         return Optional.of((String)data);
     }

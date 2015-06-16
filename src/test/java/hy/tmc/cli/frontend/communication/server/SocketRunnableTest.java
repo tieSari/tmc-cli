@@ -61,6 +61,7 @@ public class SocketRunnableTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void whenGivenInvalidCommandSocketIsClosed() throws ProtocolException, IOException {
         assertFalse(socket.isClosed());
         when(tmcCore.getCommand(eq("invalid"))).thenThrow(ProtocolException.class);

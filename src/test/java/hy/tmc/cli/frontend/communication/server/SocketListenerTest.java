@@ -21,6 +21,7 @@ public class SocketListenerTest {
      Help helpCommand;
     
     @Before
+    @SuppressWarnings("unchecked")
     public void setup() {
         commandResult = mock(ListenableFuture.class);
         output = mock(DataOutputStream.class);

@@ -54,7 +54,7 @@ public class ExerciseListerTest {
     }
 
     private List<Exercise> setupFakeExercises() {
-        List<Exercise> exercises = new ArrayList();
+        List<Exercise> exercises = new ArrayList<>();
 
         fakeExercise = new Exercise();
         fakeExercise.setName("Nimi");
@@ -110,7 +110,7 @@ public class ExerciseListerTest {
 
     @Test
     public void withNoDoneExercisesOutputContainsNoX() {
-        List<Exercise> exercises = new ArrayList();
+        List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
         exercises.add(new Exercise());
@@ -121,7 +121,7 @@ public class ExerciseListerTest {
 
     @Test
     public void withOneAttemptedExerciseOutputContainsNoX() {
-        List<Exercise> exercises = new ArrayList();
+        List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
         Exercise ex = new Exercise();
