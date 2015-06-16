@@ -4,16 +4,17 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
+import hy.tmc.cli.zipping.RootFinder;
 
 /**
- * This class will be initialized when Auth is successful. Use this to get data of user
+ * This class will be initialized when Auth is successful. Use this to get data of user.
  */
 public final class ClientData {
 
     private static int PID;
     private static String USERNAME = "";
     private static String PASSWORD = "";
-    private static ProjectRootFinder rootFinder;
+    private static RootFinder rootFinder;
 
     private ClientData() {
     }
@@ -21,21 +22,35 @@ public final class ClientData {
     /**
      * Sets the data for current user.
      *
-     * @param username Username of the current user
-     * @param password Password of the current user
+     * @param username of the current user
+     * @param password of the current user
      */
     public synchronized static void setUserData(String username, String password) {
         USERNAME = username;
         PASSWORD = password;
     }
 
-    private synchronized static ProjectRootFinder getProjectRootFinder() {
+    private synchronized static RootFinder getProjectRootFinder() {
         if (rootFinder == null) {
             rootFinder = new ProjectRootFinder(new DefaultRootDetector());
         }
         return rootFinder;
     }
 
+    /**
+     * Overrides the rootfinder which is used by getCurrentCourse-method.
+     * If nothing is set, the DefaultRootDetector will be used.
+     */
+    public synchronized static void setProjectRootFinder(RootFinder rootFinder) {
+        ClientData.rootFinder = rootFinder;
+    }
+
+    /**
+     * Finds the current course from the path using RootFinder-class.
+     * If no RootFinder is set while using this command, the DefaultRootDetector will be used.
+     * @param currentPath path to navigate through.
+     * @return optional which includes the course if found.
+     */
     public synchronized static Optional<Course> getCurrentCourse(String currentPath) {
         if (!userDataExists()) {
             throw new IllegalStateException("Not logged in.");

@@ -25,7 +25,6 @@ public class TmcServiceScheduler {
 
     public static void startIfNotRunning(Course course) {
         if (!isRunning()) {
-            System.out.println(course.getName() + " invoked start!");
             TmcServiceScheduler.getScheduler().addService(
                     new StatusPoller(course, new PollScheduler(5, TimeUnit.SECONDS))
             );

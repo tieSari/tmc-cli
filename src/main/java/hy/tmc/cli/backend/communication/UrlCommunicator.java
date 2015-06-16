@@ -77,9 +77,6 @@ public class UrlCommunicator {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
         } catch (IOException e) {
-            System.out.println("Bad request");
-            System.out.println(e.getMessage());
-            System.out.println(url);
             return new HttpResult("", BAD_REQUEST, false);
         }
     }

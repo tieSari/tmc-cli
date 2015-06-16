@@ -23,12 +23,9 @@ public class MailChecker extends Command {
 
     @Override
     protected void functionality() {
-        System.out.println("check mail");
         if (mailbox.reviewsWaiting()) {
-            System.out.println("print reviews to front");
             frontend.printLine(formatReviews(mailbox.getUnreadReviews()));
         } else {
-            System.out.println("no reviews");
             //frontend.printLine("No mail for you :(");
         }
         if (mailbox.updatesWaiting()) {
@@ -46,7 +43,6 @@ public class MailChecker extends Command {
             throw new ProtocolException("must specfiy path");
         }
         String path = data.get("path");
-        System.out.println(path);
         course = ClientData.getCurrentCourse(path);
         if (!course.isPresent()) {
             String errorMsg = "Unable to determine the course. Are you sure this is a tmc course subdirectory?";

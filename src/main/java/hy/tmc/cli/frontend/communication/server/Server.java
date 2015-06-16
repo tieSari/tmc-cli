@@ -31,7 +31,7 @@ public class Server implements FrontendListener, Runnable {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
         } catch (IOException ex) {
-            System.out.println("Server creation failed");
+            System.err.println("Server creation failed");
             System.err.println(ex.getMessage());
         }
         this.parser = new ProtocolParser(this);
@@ -131,6 +131,5 @@ public class Server implements FrontendListener, Runnable {
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
-        System.out.println(outputLine);
     }
 }

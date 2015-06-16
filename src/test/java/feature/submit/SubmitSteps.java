@@ -24,6 +24,7 @@ import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 
 import hy.tmc.cli.testhelpers.MailExample;
+import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class SubmitSteps {
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
-    /*
+    /**
      * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
      */
     @Before
@@ -59,13 +60,16 @@ public class SubmitSteps {
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
+
         TmcServiceScheduler.disablePolling();
         Mailbox.create();
+        ClientData.setProjectRootFinder(new ProjectRootFinderStub());
+
         startWireMock();
     }
 
-    /*
-    * Returns everything to it's original state.
+    /**
+     * Returns everything to it's original state.
      */
     @After
     public void closeAll() throws IOException {
@@ -74,7 +78,8 @@ public class SubmitSteps {
         wireMockServer.stop();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
         ClientData.clearUserData();
-       // Mailbox.destroy();
+        Mailbox.destroy();
+        ClientData.setProjectRootFinder(null);
     }
 
     /*
@@ -138,7 +143,6 @@ public class SubmitSteps {
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
-        System.out.println(username + "  " + password);
         testClient.sendMessage("login username " + username + " password " + password);
     }
 
@@ -170,7 +174,6 @@ public class SubmitSteps {
     @Then("^user will see the some test passing$")
     public void user_will_see_the_some_test_passing() throws Throwable {
         final String result = testClient.reply().toLowerCase();
-        System.out.println(result);
         assertTrue(result.contains("some tests failed"));
     }
 
@@ -182,12 +185,8 @@ public class SubmitSteps {
 
     @Given("^the user has mail in the mailbox$")
     public void the_user_has_mail_in_the_mailbox() throws Throwable {
-        testClient.sendMessage("login username " + "test" + " password " + "1234");
         Mailbox.getMailbox().fill(MailExample.reviewExample());
     }
-
-
-
 
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {

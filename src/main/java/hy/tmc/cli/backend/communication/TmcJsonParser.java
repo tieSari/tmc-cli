@@ -29,7 +29,6 @@ public class TmcJsonParser {
      * @return JSON-object
      */
     private static JsonObject getJsonFrom(String url) {
-        System.out.println("url: " + url);
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
                 url, ClientData.getFormattedUserData()
         );
@@ -38,13 +37,14 @@ public class TmcJsonParser {
         return json;
     }
 
+
     /**
      * Get the names of all courses on the server specified by ServerData.
      *
      * @return String containing all course names separated by newlines
      */
-    public static String getCourseNames() {
-        List<Course> courses = getCourses();
+    public static String getCourseNames(String courseAddress) {
+        List<Course> courses = getCourses(courseAddress);
 
         StringBuilder result = new StringBuilder();
         for (Course course : courses) {
@@ -58,14 +58,7 @@ public class TmcJsonParser {
         return result.toString();
     }
 
-    /**
-     * Add
-     *
-     * @param result
-     * @param name
-     * @return
-     */
-    public static StringBuilder addSpaces(StringBuilder result, String name) {
+    private static StringBuilder addSpaces(StringBuilder result, String name) {
         int spaces = 50 - name.length();
         for (int i = 0; i < spaces; i++) {
             result.append(" ");
@@ -78,10 +71,19 @@ public class TmcJsonParser {
      *
      * @return List of Course-objects
      */
-    public static List<Course> getCourses() {
-        String courseAddress = new ConfigHandler()
-                .readCoursesAddress();
+    public static List<Course> getCourses(String courseAddress) {
         JsonObject jsonObject = getJsonFrom(courseAddress);
+        Gson mapper = new Gson();
+        Course[] courses = mapper
+                .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
+        return Arrays.asList(courses);
+    }
+
+    /**
+     * Reads courses from string.
+     */
+    public static List<Course> getCoursesFromString(String jsonString) {
+        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Gson mapper = new Gson();
         Course[] courses = mapper
                 .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);

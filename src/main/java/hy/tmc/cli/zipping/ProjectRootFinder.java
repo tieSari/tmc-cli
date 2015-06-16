@@ -2,6 +2,7 @@ package hy.tmc.cli.zipping;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.nio.file.Path;
@@ -68,12 +69,12 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course
      */
     public Optional<Course> findCourseByPath(String[] foldersPath) {
-        List<Course> courses = TmcJsonParser.getCourses();
+        List<Course> courses = TmcJsonParser.getCourses(new ConfigHandler()
+                .readCoursesAddress());
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {
                     Optional<Course> courseOptional = Optional.of(course);
-                    System.out.println("kurssi: " + courseOptional.get());
                     return courseOptional;
                 }
             }

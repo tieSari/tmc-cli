@@ -3,6 +3,7 @@ package hy.tmc.cli.zipping;
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import static org.junit.Assert.assertEquals;
 
@@ -38,7 +39,8 @@ public class ProjectRootFinderTest {
 
         List<Course> courses = setupFakeCourses();
         PowerMockito
-                .when(TmcJsonParser.getCourses())
+                .when(TmcJsonParser.getCourses(new ConfigHandler()
+                        .readCoursesAddress()))
                 .thenReturn(courses);
 
     }
