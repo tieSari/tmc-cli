@@ -43,47 +43,69 @@ public class TmcCore {
     }
 
     public ListenableFuture<String> login(String username, String password) throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("login " + " username " + username + " password " + password);
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("login " + " username " + username + " password " + password);
+        return stringListenableFuture;
     }
 
     public ListenableFuture<String> logout() throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("logout");
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> logout = (ListenableFuture<String>) runCommand("logout");
+        return logout;
     }
 
     public ListenableFuture<String> selectServer(String serverAddress) throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("setServer " + " tmc-server " + serverAddress);
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("setServer " + " tmc-server " + serverAddress);
+        return stringListenableFuture;
     }
 
     public ListenableFuture<String> downloadExercises(String pwd, String courseId) throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("downloadExercises pwd "+ pwd+ " courseID " + courseId);
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("downloadExercises pwd " + pwd + " courseID " + courseId);
+        return stringListenableFuture;
     }
 
     public ListenableFuture<String> help() throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("help");
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> help = (ListenableFuture<String>) runCommand("help");
+        return help;
     }
 
     public ListenableFuture<String> listCourses() throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("listCourses");
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> listCourses = (ListenableFuture<String>) runCommand("listCourses");
+        return listCourses;
     }
 
     public ListenableFuture<String> listExercises() throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("listExercises");
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> listExercises = (ListenableFuture<String>) runCommand("listExercises");
+        return listExercises;
     }
     
     public ListenableFuture<SubmissionResult> submit(String path) throws ProtocolException {
-        return (ListenableFuture<SubmissionResult>) runCommand("submit path " + path);
+        @SuppressWarnings("unchecked")
+        ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) runCommand("submit path " + path);
+        return submissionResultListenableFuture;
     }
     
     public ListenableFuture<RunResult> test(String path) throws ProtocolException {
-        return (ListenableFuture<RunResult>) runCommand("runTests path " + path);
+        @SuppressWarnings("unchecked")
+        ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) runCommand("runTests path " + path);
+        return runResultListenableFuture;
     }
     
     public ListenableFuture<String> paste(String path) throws ProtocolException {
-        return (ListenableFuture<String>) runCommand("paste path " + path);
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("paste path " + path);
+        return stringListenableFuture;
     }
 
     public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
-        return pool.submit(parser.getCommand(inputLine));
+        @SuppressWarnings("unchecked")
+        ListenableFuture submit = pool.submit(parser.getCommand(inputLine));
+        return submit;
     }
 
 //    private ListenableFuture<?> run(String commandName, String... args) {

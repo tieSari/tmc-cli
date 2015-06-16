@@ -27,6 +27,7 @@ public class SocketListener implements Runnable {
     public void run() {
         try {
             Object result = commandResult.get();
+            @SuppressWarnings("unchecked")
             Optional<String> output = this.command.parseData(result);
             if (output.isPresent()) {
                 writeToOutput(output.get());
