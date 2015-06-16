@@ -15,10 +15,10 @@ import net.lingala.zip4j.exception.ZipException;
 public class Paste extends Command<String> {
 
     CourseSubmitter submitter;
-    
+
     public Paste() {
         submitter = new CourseSubmitter(
-                new ProjectRootFinder( new DefaultRootDetector() ),
+                new ProjectRootFinder(new DefaultRootDetector()),
                 new Zipper()
         );
     }
@@ -26,25 +26,10 @@ public class Paste extends Command<String> {
     /**
      * Constructor for mocking.
      *
-     * @param front frontend.
      * @param submitter can inject submitter mock.
      */
-
     public Paste(CourseSubmitter submitter) {
         this.submitter = submitter;
-    }
-
-    /**
-     * Takes a pwd command's output in "path" and prints out the URL for the paste.
-     *
-     */
-    protected Optional<String> functionality() {
-        try {
-            String returnUrl = submitter.submitPaste(data.get("path"));
-            return Optional.of("Paste submitted. Here it is: \n  " + returnUrl);
-        } catch (IOException | ParseException | ExpiredException | IllegalArgumentException | ZipException ex) {
-            return Optional.of(ex.getMessage());
-        }
     }
 
     /**
@@ -64,11 +49,22 @@ public class Paste extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String returnUrl = (String) data;
+        return Optional.of("Paste submitted. Here it is: \n  " + returnUrl);
     }
 
+    /**
+     * Takes a pwd command's output in "path" and prints out the URL for the
+     * paste.
+     *
+     * @return 
+     * @throws java.io.IOException
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
+     * @throws net.lingala.zip4j.exception.ZipException
+     */
     @Override
-    public String call() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+        return submitter.submitPaste(data.get("path"));
     }
 }
