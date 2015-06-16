@@ -21,8 +21,8 @@ public class ProjectRootFinderStub implements RootFinder {
     }
 
     private void fillCourseStubs() {
-        String r = ExampleJson.allCoursesExample;
-        List<Course> courses = TmcJsonParser.getCoursesFromString(r);
+        String allCourses = ExampleJson.allCoursesExample;
+        List<Course> courses = TmcJsonParser.getCoursesFromString(allCourses);
         for (Course c:courses) {
             courseStubs.put(c.getName(), c);
         }
@@ -43,6 +43,13 @@ public class ProjectRootFinderStub implements RootFinder {
 
     @Override
     public Optional<Course> getCurrentCourse(String path) {
+        String[] folders = path.split("/");
+
+        for(String folder:folders) {
+            if(courseStubs.containsKey(folder)) {
+                return Optional.of(courseStubs.get(folder));
+            }
+        }
         return Optional.absent();
     }
 
