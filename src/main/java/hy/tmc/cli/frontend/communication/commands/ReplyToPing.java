@@ -1,18 +1,10 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import java.util.concurrent.Callable;
 
-public class ReplyToPing extends Command implements Callable<String> {
+public class ReplyToPing extends Command<String> {
 
     private final String answer = "pong";
-
-    /**
-     * print pong to the frontend.
-     */
-    protected Optional<String> functionality() {
-        return Optional.of(answer);
-    }
 
     /**
      * Does nothing, this command requires no data.
@@ -23,7 +15,7 @@ public class ReplyToPing extends Command implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        return functionality().or("ping failed");
+        return answer;
     }
 
     @Override

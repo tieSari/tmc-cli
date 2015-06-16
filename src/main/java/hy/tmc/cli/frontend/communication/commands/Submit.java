@@ -16,15 +16,12 @@ import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
 
 /**
  * Submit command for submitting exercises to TMC.
  */
-public class Submit extends Command implements Callable<SubmissionResult> {
+public class Submit extends Command<SubmissionResult> {
 
     CourseSubmitter submitter;
     SubmissionInterpreter interpreter;
@@ -56,7 +53,7 @@ public class Submit extends Command implements Callable<SubmissionResult> {
      */
     private Optional<SubmissionResult> functionality() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException, ProtocolException {
         interpreter = getInterpreter();
-        String returnUrl = submitter.submit(data.get("path"));
+        String returnUrl = submitter.submit((String)data.get("path"));
         return Optional.of(interpreter.getSubmissionResult(returnUrl));
     }
 

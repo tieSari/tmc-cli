@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import net.lingala.zip4j.exception.ZipException;
 
-public class Paste extends Command {
+public class Paste extends Command<String> {
 
     CourseSubmitter submitter;
     
@@ -38,7 +38,6 @@ public class Paste extends Command {
      * Takes a pwd command's output in "path" and prints out the URL for the paste.
      *
      */
-    @Override
     protected Optional<String> functionality() {
         try {
             String returnUrl = submitter.submitPaste(data.get("path"));
@@ -61,5 +60,15 @@ public class Paste extends Command {
         if (!this.data.containsKey("path")) {
             throw new ProtocolException("pwd not supplied");
         }
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String call() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

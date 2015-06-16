@@ -6,7 +6,7 @@ import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class DownloadExercises extends Command {
+public class DownloadExercises extends Command<String> {
 
     /**
      * ExerciseDownloader that is used for downloading.
@@ -20,12 +20,11 @@ public class DownloadExercises extends Command {
     /**
      * Parses the course JSON and executes downloading of the course exercises.
      */
-    @Override
     protected Optional<String> functionality() {
-        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
+        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt((String)this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            return exerciseDownloader.downloadFiles(course.getExercises(), this.data.get("pwd"), course.getName());
+            return exerciseDownloader.downloadFiles(course.getExercises(),(String) this.data.get("pwd"), course.getName());
         }
         return Optional.absent();
     }
@@ -54,10 +53,20 @@ public class DownloadExercises extends Command {
             throw new ProtocolException("Course ID required");
         }
         try {
-            int courseId = Integer.parseInt(this.data.get("courseID"));
+   //         int courseId = Integer.parseInt(this.data.get("courseID"));
         }
         catch (NumberFormatException e) {
             throw new ProtocolException("Given course id is not a number");
         }
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String call() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

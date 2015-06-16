@@ -3,11 +3,14 @@ package hy.tmc.cli.backend;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import fi.helsinki.cs.tmc.langs.RunResult;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 public class TmcCore {
@@ -39,45 +42,65 @@ public class TmcCore {
         return pool;
     }
 
-    public ListenableFuture<String> login(String username, String password) {
-        return run("login", "username", username, "password", password);
+    public ListenableFuture<String> login(String username, String password) throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("login " + " username " + username + " password " + password);
     }
 
-    public ListenableFuture<String> logout() {
-        return run("logout");
+    public ListenableFuture<String> logout() throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("logout");
     }
 
-    public ListenableFuture<String> selectServer(String serverAddress) {
-        return run("setServer", "tmc-server", serverAddress);
+    public ListenableFuture<String> selectServer(String serverAddress) throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("setServer " + " tmc-server " + serverAddress);
     }
 
-    public ListenableFuture<String> downloadExercises(String pwd, String courseId) {
-        return run("downloadExercises", "pwd", pwd, "courseID", courseId);
+    public ListenableFuture<String> downloadExercises(String pwd, String courseId) throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("downloadExercises pwd "+ pwd+ " courseID " + courseId);
     }
 
-    public ListenableFuture<String> help() {
-        return run("help");
+    public ListenableFuture<String> help() throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("help");
     }
 
-    public ListenableFuture<String> listCourses() {
-        return run("listCourses");
+    public ListenableFuture<String> listCourses() throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("listCourses");
     }
 
-    public ListenableFuture<String> listExercises() {
-        return run("listExercises");
+    public ListenableFuture<String> listExercises() throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("listExercises");
+    }
+    
+    public ListenableFuture<SubmissionResult> submit(String path) throws ProtocolException {
+        return (ListenableFuture<SubmissionResult>) runCommand("submit path " + path);
+    }
+    
+    public ListenableFuture<RunResult> test(String path) throws ProtocolException {
+        return (ListenableFuture<RunResult>) runCommand("runTests path " + path);
+    }
+    
+    public ListenableFuture<String> paste(String path) throws ProtocolException {
+        return (ListenableFuture<String>) runCommand("paste path " + path);
     }
 
-    public ListenableFuture<String> runCommand(String inputLine) throws ProtocolException {
+    public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
         return pool.submit(parser.getCommand(inputLine));
     }
 
-    private ListenableFuture<String> run(String commandName, String... args) {
-        if (!commands.containsKey(commandName)) {
-            return null;
-        }
-        Command command = commands.get(commandName);
-        setParams(command, args);
-        return pool.submit(command);
+//    private ListenableFuture<?> run(String commandName, String... args) {
+//        if (!commands.containsKey(commandName)) {
+//            return null;
+//        }
+//        Command command = commands.get(commandName);
+//        setParams(command, args);
+//        return pool.submit(command);
+//    }
+    
+    public Command getCommand(String inputLine) throws ProtocolException {
+        return parser.getCommand(inputLine);
+    }
+    
+    public ListenableFuture<?> submitTask(Callable<?> callable) {
+        return pool.submit(callable);
     }
 
     private void setParams(Command command, String... args) {

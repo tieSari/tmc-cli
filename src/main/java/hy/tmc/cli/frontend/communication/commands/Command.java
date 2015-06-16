@@ -1,23 +1,25 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.domain.CommandResult;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public abstract class Command {
+public abstract class Command<E> implements Callable<E> {
 
     private String defaultErrorMessage = "Unexpected exception.";
 
-    protected Map<String, String> data;
+    Map<String, String> data;
     private Class returnType;
 
     /**
      * Command can return any type of object. For example SubmissionResult etc.
      */
     public Command() {
-        data = new HashMap<>();
+        data = new HashMap<String, String>();
     }
     
     public Map<String, String> getData() {

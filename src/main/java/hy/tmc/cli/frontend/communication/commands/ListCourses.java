@@ -6,12 +6,11 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class ListCourses extends Command {
+public class ListCourses extends Command<String>  {
 
     /**
      * use JSONParser to get a list of course names, and print it.
      */
-    @Override
     protected Optional<String> functionality() {
         return Optional.of(TmcJsonParser.getCourseNames());
     }
@@ -26,5 +25,15 @@ public class ListCourses extends Command {
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("User must be authorized first");
         }
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String call() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

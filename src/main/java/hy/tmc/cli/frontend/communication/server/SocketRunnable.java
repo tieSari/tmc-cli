@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.backend.TmcCore;
+import hy.tmc.cli.frontend.communication.commands.Command;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,24 +44,25 @@ public class SocketRunnable implements Runnable {
      */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException {
-        final ListenableFuture<String> commandFuture = parseCommand(inputReader, outputStream);
+        Command command = parseCommand(inputReader, outputStream);
+        final ListenableFuture<?> commandFuture = core.submitTask(command);
         if (commandFuture != null) {
             final DataOutputStream output = outputStream;
-            addListenerToFuture(commandFuture, output);
+            addListenerToFuture(commandFuture, output, command);
         }
     }
 
     /**
      * Reads input and starts corresponding command-object.
      */
-    private ListenableFuture<String> parseCommand(BufferedReader inputReader, DataOutputStream stream)
+    private Command parseCommand(BufferedReader inputReader, DataOutputStream stream)
             throws IOException {
         String input = inputReader.readLine();
         if (input == null) {
             return null;
         }
         try {
-            return core.runCommand(input);
+            return core.getCommand(input);
         }
         catch (ProtocolException ex) {
             stream.writeUTF(ex.getMessage() + "\n");
@@ -76,8 +78,8 @@ public class SocketRunnable implements Runnable {
      * @param commandResult Command-object that has been started.
      * @param output stream where to write result.
      */
-    private void addListenerToFuture(ListenableFuture<String> commandResult,
-            final DataOutputStream output) {
-        commandResult.addListener(new SocketListener(commandResult, output, socket), core.getPool());
+    private void addListenerToFuture(ListenableFuture<?> commandResult,
+            final DataOutputStream output, Command command) {
+        commandResult.addListener(new SocketListener(commandResult, output, socket, command), core.getPool());
     }
 }

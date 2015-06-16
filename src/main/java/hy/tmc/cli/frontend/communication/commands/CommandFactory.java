@@ -29,7 +29,7 @@ public class CommandFactory {
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
         commandsByName.put("stopProcess", stopProcess());
-//        commandsByName.put("answerQuestion", answerQuestion());
+        //commandsByName.put("answerQuestion", answerQuestion());
 
         return commandsByName;
     }
