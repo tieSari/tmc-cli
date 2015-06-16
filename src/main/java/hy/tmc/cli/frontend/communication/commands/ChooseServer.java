@@ -19,16 +19,6 @@ public class ChooseServer extends Command<String> {
         handler = new ConfigHandler();
     }
 
-
-    protected Optional<String> functionality() {
-        try {
-            handler.writeServerAddress(data.get("tmc-server"));            
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
-        return Optional.absent();
-    }
-
     @Override
     public void checkData() throws ProtocolException {
         if (!this.data.containsKey("tmc-server")) {
@@ -50,11 +40,17 @@ public class ChooseServer extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Optional.of((String) data);
     }
 
     @Override
     public String call() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String address = data.get("tmc-server");           
+        try { 
+            handler.writeServerAddress(address);            
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return "Address changed to " + address;
     }
 }
