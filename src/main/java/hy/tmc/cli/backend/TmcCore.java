@@ -9,7 +9,6 @@ import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
-import static hy.tmc.cli.frontend.communication.commands.CommandFactory.listExercises;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
 import java.net.URI;
@@ -58,16 +57,18 @@ public class TmcCore {
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<Boolean> login(String username, String password) throws ProtocolException {
+        checkParameters(username, password);
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("login username " + username + " password " + password);
         return stringListenableFuture;
     }
 
     /**
-     * Logs the user out, in other words clears the saved userdata from memory. 
+     * Logs the user out, in other words clears the saved userdata from memory.
      * Always clears the user data.
      *
-     * @return A Future-object containing true if user was logged in previously, and false if nobody was logged in.
+     * @return A Future-object containing true if user was logged in previously,
+     * and false if nobody was logged in.
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<Boolean> logout() throws ProtocolException {
@@ -85,6 +86,7 @@ public class TmcCore {
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<Boolean> selectServer(String serverAddress) throws ProtocolException {
+        checkParameters(serverAddress);
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("setServer tmc-server " + serverAddress);
         return stringListenableFuture;
@@ -101,6 +103,7 @@ public class TmcCore {
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<String> downloadExercises(String path, String courseId) throws ProtocolException {
+        checkParameters(path, courseId);
         @SuppressWarnings("unchecked")
         ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("downloadExercises pwd " + path + " courseID " + courseId);
         return stringListenableFuture;
@@ -142,55 +145,65 @@ public class TmcCore {
      * the path was erroneous
      */
     public ListenableFuture<List<Exercise>> listExercises(String path) throws ProtocolException {
+        checkParameters(path);
         @SuppressWarnings("unchecked")
         ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) runCommand("listExercises path " + path);
         return listExercises;
     }
 
     /**
-     * Submits an exercise in the given path to the TMC-server.
-     * Looks for a build.xml or equivalent file upwards in the path to determine exercise folder.
-     * Requires login.
+     * Submits an exercise in the given path to the TMC-server. Looks for a
+     * build.xml or equivalent file upwards in the path to determine exercise
+     * folder. Requires login.
      *
      * @param path inside any exercise directory
-     * @return SubmissionResult object containing details of the tests run on server.
-     * @throws ProtocolException if there was no course in the given path, no exercise in the given path, or not logged in.
+     * @return SubmissionResult object containing details of the tests run on
+     * server.
+     * @throws ProtocolException if there was no course in the given path, no
+     * exercise in the given path, or not logged in.
      */
     public ListenableFuture<SubmissionResult> submit(String path) throws ProtocolException {
+        checkParameters(path);
         @SuppressWarnings("unchecked")
         ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) runCommand("submit path " + path);
         return submissionResultListenableFuture;
     }
 
     /**
-     * Runs tests on the specified directory.
-     * Looks for a build.xml or equivalent file upwards in the path to determine exercise folder.
-     * Doesn't require login.
-     * 
+     * Runs tests on the specified directory. Looks for a build.xml or
+     * equivalent file upwards in the path to determine exercise folder. Doesn't
+     * require login.
+     *
      * @param path inside any exercise directory
      * @return RunResult object containing details of the tests run
-     * @throws ProtocolException if there was no course in the given path, or no exercise in the given path
+     * @throws ProtocolException if there was no course in the given path, or no
+     * exercise in the given path
      */
     public ListenableFuture<RunResult> test(String path) throws ProtocolException {
+        checkParameters(path);
         @SuppressWarnings("unchecked")
         ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) runCommand("runTests path " + path);
         return runResultListenableFuture;
     }
 
     /**
-     * Submits the current exercise to the TMC-server and requests for a paste to be made.
-     * 
+     * Submits the current exercise to the TMC-server and requests for a paste
+     * to be made.
+     *
      * @param path inside any exercise directory
      * @return URI object containing location of the paste
-     * @throws ProtocolException if there was no course in the given path, or no exercise in the given path
+     * @throws ProtocolException if there was no course in the given path, or no
+     * exercise in the given path
      */
     public ListenableFuture<URI> paste(String path) throws ProtocolException {
+        checkParameters(path);
         @SuppressWarnings("unchecked")
         ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) runCommand("paste path " + path);
         return stringListenableFuture;
     }
 
-    public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException  {
+    public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
+        checkParameters(inputLine);
         @SuppressWarnings("unchecked")
         ListenableFuture submit = pool.submit(parser.getCommand(inputLine));
         return submit;
@@ -202,5 +215,13 @@ public class TmcCore {
 
     public ListenableFuture<?> submitTask(Callable<?> callable) {
         return pool.submit(callable);
+    }
+
+    private void checkParameters(String... params) throws ProtocolException {
+        for (String param : params) {
+            if (param == null || param.isEmpty()) {
+                throw new ProtocolException("Param empty or null.");
+            }
+        }
     }
 }
