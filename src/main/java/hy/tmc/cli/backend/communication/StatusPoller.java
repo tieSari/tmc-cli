@@ -22,13 +22,16 @@ public class StatusPoller extends AbstractScheduledService {
     }
 
     @Override
-    protected void runOneIteration() throws Exception {
-        
+    protected void runOneIteration() {
+
+        if (!Mailbox.hasMailboxInitialized()) {
+            throw new IllegalStateException("No mailbox initialized.");
+        }
+
         Optional<List<Review>> reviews = checkReviews();
         if (reviews.isPresent()) {
             Mailbox.getMailbox().fill(reviews.get());
         }
-
     }
 
     @Override

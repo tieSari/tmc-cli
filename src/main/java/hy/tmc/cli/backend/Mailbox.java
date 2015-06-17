@@ -26,6 +26,7 @@ public class Mailbox {
     }
     
     public synchronized void fill(List<Review> reviews) {
+        if(mailbox == null) throw new IllegalStateException("No mailbox found.");
         newReviews = true;
         unreadReviews.addAll(reviews);
     }
@@ -65,7 +66,11 @@ public class Mailbox {
     public static void destroy() {
         mailbox = null;
     }
-    
+
+    public static boolean hasMailboxInitialized() {
+        return mailbox != null;
+    }
+
     public static Mailbox getMailbox() {
         return mailbox;
     }   
