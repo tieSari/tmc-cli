@@ -59,6 +59,7 @@ public class PasteSteps {
         serverThread.start();
         testClient = new TestClient(port);
         ClientData.setUserData("Chuck", "Norris");
+        ClientData.setProjectRootFinder(new ProjectRootFinderStub());
         startWireMock();
     }
 
