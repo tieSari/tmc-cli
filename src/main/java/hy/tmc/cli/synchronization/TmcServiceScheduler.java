@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.domain.Course;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,12 @@ public class TmcServiceScheduler {
     private final Set<Service> tasks;
     private ServiceManager serviceManager;
 
+    /**
+     * Retrieves the scheduler. Only one scheduler per
+     * client can be running at the time.
+     *
+     * @return Scheduler which has fixed time tasks
+     */
     public static TmcServiceScheduler getScheduler() {
         if (instance == null) {
             instance = new TmcServiceScheduler();
@@ -25,9 +32,15 @@ public class TmcServiceScheduler {
     }
 
     public static void startIfNotRunning(Course course) {
-       startIfNotRunning(course, 5, TimeUnit.SECONDS);
+        startIfNotRunning(course, 5, TimeUnit.SECONDS);
     }
-    
+
+    /**
+     * Starts the scheduled time tasker.
+     * @param course for denominating current course
+     * @param interval when tasks are executed
+     * @param timeunit in milliseconds, seconds, minutes, hours etc.
+     */
     public static void startIfNotRunning(Course course, long interval, TimeUnit timeunit) {
         if (!isRunning()) {
             TmcServiceScheduler.getScheduler().addService(
@@ -42,7 +55,7 @@ public class TmcServiceScheduler {
     }
 
     /**
-     * Disable polling.
+     * Disables scheduled tasks until it enablePolling is called.
      */
     public static void disablePolling() {
         if (isRunningTasks) {
@@ -51,19 +64,22 @@ public class TmcServiceScheduler {
         isRunningTasks = true;
         isDisabled = true;
     }
-    
+
+    /**
+     * Enables scheduled tasks to be executed.
+     */
     public static void enablePolling() {
         if (isDisabled) {
             isDisabled = false;
             isRunningTasks = false;
         }
     }
-    
+
     private TmcServiceScheduler() {
         tasks = new HashSet<>();
     }
 
-    public TmcServiceScheduler addService(Service service) {
+    private TmcServiceScheduler addService(Service service) {
         if (isRunningTasks) {
             return this;
         }
@@ -71,12 +87,18 @@ public class TmcServiceScheduler {
         return this;
     }
 
+    /**
+     * Starts every service as asynced process.
+     */
     public void start() {
         this.serviceManager = new ServiceManager(tasks);
         isRunningTasks = true;
         serviceManager.startAsync();
     }
 
+    /**
+     * Stops every service as asynced process.
+     */
     public void stop() {
         isRunningTasks = false;
         if (serviceManager == null) {

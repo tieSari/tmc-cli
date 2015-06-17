@@ -11,7 +11,7 @@ public class Cache {
     private static Map<Integer, Course> courses;
     private static Date lastUpdated = new Date();
     
-    public static void update(Map<Integer, Course> freshData){
+    public static void update(Map<Integer, Course> freshData) {
         lastUpdated = new Date();
         lastUpdated.setTime(System.currentTimeMillis());
     }

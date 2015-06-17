@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend;
 
+import com.google.common.annotations.Beta;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.Review;
@@ -24,25 +25,46 @@ public class Mailbox {
         unreadReviews = new ArrayList<>();
         exerciseUpdates = new HashMap<>();
     }
-    
+
+    /**
+     * Fills the mailbox with reviews.
+     * @param reviews which contains codereviews as Review-objects
+     */
     public synchronized void fill(List<Review> reviews) {
+        if (mailbox == null) throw new IllegalStateException("No mailbox found.");
         newReviews = true;
         unreadReviews.addAll(reviews);
     }
-    
+
+    /**
+     * Fills the exercise updates related to the course.
+     * @param course where are updates
+     * @param exercises which can be updated
+     */
+    @Beta
     public synchronized void fill(Course course, List<Exercise> exercises) {
         newUpdates = false;
         exercises.addAll(exerciseUpdates.get(course));
         exerciseUpdates.put(course, exercises);
     }
-    
+
+    /**
+     * Gets all unread reviews which are automatically removed.
+     * @return list of code reviews
+     */
     public synchronized List<Review> getUnreadReviews() {
         newReviews = false;
         List<Review> unread = new ArrayList<>(unreadReviews);
         unreadReviews.clear();
         return unread;
     }
-    
+
+    /**
+     * Gets all exercise updates of the specific course.
+     * @param course to get updates from
+     * @return list of exercise updates
+     */
+    @Beta
     public synchronized List<Exercise> getExerciseUpdates(Course course) {
         newUpdates = false;
         List<Exercise> updates = exerciseUpdates.get(course);
@@ -65,7 +87,11 @@ public class Mailbox {
     public static void destroy() {
         mailbox = null;
     }
-    
+
+    public static boolean hasMailboxInitialized() {
+        return mailbox != null;
+    }
+
     public static Mailbox getMailbox() {
         return mailbox;
     }   

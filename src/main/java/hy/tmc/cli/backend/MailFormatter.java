@@ -1,18 +1,28 @@
 package hy.tmc.cli.backend;
 
-import hy.tmc.cli.domain.Exercise;
+import com.google.common.annotations.Beta;
 import hy.tmc.cli.domain.Review;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class MailFormatter {
-    
+
+    /**
+     * Formats the list of reviews as user friendly string.
+     * @param reviews to be formatted
+     * @return formatted string which contains reviews
+     */
     public static String formatReviews(List<Review> reviews) {
         return reviewOutput(reviews);
     }
-    
+
+    /**
+     *
+     * @param exercises
+     * @return
+     */
+    @Beta
     public static String formatExercises(List<?> exercises) {
         return "";
     }

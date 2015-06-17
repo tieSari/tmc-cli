@@ -30,6 +30,10 @@ public class TestClient {
                 new InputStreamReader(socket.getInputStream()));
 
     }
+    
+    public boolean checkForMessages() throws IOException {
+        return input.ready();
+    }
 
     private boolean isClosedFromServer() {
         try {

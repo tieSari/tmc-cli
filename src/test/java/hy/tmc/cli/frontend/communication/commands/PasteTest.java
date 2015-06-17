@@ -12,6 +12,8 @@ import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.IOException;
 import java.text.ParseException;
+
+import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import org.junit.After;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -42,6 +44,7 @@ public class PasteTest {
         Mailbox.create();
         mock();
         ClientData.setUserData("Bossman", "Samu");
+        ClientData.setProjectRootFinder(new ProjectRootFinderStub());
         TmcServiceScheduler.disablePolling();
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);

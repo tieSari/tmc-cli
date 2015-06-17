@@ -16,19 +16,27 @@ public class StatusPoller extends AbstractScheduledService {
     private Course currentCourse;
     private PollScheduler pollScheduler;
 
+    /**
+     * StatusPoller which polls code reviews. Has fixed time interval
+     * which can be directly modified even if the polling is running.
+     * @param currentCourse course which code reviews are being checked
+     * @param schedule object that contains the time interval
+     */
     public StatusPoller(Course currentCourse, PollScheduler schedule) {
         this.currentCourse = currentCourse;
         this.pollScheduler = schedule;
     }
 
     @Override
-    protected void runOneIteration() throws Exception {
-        
+    protected void runOneIteration() {
+        if (!Mailbox.hasMailboxInitialized()) {
+            throw new IllegalStateException("No mailbox initialized.");
+        }
+
         Optional<List<Review>> reviews = checkReviews();
         if (reviews.isPresent()) {
             Mailbox.getMailbox().fill(reviews.get());
         }
-
     }
 
     @Override

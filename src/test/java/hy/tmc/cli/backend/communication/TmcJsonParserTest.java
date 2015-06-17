@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import static org.junit.Assert.assertEquals;
 
@@ -28,10 +29,10 @@ public class TmcJsonParserTest {
      */
     @Before
     public void setup() {
+        TmcServiceScheduler.getScheduler().stop();
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-
         ClientData.setUserData("chang", "paras");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
