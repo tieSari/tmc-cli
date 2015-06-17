@@ -116,6 +116,12 @@ trap control_c SIGINT
 
 #echo "Servu paalle"
 
+if [ ! -f tmc-cli.jar ];
+then
+    echo 'FATAL: tmc client jarfile not found'
+    exit
+fi
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"
