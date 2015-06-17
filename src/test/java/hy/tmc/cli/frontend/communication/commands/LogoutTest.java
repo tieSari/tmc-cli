@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -28,14 +29,14 @@ public class LogoutTest {
     @Test
     public void messageCorrectIfLoggedOut() throws ProtocolException {
         ClientData.setUserData("Chang", "Paras");
-        String response = logout.call();
-        assertTrue(response.contains("clear"));
+        Optional<String> response = logout.parseData(logout.call());
+        assertTrue(response.get().contains("clear"));
     }
 
     @Test
     public void messageCorrectIfNobodyLoggedIn() throws ProtocolException {
         ClientData.clearUserData();
-        String response = logout.call();
-        assertTrue(response.contains("Nobody"));
+        Optional<String> response = logout.parseData(logout.call());
+        assertTrue(response.get().contains("Nobody"));
     }
 }

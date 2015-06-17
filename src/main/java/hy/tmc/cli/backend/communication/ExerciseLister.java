@@ -5,6 +5,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.ColorFormatter;
 import hy.tmc.cli.frontend.CommandLineColor;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
@@ -31,28 +32,35 @@ public class ExerciseLister {
     }
 
     /**
-     * Returns a list of exercises of a current directory in which a course exists. Also gives
-     * information about passed exercises
+     * Returns a list of exercises of a current directory in which a course exists. 
      *
      * @param path directory path to lookup course from
      * @return String with a list of exercises.
      */
-    public String listExercises(String path) {
+    public List<Exercise> listExercises(String path) throws ProtocolException {
         Optional<Course> course = finder.getCurrentCourse(path);
         
         if (!course.isPresent()) {
-            return "No course found";
+            throw new ProtocolException("No course found");
         }
         
         List<Exercise> exercises = TmcJsonParser.getExercises(course.get());
         if (exercises == null || exercises.isEmpty()) {
-            return "No exercises found";
+            throw new ProtocolException("No exercises found");
         }
 
-        return buildExercisesInfo(exercises);
+        return exercises;
     }
+    
 
-    private String buildExercisesInfo(List<Exercise> exercises) {
+    /**
+     * Builds a printout of the exercises given.
+     * 
+     * @param exercises to build info from
+     * @return String containing information
+     */
+    
+    public String buildExercisesInfo(List<Exercise> exercises) {
         StringBuilder builder = new StringBuilder();
 
         for (Exercise exercise : exercises) {

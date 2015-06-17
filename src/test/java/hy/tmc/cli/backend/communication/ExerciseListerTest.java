@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,16 +80,15 @@ public class ExerciseListerTest {
         ClientData.clearUserData();
     }
 
-    @Test
-    public void ifNoCourseIsFoundThenReturnsCorrectString() {
-        String correct = "No course found";
+    @Test(expected=ProtocolException.class)
+    public void ifNoCourseIsFoundThenThrowsProtocolException() throws ProtocolException {
         Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))
                 .thenReturn(Optional.<Course>absent());
-        assertEquals(correct, lister.listExercises("any"));
+        lister.listExercises("polku/tuntemattomaan/tiedostoon");
     }
 
-    @Test
-    public void ifNoExercisesFoundThenReturnsCorrectString() {
+    @Test(expected=ProtocolException.class)
+    public void ifNoExercisesFoundThenThrowsProtocolException() throws ProtocolException {
         String correct = "No exercises found";
 
         mockExercisesWith(null);
@@ -97,30 +97,30 @@ public class ExerciseListerTest {
     }
 
     @Test
-    public void withCorrectCourseAndExercisesOutputContainsNames() {
-        assertTrue(lister.listExercises("any").contains("Nimi"));
-        assertTrue(lister.listExercises("any").contains("Kuusi"));
+    public void withCorrectCourseAndExercisesOutputContainsNames() throws ProtocolException {
+        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Nimi"));
+        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Kuusi"));
 
     }
 
     @Test
-    public void withOneDoneExerciseOutputContainsX() {
-        assertTrue(lister.listExercises("any").contains("x"));
+    public void withOneDoneExerciseOutputContainsX() throws ProtocolException {
+        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
     }
 
     @Test
-    public void withNoDoneExercisesOutputContainsNoX() {
+    public void withNoDoneExercisesOutputContainsNoX() throws ProtocolException {
         List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
         exercises.add(new Exercise());
         mockExercisesWith(exercises);
 
-        assertFalse(lister.listExercises("any").contains("x"));
+        assertFalse(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
     }
 
     @Test
-    public void withOneAttemptedExerciseOutputContainsNoX() {
+    public void withOneAttemptedExerciseOutputContainsNoX() throws ProtocolException {
         List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
@@ -129,7 +129,7 @@ public class ExerciseListerTest {
         exercises.add(ex);
 
         mockExercisesWith(exercises);
-        assertFalse(lister.listExercises("any").contains("x"));
+        assertFalse(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
 
     }
 }

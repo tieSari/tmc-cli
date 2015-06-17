@@ -9,7 +9,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -129,7 +128,7 @@ public class DownloadExercisesSteps {
     @When("^user gives a download exercises command and course id\\.$")
     public void user_gives_a_download_exercises_command_and_course_id() throws Throwable {
         createTestClient();
-        testClient.sendMessage("downloadExercises courseID 21 pwd " + tempDir.toAbsolutePath());
+        testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
         while (true) {
             String out = testClient.reply();
             if (out != null && !out.equals("fail")) {

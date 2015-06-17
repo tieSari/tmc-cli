@@ -9,10 +9,11 @@ import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
+import java.net.URI;
 import java.text.ParseException;
 import net.lingala.zip4j.exception.ZipException;
 
-public class Paste extends Command<String> {
+public class Paste extends Command<URI> {
 
     CourseSubmitter submitter;
 
@@ -49,8 +50,8 @@ public class Paste extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        String returnUrl = (String) data;
-        return Optional.of("Paste submitted. Here it is: \n  " + returnUrl);
+        URI returnURI = (URI) data;
+        return Optional.of("Paste submitted. Here it is: \n  " + returnURI);
     }
 
     /**
@@ -65,8 +66,8 @@ public class Paste extends Command<String> {
      * @throws hy.tmc.cli.frontend.communication.server.ProtocolException
      */
     @Override
-    public String call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         checkData();
-        return submitter.submitPaste(data.get("path"));
+        return URI.create(submitter.submitPaste(data.get("path")));
     }
 }

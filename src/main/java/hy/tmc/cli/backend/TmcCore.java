@@ -4,11 +4,16 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import fi.helsinki.cs.tmc.langs.RunResult;
+import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
+import static hy.tmc.cli.frontend.communication.commands.CommandFactory.listExercises;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -20,8 +25,9 @@ public class TmcCore {
     private ProtocolParser parser = new ProtocolParser();
 
     /**
-     * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
-     * The TmcCore provides all the essential backend functionalities as public methods.
+     * The TmcCore that can be used as a standalone businesslogic for any tmc
+     * client application. The TmcCore provides all the essential backend
+     * functionalities as public methods.
      */
     public TmcCore() {
         commands = CommandFactory.createCommandMap();
@@ -37,14 +43,15 @@ public class TmcCore {
         commands = CommandFactory.createCommandMap();
         this.pool = pool;
     }
-    
+
     public ListeningExecutorService getPool() {
         return pool;
     }
-    
+
     /**
-     * Authenticates the given user on the server, and saves the data into memory.
-     * 
+     * Authenticates the given user on the server, and saves the data into
+     * memory.
+     *
      * @param username to authenticate with
      * @param password to authenticate with
      * @return A Future-object containing true or false on success or fail
@@ -57,9 +64,10 @@ public class TmcCore {
     }
 
     /**
-     * Logs the user out, in other words clears the saved userdata from memory.
-     * 
-     * @return A Future-object containing true or false on success or fail
+     * Logs the user out, in other words clears the saved userdata from memory. 
+     * Always clears the user data.
+     *
+     * @return A Future-object containing true if user was logged in previously, and false if nobody was logged in.
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<Boolean> logout() throws ProtocolException {
@@ -67,9 +75,11 @@ public class TmcCore {
         ListenableFuture<Boolean> logout = (ListenableFuture<Boolean>) runCommand("logout");
         return logout;
     }
+
     /**
-     * Selects the given server as the working TMC-server. All requests, submits, etc. will be made to that server.
-     * 
+     * Selects the given server as the working TMC-server. All requests,
+     * submits, etc. will be made to that server.
+     *
      * @param serverAddress this will be the new TMC-server address.
      * @return A Future-object containing true or false on success or fail
      * @throws ProtocolException if something in the given input was wrong
@@ -79,10 +89,12 @@ public class TmcCore {
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("setServer " + " tmc-server " + serverAddress);
         return stringListenableFuture;
     }
+
     /**
-     * Downloads the exercise files of a given source to the given directory.
-     * If files exist, overrides everything except the source folder and files specified in .tmcproject.yml
-     * 
+     * Downloads the exercise files of a given source to the given directory. If
+     * files exist, overrides everything except the source folder and files
+     * specified in .tmcproject.yml Requires login.
+     *
      * @param path where it downloads the exercises
      * @param courseId ID of course to download
      * @return A Future-object containing true or false on success or fail
@@ -95,44 +107,86 @@ public class TmcCore {
     }
 
     /**
-     * Displays a help message containing the names of valid commands on the server side.
-     * 
-     * @return 
-     * @throws ProtocolException 
+     * Displays a help message containing the names of valid commands on the
+     * server side.
+     *
+     * @return Future-object containing a String with the help information.
+     * @throws ProtocolException if something went wrong.
      */
     public ListenableFuture<String> help() throws ProtocolException {
         @SuppressWarnings("unchecked")
         ListenableFuture<String> help = (ListenableFuture<String>) runCommand("help");
         return help;
     }
-    
-    public ListenableFuture<String> listCourses() throws ProtocolException {
+
+    /**
+     * Gives a list of all the courses on the current server, to which the
+     * current user has access. Doesn't require login.
+     *
+     * @return List containing course-objects parsed from JSON
+     * @throws ProtocolException if something went wrong
+     */
+    public ListenableFuture<List<Course>> listCourses() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> listCourses = (ListenableFuture<String>) runCommand("listCourses");
+        ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) runCommand("listCourses");
         return listCourses;
     }
 
-    public ListenableFuture<String> listExercises() throws ProtocolException {
+    /**
+     * Gives a list of all the exercises relating to a course. Course is found
+     * by path. Requires login.
+     *
+     * @param path to any directory inside a course directory
+     * @return List containing exercise-objects parsed from JSON
+     * @throws ProtocolException if there was no course in the given path, or if
+     * the path was erroneous
+     */
+    public ListenableFuture<List<Exercise>> listExercises(String path) throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> listExercises = (ListenableFuture<String>) runCommand("listExercises");
+        ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) runCommand("listExercises path " + path);
         return listExercises;
     }
-    
+
+    /**
+     * Submits an exercise in the given path to the TMC-server.
+     * Looks for a build.xml or equivalent file upwards in the path to determine exercise folder.
+     * Requires login.
+     *
+     * @param path inside any exercise directory
+     * @return SubmissionResult object containing details of the tests run on server.
+     * @throws ProtocolException if there was no course in the given path, no exercise in the given path, or not logged in.
+     */
     public ListenableFuture<SubmissionResult> submit(String path) throws ProtocolException {
         @SuppressWarnings("unchecked")
         ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) runCommand("submit path " + path);
         return submissionResultListenableFuture;
     }
-    
+
+    /**
+     * Runs tests on the specified directory.
+     * Looks for a build.xml or equivalent file upwards in the path to determine exercise folder.
+     * Doesn't require login.
+     * 
+     * @param path inside any exercise directory
+     * @return RunResult object containing details of the tests run
+     * @throws ProtocolException if there was no course in the given path, or no exercise in the given path
+     */
     public ListenableFuture<RunResult> test(String path) throws ProtocolException {
         @SuppressWarnings("unchecked")
         ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) runCommand("runTests path " + path);
         return runResultListenableFuture;
     }
-    
-    public ListenableFuture<String> paste(String path) throws ProtocolException {
+
+    /**
+     * Submits the current exercise to the TMC-server and requests for a paste to be made.
+     * 
+     * @param path inside any exercise directory
+     * @return URI object containing location of the paste
+     * @throws ProtocolException if there was no course in the given path, or no exercise in the given path
+     */
+    public ListenableFuture<URI> paste(String path) throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("paste path " + path);
+        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) runCommand("paste path " + path);
         return stringListenableFuture;
     }
 
@@ -141,18 +195,12 @@ public class TmcCore {
         ListenableFuture submit = pool.submit(parser.getCommand(inputLine));
         return submit;
     }
-    
+
     public Command getCommand(String inputLine) throws ProtocolException {
         return parser.getCommand(inputLine);
     }
-    
+
     public ListenableFuture<?> submitTask(Callable<?> callable) {
         return pool.submit(callable);
-    }
-
-    private void setParams(Command command, String... args) {
-        for (int i = 0, j = 1; j < args.length; i += 2, j += 2) {
-            command.setParameter(args[i], args[j]);
-        }
     }
 }

@@ -39,7 +39,7 @@ public class PasteTest {
     @Test
     public void submitReturnsBadOutputWhenCodeIsBad() throws Exception {
         paste.setParameter("path", "/hieno/path");
-        String result = paste.call();
+        String result = paste.parseData(paste.call()).get();
         assertTrue(result.contains(pasteUrl));
     }
 
