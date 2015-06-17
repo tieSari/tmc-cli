@@ -6,6 +6,7 @@ import static hy.tmc.cli.backend.MailFormatter.formatReviews;
 import com.google.common.base.Optional;
 
 import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.FrontendListener;
@@ -35,15 +36,21 @@ public class MailChecker extends Command {
 
     @Override
     public void checkData() throws ProtocolException {
+        if (!ClientData.userDataExists()) {
+            throw new ProtocolException("Must be logged in first");
+        }
         mailbox = Mailbox.getMailbox();
         if (mailbox == null) {
             throw new ProtocolException("No mailbox found. Are you logged in?");
         }
-        if (!data.containsKey("path")) {
-            throw new ProtocolException("must specfiy path");
+        if (data.containsKey("courseID")) {
+            course = TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
+        } else if (data.containsKey("path")) {
+            String path = data.get("path");
+            course = ClientData.getCurrentCourse(path);
+        } else {
+            throw new ProtocolException("must specify path or courseID");
         }
-        String path = data.get("path");
-        course = ClientData.getCurrentCourse(path);
         if (!course.isPresent()) {
             String errorMsg = "Unable to determine the course. Are you sure this is a tmc course subdirectory?";
             throw new ProtocolException(errorMsg);

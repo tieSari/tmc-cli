@@ -33,6 +33,8 @@ public class RunTests extends MailCheckingCommand {
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
 
+        System.out.println(exercise.get().toAbsolutePath().toString());
+
         TmcServiceScheduler.startIfNotRunning(course);
 
         if (!exercise.isPresent()) {

@@ -30,6 +30,10 @@ public class TestClient {
                 new InputStreamReader(socket.getInputStream()));
 
     }
+    
+    public boolean checkForMessages() throws IOException {
+        return input.ready();
+    }
 
     private boolean isClosedFromServer() {
         try {
@@ -57,7 +61,6 @@ public class TestClient {
         StringBuilder replybuffer = new StringBuilder();
         String reply = input.readLine();
         while (reply != null) {
-            System.out.println(reply);
             replybuffer.append(reply).append("\n");
             reply = input.readLine();
         }
@@ -73,7 +76,6 @@ public class TestClient {
     public String reply() {
         try {
             String reply = input.readLine();
-            System.out.println(reply);
             if (reply == null) {
                 this.init();
                 return input.readLine();
