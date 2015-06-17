@@ -8,6 +8,7 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import org.junit.After;
@@ -30,6 +31,7 @@ public class TmcTestsSteps {
         ClientData.clearUserData();
         Mailbox.create();
         ClientData.setUserData("test", "1234");
+        TmcServiceScheduler.disablePolling();
     }
 
     /**
@@ -40,6 +42,9 @@ public class TmcTestsSteps {
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
         testRunner = new RunTests(front);
+        System.out.println("exDir: " + exerciseDirectory);
+        System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
         testRunner.setParameter("path", exerciseDirectory);
     }
 
@@ -74,13 +79,15 @@ public class TmcTestsSteps {
     @Then("^the user sees both passed and failed tests$")
     public void theUserSeesBothPassedAndFailedTests() {
         String output = front.getMostRecentLine();
+        System.out.println("Output: " + output);
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
 
     }
     
     @After
-    public void clean(){
+    public void clean() throws InterruptedException {
+        //Thread.sleep(5000);
         Mailbox.destroy();
         ClientData.clearUserData();
     }

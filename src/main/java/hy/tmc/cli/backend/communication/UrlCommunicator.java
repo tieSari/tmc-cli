@@ -77,6 +77,7 @@ public class UrlCommunicator {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
         } catch (IOException e) {
+            e.printStackTrace();
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
