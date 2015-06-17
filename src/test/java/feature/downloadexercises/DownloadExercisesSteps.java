@@ -28,6 +28,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.testhelpers.MailExample;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,8 +52,10 @@ public class DownloadExercisesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 5055;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+
     /**
      * Set up server.
+     *
      * @throws IOException if server initializing fails
      */
     @Before
@@ -64,7 +67,9 @@ public class DownloadExercisesSteps {
         config.writeServerAddress(SERVER_ADDRESS);
         server = new Server();
         port = server.getCurrentPort();
+        createTestClient();
         serverThread = new Thread(server);
+        
         configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
         serverThread.start();
@@ -90,9 +95,22 @@ public class DownloadExercisesSteps {
                         .withHeader("Content-Type", "text/json")
                         .withBodyFile("test.zip")));
     }
+    
+    
+    @After
+    public void closeServer() throws IOException, InterruptedException {
+        tempDir.toFile().delete();
+        WireMock.reset();
+        wireMockServer.stop();
+        server.close();
+        serverThread.interrupt();
+        config.writeServerAddress(originalServerAddress);
+        ClientData.clearUserData();
+    }
 
     /**
      * Create test client.
+     *
      * @throws IOException if creating fails
      */
     private void createTestClient() throws IOException {
@@ -101,13 +119,13 @@ public class DownloadExercisesSteps {
 
     /**
      * Tests that user sends login request.
+     *
      * @param username string
      * @param password string
      * @throws Throwable if something fails
      */
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in(String username, String password) throws Throwable {
-        createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
         testClient.getAllFromSocket();
 
@@ -117,6 +135,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Verifies that user gives a download exercises command and course id.
+     *
      * @throws Throwable if test fails
      */
     @When("^user gives a download exercises command and course id\\.$")
@@ -131,7 +150,9 @@ public class DownloadExercisesSteps {
     }
 
     /**
-     * Verifies that output contains zip files and folders contain unzipped files.
+     * Verifies that output contains zip files and folders contain unzipped
+     * files.
+     *
      * @throws Throwable if something fails
      */
     @Then("^output should contain zip files and folders containing unzipped files$")
@@ -144,6 +165,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Verifies that downloading gives information about progress.
+     *
      * @throws Throwable if something fails
      */
     @Then("^information about download progress\\.$")
@@ -154,6 +176,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Closes server after test.
+     *
      * @throws IOException if server operations fail
      */
     @Then("^\\.zip -files are removed\\.$")
@@ -168,21 +191,29 @@ public class DownloadExercisesSteps {
         }
         assertFalse(zips);
     }
-    
+
     public File[] getFileArray(String filepath) {
         File fi = new File(filepath);
         File[] paths = fi.listFiles();
         return paths;
     }
 
-    @After
-    public void closeServer() throws IOException {
-        tempDir.toFile().delete();
-        WireMock.reset();
-        wireMockServer.stop();
-        server.close();
-        serverThread.interrupt();
-        config.writeServerAddress(originalServerAddress);
-        ClientData.clearUserData();
+    @Given("^the user has mail in the mailbox$")
+    public void the_user_has_mail_in_the_mailbox() throws Throwable {
+        Mailbox.getMailbox().fill(MailExample.reviewExample());
+        assertTrue(Mailbox.getMailbox().reviewsWaiting());
+    }
+
+    @Then("^user will see the new mail$")
+    public void user_will_see_the_new_mail() throws Throwable {
+        assertContains(output, "There are 3 unread code reviews");
+        assertContains(output, "rainfall reviewed by Bossman Samu");
+        assertContains(output, "Keep up the good work.");
+        assertContains(output, "good code");
+
+    }
+    
+    private void assertContains(String testedString, String expectedContent) {
+        assertTrue(testedString.contains(expectedContent));
     }
 }
