@@ -149,10 +149,4 @@ public class TmcCore {
     public ListenableFuture<?> submitTask(Callable<?> callable) {
         return pool.submit(callable);
     }
-
-    private void setParams(Command command, String... args) {
-        for (int i = 0, j = 1; j < args.length; i += 2, j += 2) {
-            command.setParameter(args[i], args[j]);
-        }
-    }
 }

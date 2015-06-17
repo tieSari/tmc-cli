@@ -72,10 +72,11 @@ public class TmcCoreTest {
         tmcCore.login("", "").get();
     }
 
-//    @Test
-//    public void logout() throws ProtocolException, InterruptedException, ExecutionException {
-//        assertEquals(String.class, tmcCore.logout().get().getClass());
-//    }
+    @Test
+    public void logout() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+        when(fakeCommandMap.get("logout").call()).thenReturn(true);
+        assertEquals(Boolean.class, tmcCore.logout().get().getClass());
+    }
 //
 //    @Test
 //    public void selectServer() throws ProtocolException, InterruptedException, ExecutionException {
