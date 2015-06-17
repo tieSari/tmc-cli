@@ -12,7 +12,7 @@ public class DownloadExercisesTest {
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
         DownloadExercises de = new DownloadExercises();
-        de.setParameter("pwd", "/home/tmccli/uolevipuistossa");
+        de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         de.checkData();
     }
@@ -32,7 +32,7 @@ public class DownloadExercisesTest {
     @Test(expected = ProtocolException.class)
     public void courseIdNotANumber() throws ProtocolException {
         DownloadExercises de = new DownloadExercises();
-        de.setParameter("pwd", "/home/tmccli/uolevipuistossa");
+        de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "not a number");
         de.checkData();
     }

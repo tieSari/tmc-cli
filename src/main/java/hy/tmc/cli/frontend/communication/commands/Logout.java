@@ -7,27 +7,31 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 /**
  * Allows the user to log out.
  */
-public class Logout extends Command<String> {
+public class Logout extends Command<Boolean> {
 
     @Override
-    public void checkData() throws ProtocolException {
-    }
+    public void checkData() throws ProtocolException {}
 
     @Override
     public Optional<String> parseData(Object data) {
-        return Optional.of((String) data);
-    }
-
-    @Override
-    public String call() throws ProtocolException {
-        checkData();
-         String message = "";
-        if (ClientData.userDataExists()) {
+        Boolean result = (Boolean) data;
+        String message;
+        if (result) {
             ClientData.clearUserData();
             message = "User logged out. User data cleared.";
         } else {
             message = "Nobody is logged in!";
         }
-        return message;
+        return Optional.of(message);
+    }
+
+    @Override
+    public Boolean call() throws ProtocolException {
+        if (ClientData.userDataExists()) {
+            ClientData.clearUserData();
+            return true;
+        } else {
+            return false;
+        }
     }
 }

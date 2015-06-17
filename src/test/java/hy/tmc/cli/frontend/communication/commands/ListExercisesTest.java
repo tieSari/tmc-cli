@@ -5,29 +5,49 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 
 public class ListExercisesTest {
 
     private ListExercises list;
     private ExerciseLister lister;
-    private String example = "viikko1-Viikko1_000.Hiekkalaatikko[ ]\n"
-            + "viikko1-Viikko1_001.Nimi[x]\n"
-            + "viikko1-Viikko1_002.HeiMaailma[ ]\n"
-            + "viikko1-Viikko1_003.Kuusi[ ]";
+    private List<Exercise> exampleExercises;
+
+    private void buildExample() {
+        exampleExercises = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            Exercise ex = new Exercise();
+            ex.setId(i);
+            ex.setName(i + " tehtävä");
+            ex.setAttempted(random.nextBoolean());
+            ex.setCompleted(random.nextBoolean());
+
+            exampleExercises.add(ex);
+        }
+
+    }
 
     @Before
-    public void setup() {
+    public void setup() throws ProtocolException {
+        buildExample();
         ClientData.setUserData("Chang", "Jamo");
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
-                .thenReturn(example);
+                .thenReturn(exampleExercises);
 
         list = new ListExercises(lister);
     }
@@ -39,8 +59,7 @@ public class ListExercisesTest {
         ls.setParameter("path", "legit");
         try {
             ls.checkData();
-        }
-        catch (ProtocolException p) {
+        } catch (ProtocolException p) {
             fail("testCheckDataSuccess failed");
         }
     }
@@ -48,12 +67,12 @@ public class ListExercisesTest {
     @Test
     public void getsExerciseName() throws Exception {
         list.setParameter("path", "any");
+        when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
         try {
             String result = list.parseData(list.call()).get();
-            assertTrue(result.contains("Viikko1_000.Hiekkalaatikko"));
-            assertTrue(result.contains("viikko1-Viikko1_002.HeiMaailma"));
-        }
-        catch (ProtocolException ex) {
+            assertTrue(result.contains("1 tehtävä"));
+            assertTrue(result.contains("3 tehtävä"));
+        } catch (ProtocolException ex) {
             fail("unexpected exception");
         }
     }
@@ -61,8 +80,7 @@ public class ListExercisesTest {
     @Test
     public void returnsFailIfBadPath() throws ProtocolException, Exception {
         String found = "No course found";
-        Mockito.when(lister.listExercises(Mockito.anyString()))
-                .thenReturn(found);
+        Mockito.when(lister.buildExercisesInfo(eq(exampleExercises))).thenReturn(found);
         list.setParameter("path", "any");
         String result = list.parseData(list.call()).get();
         assertEquals(found, result);
@@ -70,26 +88,25 @@ public class ListExercisesTest {
     }
 
     @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoUser() throws ProtocolException, Exception {
+    public void throwsErrorIfNoUser() throws ProtocolException {
         ClientData.clearUserData();
         list.setParameter("path", "any");
         list.call();
     }
 
     @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoCourseSpecified() throws ProtocolException, Exception {
+    public void throwsErrorIfNoCourseSpecified() throws ProtocolException {
+        ClientData.clearUserData();
         list.call();
     }
 
     @Test
-    public void doesntContainWeirdName() {
+    public void doesntContainWeirdName() throws ProtocolException {
         list.setParameter("path", "any");
-        try {
-            String result = list.parseData(list.call()).get();
-            assertFalse(result.contains("Ilari"));
-        }
-        catch (ProtocolException ex) {
-            fail("unexpected exception");
-        }
+        when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
+
+        String result = list.parseData(list.call()).get();
+        assertFalse(result.contains("Ilari"));
+
     }
 }

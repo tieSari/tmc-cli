@@ -3,9 +3,12 @@ package hy.tmc.cli.frontend.communication.commands;
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.util.List;
 
-public class ListCourses extends Command<String> {
+public class ListCourses extends Command<List<Course>> {
+
     /**
      * Checks that the user has authenticated, by verifying ClientData.
      *
@@ -20,12 +23,15 @@ public class ListCourses extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        return Optional.of((String)data);
+        @SuppressWarnings("unchecked")
+        List<Course> courses = (List<Course>) data;
+
+        return Optional.of(TmcJsonParser.getCourseNames(courses));
     }
 
     @Override
-    public String call() throws Exception {
+    public List<Course> call() throws Exception {
         checkData();
-        return TmcJsonParser.getCourseNames();
+        return TmcJsonParser.getCourses();
     }
 }

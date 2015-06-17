@@ -7,7 +7,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class ChooseServer extends Command<String> {
+public class ChooseServer extends Command<Boolean> {
 
     private ConfigHandler handler;
 
@@ -30,7 +30,7 @@ public class ChooseServer extends Command<String> {
     }
 
     private boolean isValidTmcUrl(String url) {
-        String urlPattern = "(http://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
+        String urlPattern = "(https?://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
         Pattern tmcServerAddress = Pattern.compile(urlPattern);
         if (Strings.isNullOrEmpty(url)) {
             return false;
@@ -40,18 +40,26 @@ public class ChooseServer extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        return Optional.of((String) data);
+        Boolean result = (Boolean) data;
+
+        String address = this.data.get("tmc-server");
+        if (result) {
+            return Optional.of("Address changed to " + address);
+        }
+        return Optional.of("Failed to change address. Check logs for information.");
     }
 
     @Override
-    public String call() throws Exception {
+    public Boolean call() throws ProtocolException {
         checkData();
-        String address = data.get("tmc-server");           
-        try { 
-            handler.writeServerAddress(address);            
+
+        String address = data.get("tmc-server");
+        try {
+            handler.writeServerAddress(address);
+            return true;
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
+            return false;
         }
-        return "Address changed to " + address;
     }
 }
