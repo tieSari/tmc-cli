@@ -44,7 +44,7 @@ public class DownloadExercisesSteps {
     private Server server;
     private TestClient testClient;
     private Path tempDir;
-    private ArrayList<String> output;
+    private String output;
     private ConfigHandler config;
     private WireMockServer wireMockServer;
 
@@ -65,7 +65,6 @@ public class DownloadExercisesSteps {
         server = new Server();
         port = server.getCurrentPort();
         serverThread = new Thread(server);
-        output = new ArrayList<>();
         configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
         serverThread.start();
@@ -110,14 +109,7 @@ public class DownloadExercisesSteps {
     public void user_has_logged_in(String username, String password) throws Throwable {
         createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
-
-        // waiting for command to complete
-        while (true) {
-            String out = testClient.reply();
-            if (!(out != null && !out.equals("fail"))) {
-                break;
-            }
-        }
+        testClient.getAllFromSocket();
 
         verify(getRequestedFor(urlEqualTo("/user"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
@@ -130,15 +122,8 @@ public class DownloadExercisesSteps {
     @When("^user gives a download exercises command and course id\\.$")
     public void user_gives_a_download_exercises_command_and_course_id() throws Throwable {
         createTestClient();
-        testClient.sendMessage("downloadExercises courseID 21 pwd " + tempDir.toAbsolutePath());
-        while (true) {
-            String out = testClient.reply();
-            if (out != null && !out.equals("fail")) {
-                output.add(out);
-            } else {
-                break;
-            }
-        }
+        testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
+        output = testClient.getAllFromSocket();
         verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
         verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
@@ -164,7 +149,7 @@ public class DownloadExercisesSteps {
     @Then("^information about download progress\\.$")
     public void information_about_download_progress()
             throws Throwable {
-        assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.get(0));
+        assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.split("\n")[0]);
     }
 
     /**

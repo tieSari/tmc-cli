@@ -13,11 +13,13 @@ Feature: ListExercises command
        
 
     Scenario: listExercises will show mail in the mailbox
+        Given user has logged in with username "test" and password "1234".
         Given the user has mail in the mailbox
         When user gives command listExercises with path "testResources/2013_ohpeJaOhja/viikko1/Viikko1_002.HeiMaailma".
         Then user will see the new mail
 
     Scenario: listExercises will start the polling
+        Given user has logged in with username "test" and password "1234".
         Given polling for reviews is not in progress
         When user gives command listExercises with path "testResources/2013_ohpeJaOhja/viikko1/Viikko1_002.HeiMaailma".
         Then the polling will be started

@@ -10,6 +10,11 @@ public class PollScheduler extends CustomScheduler {
 
     private Schedule schedule;
 
+    /**
+     * Timefixed scheduler.
+     * @param interval to init the task
+     * @param timeunit type of interval
+     */
     public PollScheduler(long interval, TimeUnit timeunit) {
         this.interval = interval;
         this.timeunit = timeunit;
@@ -21,6 +26,11 @@ public class PollScheduler extends CustomScheduler {
         return schedule;
     }
 
+    /**
+     * Changes the interval.
+     * @param interval to init the task
+     * @param timeunit type of interval
+     */
     public void changeSchedule(long interval, TimeUnit timeunit) {
         this.schedule = new Schedule(interval, timeunit);
     }

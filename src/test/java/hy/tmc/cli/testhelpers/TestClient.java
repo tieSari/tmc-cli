@@ -31,11 +31,10 @@ public class TestClient {
 
     }
 
-    public boolean isClosedFromServer() {
+    private boolean isClosedFromServer() {
         try {
             input.read();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return false;
         }
         return true;
@@ -49,16 +48,38 @@ public class TestClient {
         output.println(message);
     }
 
+    /**
+     * Reads while socket is open.
+     * @return all lines read from the socket
+     * @throws IOException if reading fails
+     */
+    public String getAllFromSocket() throws IOException {
+        StringBuilder replybuffer = new StringBuilder();
+        String reply = input.readLine();
+        while (reply != null) {
+            System.out.println(reply);
+            replybuffer.append(reply).append("\n");
+            reply = input.readLine();
+        }
+        return replybuffer.toString();
+    }
+
+    /**
+     * Reads one line from the socket.
+     * Waits for input.
+     *
+     * @return last reply from frontend
+     */
     public String reply() {
         try {
             String reply = input.readLine();
+            System.out.println(reply);
             if (reply == null) {
                 this.init();
                 return input.readLine();
             }
             return reply;
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
             return "fail";
         }

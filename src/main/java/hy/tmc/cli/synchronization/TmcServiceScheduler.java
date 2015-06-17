@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class TmcServiceScheduler {
 
     private static TmcServiceScheduler instance;
+
     private static boolean isRunningTasks = false;
     private static boolean isDisabled;
     private final Set<Service> tasks;
