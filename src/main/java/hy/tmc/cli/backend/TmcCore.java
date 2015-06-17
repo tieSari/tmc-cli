@@ -44,7 +44,7 @@ public class TmcCore {
 
     public ListenableFuture<String> login(String username, String password) throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("login " + " username " + username + " password " + password);
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("login username " + username + " password " + password);
         return stringListenableFuture;
     }
 
@@ -56,7 +56,7 @@ public class TmcCore {
 
     public ListenableFuture<String> selectServer(String serverAddress) throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("setServer " + " tmc-server " + serverAddress);
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("setServer tmc-server " + serverAddress);
         return stringListenableFuture;
     }
 
@@ -102,7 +102,7 @@ public class TmcCore {
         return stringListenableFuture;
     }
 
-    public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
+    public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException  {
         @SuppressWarnings("unchecked")
         ListenableFuture submit = pool.submit(parser.getCommand(inputLine));
         return submit;

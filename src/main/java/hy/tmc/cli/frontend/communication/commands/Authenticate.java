@@ -29,10 +29,12 @@ public class Authenticate extends Command<String> {
 
     @Override
     public void checkData() throws ProtocolException {
-        if (!this.data.containsKey("username")) {
+        String username = this.data.get("username");
+        if (username == null || username.isEmpty()) {
             throw new ProtocolException("username must be set!");
         }
-        if (!this.data.containsKey("password")) {
+        String password = this.data.get("password");
+        if (password == null || password.isEmpty()) {
             throw new ProtocolException("password must be set!");
         }
     }
@@ -54,6 +56,7 @@ public class Authenticate extends Command<String> {
 
     @Override
     public String call() throws ProtocolException {
+        System.out.println("mua kutsutaan!");
         checkData();
         return functionality().get();
     }
