@@ -23,10 +23,10 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
+import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
 
 import java.io.IOException;
-import static javax.swing.text.html.HTML.Tag.HEAD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import org.junit.Rule;
@@ -59,13 +59,11 @@ public class PasteSteps {
         serverThread.start();
         testClient = new TestClient(port);
         ClientData.setUserData("Chuck", "Norris");
-
         startWireMock();
     }
 
     @After
     public void closeAll() throws IOException, InterruptedException {
-        Thread.sleep(500);
         server.close();
         serverThread.interrupt();
         wireMockServer.stop();
@@ -126,15 +124,18 @@ public class PasteSteps {
     @Given("^the user has mail in the mailbox$")
     public void the_user_has_mail_in_the_mailbox() throws Throwable {
         testClient.sendMessage("login username test password 1234");
+        testClient.getAllFromSocket(); // wait for login completion
         Mailbox.create();
         Mailbox.getMailbox().fill(MailExample.reviewExample());
     }
 
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
-        assertTrue(testClient.reply().contains("Paste submitted"));
-        assertTrue(testClient.reply().contains("https://tmc.mooc.fi/staging/paste"));
-        assertEquals("There are 3 unread code reviews", testClient.reply());
+        String fullReply = testClient.getAllFromSocket();
+        assertContains(fullReply, "There are 3 unread code reviews");
+        assertContains(fullReply, "rainfall reviewed by Bossman Samu");
+        assertContains(fullReply, "Keep up the good work.");
+        assertContains(fullReply, "good code");
     }
 
     @Given("^polling for reviews is not in progress$")
@@ -146,7 +147,11 @@ public class PasteSteps {
 
     @Then("^the polling will be started$")
     public void the_polling_will_be_started() throws Throwable {
-        Thread.sleep(500);
+        testClient.getAllFromSocket();
         assertTrue(TmcServiceScheduler.isRunning());
+    }
+
+    private void assertContains(String testedString, String expectedContent) {
+        assertTrue(testedString.contains(expectedContent));
     }
 }

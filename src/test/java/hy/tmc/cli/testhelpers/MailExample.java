@@ -20,8 +20,9 @@ public class MailExample {
         return reviews;
     }
 
-    private static Review makeReview(String reviewer, String content) {
+    private static Review makeReview(String content, String reviewer) {
         Review review = new Review();
+        review.setExerciseName("rainfall");
         review.setReviewBody(content);
         review.setReviewerName(reviewer);
         return review;

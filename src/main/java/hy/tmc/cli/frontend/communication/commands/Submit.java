@@ -52,7 +52,6 @@ public class Submit extends MailCheckingCommand {
      */
     @Override
     protected void functionality() {
-
         TmcServiceScheduler.startIfNotRunning(course);
 
         try {
