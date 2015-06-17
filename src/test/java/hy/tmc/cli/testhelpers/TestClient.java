@@ -31,11 +31,10 @@ public class TestClient {
 
     }
 
-    public boolean isClosedFromServer() {
+    private boolean isClosedFromServer() {
         try {
             input.read();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return false;
         }
         return true;
@@ -49,6 +48,11 @@ public class TestClient {
         output.println(message);
     }
 
+    /**
+     * Reads the frontend answers.
+     *
+     * @return last reply from frontend
+     */
     public String reply() {
         try {
             String reply = input.readLine();
