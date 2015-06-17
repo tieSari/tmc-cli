@@ -42,9 +42,7 @@ public class TmcTestsSteps {
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
         testRunner = new RunTests(front);
-        System.out.println("exDir: " + exerciseDirectory);
-        System.out.println("Working Directory = " +
-                System.getProperty("user.dir"));
+        System.getProperty("user.dir");
         testRunner.setParameter("path", exerciseDirectory);
     }
 

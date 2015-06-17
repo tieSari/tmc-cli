@@ -47,8 +47,7 @@ public class SetServerSteps {
         try {
             command.setParameter("tmc-server", serverName);
             command.execute();
-        } catch (ProtocolException ex) {
-        }
+        } catch (ProtocolException ex) {}
     }
     
     /**
