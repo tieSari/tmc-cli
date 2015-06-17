@@ -2,13 +2,11 @@
 package feature.submit;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import cucumber.api.PendingException;
 import cucumber.api.java.After;
@@ -22,12 +20,12 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
-
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
-
 import java.io.IOException;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static org.junit.Assert.assertTrue;
 
@@ -144,6 +142,11 @@ public class SubmitSteps {
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
+        checkForMessages();
+    }
+
+    private void checkForMessages() throws IOException, InterruptedException {
+        Thread.sleep(500);
     }
 
     @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
@@ -153,6 +156,7 @@ public class SubmitSteps {
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
+        checkForMessages();
     }
 
     @When("^user gives command submit with expired path \"(.*?)\" and exercise \"(.*?)\"$")
@@ -163,6 +167,7 @@ public class SubmitSteps {
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
+        checkForMessages();
     }
 
     @Then("^user will see all test passing$")
@@ -179,7 +184,7 @@ public class SubmitSteps {
 
     @Then("^user will see a message which tells that exercise is expired\\.$")
     public void user_will_see_a_message_which_tells_that_exercise_is_expired() throws Throwable {
-        final String result = testClient.reply();
+        final String result = testClient.getAllFromSocket();
         assertTrue(result.contains("expired"));
     }
 
@@ -190,19 +195,19 @@ public class SubmitSteps {
 
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
-        String result = testClient.reply();
-        assertTrue(result.contains("mail"));
+        String result = testClient.getAllFromSocket();
+        System.out.println("Result: " + result);
+        assertTrue(result.contains("unread code reviews"));
     }
 
     @Given("^polling for reviews is not in progress$")
     public void polling_for_reviews_is_not_in_progress() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        TmcServiceScheduler.enablePolling();
+        assertFalse(TmcServiceScheduler.isRunning());
     }
 
     @Then("^the polling will be started$")
     public void the_polling_will_be_started() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        assertTrue(TmcServiceScheduler.isRunning());
     }
 }
