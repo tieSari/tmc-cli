@@ -46,9 +46,10 @@ public class MailCheckerTest {
         mailChecker.checkData();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = ProtocolException.class)
     public void notValidIfNotLoggedIn() throws Exception {
-        mailChecker.data.put("path", "asd");
+        ClientData.clearUserData();
+        mailChecker.data.put("courseID", "3");
         mailChecker.checkData();
     }
 

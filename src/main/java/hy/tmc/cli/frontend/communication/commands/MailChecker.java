@@ -36,6 +36,9 @@ public class MailChecker extends Command {
 
     @Override
     public void checkData() throws ProtocolException {
+        if (!ClientData.userDataExists()) {
+            throw new ProtocolException("Must be logged in first");
+        }
         mailbox = Mailbox.getMailbox();
         if (mailbox == null) {
             throw new ProtocolException("No mailbox found. Are you logged in?");
