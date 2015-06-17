@@ -49,6 +49,18 @@ public class TestClient {
         output.println(message);
     }
 
+    public String getAllFromSocket() throws IOException {
+        StringBuilder replybuffer = new StringBuilder();
+        System.out.println("hi");
+        String reply = input.readLine();
+        while (reply != null) {
+            System.out.println(reply);
+            replybuffer.append(reply).append("\n");
+            reply = input.readLine();
+        }
+        return replybuffer.toString();
+    }
+    
     public String reply() {
         try {
             String reply = input.readLine();
