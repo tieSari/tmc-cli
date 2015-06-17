@@ -8,8 +8,7 @@ function command_submit () {
     then
     send_command_wait_output "submit path `pwd`"
   else
-    echo "submit path `pwd` exerciseName $1"
-    send_command_wait_output "submit path `pwd` exerciseName $1"
+    send_command_wait_output "submit path `pwd` $1"
   fi
 
   echo "$OUTPUT"
