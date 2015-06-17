@@ -9,7 +9,7 @@ Feature: Downloading exercises -command
         And .zip -files are removed.
 
     Scenario: download exercises will show mail in the mailbox
-        Given the user has mail in the mailbox
         Given user has logged in with username "pihla" and password "juuh".
+        Given the user has mail in the mailbox
         When user gives a download exercises command and course id.
         Then user will see the new mail
