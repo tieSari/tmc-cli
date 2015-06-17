@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSortedMap;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
 import hy.tmc.cli.domain.submission.SubmissionResult;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Authenticate;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.commands.Command;
@@ -40,7 +39,6 @@ import static org.mockito.Mockito.when;
 public class TmcCoreTest {
 
     private TmcCore tmcCore;
-    private FrontendListener listener;
     private Map<String, Command> fakeCommandMap;
 
     @Before
@@ -71,7 +69,7 @@ public class TmcCoreTest {
         when(fakeCommandMap.get("login").call()).thenReturn(true);
         assertEquals(Boolean.class, tmcCore.login("nimi", "passu").get().getClass());
     }
-    
+
     @Test(expected = ProtocolException.class)
     public void loginWithoutNumberFails() throws ProtocolException, InterruptedException, ExecutionException, Exception {
         when(fakeCommandMap.get("login").call()).thenThrow(new ProtocolException("feilaus"));
@@ -89,7 +87,6 @@ public class TmcCoreTest {
 //        when(fakeCommandMap.get("logout").call()).thenReturn(true);
 //        assertEquals(Boolean.class, tmcCore.logout().get().getClass());
 //    }
-
 
     @Test
     public void selectServer() throws ProtocolException, InterruptedException, ExecutionException, Exception {
@@ -120,7 +117,7 @@ public class TmcCoreTest {
         when(fakeCommandMap.get("listExercises").call()).thenReturn(new ArrayList<>());
         assertEquals(ArrayList.class, tmcCore.listExercises("polku").get().getClass());
     }
-    
+
     @Test
     public void test() throws ProtocolException, InterruptedException, ExecutionException, Exception {
         when(fakeCommandMap.get("runTests").call()).thenReturn(new RunResult(
@@ -130,10 +127,46 @@ public class TmcCoreTest {
         ));
         assertEquals(RunResult.class, tmcCore.test("askjdhasdhasjd").get().getClass());
     }
-    
+
     @Test
     public void submit() throws Exception {
         when(fakeCommandMap.get("submit").call()).thenReturn(new SubmissionResult());
         assertEquals(SubmissionResult.class, tmcCore.submit("merkkijono").get().getClass());
     }
+
+    @Test(expected = ExecutionException.class)
+    public void downloadExercisesThrowsExceptionWithBadPath() throws Exception {
+        when(fakeCommandMap.get("downloadExercises").call()).thenThrow(new ProtocolException("Bad path"));
+        tmcCore.downloadExercises("Really/Solid/path", "2").get();
+
+    }
+
+    @Test
+    public void downloadExercisesThrowsCorrectExceptionWithBadPath() throws Exception {
+        when(fakeCommandMap.get("downloadExercises").call()).thenThrow(new ProtocolException("Bad path"));
+        try {
+            tmcCore.downloadExercises("Really/Solid/path/with/no/exercise", "2").get();
+        } catch (ExecutionException e) {
+            assertEquals("Bad path", e.getCause().getMessage());
+        }
+    }
+    @Test
+    public void submitThrowsCorrectExceptionWithBadPath() throws Exception {
+        when(fakeCommandMap.get("submit").call()).thenThrow(new ProtocolException("Bad path"));
+        try {
+            tmcCore.submit("Really/Solid/path").get();
+        } catch (ExecutionException e) {
+            assertEquals("Bad path", e.getCause().getMessage());
+        }
+    }
+    @Test
+    public void downloadExercisesThrowsCorrectExceptionWithBadCourseID() throws Exception {
+        when(fakeCommandMap.get("downloadExercises").call()).thenThrow(new ProtocolException("Bad course ID"));
+        try {
+            tmcCore.downloadExercises("Really/Solid/path", "jeahh").get();
+        } catch (ExecutionException e) {
+            assertEquals("Bad course ID", e.getCause().getMessage());
+        }
+    }
+    
 }
