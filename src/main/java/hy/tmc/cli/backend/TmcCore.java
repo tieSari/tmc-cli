@@ -41,37 +41,71 @@ public class TmcCore {
     public ListeningExecutorService getPool() {
         return pool;
     }
-
-    public ListenableFuture<String> login(String username, String password) throws ProtocolException {
+    
+    /**
+     * Authenticates the given user on the server, and saves the data into memory.
+     * 
+     * @param username to authenticate with
+     * @param password to authenticate with
+     * @return A Future-object containing true or false on success or fail
+     * @throws ProtocolException if something in the given input was wrong
+     */
+    public ListenableFuture<Boolean> login(String username, String password) throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("login username " + username + " password " + password);
+        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("login username " + username + " password " + password);
         return stringListenableFuture;
     }
 
-    public ListenableFuture<String> logout() throws ProtocolException {
+    /**
+     * Logs the user out, in other words clears the saved userdata from memory.
+     * 
+     * @return A Future-object containing true or false on success or fail
+     * @throws ProtocolException if something in the given input was wrong
+     */
+    public ListenableFuture<Boolean> logout() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> logout = (ListenableFuture<String>) runCommand("logout");
+        ListenableFuture<Boolean> logout = (ListenableFuture<Boolean>) runCommand("logout");
         return logout;
     }
-
-    public ListenableFuture<String> selectServer(String serverAddress) throws ProtocolException {
+    /**
+     * Selects the given server as the working TMC-server. All requests, submits, etc. will be made to that server.
+     * 
+     * @param serverAddress this will be the new TMC-server address.
+     * @return A Future-object containing true or false on success or fail
+     * @throws ProtocolException if something in the given input was wrong
+     */
+    public ListenableFuture<Boolean> selectServer(String serverAddress) throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("setServer tmc-server " + serverAddress);
+        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("setServer tmc-server " + serverAddress);
+        return stringListenableFuture;
+    }
+    /**
+     * Downloads the exercise files of a given source to the given directory.
+     * If files exist, overrides everything except the source folder and files specified in .tmcproject.yml
+     * 
+     * @param path where it downloads the exercises
+     * @param courseId ID of course to download
+     * @return A Future-object containing true or false on success or fail
+     * @throws ProtocolException if something in the given input was wrong
+     */
+    public ListenableFuture<String> downloadExercises(String path, String courseId) throws ProtocolException {
+        @SuppressWarnings("unchecked")
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("downloadExercises pwd " + path + " courseID " + courseId);
         return stringListenableFuture;
     }
 
-    public ListenableFuture<String> downloadExercises(String pwd, String courseId) throws ProtocolException {
-        @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("downloadExercises pwd " + pwd + " courseID " + courseId);
-        return stringListenableFuture;
-    }
-
+    /**
+     * Displays a help message containing the names of valid commands on the server side.
+     * 
+     * @return 
+     * @throws ProtocolException 
+     */
     public ListenableFuture<String> help() throws ProtocolException {
         @SuppressWarnings("unchecked")
         ListenableFuture<String> help = (ListenableFuture<String>) runCommand("help");
         return help;
     }
-
+    
     public ListenableFuture<String> listCourses() throws ProtocolException {
         @SuppressWarnings("unchecked")
         ListenableFuture<String> listCourses = (ListenableFuture<String>) runCommand("listCourses");
@@ -107,15 +141,6 @@ public class TmcCore {
         ListenableFuture submit = pool.submit(parser.getCommand(inputLine));
         return submit;
     }
-
-//    private ListenableFuture<?> run(String commandName, String... args) {
-//        if (!commands.containsKey(commandName)) {
-//            return null;
-//        }
-//        Command command = commands.get(commandName);
-//        setParams(command, args);
-//        return pool.submit(command);
-//    }
     
     public Command getCommand(String inputLine) throws ProtocolException {
         return parser.getCommand(inputLine);

@@ -62,8 +62,8 @@ public class TmcCoreTest {
 
     @Test
     public void login() throws ProtocolException, InterruptedException, ExecutionException, Exception {
-        when(fakeCommandMap.get("login").call()).thenReturn("stringi");
-        assertEquals(String.class, tmcCore.login("nimi", "passu").get().getClass());
+        when(fakeCommandMap.get("login").call()).thenReturn(true);
+        assertEquals(Boolean.class, tmcCore.login("nimi", "passu").get().getClass());
     }
     
     @Test(expected = ProtocolException.class)

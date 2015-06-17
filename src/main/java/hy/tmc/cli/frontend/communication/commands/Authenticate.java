@@ -7,20 +7,12 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class Authenticate extends Command<String> {
+public class Authenticate extends Command<Boolean> {
 
     /**
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
-
-    private String returnResponse(int statusCode) {
-        if (Integer.toString(statusCode).matches(httpOk)) {
-            ClientData.setUserData((String)data.get("username"), (String)data.get("password"));
-            return "Auth successful. Saved userdata in session";
-        }
-        return "Auth unsuccessful. Check your connection and/or credentials";
-    }
 
     @Override
     public final void setParameter(String key, String value) {
@@ -39,25 +31,30 @@ public class Authenticate extends Command<String> {
         }
     }
 
-    protected Optional<String> functionality() {
+    private int makeRequest() {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),
                 auth
         ).getStatusCode();
-        return Optional.of(returnResponse(code));
+        return code;
     }
-
+    
     @Override
-    public Optional<String> parseData(Object data) {
-        String result = (String) data;
-        return Optional.of(result);
-    }
-
-    @Override
-    public String call() throws ProtocolException {
-        System.out.println("mua kutsutaan!");
+    public Boolean call() throws ProtocolException {
         checkData();
-        return functionality().get();
+        if (Integer.toString(makeRequest()).matches(httpOk)) {
+            ClientData.setUserData((String)data.get("username"), (String)data.get("password"));
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<String> parseData(Object data) {
+        Boolean result = (Boolean) data;
+        if (result) {
+            return Optional.of("Auth successful. Saved userdata in session");
+        }
+        return Optional.of("Auth unsuccessful. Check your connection and/or credentials");
     }
 }

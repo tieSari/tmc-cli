@@ -19,15 +19,15 @@ public class DownloadExercises extends Command<String> {
 
     /**
      * Checks that command has required parameters courseID is the id of the
-     * course and pwd is the path of where files are downloaded and extracted.
+     * course and path is the path of where files are downloaded and extracted.
      *
-     * @throws ProtocolException if pwd isnt supplied
+     * @throws ProtocolException if path isn't supplied
      */
     @Override
     public void checkData() throws ProtocolException {
         checkCourseId();
-        if (!this.data.containsKey("pwd")) {
-            throw new ProtocolException("Pwd required");
+        if (!this.data.containsKey("path")) {
+            throw new ProtocolException("Path required");
         }
     }
 
@@ -65,7 +65,7 @@ public class DownloadExercises extends Command<String> {
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
             Optional<String> downloadFiles = exerciseDownloader.downloadFiles(course.getExercises(),
-                    data.get("pwd"),
+                    data.get("path"),
                     course.getName());
             if (downloadFiles.isPresent()) {
                 return downloadFiles.get();
