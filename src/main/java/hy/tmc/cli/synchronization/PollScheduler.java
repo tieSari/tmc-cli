@@ -34,7 +34,9 @@ public class PollScheduler extends CustomScheduler {
     public void changeSchedule(long interval, TimeUnit timeunit) {
         this.schedule = new Schedule(interval, timeunit);
     }
-    
-    
+
+    public long getInterval() {
+        return interval;
+    }
 
 }
