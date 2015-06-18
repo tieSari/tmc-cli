@@ -1,6 +1,7 @@
 package hy.tmc.cli.backend;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.Review;
@@ -12,15 +13,15 @@ import java.util.Map;
 
 
 public class Mailbox {
-    
+
     private static Mailbox mailbox;
-    
+
     private boolean newReviews;
     private boolean newUpdates;
-    
+
     private List<Review> unreadReviews;
     private Map<Course, List<Exercise>> exerciseUpdates;
-    
+
     private Mailbox() {
         unreadReviews = new ArrayList<>();
         exerciseUpdates = new HashMap<>();
@@ -28,6 +29,7 @@ public class Mailbox {
 
     /**
      * Fills the mailbox with reviews.
+     *
      * @param reviews which contains codereviews as Review-objects
      */
     public synchronized void fill(List<Review> reviews) {
@@ -38,7 +40,8 @@ public class Mailbox {
 
     /**
      * Fills the exercise updates related to the course.
-     * @param course where are updates
+     *
+     * @param course    where are updates
      * @param exercises which can be updated
      */
     @Beta
@@ -50,6 +53,7 @@ public class Mailbox {
 
     /**
      * Gets all unread reviews which are automatically removed.
+     *
      * @return list of code reviews
      */
     public synchronized List<Review> getUnreadReviews() {
@@ -61,6 +65,7 @@ public class Mailbox {
 
     /**
      * Gets all exercise updates of the specific course.
+     *
      * @param course to get updates from
      * @return list of exercise updates
      */
@@ -71,28 +76,32 @@ public class Mailbox {
         exerciseUpdates.remove(course);
         return updates;
     }
-    
+
     public synchronized boolean reviewsWaiting() {
         return this.newReviews;
     }
-    
+
     public synchronized boolean updatesWaiting() {
         return this.newUpdates;
     }
-    
+
     public static void create() {
         mailbox = new Mailbox();
     }
-    
+
     public static void destroy() {
         mailbox = null;
     }
 
     public static boolean hasMailboxInitialized() {
-        return mailbox != null;
+        return getMailbox().isPresent();
     }
 
-    public static Mailbox getMailbox() {
-        return mailbox;
-    }   
+    public static Optional<Mailbox> getMailbox() {
+        if (mailbox == null) {
+            return Optional.absent();
+        } else {
+            return Optional.of(mailbox);
+        }
+    }
 }

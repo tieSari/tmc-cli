@@ -22,7 +22,7 @@ public class MailCheckerTest {
     @Before
     public void before() throws Exception {
         Mailbox.create();
-        Mailbox.getMailbox().fill(MailExample.reviewExample());
+        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
         this.frontendStub = new FrontendStub();
         this.mailChecker = new MailChecker(frontendStub);
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());

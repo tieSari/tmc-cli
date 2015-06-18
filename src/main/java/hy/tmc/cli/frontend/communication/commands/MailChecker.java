@@ -14,7 +14,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 public class MailChecker extends Command {
 
-    private Mailbox mailbox;
+    private Optional<Mailbox> mailbox;
     private Optional<Course> course;
 
     public MailChecker(FrontendListener front) {
@@ -24,13 +24,13 @@ public class MailChecker extends Command {
 
     @Override
     protected void functionality() {
-        if (mailbox.reviewsWaiting()) {
-            frontend.printLine(formatReviews(mailbox.getUnreadReviews()));
+        if (mailbox.get().reviewsWaiting()) {
+            frontend.printLine(formatReviews(mailbox.get().getUnreadReviews()));
         } else {
             //frontend.printLine("No mail for you :(");
         }
-        if (mailbox.updatesWaiting()) {
-            frontend.printLine(formatExercises(mailbox.getExerciseUpdates(course.get())));
+        if (mailbox.get().updatesWaiting()) {
+            frontend.printLine(formatExercises(mailbox.get().getExerciseUpdates(course.get())));
         }
     }
 
@@ -40,7 +40,7 @@ public class MailChecker extends Command {
             throw new ProtocolException("Must be logged in first");
         }
         mailbox = Mailbox.getMailbox();
-        if (mailbox == null) {
+        if (!mailbox.isPresent()) {
             throw new ProtocolException("No mailbox found. Are you logged in?");
         }
         if (data.containsKey("courseID")) {

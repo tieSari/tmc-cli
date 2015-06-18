@@ -35,7 +35,7 @@ public class StatusPollerTest {
     @Test
     public void afterOneIterationThereShouldBeMessagesPolled() throws Exception {
         statusPoller.runOneIteration();
-        assertTrue(Mailbox.getMailbox().reviewsWaiting());
+        assertTrue(Mailbox.getMailbox().get().reviewsWaiting());
     }
 
     @Test(expected = IllegalStateException.class)

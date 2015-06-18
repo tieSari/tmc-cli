@@ -16,7 +16,7 @@ public class MailboxTest {
     @Before
     public void setup() {
         Mailbox.create();
-        mail = Mailbox.getMailbox();
+        mail = Mailbox.getMailbox().get();
     }
 
     @Test
@@ -62,6 +62,13 @@ public class MailboxTest {
         assertEquals("third", reviews.get(2).getReviewBody());
         assertEquals("duck", reviews.get(3).getReviewBody());
         assertEquals("fifth", reviews.get(4).getReviewBody());
+    }
+
+    @Test (expected = IllegalStateException.class)
+    public void fillingWithoutMailboxThrowsError() {
+        Mailbox mailbox = Mailbox.getMailbox().get();
+        Mailbox.destroy();
+        mailbox.fill(new ArrayList<Review>());
     }
 
     private List<Review> reviews(String... reviewMsgs) {

@@ -127,7 +127,7 @@ public class PasteSteps {
         testClient.sendMessage("login username test password 1234");
         testClient.getAllFromSocket(); // wait for login completion
         Mailbox.create();
-        Mailbox.getMailbox().fill(MailExample.reviewExample());
+        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
     }
 
     @Then("^user will see the new mail$")

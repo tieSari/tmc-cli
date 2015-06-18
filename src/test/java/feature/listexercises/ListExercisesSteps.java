@@ -130,7 +130,7 @@ public class ListExercisesSteps {
 
     @Given("^the user has mail in the mailbox$")
     public void the_user_has_mail_in_the_mailbox() throws Throwable {
-        Mailbox.getMailbox().fill(MailExample.reviewExample());
+        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
     }
 
     @Then("^user will see the new mail$")

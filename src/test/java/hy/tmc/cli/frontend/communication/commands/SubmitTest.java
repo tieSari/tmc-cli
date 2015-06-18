@@ -46,7 +46,6 @@ public class SubmitTest {
         Mailbox.create();
         TmcServiceScheduler.disablePolling();
         mock();
-        System.out.println("CLIENT in before " + ClientData.getFormattedUserData());
         front = new FrontendStub();
         submit = new Submit(front, submitterMock, interpreter);
     }

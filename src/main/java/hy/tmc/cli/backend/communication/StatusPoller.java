@@ -35,7 +35,7 @@ public class StatusPoller extends AbstractScheduledService {
 
         Optional<List<Review>> reviews = checkReviews();
         if (reviews.isPresent()) {
-            Mailbox.getMailbox().fill(reviews.get());
+            Mailbox.getMailbox().get().fill(reviews.get());
         }
     }
 
