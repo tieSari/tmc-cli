@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import static org.junit.Assert.fail;
 
-import hy.tmc.cli.frontend.communication.commands.DownloadExercises;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.FrontendStub;
 

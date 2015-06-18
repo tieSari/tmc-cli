@@ -43,7 +43,7 @@ public class TmcServiceScheduler {
      */
     public static void startIfNotRunning(Course course, long interval, TimeUnit timeunit) {
         if (!isRunning()) {
-            TmcServiceScheduler.getScheduler().addService(
+            getScheduler().addService(
                     new StatusPoller(course, new PollScheduler(interval, timeunit))
             ).start();
             isRunningTasks = true;
@@ -88,6 +88,14 @@ public class TmcServiceScheduler {
     }
 
     /**
+     * Get all tasks that will be ran after start-method.
+     * @return Set of Service-objects which work can be started as async.
+     */
+    public static Set<Service> getInitialisedTasks() {
+        return getScheduler().tasks;
+    }
+
+    /**
      * Starts every service as asynced process.
      */
     public void start() {
@@ -101,10 +109,10 @@ public class TmcServiceScheduler {
      */
     public void stop() {
         isRunningTasks = false;
+        instance = new TmcServiceScheduler();
         if (serviceManager == null) {
             return;
         }
         serviceManager.stopAsync();
-        instance = new TmcServiceScheduler();
     }
 }
