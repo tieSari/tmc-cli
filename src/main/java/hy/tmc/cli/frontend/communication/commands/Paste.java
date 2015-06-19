@@ -69,7 +69,7 @@ public class Paste extends MailCheckingCommand {
             throw new ProtocolException("User must be authorized first");
         }
         if (!this.data.containsKey("path")) {
-            throw new ProtocolException("pwd not supplied");
+            throw new ProtocolException("path not supplied");
         }
         Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
         if (currentCourse.isPresent()) {
