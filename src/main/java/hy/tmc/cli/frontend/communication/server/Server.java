@@ -165,7 +165,6 @@ public class Server implements FrontendListener, Runnable {
 
         if (this.rangeFeedbackHandler.allQuestionsAsked()) {
             if (textFeedbackHandler.allQuestionsAsked()) {
-//                printLine("end");
                 sendToTmcServer();
                 this.feedbackAnswers = new JsonArray();
             } else {
@@ -186,7 +185,6 @@ public class Server implements FrontendListener, Runnable {
         feedbackAnswers.add(jsonAnswer);
 
         if (this.textFeedbackHandler.allQuestionsAsked()) {
-//            printLine("end");
             sendToTmcServer();
             this.feedbackAnswers = new JsonArray();
         } else {
@@ -197,11 +195,10 @@ public class Server implements FrontendListener, Runnable {
     protected void sendToTmcServer() {
         JsonObject req = getAnswersJson();
         try {
-            HttpResult httpResult = UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
-//            printLine(httpResult.getData());
+            UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
         }
         catch (IOException e) {
-//            printLine(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 

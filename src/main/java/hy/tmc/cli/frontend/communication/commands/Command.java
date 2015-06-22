@@ -1,7 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.domain.CommandResult;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import java.util.HashMap;

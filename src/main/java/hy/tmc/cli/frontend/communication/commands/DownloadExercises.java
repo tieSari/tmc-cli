@@ -64,9 +64,8 @@ public class DownloadExercises extends Command<String> {
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt((String) this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            Optional<String> downloadFiles = exerciseDownloader.downloadFiles(course.getExercises(),
-                    data.get("path"),
-                    course.getName());
+            Optional<String> downloadFiles = exerciseDownloader.downloadFiles(
+                    course.getExercises(), data.get("path"), course.getName());
             if (downloadFiles.isPresent()) {
                 return downloadFiles.get();
             }
