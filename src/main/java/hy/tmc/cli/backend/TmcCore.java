@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class TmcCore {
 
     private Map<String, Command> commands;
-    private ListeningExecutorService pool;
+    private ListeningExecutorService threadPool;
     private ProtocolParser parser = new ProtocolParser();
 
     /**
@@ -31,21 +31,21 @@ public class TmcCore {
      */
     public TmcCore() {
         commands = CommandFactory.createCommandMap();
-        pool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+        threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 
     /**
-     * For dependency injection of pool.
+     * For dependency injection of threadPool.
      *
-     * @param pool Thread pool which to use with the core.
+     * @param pool Thread threadPool which to use with the core
      */
     public TmcCore(ListeningExecutorService pool) {
         commands = CommandFactory.createCommandMap();
-        this.pool = pool;
+        this.threadPool = pool;
     }
 
-    public ListeningExecutorService getPool() {
-        return pool;
+    public ListeningExecutorService getThreadPool() {
+        return threadPool;
     }
 
     /**
@@ -69,7 +69,7 @@ public class TmcCore {
      * Always clears the user data.
      *
      * @return A Future-object containing true if user was logged in previously,
-     * and false if nobody was logged in.
+     * and false if nobody was logged in
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<Boolean> logout() throws ProtocolException {
@@ -82,7 +82,7 @@ public class TmcCore {
      * Selects the given server as the working TMC-server. All requests,
      * submits, etc. will be made to that server.
      *
-     * @param serverAddress this will be the new TMC-server address.
+     * @param serverAddress this will be the new TMC-server address
      * @return A Future-object containing true or false on success or fail
      * @throws ProtocolException if something in the given input was wrong
      */
@@ -159,9 +159,9 @@ public class TmcCore {
      *
      * @param path inside any exercise directory
      * @return SubmissionResult object containing details of the tests run on
-     * server.
+     * server
      * @throws ProtocolException if there was no course in the given path, no
-     * exercise in the given path, or not logged in.
+     * exercise in the given path, or not logged in
      */
     public ListenableFuture<SubmissionResult> submit(String path) throws ProtocolException {
         checkParameters(path);
@@ -206,7 +206,7 @@ public class TmcCore {
     public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
         checkParameters(inputLine);
         @SuppressWarnings("unchecked")
-        ListenableFuture submit = pool.submit(parser.getCommand(inputLine));
+        ListenableFuture submit = threadPool.submit(parser.getCommand(inputLine));
         return submit;
     }
 
@@ -215,7 +215,7 @@ public class TmcCore {
     }
 
     public ListenableFuture<?> submitTask(Callable<?> callable) {
-        return pool.submit(callable);
+        return threadPool.submit(callable);
     }
 
     private void checkParameters(String... params) throws ProtocolException {

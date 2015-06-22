@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +36,6 @@ public class CommandFactory {
     /**
      * Create Help Command object.
      *
-     * @param that the command will use
      * @return a help object
      */
     public static Command help() {
@@ -47,7 +45,6 @@ public class CommandFactory {
     /**
      * Create ReplyToPing Command object.
      *
-     * @param that the command will use
      * @return a replyToPing object
      */
     public static Command replyToPing() {
@@ -57,7 +54,6 @@ public class CommandFactory {
     /**
      * Create RunTests command object.
      *
-     * @param that the command will use
      * @return a help object
      */
     public static Command runTests() {
@@ -67,7 +63,6 @@ public class CommandFactory {
     /**
      * Create an Authenticate Command object.
      *
-     * @param that the command will use
      * @return an authenticate object
      */
     public static Command authenticate() {
@@ -77,8 +72,7 @@ public class CommandFactory {
     /**
      * Same as authenticate.
      *
-     * @param to use
-     * @return an authenticate bject
+     * @return an authenticate object
      */
     public static Command login() {
         return new Authenticate(); // NOTE: login == authenticate
@@ -87,7 +81,6 @@ public class CommandFactory {
     /**
      * Create a ListCourses Command object.
      *
-     * @param that the command will use
      * @return a listCourses object
      */
     public static Command listCourses() {
@@ -97,7 +90,6 @@ public class CommandFactory {
     /**
      * Create a ListExercises Command object.
      *
-     * @param that the command will use
      * @return a listExercises object
      */
     public static Command listExercises() {
@@ -107,7 +99,6 @@ public class CommandFactory {
     /**
      * Create a DownloadExercises Command object.
      *
-     * @param that the command will use
      * @return a downloadExercises object
      */
     public static Command downloadExercises() {
@@ -117,7 +108,6 @@ public class CommandFactory {
     /**
      * Create a Logout Command object.
      *
-     * @param that the command will use
      * @return a logout object
      */
     public static Command logout() {
@@ -127,7 +117,6 @@ public class CommandFactory {
     /**
      * Create a chooseServer Command object.
      *
-     * @param that the command will use
      * @return a chooseServer object
      */
     public static Command chooseServer() {
@@ -137,7 +126,6 @@ public class CommandFactory {
     /**
      * Create a Submit Command object.
      *
-     * @param that the command will use
      * @return a Submit object
      */
     public static Command submit() {
@@ -157,16 +145,11 @@ public class CommandFactory {
     /**
      * Create a Paste Command object.
      *
-     * @param that the command will use
      * @return a Paste object
      */
     public static Command paste() {
         return new Paste();
     }
-
-//    public static Command answerQuestion() {
-//        return new AnswerQuestion();
-//    }
 
     /**
      * Takes the command map and returns a set of command names.

@@ -80,6 +80,6 @@ public class SocketRunnable implements Runnable {
      */
     private void addListenerToFuture(ListenableFuture<?> commandResult,
             final DataOutputStream output, Command command) {
-        commandResult.addListener(new SocketListener(commandResult, output, socket, command), core.getPool());
+        commandResult.addListener(new SocketListener(commandResult, output, socket, command), core.getThreadPool());
     }
 }

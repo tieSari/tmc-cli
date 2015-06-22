@@ -85,16 +85,7 @@ public class Submit extends Command<SubmissionResult> {
     public Optional<String> parseData(Object data) {
         try {
             SubmissionResult submissionResult = (SubmissionResult) data;
-            String output = "";
-            output = interpreter.resultSummary(true);
-            if (submissionResult.isAllTestsPassed()) {
-                List<FeedbackQuestion> feedback = submissionResult.getFeedbackQuestions();
-                if (feedback != null && !feedback.isEmpty()) {
-                    output += "Please give feedback:";
-                    output += feedback + submissionResult.getFeedbackAnswerUrl();
-                }
-            }
-            return Optional.of(output);
+            return Optional.of(interpreter.resultSummary(true));
         } catch (InterruptedException ex) {
             return Optional.of("Error while parsing submissionResult.");
         }
