@@ -78,7 +78,7 @@ function command_login () {
 }
 
 function command_download () {
-  send_command "downloadExercises pwd `pwd` courseID $1"
+  send_command "downloadExercises path `pwd` courseID $1"
 }
 
 function command_paste () {
@@ -86,12 +86,11 @@ function command_paste () {
 }
 
 function command_test () {
-  #send_command "runTests filepath `pwd`"
   if [ $# -eq 0 ]
-  then
-    send_command "runTests filepath `pwd`"
-  else
-    send_command "runTests filepath `pwd` $1"
+    then
+      send_command "runTests path `pwd`"
+    else
+      send_command "runTests path `pwd` $1"
   fi
 }
 

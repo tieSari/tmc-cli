@@ -61,7 +61,6 @@ public class VimTestResultFormatterTest {
     @Test
     public void getFailedTestsOutput(){
         String explanation = formatter.getFailedTestOutput(allFailed.testResults.get(0));
-        System.out.println("Explanation: " + explanation);
         assertTrue(explanation.contains("KuusiTest test failed: Ohjelmasi pitäisi tulostaa"));
     }
 

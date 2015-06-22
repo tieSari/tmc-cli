@@ -43,7 +43,11 @@ public class TmcJsonParser {
      */
     public static String getCourseNames() {
         List<Course> courses = getCourses();
+        return getCourseNames(courses);
 
+    }
+
+    public static String getCourseNames(List<Course> courses) {
         StringBuilder result = new StringBuilder();
         for (Course course : courses) {
             String name = course.getName();
@@ -58,9 +62,10 @@ public class TmcJsonParser {
 
     /**
      * Add
+     *
      * @param result
      * @param name
-     * @return 
+     * @return
      */
     public static StringBuilder addSpaces(StringBuilder result, String name) {
         int spaces = 50 - name.length();
@@ -148,7 +153,7 @@ public class TmcJsonParser {
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects. If no course is found, 
+     * @return List of all exercises as Exercise-objects. If no course is found,
      * empty list will be returned.
      */
     public static List<Exercise> getExercises(String courseUrl) {
@@ -180,21 +185,20 @@ public class TmcJsonParser {
     public static String getSubmissionUrl(HttpResult result) {
         return getPropertyFromResult(result, "submission_url");
     }
-    
+
     /**
      * Parses the submission result paste URL from a HttpResult with JSON.
-     * 
+     *
      * @param result HTTPResult containing JSON with paste url.
      * @return url where paste is located.
      */
-    
     public static String getPasteUrl(HttpResult result) {
         return getPropertyFromResult(result, "paste_url");
     }
-    
+
     private static String getPropertyFromResult(HttpResult result, String property) {
-        JsonElement jelement = new JsonParser().parse(result.getData());        
-        JsonObject  jobject = jelement.getAsJsonObject();
+        JsonElement jelement = new JsonParser().parse(result.getData());
+        JsonObject jobject = jelement.getAsJsonObject();
         return jobject.get(property).getAsString();
     }
 }

@@ -94,6 +94,7 @@ public class ExampleJson {
             return FileUtils.readFileToString(new File(path));
         }
         catch (IOException ex) {
+            System.err.println(ex.getMessage());
             return "";
         }
     }

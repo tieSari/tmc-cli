@@ -9,10 +9,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import hy.tmc.cli.backend.communication.ExerciseDownloader;
+import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,15 +30,13 @@ public class ExerciseDownloaderTest {
     public WireMockRule wireMockRule = new WireMockRule();
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
-    private FrontendStub front;
 
     /**
      * Creates required stubs and example data for downloader.
      */
     @Before
     public void setup() {
-        front = new FrontendStub();
-        exDl = new ExerciseDownloader(front);
+        exDl = new ExerciseDownloader();
         exercises = new ArrayList<>();
 
         Exercise e1 = new Exercise();
@@ -106,14 +103,13 @@ public class ExerciseDownloaderTest {
 
     @Test
     public void downloadingGivesOutput() {
-        exDl.downloadFiles(exercises);
-        assertTrue(front.getMostRecentLine().endsWith(" exercises downloaded."));
+        assertTrue(exDl.downloadFiles(exercises).or("").endsWith(" exercises downloaded."));
     }
     
     @Test
     public void exerciseListIsEmpty() {
-        exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
-        assertTrue(front.getMostRecentLine().contains("No exercises to download."));
+        Optional<String> output = exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
+        assertTrue(output.or("").contains("No exercises to download."));
     }
 
     @Test

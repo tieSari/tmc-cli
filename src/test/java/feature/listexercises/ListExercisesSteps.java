@@ -91,6 +91,7 @@ public class ListExercisesSteps {
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
+        Thread.sleep(300); //To avoid calling listExercises too fast, without being actually authed.
         testClient.init();
     }
 
@@ -108,6 +109,7 @@ public class ListExercisesSteps {
             reply = testClient.reply();
         }
         String result = replybuffer.toString();
+        System.out.println(result);
         assertTrue(result.contains("viikko1-Viikko1_000.Hiekkalaatikko"));
         assertTrue(result.contains("viikko1-Viikko1_001.Nimi"));
     }

@@ -1,31 +1,30 @@
 package hy.tmc.cli.testhelpers;
 
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class CommandStub extends Command {
+//To change return value of this command, change class definition
+public class CommandStub extends Command<String> {
 
-
-    /**
-     * A stub command for tests.
-     * Allows access to commands params
-     */
-    public CommandStub(FrontendListener front) {
-        super(front);
+    protected Optional<String> functionality() {     
+        return Optional.absent();
     }
 
     @Override
-    protected void functionality() {
+    public void checkData() throws ProtocolException {        
+    }    
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public Optional<String> parseData(Object data) {
+        String data1 = (String) data;
+        Optional<String> of = Optional.of(data1);
+        return of;
     }
 
     @Override
-    public void checkData() throws ProtocolException {
-
-    }
-
-    public String getValue(String param) {
-        return this.data.get(param);
+    public String call() throws Exception {
+        return "OK";
     }
 }

@@ -23,6 +23,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.configuration.ClientData;
 
 import java.io.IOException;
 
@@ -86,13 +87,13 @@ public class ListCoursesSteps {
     public void user_has_logged_in_with_username_and_password(String username,
                                                               String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
+        Thread.sleep(300);
         testClient.init();
     }
     
     @When("^user gives command listCourses\\.$")
     public void user_gives_command_listCourses() throws Throwable {
         testClient.sendMessage("listCourses");
-        
     }
 
     @Then("^output should contain more than one line$")

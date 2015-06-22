@@ -9,11 +9,6 @@ public interface FrontendListener {
      * Starts the Frontend Listener.
      */
     void start();
-    /**
-     * prints Strings.
-     * @param line is printed out
-     */
-    void printLine(String line);
 
     /**
      * Take feedback question to get feedback from the user with.

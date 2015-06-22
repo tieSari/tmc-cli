@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-
+@Deprecated
 public class FrontendStub implements FrontendListener {
     
     String line;
@@ -21,7 +21,6 @@ public class FrontendStub implements FrontendListener {
         
     }
 
-    @Override
     public void printLine(String line) {
         this.line = line;
         allLines.add(line);

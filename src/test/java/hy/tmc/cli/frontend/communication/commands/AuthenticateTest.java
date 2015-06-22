@@ -4,7 +4,8 @@ import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.backend.communication.authorization.Authorization;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,15 +24,13 @@ public class AuthenticateTest {
     private final String testUsername = "test";
     private final String testPassword = "1234";
     private Authenticate auth;
-    private FrontendStub serverMock;
 
     /**
      * Set up server mock and Authenticate command.
      */
     @Before
     public void setUp() {
-        this.serverMock = new FrontendStub();
-        this.auth = new Authenticate(serverMock);
+        this.auth = new Authenticate();
     }
 
     @Test
@@ -47,32 +46,30 @@ public class AuthenticateTest {
         assertTrue(result.contains("Auth unsuccessful."));
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = ProtocolException.class)
     public void failsWithWrongKeys() throws ProtocolException {
         executeWithParams("usernamee", testUsername, "passwordi", testPassword);
     }
 
     private String executeWithParams(String key1, String param1,
             String key2, String param2) throws ProtocolException {
-        
+
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
         PowerMockito.mockStatic(UrlCommunicator.class);
         powerMockWithCredentials("test:1234", 200);
         powerMockWithCredentials("samu:salis", 400);
-        
-        auth.execute();
-        String result = serverMock.getMostRecentLine();
-        return result;
+
+        return auth.parseData(auth.call()).get();
+
     }
 
     private void powerMockWithCredentials(String credentials, int status) {
         HttpResult fakeResult = new HttpResult("", status, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(
-                        Mockito.anyString(),
-                        Mockito.eq(credentials)))
+                                Mockito.anyString(),
+                                Mockito.eq(credentials)))
                 .thenReturn(fakeResult);
     }
-
 }

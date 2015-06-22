@@ -1,26 +1,19 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
+public class Feedback extends Command<String> {
 
-public class StopProcess extends Command<String> {
-
-    /**
-     * Exit java virtual machine
-     */
     protected Optional<String> functionality() {
-        System.exit(0);
-        return Optional.absent();
+        return null;
     }
 
-    /**
-     * Does nothing, this command does not require data.
-     * @throws ProtocolException 
-     */
     @Override
     public void checkData() throws ProtocolException {
+        if (!data.containsKey("question")) {
+            throw new ProtocolException("Question missing");
+        }
     }
 
     @Override
@@ -32,4 +25,5 @@ public class StopProcess extends Command<String> {
     public String call() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }

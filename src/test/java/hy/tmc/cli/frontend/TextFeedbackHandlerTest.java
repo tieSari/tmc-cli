@@ -25,7 +25,6 @@ public class TextFeedbackHandlerTest {
         this.builder = new FeedbackBuilder();
     }
 
-    @Test
     public void answerOneQuestion() {
         builder.withSimpleTextQuestion();
         handler.feedback(builder.build(), "");
@@ -35,7 +34,6 @@ public class TextFeedbackHandlerTest {
         assertTrue(allLines.contains("hello world"));
     }
 
-    @Test
     public void answerManyQuestions() {
         builder.withSimpleTextQuestion()
                 .withLongTextQuestion();

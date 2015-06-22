@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
+import hy.tmc.cli.backend.TmcCore;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -10,57 +10,74 @@ import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.TextFeedbackHandler;
-
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-
 import java.net.ServerSocket;
 import java.net.Socket;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server implements FrontendListener, Runnable {
 
-    private Socket clientSocket;
-    private final ProtocolParser parser;
     private ServerSocket serverSocket;
     private boolean isRunning;
+    private TmcCore tmcCore;
+    private ExecutorService socketThreadPool;
     private BufferedReader in;
     private JsonArray feedbackAnswers = new JsonArray();
     private RangeFeedbackHandler rangeFeedbackHandler;
     private TextFeedbackHandler textFeedbackHandler;
 
     /**
-     * Constructor for server.
+     * Constructor for server. It finds a free port to be listened to.
      *
-     * @throws IOException if failed to write port to config file
+     * @throws IOException if failed to write port to configuration file
      */
     public Server() throws IOException {
-        try {
-            serverSocket = new ServerSocket(0);
-            int serverPort = serverSocket.getLocalPort();
-            new ConfigHandler().writePort(serverPort);
-            System.out.println("Listening on port " + serverPort);
-        } catch (IOException ex) {
-            System.out.println("Server creation failed");
-            System.err.println(ex.getMessage());
-        }
-        this.parser = new ProtocolParser(this);
-        this.rangeFeedbackHandler = new RangeFeedbackHandler(this);
-        this.textFeedbackHandler = new TextFeedbackHandler(this);
+        this(new TmcCore(), Executors.newCachedThreadPool(), new RangeFeedbackHandler(null)); //NULL NULL NULL
     }
-
+    
     /**
-     * Dependency injection for tests.
+     * Constructor for dependency injection.
+     *
+     * @throws IOException if failed to write port to configuration file
      */
     public Server(RangeFeedbackHandler handler) throws IOException {
-        this();
+        this(new TmcCore(), Executors.newCachedThreadPool(), handler);
+    }
+
+    
+    public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
+        this(tmcCore, socketThreadPool, new RangeFeedbackHandler(null));
+    }
+    
+    
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param tmcCore
+     * @param socketThreadPool
+     */
+    public Server(TmcCore tmcCore, ExecutorService socketThreadPool, RangeFeedbackHandler handler) throws IOException {
+        this.tmcCore = tmcCore;
+        this.socketThreadPool = socketThreadPool;
+        initServerSocket();
         this.rangeFeedbackHandler = handler;
+        this.textFeedbackHandler = new TextFeedbackHandler(this);
+
+    }
+
+    private void initServerSocket() {
+        try {
+            serverSocket = new ServerSocket(0);
+            new ConfigHandler().writePort(serverSocket.getLocalPort());
+        }
+        catch (IOException ex) {
+            System.err.println("Server creation failed");
+            System.err.println(ex.getMessage());
+        }
     }
 
     public int getCurrentPort() {
@@ -75,90 +92,39 @@ public class Server implements FrontendListener, Runnable {
         this.run();
     }
 
+    public boolean isRunning() {
+        return isRunning;
+    }
+
     /**
-     * Run is loop that accepts new client connection and handles it.
+     * Run is loop that accepts new client connection and handles it. Submits the new socket task
+     * into a thread pool that executes is with a thread that is free.
      */
     @Override
     public final void run() {
         isRunning = true;
-        while (isRunning) {
-            if (!startClientProcess()) {
-                break;
+        while (true) {
+            try {
+                if (!serverSocket.isClosed()) {
+                    Socket clientSocket = serverSocket.accept();
+                    socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore));
+                }
+            }
+            catch (IOException e) {
+                System.err.println(e.getMessage());
             }
         }
-    }
-
-    private boolean startClientProcess() {
-        try (final Socket cs = serverSocket.accept()) {
-            if (!introduceClientSuccessful(cs)) {
-                return false;
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-            isRunning = false;
-        }
-        return true;
-    }
-
-    private boolean introduceClientSuccessful(Socket client) throws IOException {
-        this.clientSocket = client;
-        return canListenClient(clientSocket);
-    }
-
-    private boolean canListenClient(Socket clientSocket) throws IOException {
-        in = new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
-        String inputLine = readCommandFromClient(clientSocket);
-
-        if (inputLine == null) {
-            return false;
-        }
-
-        try {
-            parseAndExecuteCommand(inputLine);
-        } catch (ProtocolException ex) {
-            printLine(ex.getMessage());
-        }
-        return true;
-    }
-
-    private String readCommandFromClient(Socket clientSocket) throws IOException {
-        // BufferedReader in = ;
-        return in.readLine();
-    }
-
-    private void parseAndExecuteCommand(String inputLine) throws ProtocolException {
-        parser.getCommand(inputLine).execute();
     }
 
     /**
-     * Closes serverSocket.
+     * Closes serverSocket. Destroys the Socket pool.
      *
      * @throws IOException if failed to close socket
      */
     public void close() throws IOException {
         isRunning = false;
-        this.serverSocket.close();
-    }
-
-    /**
-     * Prints line to server output.
-     *
-     * @param outputLine string to print in server out
-     */
-    @Override
-    public void printLine(String outputLine) {
-        if (clientSocket == null) {
-            return;
-        }
-        PrintWriter out;
-        try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(outputLine);
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
-        System.out.println(outputLine);
+        serverSocket.close();
+        socketThreadPool.shutdown();
     }
 
     @Override
@@ -166,7 +132,6 @@ public class Server implements FrontendListener, Runnable {
         if (feedbackQuestions.isEmpty()) {
             return;
         }
-
 
         List<FeedbackQuestion> rangeQuestions = new ArrayList<>();
         List<FeedbackQuestion> textQuestions = new ArrayList<>();
@@ -200,7 +165,6 @@ public class Server implements FrontendListener, Runnable {
 
         if (this.rangeFeedbackHandler.allQuestionsAsked()) {
             if (textFeedbackHandler.allQuestionsAsked()) {
-                printLine("end");
                 sendToTmcServer();
                 this.feedbackAnswers = new JsonArray();
             } else {
@@ -221,7 +185,6 @@ public class Server implements FrontendListener, Runnable {
         feedbackAnswers.add(jsonAnswer);
 
         if (this.textFeedbackHandler.allQuestionsAsked()) {
-            printLine("end");
             sendToTmcServer();
             this.feedbackAnswers = new JsonArray();
         } else {
@@ -232,10 +195,10 @@ public class Server implements FrontendListener, Runnable {
     protected void sendToTmcServer() {
         JsonObject req = getAnswersJson();
         try {
-            HttpResult httpResult = UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
-            printLine(httpResult.getData());
-        } catch (IOException e) {
-            printLine(e.getMessage());
+            UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
+        }
+        catch (IOException e) {
+            System.err.println(e.getMessage());
         }
     }
 

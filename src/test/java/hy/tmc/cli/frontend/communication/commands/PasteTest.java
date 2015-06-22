@@ -3,14 +3,8 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
-import java.io.IOException;
-import java.text.ParseException;
-import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -20,7 +14,6 @@ import static org.mockito.Mockito.when;
 
 public class PasteTest {
 
-    private FrontendStub front;
     private Paste paste;
     CourseSubmitter submitterMock;
     SubmissionInterpreter interpreter;
@@ -30,12 +23,11 @@ public class PasteTest {
      * Mocks CourseSubmitter and injects it into Paste command.
      */
     @Before
-    public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException, IOException, ZipException {
+    public void setup() throws Exception {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
 
-        front = new FrontendStub();
-        paste = new Paste(front, submitterMock);
+        paste = new Paste(submitterMock);
         ClientData.setUserData("Bossman", "Samu");
     }
 
@@ -45,11 +37,9 @@ public class PasteTest {
     }
 
     @Test
-    public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
-        front.start();
+    public void submitReturnsBadOutputWhenCodeIsBad() throws Exception {
         paste.setParameter("path", "/hieno/path");
-        paste.execute();
-        String result = front.getMostRecentLine();
+        String result = paste.parseData(paste.call()).get();
         assertTrue(result.contains(pasteUrl));
     }
 
@@ -58,7 +48,7 @@ public class PasteTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        Paste pasteCommand = new Paste(front);
+        Paste pasteCommand = new Paste();
         pasteCommand.setParameter("path", "/home/tmccli/uolevipuistossa");
         try {
             pasteCommand.checkData();
@@ -73,13 +63,13 @@ public class PasteTest {
      */
     @Test(expected = ProtocolException.class)
     public void testCheckDataFail() throws ProtocolException {
-        Paste pasteCommand = new Paste(front);
+        Paste pasteCommand = new Paste();
         pasteCommand.checkData();
     }
     
     @Test(expected = ProtocolException.class)
     public void checkDataFailIfNoAuth() throws ProtocolException {
-        Paste pasteCommand = new Paste(front);
+        Paste pasteCommand = new Paste();
         ClientData.clearUserData();
         pasteCommand.checkData();
     }

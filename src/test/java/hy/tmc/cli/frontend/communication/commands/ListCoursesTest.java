@@ -5,7 +5,6 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,18 +24,16 @@ import static org.junit.Assert.fail;
 @PrepareForTest(UrlCommunicator.class)
 public class ListCoursesTest {
 
-    private FrontendStub front;
-    private Command list;
+    private ListCourses list;
 
     /**
-     * Set up FrontendStub, ListCourses command, power mockito and fake http result.
+     * Set up FrontendStub, ListCourses command, power mockito and fake http
+     * result.
      */
     @Before
     public void setUp() {
-        front = new FrontendStub();
-        list = new ListCourses(front);
-        
-        
+        list = new ListCourses();
+
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
@@ -44,14 +41,14 @@ public class ListCoursesTest {
         ClientData.setUserData("mockattu", "ei tarvi");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(
-                            Mockito.anyString(), Mockito.anyString()))
+                                Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
-        
+
     }
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        ListCourses ls = new ListCourses(front);
+        ListCourses ls = new ListCourses();
         ClientData.setUserData("asdf", "bsdf");
         try {
             ls.checkData();
@@ -59,35 +56,28 @@ public class ListCoursesTest {
             fail("testCheckDataSuccess failed");
         }
     }
-    
-    @Test (expected = ProtocolException.class)
-    public void testNoAuthThrowsException() throws ProtocolException {
+
+    @Test(expected = ProtocolException.class)
+    public void testNoAuthThrowsException() throws ProtocolException, Exception {
         ClientData.setUserData("", "");
-        list.execute();   
+        list.call();
     }
 
     @Test
-    public void testWithAuthPrintsCourses() {
-        try {
-            list.execute();
-            assertTrue(front.getMostRecentLine().contains("WEPAMOOC-STAGE"));
-        } catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("unexpected exception");
-        }
+    public void testWithAuthPrintsCourses() throws Exception {
+        String testResult = list.parseData(list.call()).get();
+        assertTrue(testResult.contains("WEPAMOOC-STAGE"));
     }
 
     @Test
-    public void testWithAuthPrintsSeveralCourses() {
+    public void testWithAuthPrintsSeveralCourses() throws Exception {
         try {
-            list.execute();
-            assertTrue(front.getMostRecentLine().contains("WEPATEST"));
+            String testResult = list.parseData(list.call()).get();
+            assertTrue(testResult.contains("WEPATEST"));
         } catch (ProtocolException ex) {
-            Logger.getLogger(ListCoursesTest.class.getName()).log(Level.SEVERE, null, ex);
             fail("unexpected exception");
         }
     }
-
 
     @Test
     public void checkDataTest() {

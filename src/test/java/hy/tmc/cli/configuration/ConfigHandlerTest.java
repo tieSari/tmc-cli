@@ -35,7 +35,10 @@ public class ConfigHandlerTest {
     public void tearstuff() {
         try {
             handler.writeServerAddress("");
-            new File("test.properties").delete();
+            File file = new File("test.properties");
+            if (file.exists()) {
+                file.delete();
+            }
         } catch (IOException ex) {
             fail("something went wrong");
         }
