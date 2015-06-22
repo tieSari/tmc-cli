@@ -72,7 +72,6 @@ public class TmcCoreTest {
 
     @Test(expected = ProtocolException.class)
     public void loginWithoutNumberFails() throws ProtocolException, InterruptedException, ExecutionException, Exception {
-        when(fakeCommandMap.get("login").call()).thenThrow(new ProtocolException("feilaus"));
         tmcCore.login("", "").get();
     }
 
@@ -81,17 +80,17 @@ public class TmcCoreTest {
         when(fakeCommandMap.get("logout").call()).thenReturn(true);
         assertEquals(Boolean.class, tmcCore.logout().get().getClass());
     }
-//    
-//    @Test
-//    public void logoutFailsWithInvalidUrl() throws ProtocolException, InterruptedException, ExecutionException, Exception {
-//        when(fakeCommandMap.get("logout").call()).thenReturn(true);
-//        assertEquals(Boolean.class, tmcCore.logout().get().getClass());
-//    }
 
     @Test
     public void selectServer() throws ProtocolException, InterruptedException, ExecutionException, Exception {
         when(fakeCommandMap.get("setServer").call()).thenReturn(true);
         assertEquals(Boolean.class, tmcCore.selectServer("uusServu").get().getClass());
+    }
+    
+    @Test(expected = ExecutionException.class)
+    public void selectServerFailswithInvalidServeraddress() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+        when(fakeCommandMap.get("setServer").call()).thenThrow(new ProtocolException("ei kelpaaa"));
+        tmcCore.selectServer("paskaServu").get();
     }
 
     @Test
