@@ -65,7 +65,7 @@ public class SocketRunnable implements Runnable {
             return core.getCommand(input);
         }
         catch (ProtocolException ex) {
-            stream.writeUTF(ex.getMessage() + "\n");
+            stream.write((ex.getMessage() + "\n").getBytes());
             socket.close();
             return null;
         }

@@ -3,10 +3,10 @@ package hy.tmc.cli.frontend.communication.server;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.frontend.communication.commands.Command;
-import hy.tmc.cli.frontend.communication.commands.Submit;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 public class SocketListener implements Runnable {
@@ -34,13 +34,14 @@ public class SocketListener implements Runnable {
             }
        }
         catch (InterruptedException | ExecutionException ex) {
+            System.err.println(Arrays.toString(ex.getStackTrace()));
             writeToOutput(ex.getCause().getMessage());
         }
     }
 
     private void writeToOutput(final String commandOutput) {
         try {
-            output.writeUTF(commandOutput + "\n");
+            output.write((commandOutput + "\n").getBytes());
             socket.close();
         }
         catch (IOException ex) {
