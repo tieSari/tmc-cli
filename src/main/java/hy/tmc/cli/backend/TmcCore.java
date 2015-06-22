@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -36,7 +37,7 @@ public class TmcCore {
     /**
      * For dependency injection of pool.
      *
-     * @param pool
+     * @param pool Thread pool which to use with the core.
      */
     public TmcCore(ListeningExecutorService pool) {
         commands = CommandFactory.createCommandMap();
@@ -219,7 +220,7 @@ public class TmcCore {
 
     private void checkParameters(String... params) throws ProtocolException {
         for (String param : params) {
-            if (param == null || param.isEmpty()) {
+            if (isNullOrEmpty(param)) {
                 throw new ProtocolException("Param empty or null.");
             }
         }

@@ -86,12 +86,11 @@ function command_paste () {
 }
 
 function command_test () {
-  #send_command "runTests filepath `pwd`"
   if [ $# -eq 0 ]
-  then
-    send_command "runTests path `pwd`"
-  else
-    send_command "runTests path `pwd` $1"
+    then
+      send_command "runTests path `pwd`"
+    else
+      send_command "runTests path `pwd` $1"
   fi
 }
 

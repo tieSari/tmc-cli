@@ -97,6 +97,7 @@ public class ExerciseDownloader {
             deleteZip(filePath);
         }
         catch (IOException | ZipException ex) {
+            System.err.println(ex.getMessage());
             exerciseInfo = "Unzipping exercise failed.";
         }
         return exerciseInfo;
@@ -118,8 +119,7 @@ public class ExerciseDownloader {
      * @param unzipPath path of file which will be unzipped
      * @param destinationPath destination path
      */
-    public void unzipFile(String unzipPath,
-            String destinationPath) throws IOException, ZipException {
+    public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
         UnzipDecider decider = new DefaultUnzipDecider();
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
         zipHandler.unzip();
