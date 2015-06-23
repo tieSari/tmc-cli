@@ -18,9 +18,24 @@ Current core functionality includes:
 
 
 ## Usage
+
+1. Start by logging in.
+
+![asd](docs/gifs/login.gif)
+
+2. If you don't know the id of the course you want to download, you can list courses with listCourses command.
+
+![asd](docs/gifs/listcourses.gif)
+
+3. You can download a course to your current folder by typing tmc download <course id>
+
+4. You can now start doing exercises. If you want to see if tests pass, you can type tmc test in the exercise folder.
+
+5. You can submit the exercise by typing tmc submit.
+
 ### List of commands:
 - login
-  - Takes a username and a password and remembers the information. 
+  - Takes a username and a password and remembers the information.
 - test
   - Runs TMC tests on the exercise in the current directory
   - Returns info about the tests (failed/passed etc)
@@ -39,7 +54,7 @@ Current core functionality includes:
 - ping
   - returns "pong" if the program is running
 - setServer
-  - Sets the server where to return exercises to and get exercises from 
+  - Sets the server where to return exercises to and get exercises from
 - listExercises
   - When a user is in a course directory, lists the exercises of that course
   - If the user has completed a certain exercise, it is shown that way
