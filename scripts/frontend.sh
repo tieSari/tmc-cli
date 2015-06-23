@@ -86,16 +86,12 @@ function command_paste () {
 }
 
 function command_test () {
-<<<<<<< HEAD
-  send_command "runTests path `pwd`"
-=======
   if [ $# -eq 0 ]
     then
       send_command "runTests path `pwd`"
     else
       send_command "runTests path `pwd` $1"
   fi
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 }
 
 function command_default () {
@@ -156,17 +152,6 @@ control_c()
 # catch crtl_c and run function control_c if user hits ctrl-c
 trap control_c SIGINT
 
-<<<<<<< HEAD
-#echo "Servu paalle"
-
-if [ ! -f tmc-cli.jar ];
-then
-    echo 'FATAL: tmc client jarfile not found'
-    exit
-fi
-
-=======
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"

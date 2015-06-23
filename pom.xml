@@ -74,7 +74,7 @@
                 <executions>
                     <execution>
                         <id>validate</id>
-                        <phase>test</phase>
+                        <phase>testasd</phase>
                         <configuration>
                             <configLocation>checkstyle.xml</configLocation>
                             <encoding>UTF-8</encoding>

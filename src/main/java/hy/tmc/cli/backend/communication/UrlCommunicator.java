@@ -17,7 +17,6 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -25,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +32,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
-=======
 import java.io.IOException;
 import java.util.Map;
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 
 public class UrlCommunicator {
     
@@ -86,12 +82,10 @@ public class UrlCommunicator {
             HttpGet httpGet = createGet(url, params);
             return getResponseResult(httpGet);
         } catch (IOException e) {
-<<<<<<< HEAD
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             return new HttpResult("", BAD_REQUEST, false);
         }
     }
-    
     
     /**
      * Makes PUT-request to wanted Url. Key-Value parameters gets added to body. 
@@ -115,8 +109,7 @@ public class UrlCommunicator {
             
             return getResponseResult(httpPut);
         } catch (IOException e) {
-=======
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
+            System.err.println(e.getMessage());
             return new HttpResult("", BAD_REQUEST, false);
         }
     }

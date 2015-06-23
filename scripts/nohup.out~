@@ -1,0 +1,28 @@
+Available commands: 
+submit, auth, ping, listCourses, setServer, paste, login, getMail, help, logout, stopProcess, listExercises, runTests, downloadExercises
+Available commands: 
+submit, auth, ping, listCourses, setServer, paste, login, getMail, help, logout, stopProcess, listExercises, runTests, downloadExercises
+Exception in thread "main" java.lang.NullPointerException
+	at java.util.Objects.requireNonNull(Objects.java:203)
+	at java.util.Arrays$ArrayList.<init>(Arrays.java:3813)
+	at java.util.Arrays.asList(Arrays.java:3800)
+	at hy.tmc.cli.backend.communication.TmcJsonParser.getCourses(TmcJsonParser.java:86)
+	at hy.tmc.cli.zipping.ProjectRootFinder.findCourseByPath(ProjectRootFinder.java:65)
+	at hy.tmc.cli.zipping.ProjectRootFinder.getCurrentCourse(ProjectRootFinder.java:54)
+	at hy.tmc.cli.configuration.ClientData.getCurrentCourse(ClientData.java:41)
+	at hy.tmc.cli.frontend.communication.commands.RunTests.checkData(RunTests.java:73)
+	at hy.tmc.cli.frontend.communication.commands.Command.execute(Command.java:36)
+	at hy.tmc.cli.frontend.communication.commands.MailCheckingCommand.execute(MailCheckingCommand.java:17)
+	at hy.tmc.cli.frontend.communication.server.Server.parseAndExecuteCommand(Server.java:104)
+	at hy.tmc.cli.frontend.communication.server.Server.canListenClient(Server.java:90)
+	at hy.tmc.cli.frontend.communication.server.Server.introduceClientSuccessful(Server.java:79)
+	at hy.tmc.cli.frontend.communication.server.Server.startClientProcess(Server.java:67)
+	at hy.tmc.cli.frontend.communication.server.Server.run(Server.java:59)
+	at hy.tmc.cli.frontend.communication.server.Server.start(Server.java:49)
+	at hy.tmc.cli.Main.main(Main.java:18)
+Available commands: 
+submit, auth, ping, listCourses, setServer, paste, login, getMail, help, logout, stopProcess, listExercises, runTests, downloadExercises
+Available commands: 
+submit, auth, ping, listCourses, setServer, paste, login, getMail, help, logout, stopProcess, listExercises, runTests, downloadExercises
+Available commands: 
+submit, auth, ping, listCourses, setServer, paste, login, getMail, help, logout, stopProcess, listExercises, runTests, downloadExercises
