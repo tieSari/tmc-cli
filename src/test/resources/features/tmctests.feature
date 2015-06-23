@@ -16,7 +16,6 @@ Feature: Test command
         When the user runs the tests
         Then the user sees both passed and failed tests
 
-
     Scenario: runtests will show mail in the mailbox
         Given the user has mail in the mailbox and exercise path is "testResources/successExercise/viikko1/Viikko1_001.Nimi"
         When the user runs the tests
@@ -26,3 +25,10 @@ Feature: Test command
         Given polling for reviews is not in progress and exercise path is "testResources/successExercise/viikko1/Viikko1_001.Nimi"
         When the user runs the tests
         Then the polling will be started
+
+    Scenario: Test an exercise where all tests pass with vim flag
+        Given the user is in the exercise directory "testResources/successExercise/viikko1/Viikko1_001.Nimi"
+        And the user gives the vim flag
+        When the user runs the tests
+        Then the user sees that all tests have passed formatted with vim formatter.
+

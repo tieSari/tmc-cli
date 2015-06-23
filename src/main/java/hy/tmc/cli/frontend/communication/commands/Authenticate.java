@@ -1,68 +1,68 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.Mailbox;
+import com.google.common.base.Optional;
+
 import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class Authenticate extends Command {
+public class Authenticate extends Command<Boolean> {
 
     /**
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
 
-    public Authenticate(FrontendListener front) {
-        super(front);
-    }
-
-    private String returnResponse(int statusCode) {
-        if (ok(statusCode)) {
-            return "Auth successful. Saved userdata in session";
-        }
-        return "Auth unsuccessful. Check your connection and/or credentials";
-    }
-
     @Override
     public final void setParameter(String key, String value) {
-        data.put(key, value);
+        getData().put(key, value);
     }
 
     @Override
     public void checkData() throws ProtocolException {
-        if (!this.data.containsKey("username")) {
+        String username = this.data.get("username");
+        if (username == null || username.isEmpty()) {
             throw new ProtocolException("username must be set!");
         }
-        if (!this.data.containsKey("password")) {
+        String password = this.data.get("password");
+        if (password == null || password.isEmpty()) {
             throw new ProtocolException("password must be set!");
         }
     }
 
-    @Override
-    protected void functionality() {
+    private int makeRequest() {
         String auth = data.get("username") + ":" + data.get("password");
-        
-        if (ClientData.getFormattedUserData().equals(auth)) {
-            this.frontend.printLine("You are already logged in with these credentials");
-            return;
-        }
-        
-        int code = makeGetRequest(new ConfigHandler().readAuthAddress(), auth).getStatusCode();
-        if (ok(code)){
-            initializeUserState();
-        }
-        this.frontend.printLine(returnResponse(code));
+        int code = makeGetRequest(
+                new ConfigHandler().readAuthAddress(),
+                auth
+        ).getStatusCode();
+        return code;
     }
-    
-    private boolean ok(int code) {
+
+    @Override
+    public Boolean call() throws ProtocolException {
+        checkData();
+        if (isOk(makeRequest())) {
+            ClientData.setUserData(data.get("username"), data.get("password"));
+            Mailbox.create();
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<String> parseData(Object data) {
+        Boolean result = (Boolean) data;
+        if (result) {
+            return Optional.of("Auth successful. Saved userdata in session");
+        }
+        return Optional.of("Auth unsuccessful. Check your connection and/or credentials");
+    }
+
+    private boolean isOk(int code) {
         return Integer.toString(code).matches(httpOk);
     }
-    
-    private void initializeUserState() {
-        ClientData.setUserData(data.get("username"), data.get("password"));
-        Mailbox.create();
-    }
+
 }

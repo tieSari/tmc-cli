@@ -26,9 +26,7 @@ public class TestClient {
     public void init() throws IOException {
         this.socket = new Socket("localhost", portnumber);
         this.output = new PrintWriter(socket.getOutputStream(), true);
-        this.input = new BufferedReader(
-                new InputStreamReader(socket.getInputStream()));
-
+        this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
     
     public boolean checkForMessages() throws IOException {
@@ -85,5 +83,13 @@ public class TestClient {
             System.err.println(ex.getMessage());
             return "fail";
         }
+    }
+    
+    public boolean isReadyToBeRead() throws IOException {
+        return input.ready();
+    }
+
+    public boolean hasNewMessages() throws IOException {
+        return input.ready();
     }
 }

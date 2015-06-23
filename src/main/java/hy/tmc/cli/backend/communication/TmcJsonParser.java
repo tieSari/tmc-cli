@@ -23,29 +23,20 @@ import java.util.List;
 public class TmcJsonParser {
 
     /**
-     * Get JSON-data from url.
-     *
-     * @param url url from which the object data is fetched
-     * @return JSON-object
-     */
-    private static JsonObject getJsonFrom(String url) {
-        HttpResult httpResult = UrlCommunicator.makeGetRequest(
-                url, ClientData.getFormattedUserData()
-        );
-        String data = httpResult.getData();
-        final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
-        return json;
-    }
-
-
-    /**
      * Get the names of all courses on the server specified by ServerData.
      *
      * @return String containing all course names separated by newlines
      */
     public static String getCourseNames(String courseAddress) {
         List<Course> courses = getCourses(courseAddress);
+        return getCourseNames(courses);
+    }
 
+    public static String getCourseNames() {
+        return getCourseNames(new ConfigHandler().readCoursesAddress());
+    }
+
+    public static String getCourseNames(List<Course> courses) {
         StringBuilder result = new StringBuilder();
         for (Course course : courses) {
             String name = course.getName();
@@ -58,6 +49,13 @@ public class TmcJsonParser {
         return result.toString();
     }
 
+    /**
+     * Adds spaces to format.
+     *
+     * @param result
+     * @param name
+     * @return
+     */
     private static StringBuilder addSpaces(StringBuilder result, String name) {
         int spaces = 50 - name.length();
         for (int i = 0; i < spaces; i++) {
@@ -69,6 +67,7 @@ public class TmcJsonParser {
     /**
      * Get list of all the courses on the server specified by ServerData.
      *
+     * @param courseAddress address of json
      * @return List of Course-objects
      */
     public static List<Course> getCourses(String courseAddress) {
@@ -77,6 +76,15 @@ public class TmcJsonParser {
         Course[] courses = mapper
                 .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
+    }
+
+    /**
+     * Get list of all the courses on the server specified by ServerData.
+     *
+     * @return List of Course-objects
+     */
+    public static List<Course> getCourses() {
+        return getCourses(new ConfigHandler().readCoursesAddress());
     }
 
     /**
@@ -169,8 +177,8 @@ public class TmcJsonParser {
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
-     * returned.
+     * @return List of all exercises as Exercise-objects. If no course is found,
+     * empty list will be returned.
      */
     public static List<Exercise> getExercises(String courseUrl) {
         Optional<Course> course = getCourse(courseUrl);
@@ -224,6 +232,21 @@ public class TmcJsonParser {
             url += postfix;
         }
         return url;
+    }
+
+    /**
+     * Get JSON-data from url.
+     *
+     * @param url url from which the object data is fetched
+     * @return JSON-object
+     */
+    private static JsonObject getJsonFrom(String url) {
+        HttpResult httpResult = UrlCommunicator.makeGetRequest(
+                url, ClientData.getFormattedUserData()
+        );
+        String data = httpResult.getData();
+        final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        return json;
     }
 
 }

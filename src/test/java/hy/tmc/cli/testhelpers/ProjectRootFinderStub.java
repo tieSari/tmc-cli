@@ -41,7 +41,6 @@ public class ProjectRootFinderStub implements RootFinder {
         return Optional.of(Paths.get(returnValue));
     }
 
-    @Override
     public Optional<Course> getCurrentCourse(String path) {
         String[] folders = path.split("/");
 

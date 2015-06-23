@@ -9,29 +9,17 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class MailChecker extends Command {
+public class MailChecker extends Command<String> {
 
     private Optional<Mailbox> mailbox;
     private Optional<Course> course;
 
-    public MailChecker(FrontendListener front) {
-        super(front);
+    public MailChecker() {
         mailbox = Mailbox.getMailbox();
-    }
-
-    @Override
-    protected void functionality() {
-        if (mailbox.get().reviewsWaiting()) {
-            frontend.printLine(formatReviews(mailbox.get().getUnreadReviews()));
-        } else {
-            //frontend.printLine("No mail for you :(");
-        }
-        if (mailbox.get().updatesWaiting()) {
-            frontend.printLine(formatExercises(mailbox.get().getExerciseUpdates(course.get())));
-        }
     }
 
     @Override
@@ -57,4 +45,23 @@ public class MailChecker extends Command {
         }
     }
 
+    @Override
+    public Optional<String> parseData(Object data) {
+        return Optional.of((String) data);
+    }
+
+    @Override
+    public String call() throws ProtocolException {
+        checkData();
+        String mail = "";
+        if (mailbox.get().reviewsWaiting()) {
+            mail += formatReviews(mailbox.get().getUnreadReviews());
+        } else {
+            mail += "No mail for you :(";
+        }
+        if (mailbox.get().updatesWaiting()) {
+            mail += formatExercises(mailbox.get().getExerciseUpdates(course.get()));
+        }
+        return mail;
+    }
 }

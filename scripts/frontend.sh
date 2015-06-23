@@ -8,27 +8,64 @@ function command_submit () {
     then
     send_command_wait_output "submit path `pwd`"
   else
-    echo "submit path `pwd` exerciseName $1"
-    send_command_wait_output "submit path `pwd` exerciseName $1"
+    send_command_wait_output "submit path `pwd` $1"
   fi
 
-  if [[ $OUTPUT =~ All\ tests\ passed.* ]]
-  then
-    TIMESTAMP=`date +%s`
-    FEEDBACK="/tmp/feedback-$TIMESTAMP"
-    echo "" >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "#############" >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "Please enter feedback above the bar." >> $FEEDBACK
-    echo "" >> $FEEDBACK
-    echo "$OUTPUT" >> $FEEDBACK
-    nano $FEEDBACK
+  echo "$OUTPUT"
 
-    PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
-    # TODO: send output to server
+  if [[ $OUTPUT =~ All\ tests\ passed.*Please\ give\ feedback\:.* ]]
+  then
+    OUTPUT=""
+    feedback
+  fi
+}
+
+function feedback () {
+  if [[ $OUTPUT =~ .*text ]]
+    then
+    text_feedback
   else
-    echo "$OUTPUT"
+    int_feedback
+  fi
+}
+
+function int_feedback () {
+  echo "$OUTPUT"
+  read -p "> " answer
+  send_command_wait_output "answerQuestion answer $answer kind integer"
+  if [[ $OUTPUT =~ end ]]
+    then
+    echo "Thank you for your answers!"
+  else
+    feedback
+  fi
+}
+
+function text_feedback () {
+  TIMESTAMP=`date +%s`
+  FEEDBACK="/tmp/feedback-$TIMESTAMP"
+  echo "" >> $FEEDBACK
+  echo "" >> $FEEDBACK
+  echo "#############" >> $FEEDBACK
+  echo "" >> $FEEDBACK
+  echo "Please enter feedback above the bar." >> $FEEDBACK
+  echo "" >> $FEEDBACK
+  echo "$OUTPUT" >> $FEEDBACK
+
+  if [[ -z "$EDITOR" ]]
+  then
+    $EDITOR $FEEDBACK
+  else
+    nano $FEEDBACK
+  fi
+
+  PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
+  send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/\<newline\>} }"
+  if [[ $OUTPUT =~ end ]]
+    then
+    echo "Thank you for your answers!"
+  else
+    feedback $OUTPUT
   fi
 }
 
@@ -49,7 +86,16 @@ function command_paste () {
 }
 
 function command_test () {
+<<<<<<< HEAD
   send_command "runTests path `pwd`"
+=======
+  if [ $# -eq 0 ]
+    then
+      send_command "runTests path `pwd`"
+    else
+      send_command "runTests path `pwd` $1"
+  fi
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 }
 
 function command_default () {
@@ -78,21 +124,17 @@ function login () {
 
 # Backend cmd send
 function send_command () {
-#    OUTPUT=$(echo $@ | nc localhost 1234)
-#    echo $OUTPUT
     DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
     CONFIGPATH="$DIR/config.properties"
     CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-    echo $@ | nc localhost $CONFIGPORT
+    echo $@ - | nc localhost $CONFIGPORT
 
     return 0;
 
 }
 
 function send_command_wait_output () {
-#    OUTPUT=$(echo $@ | nc localhost 1234)
-#    echo $OUTPUT
     DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
     CONFIGPATH="$DIR/config.properties"
@@ -114,6 +156,7 @@ control_c()
 # catch crtl_c and run function control_c if user hits ctrl-c
 trap control_c SIGINT
 
+<<<<<<< HEAD
 #echo "Servu paalle"
 
 if [ ! -f tmc-cli.jar ];
@@ -122,18 +165,19 @@ then
     exit
 fi
 
+=======
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"
 bash $STARTUP
 
 case "$1" in
-#    "help") command_help;;
     "login") command_login;;
     "submit") command_submit $2;;
     "download") command_download $2;;
-    "test") command_test;;
-    "paste") command_paste;;
+    "test") command_test $2;;
+    "paste") command_paste $2;;
     "listExercises") command_listExercises;;
     *) command_default $@;;
 esac

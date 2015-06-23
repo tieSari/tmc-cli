@@ -56,7 +56,10 @@
                     </filesets>
                 </configuration>
             </plugin>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -124,9 +127,17 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+<<<<<<< HEAD
                     <compilerArguments>
                         <Werror/>
                     </compilerArguments>
+=======
+                    <compilerArgs>
+                        <arg>-Werror</arg>
+<!--                        <arg>-Xlint:all</arg>-->
+                        <arg>-Xlint:unchecked</arg>
+                    </compilerArgs>
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
                 </configuration>
             </plugin>
 

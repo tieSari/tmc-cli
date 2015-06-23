@@ -25,7 +25,11 @@ import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
+<<<<<<< HEAD
 
+=======
+import java.io.File;
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -42,6 +46,7 @@ public class PasteSteps {
 
     private ConfigHandler configHandler; // writes the test address
     private WireMockServer wireMockServer;
+    private String pasteCommand;
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
@@ -59,7 +64,11 @@ public class PasteSteps {
         serverThread.start();
         testClient = new TestClient(port);
         ClientData.setUserData("Chuck", "Norris");
+<<<<<<< HEAD
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());
+=======
+
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         startWireMock();
     }
 
@@ -109,11 +118,20 @@ public class PasteSteps {
 
     @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
     public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
+        this.pasteCommand = "paste path ";
+        String pastePath = System.getProperty("user.dir") + path + File.separator + exercise;
+        this.pasteCommand = pasteCommand + pastePath;
+    }
+
+    @When("^flag \"(.*?)\"$")
+    public void flag(String flag) throws Throwable {
+        this.pasteCommand += " " + flag;
+    }
+
+    @When("^user executes the command$")
+    public void user_executes_the_command() throws Throwable {
         testClient.init();
-        String pasteCommand = "paste path ";
-        String pastePath = System.getProperty("user.dir") + path + "/" + exercise;
-        final String message = pasteCommand + pastePath;
-        testClient.sendMessage(message);
+        testClient.sendMessage(pasteCommand);
     }
 
     @Then("^user will see the paste url$")

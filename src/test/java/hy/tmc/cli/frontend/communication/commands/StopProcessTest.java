@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -17,10 +16,8 @@ public class StopProcessTest {
     @Test
     public void functionalityStopsTheProcess() {
         PowerMockito.mockStatic(System.class);
-        FrontendStub frontendStub = new FrontendStub();
-        StopProcess stop = new StopProcess(frontendStub);
+        StopProcess stop = new StopProcess();
         stop.functionality();
         PowerMockito.verifyStatic();
     }
-
 }

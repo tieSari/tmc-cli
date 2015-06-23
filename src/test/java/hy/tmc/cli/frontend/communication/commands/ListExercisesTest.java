@@ -11,6 +11,7 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.ExerciseLister;
 
 import hy.tmc.cli.configuration.ClientData;
+<<<<<<< HEAD
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
@@ -23,31 +24,62 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+=======
+import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ClientData.class)
 public class ListExercisesTest {
 
-    private FrontendStub front;
-    private Command list;
+    private ListExercises list;
     private ExerciseLister lister;
-    private String example = "viikko1-Viikko1_000.Hiekkalaatikko[ ]\n"
-            + "viikko1-Viikko1_001.Nimi[x]\n"
-            + "viikko1-Viikko1_002.HeiMaailma[ ]\n"
-            + "viikko1-Viikko1_003.Kuusi[ ]";
+    private List<Exercise> exampleExercises;
+
+    private void buildExample() {
+        exampleExercises = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            Exercise ex = new Exercise();
+            ex.setId(i);
+            ex.setName(i + " tehtävä");
+            ex.setAttempted(random.nextBoolean());
+            ex.setCompleted(random.nextBoolean());
+
+            exampleExercises.add(ex);
+        }
+
+    }
 
     @Before
+<<<<<<< HEAD
     public void setup() {
         Mailbox.create();
         TmcServiceScheduler.disablePolling();
+=======
+    public void setup() throws ProtocolException {
+        buildExample();
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         ClientData.setUserData("Chang", "Jamo");
         mock();
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
-                .thenReturn(example);
+                .thenReturn(exampleExercises);
 
-        front = new FrontendStub();
-        list = new ListExercises(front, lister);
+        list = new ListExercises(lister);
     }
 
     private void mock() {
@@ -66,7 +98,8 @@ public class ListExercisesTest {
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        ListExercises ls = new ListExercises(front);
+        ListExercises ls = new ListExercises();
+        ls.setParameter("courseUrl", "legit");
         ls.setParameter("path", "legit");
         try {
             ls.checkData();
@@ -76,21 +109,37 @@ public class ListExercisesTest {
     }
 
     @Test
-    public void getsExerciseName() throws ProtocolException {
+    public void getsExerciseName() throws Exception {
         list.setParameter("path", "any");
+<<<<<<< HEAD
         list.execute();
         System.out.println(front.getMostRecentLine());
         assertTrue(front.getMostRecentLine().contains("Viikko1"));
+=======
+        when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
+        try {
+            String result = list.parseData(list.call()).get();
+            assertTrue(result.contains("1 tehtävä"));
+            assertTrue(result.contains("3 tehtävä"));
+        } catch (ProtocolException ex) {
+            fail("unexpected exception");
+        }
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     @Test
-    public void returnsFailIfBadPath() throws ProtocolException {
+    public void returnsFailIfBadPath() throws ProtocolException, Exception {
         String found = "No course found";
+<<<<<<< HEAD
         Mockito.when(lister.listExercises(Mockito.anyString()))
                 .thenReturn(found);
+=======
+        Mockito.when(lister.buildExercisesInfo(eq(exampleExercises))).thenReturn(found);
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         list.setParameter("path", "any");
-        list.execute();
-        assertEquals(found, front.getMostRecentLine());
+        String result = list.parseData(list.call()).get();
+        assertEquals(found, result);
+
     }
 
     @Test(expected = ProtocolException.class)
@@ -98,22 +147,22 @@ public class ListExercisesTest {
         PowerMockito.mockStatic(ClientData.class);
         ClientData.clearUserData();
         list.setParameter("path", "any");
-        list.execute();
+        list.call();
     }
 
     @Test(expected = ProtocolException.class)
     public void throwsErrorIfNoCourseSpecified() throws ProtocolException {
-        list.execute();
+        ClientData.clearUserData();
+        list.call();
     }
 
     @Test
-    public void doesntContainWeirdName() {
+    public void doesntContainWeirdName() throws ProtocolException {
         list.setParameter("path", "any");
-        try {
-            list.execute();
-            assertFalse(front.getMostRecentLine().contains("Ilari"));
-        } catch (ProtocolException ex) {
-            fail("unexpected exception");
-        }
+        when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
+
+        String result = list.parseData(list.call()).get();
+        assertFalse(result.contains("Ilari"));
+
     }
 }

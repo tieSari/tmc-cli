@@ -9,7 +9,19 @@ tmc-cli.iml
 */private/*
 */build/*
 build/*
+<<<<<<< HEAD
 **/test.properties
 **/build_errors.*
 **/config
 **/*.properties
+=======
+*/private/*
+/config.properties
+/scripts/config.properties
+/**/test.properties
+/**/build_log.*
+/**/built-jar.*
+/**/config
+/testResources/successExercise/viikko1/Viikko1_001.Nimi/nbproject/private/
+/scripts/2014-mooc-no-deadline/viikko1/Viikko1_006.Yhteenlasku/build/
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720

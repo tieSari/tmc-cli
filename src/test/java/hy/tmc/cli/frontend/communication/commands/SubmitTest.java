@@ -10,20 +10,27 @@ import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
 
 import java.io.IOException;
 import java.text.ParseException;
 
+import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -32,29 +39,17 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(ClientData.class)
 public class SubmitTest {
 
-    private FrontendStub front;
     private Submit submit;
     CourseSubmitter submitterMock;
-    SubmissionInterpreter interpreter;
+    SubmissionResultFormatter formatter;
+    private SubmissionInterpreter interpreter;
+    private final String submissionUrl = "/submissions/1781.json?api_version=7";
 
-    /**
-     * Mocks CourseSubmitter and injects it into Submit command.
-     */
-    @Before
-    public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException {
-        ClientData.setUserData("Bossman", "Samu");
-        Mailbox.create();
-        TmcServiceScheduler.disablePolling();
-        mock();
-        front = new FrontendStub();
-        submit = new Submit(front, submitterMock, interpreter);
-    }
-
-    private void mock() throws ParseException, ExpiredException, IOException {
+    private void mock() throws ParseException, ExpiredException, IOException, ZipException {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito
-                .when(ClientData.getCurrentCourse(Mockito.anyString()))
+                .when(ClientData.getCurrentCourse(anyString()))
                 .thenReturn(Optional.<Course>of(new Course()));
         PowerMockito
                 .when(ClientData.getFormattedUserData())
@@ -62,11 +57,24 @@ public class SubmitTest {
         PowerMockito
                 .when(ClientData.userDataExists())
                 .thenReturn(true);
-        
 
-        when(submitterMock.submit(Mockito.anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
+        when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
         interpreter = Mockito.mock(SubmissionInterpreter.class);
+    }
+
+    public void setup() throws
+            IOException, InterruptedException, IOException, ParseException, ExpiredException, Exception {
+        ClientData.setUserData("Bossman", "Samu");
+        Mailbox.create();
+        TmcServiceScheduler.disablePolling();
+        mock();
+        submitterMock = Mockito.mock(CourseSubmitter.class);
+        when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
+        formatter = Mockito.mock(CommandLineSubmissionResultFormatter.class);
+        interpreter = Mockito.mock(SubmissionInterpreter.class);
+        submit = new Submit(submitterMock, interpreter);
+        ClientData.setUserData("Bossman", "Samu");
     }
 
     @After
@@ -75,25 +83,21 @@ public class SubmitTest {
     }
 
     @Test
-    public void submitReturnsBadOutputWhenCodeIsBad() throws ProtocolException, InterruptedException {
-        front.start();
-        when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("No tests passed.");
-
+    public void submitReturnsBadOutputWhenCodeIsBad() throws Exception {
+        when(interpreter.getSubmissionResult(anyString())).thenReturn(new SubmissionResult());
+        when(interpreter.resultSummary(Mockito.anyBoolean())).thenReturn("No tests passed.");
         submit.setParameter("path", "/hieno/path");
-        System.out.println("CLIENT just before calling submit.exe "+ ClientData.getFormattedUserData());
-        submit.execute();
-        String result = front.getMostRecentLine();
+        String result = submit.parseData(submit.call()).get();
         assertTrue(result.contains("No tests passed."));
     }
 
     @Test
-    public void submitPrintsAllTestsPassedWhenCodeIsCorrect() throws ProtocolException, InterruptedException {
-        front.start();
-        when(interpreter.resultSummary(Mockito.anyString(), Mockito.anyBoolean())).thenReturn("All tests passed.");
-
+    public void submitPrintsAllTestsPassedWhenCodeIsCorrect() throws Exception {
+        when(interpreter.getSubmissionResult(anyString())).thenReturn(new SubmissionResult());
+        when(interpreter.resultSummary(Mockito.anyBoolean())).thenReturn("All tests passed.");
         submit.setParameter("path", "/hieno/path");
-        submit.execute();
-        String result = front.getMostRecentLine();
+        String result = submit.parseData(submit.call()).get();
+
         assertTrue(result.contains("All tests passed."));
     }
 
@@ -102,7 +106,7 @@ public class SubmitTest {
      */
     @Test
     public void testCheckDataSuccess() {
-        Submit submitCommand = new Submit(front);
+        Submit submitCommand = new Submit();
         submitCommand.setParameter("path", "/home/tmccli/testi");
         try {
             submitCommand.checkData();
@@ -116,14 +120,15 @@ public class SubmitTest {
      */
     @Test(expected = ProtocolException.class)
     public void testCheckDataFail() throws ProtocolException {
-        Submit submitCommand = new Submit(front);
+        Submit submitCommand = new Submit();
         submitCommand.checkData();
     }
 
     @Test(expected = ProtocolException.class)
     public void checkDataFailIfNoAuth() throws ProtocolException {
-        Submit submitCommand = new Submit(front);
+        Submit submitCommand = new Submit();
         ClientData.clearUserData();
         submitCommand.checkData();
     }
+
 }

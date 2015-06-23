@@ -1,7 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend.FrontendListener;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -11,159 +9,149 @@ public class CommandFactory {
     /**
      * Maps command strings to objects.
      *
-     * @param frontend that the commands will use
+     * @param that the commands will use
      * @return A map of names to corresponding commands
      */
-    public static Map<String, Command> createCommandMap(FrontendListener frontend) {
+    public static Map<String, Command> createCommandMap() {
         HashMap<String, Command> commandsByName = new HashMap<>();
-        commandsByName.put("auth", authenticate(frontend));
-        commandsByName.put("help", help(frontend));
-        commandsByName.put("login", login(frontend));
-        commandsByName.put("ping", replyToPing(frontend));
-        commandsByName.put("listCourses", listCourses(frontend));
-        commandsByName.put("listExercises", listExercises(frontend));
-        commandsByName.put("downloadExercises", downloadExercises(frontend));
-        commandsByName.put("logout", logout(frontend));
-        commandsByName.put("setServer", chooseServer(frontend));
-        commandsByName.put("submit", submit(frontend));
-        commandsByName.put("runTests", runTests(frontend));
-        commandsByName.put("paste", paste(frontend));
-        commandsByName.put("stopProcess", stopProcess(frontend));
-        commandsByName.put("getMail", getMail(frontend));
+
+        commandsByName.put("auth", authenticate());
+        commandsByName.put("help", help());
+        commandsByName.put("login", login());
+        commandsByName.put("ping", replyToPing());
+        commandsByName.put("listCourses", listCourses());
+        commandsByName.put("listExercises", listExercises());
+        commandsByName.put("downloadExercises", downloadExercises());
+        commandsByName.put("logout", logout());
+        commandsByName.put("setServer", chooseServer());
+        commandsByName.put("submit", submit());
+        commandsByName.put("runTests", runTests());
+        commandsByName.put("paste", paste());
+        commandsByName.put("stopProcess", stopProcess());
+        commandsByName.put("getMail", getMail());
         return commandsByName;
     }
 
     /**
      * Create Help Command object.
      *
-     * @param front frontend that the command will use
      * @return a help object
      */
-    public static Command help(FrontendListener front) {
-        return new Help(front);
+    public static Command help() {
+        return new Help();
     }
 
     /**
      * Create ReplyToPing Command object.
      *
-     * @param front frontend that the command will use
      * @return a replyToPing object
      */
-    public static Command replyToPing(FrontendListener front) {
-        return new ReplyToPing(front);
+    public static Command replyToPing() {
+        return new ReplyToPing();
     }
 
     /**
      * Create RunTests command object.
      *
-     * @param front frontend that the command will use
      * @return a help object
      */
-    public static Command runTests(FrontendListener front) {
-        return new RunTests(front);
+    public static Command runTests() {
+        return new RunTests();
     }
 
     /**
      * Create an Authenticate Command object.
      *
-     * @param front frontend that the command will use
      * @return an authenticate object
      */
-    public static Command authenticate(FrontendListener front) {
-        return new Authenticate(front);
+    public static Command authenticate() {
+        return new Authenticate();
     }
 
     /**
      * Same as authenticate.
      *
-     * @param front frontend to use
-     * @return an authenticate bject
+     * @return an authenticate object
      */
-    public static Command login(FrontendListener front) {
-        return new Authenticate(front); // NOTE: login == authenticate
+    public static Command login() {
+        return new Authenticate(); // NOTE: login == authenticate
     }
 
     /**
      * Create a ListCourses Command object.
      *
-     * @param front frontend that the command will use
      * @return a listCourses object
      */
-    public static Command listCourses(FrontendListener front) {
-        return new ListCourses(front);
+    public static Command listCourses() {
+        return new ListCourses();
     }
 
     /**
      * Create a ListExercises Command object.
      *
-     * @param front frontend that the command will use
      * @return a listExercises object
      */
-    public static Command listExercises(FrontendListener front) {
-        return new ListExercises(front);
+    public static Command listExercises() {
+        return new ListExercises();
     }
 
     /**
      * Create a DownloadExercises Command object.
      *
-     * @param front frontend that the command will use
      * @return a downloadExercises object
      */
-    public static Command downloadExercises(FrontendListener front) {
-        return new DownloadExercises(front);
+    public static Command downloadExercises() {
+        return new DownloadExercises();
     }
 
     /**
      * Create a Logout Command object.
      *
-     * @param front frontend that the command will use
      * @return a logout object
      */
-    public static Command logout(FrontendListener front) {
-        return new Logout(front);
+    public static Command logout() {
+        return new Logout();
     }
 
     /**
      * Create a chooseServer Command object.
      *
-     * @param front frontend that the command will use
      * @return a chooseServer object
      */
-    public static Command chooseServer(FrontendListener front) {
-        return new ChooseServer(front);
+    public static Command chooseServer() {
+        return new ChooseServer();
     }
 
     /**
      * Create a Submit Command object.
      *
-     * @param front frontend that the command will use
      * @return a Submit object
      */
-    public static Command submit(FrontendListener front) {
-        return new Submit(front);
+    public static Command submit() {
+        return new Submit();
     }
-    
+
     /**
      * Stops the whole process and exits java virtual machine.
-     * @param front frontend that the command will use
+     *
+     * @param that the command will use
      * @return StopProcess object
      */
-    private static Command stopProcess(FrontendListener front) {
-        return new StopProcess(front);
+    private static Command stopProcess() {
+        return new StopProcess();
     }
 
     /**
      * Create a Paste Command object.
      *
-     * @param front frontend that the command will use
      * @return a Paste object
      */
-    public static Command paste(FrontendListener front) {
-        return new Paste(front);
+    public static Command paste() {
+        return new Paste();
     }
     
-    public static Command getMail(FrontendListener front) {
-        return new MailChecker(front);
+    public static Command getMail() {
+        return new MailChecker();
     }
 
     /**
@@ -171,17 +159,7 @@ public class CommandFactory {
      *
      * @return a set of all available command names.
      */
-    static Set<String> allCommandNames() {
-        FrontendListener stub = new FrontendListener() {
-            @Override
-            public void start() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-            @Override
-            public void printLine(String line) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        };
-        return createCommandMap(stub).keySet();
+    public static Set<String> allCommandNames() {
+        return createCommandMap().keySet();
     }
 }

@@ -52,7 +52,7 @@ public class ProjectRootFinderTest {
         Course secondCourse = new Course();
         secondCourse.setName(otherFakeName);
 
-        List<Course> courses = new ArrayList();
+        List<Course> courses = new ArrayList<>();
         courses.add(fakeCourse);
         courses.add(secondCourse);
         return courses;

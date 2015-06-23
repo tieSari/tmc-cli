@@ -5,8 +5,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -14,11 +14,13 @@ import java.util.Properties;
  */
 public class ConfigHandler {
 
+    public static final String apiVersion = "7";
+
     private String configFilePath;
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
-    public static final String apiVersion = "7";
-    public final String coursesExtension = "/courses.json?api_version=" + apiVersion;
+    public final String apiParam = "api_version=" + apiVersion;
+    public final String coursesExtension = "/courses.json?" + apiParam;
     public final String authExtension = "/user";
 
     /**

@@ -4,40 +4,31 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseLister;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.FrontendListener;
+
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 
-public class ListExercises extends MailCheckingCommand {
+import hy.tmc.cli.domain.Exercise;
+import java.util.List;
+
+public class ListExercises extends Command<List<Exercise>> {
 
     private ExerciseLister lister;
     private Course current;
+    private MailChecker mail;
 
-    public ListExercises(FrontendListener front) {
-        super(front);
-        lister = new ExerciseLister();
+    public ListExercises() {
+        this(new ExerciseLister());
     }
 
     /**
      * For dependency injection for tests.
      *
-     * @param front
      * @param lister mocked lister object.
      */
-    public ListExercises(FrontendListener front, ExerciseLister lister) {
-        super(front);
+    public ListExercises(ExerciseLister lister) {
+        mail = new MailChecker();
         this.lister = lister;
-    }
-
-    /**
-     * Get a list of the exercises of the course which the current directory
-     * belongs to.
-     */
-    @Override
-    protected void functionality() {
-        TmcServiceScheduler.startIfNotRunning(this.current);
-        this.frontend.printLine(lister.listExercises(data.get("path")));
-
     }
 
     /**
@@ -58,6 +49,44 @@ public class ListExercises extends MailCheckingCommand {
             this.current = currentCourse.get();
         } else {
             throw new ProtocolException("No course resolved from the path.");
+        }
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        String mail = checkMail();
+        @SuppressWarnings("unchecked")
+        List<Exercise> result = (List<Exercise>) data;
+        return Optional.of(mail + "\n" + lister.buildExercisesInfo(result));
+    }
+
+    @Override
+    public List<Exercise> call() throws ProtocolException {
+        TmcServiceScheduler.startIfNotRunning(this.current);
+        checkData();
+        return lister.listExercises(data.get("path"));
+    }
+
+    /**
+     * HUOM EXTRAKTOI TÄMÄ OMAAN LUOKKAAN
+     * Executes the mail command with necessary params.
+     * Gives the mail command either a courseID (preferably) or a path
+     * for determining which courses reviews and updates should be fetched.
+     *
+     * @throws ProtocolException if unable to find necessary params.
+     */
+    private String checkMail() {
+        if (data.containsKey("courseID")) {
+            mail.setParameter("courseID", data.get("courseID"));
+        } else if (data.containsKey("path")) {
+            mail.setParameter("path", data.get("path"));
+        } else {
+            return "must specify path";
+        }
+        try {
+            return mail.call();
+        } catch (ProtocolException e) {
+            return e.getMessage();
         }
     }
 }

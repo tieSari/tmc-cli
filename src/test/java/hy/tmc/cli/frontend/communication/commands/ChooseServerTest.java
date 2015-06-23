@@ -1,10 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
-
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.apache.commons.io.FileUtils;
 
@@ -22,17 +19,11 @@ import static org.junit.Assert.fail;
 public class ChooseServerTest {
 
     private ChooseServer chooser;
-    private final FrontendStub frontendMock;
     private final String path = "testResources/test.properties";
-
-    public ChooseServerTest() {
-        this.frontendMock = new FrontendStub();
-    }
 
     @Before
     public void setup() {
-        this.chooser = new ChooseServer(new ConfigHandler(path), 
-                this.frontendMock);
+        this.chooser = new ChooseServer(new ConfigHandler(path));
     }
     
     @After
@@ -46,9 +37,9 @@ public class ChooseServerTest {
     }
 
     @Test
-    public void testFunctionality() throws ProtocolException {
+    public void testFunctionality() throws ProtocolException, Exception {
         chooser.setParameter("tmc-server", "http://tmc.ebin.fi");
-        chooser.execute();
+        chooser.call();
         try {
             String propFile = FileUtils.readFileToString(new File(path));
             assertTrue(propFile.contains("tmc.ebin.fi"));

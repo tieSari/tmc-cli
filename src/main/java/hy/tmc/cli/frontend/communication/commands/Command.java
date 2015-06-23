@@ -1,47 +1,26 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backend.Mailbox;
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public abstract class Command {
-
-    /**
-     * The frontend that this command responds to.
-     */
-    protected final FrontendListener frontend;
+public abstract class Command<E> implements Callable<E> {
 
     protected Map<String, String> data;
-    
+
     /**
-     * Constructor sets frontend and backend.
-     *
-     * @param front frontend
+     * Command can return any type of object. For example SubmissionResult etc.
      */
-    public Command(FrontendListener front) {
-        this.frontend = front;
+    public Command() {
         data = new HashMap<>();
     }
 
-    /**
-     * First uses checkData() to verify that the command has been given sufficient information. Then
-     * runs functionality() to perform this command. This method should not be overriden, the
-     * functionality should be written in the functionality-method.
-     *
-     * @throws ProtocolException if the command has insufficient data to run
-     */
-    public void execute() throws ProtocolException {
-        checkData();
-        functionality();
+    public Map<String, String> getData() {
+        return data;
     }
-
-    /**
-     * The functionality of the command. This method defines what the command does.
-     */
-    protected abstract void functionality();
 
     /**
      * setParameter sets parameter data for command.
@@ -54,10 +33,25 @@ public abstract class Command {
     }
 
     /**
-     * Command must have checkData method which throws ProtocolException if it doesn't have all data
-     * needed.
+     * Command must have checkData method which throws ProtocolException if it
+     * doesn't have all data needed.
      *
      * @throws ProtocolException if the command lacks some necessary data
      */
     public abstract void checkData() throws ProtocolException;
+
+    /**
+     * Command should define, how to format data when result is ready. This is
+     * ONLY for TMC-cli-client. Other (G)UI's like TMC-Netbeans define
+     * themselves, how to parse ready commandResult.
+     *
+     * @param data SubmissionResult or String for example
+     * @return String to be printed to user
+     */
+    public abstract Optional<String> parseData(Object data);
+
+    private void cleanData() {
+        data.clear();
+    }
+
 }

@@ -11,7 +11,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -141,7 +140,18 @@ public class DownloadExercisesSteps {
     public void user_gives_a_download_exercises_command_and_course_id() throws Throwable {
         createTestClient();
         testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
+<<<<<<< HEAD
         output = testClient.getAllFromSocket();
+=======
+        while (true) {
+            String out = testClient.reply();
+            if (out != null && !out.equals("fail")) {
+                output.add(out);
+            } else {
+                break;
+            }
+        }
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
         verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
@@ -170,7 +180,11 @@ public class DownloadExercisesSteps {
     @Then("^information about download progress\\.$")
     public void information_about_download_progress()
             throws Throwable {
+<<<<<<< HEAD
         assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.split("\n")[0]);
+=======
+        assertTrue(output.get(0).contains("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%"));
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     /**
@@ -190,13 +204,22 @@ public class DownloadExercisesSteps {
         }
         assertFalse(zips);
     }
+<<<<<<< HEAD
 
+=======
+    
+    /**
+     * Get the files under the directory specified
+     * @param filepath the directory
+     */
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     public File[] getFileArray(String filepath) {
         File fi = new File(filepath);
         File[] paths = fi.listFiles();
         return paths;
     }
 
+<<<<<<< HEAD
     @Given("^the user has mail in the mailbox$")
     public void the_user_has_mail_in_the_mailbox() throws Throwable {
         Mailbox.getMailbox().get().fill(MailExample.reviewExample());
@@ -214,5 +237,19 @@ public class DownloadExercisesSteps {
     
     private void assertContains(String testedString, String expectedContent) {
         assertTrue(testedString.contains(expectedContent));
+=======
+    /**
+     * Close the server, so that the other tests will work.
+     */
+    @After
+    public void closeServer() throws IOException {
+        tempDir.toFile().delete();
+        WireMock.reset();
+        wireMockServer.stop();
+        server.close();
+        serverThread.interrupt();
+        config.writeServerAddress(originalServerAddress);
+        ClientData.clearUserData();
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 }

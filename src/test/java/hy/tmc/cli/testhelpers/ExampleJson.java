@@ -13,10 +13,13 @@ public class ExampleJson {
     public static String failedSubmission = failedSubmission();
     public static String submitResponse = submitResponse();
     public static String noDeadlineCourseExample = noDeadlineCourseExample();
-
     public static String failingCourse = failingCourse();
     public static String failedSubmitResponse = failedSubmitResponse();
     public static String pasteResponse = pasteResponse();
+    public static String feedbackExample = feedbackExample();
+    public static String noFeedbackExample = noFeedbackExample();
+    public static String feedbackCourse = feedbackCourseExample();
+    public static String trivialNoFeedback = trivialNoFeedback();
     public static String checkstyleFailed = checkstyleFailed();
     public static String valgrindFailed = valgrindFailed();
     public static String expiredCourseExample = expiredCourseExample();
@@ -29,9 +32,20 @@ public class ExampleJson {
         return readFile("src/test/resources/failedSubmitResponse.json");
     }
 
-
     private static String successfulSubmission() {
         return readFile("src/test/resources/successfulSubmission.json");
+    }
+
+    private static String feedbackExample() {
+        return readFile("src/test/resources/feedback.json");
+    }
+
+    private static String noFeedbackExample() {
+        return readFile("src/test/resources/noFeedback.json");
+    }
+
+    private static String trivialNoFeedback() {
+        return readFile("src/test/resources/trivialNoFeedback.json");
     }
 
     private static String failedSubmission() {
@@ -54,6 +68,10 @@ public class ExampleJson {
         return readFile("src/test/resources/courses.json");
     }
 
+    private static String feedbackCourseExample() {
+        return readFile("src/test/resources/feedbackCourse.json");
+    }
+
     private static String submitResponse() {
         return readFile("src/test/resources/submitResponse.json");
     }
@@ -73,9 +91,8 @@ public class ExampleJson {
     private static String readFile(final String path) {
         try {
             return FileUtils.readFileToString(new File(path));
-        }
-        catch (IOException ex) {
-            System.out.println("FAIL LOL ");
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
             return "";
         }
     }

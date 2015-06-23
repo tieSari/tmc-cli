@@ -1,19 +1,17 @@
 package hy.tmc.cli.backend.communication;
 
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.SubmissionInterpreter;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mockito;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -22,7 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(UrlCommunicator.class)
 public class SubmissionInterpreterTest {
 
-    SubmissionInterpreter SI;
+    SubmissionInterpreter submissionInterpreter;
     String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
 
     @Before
@@ -31,7 +29,7 @@ public class SubmissionInterpreterTest {
 
         ClientData.setUserData("chang", "paras");
 
-        SI = new SubmissionInterpreter();
+        submissionInterpreter = new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
     }
 
     @After
@@ -74,8 +72,7 @@ public class SubmissionInterpreterTest {
     @Test
     public void passedResultOutputsPassed() throws InterruptedException {
         initSuccessMock();
-
-        String output = SI.resultSummary(url, false);
+        String output = submissionInterpreter.resultSummary(url, false);
         assertTrue(output.contains("passed"));
     }
 
@@ -83,7 +80,7 @@ public class SubmissionInterpreterTest {
     public void failedResultOutputsFailed() throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, false);
+        String output = submissionInterpreter.resultSummary(url, false);
         assertTrue(output.contains("failed"));
 
     }
@@ -93,7 +90,7 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, false);
+        String output = submissionInterpreter.resultSummary(url, false);
         assertTrue(output.contains("et tulosta mitään!"));
     }
 
@@ -102,7 +99,7 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, true);
+        String output = submissionInterpreter.resultSummary(url, true);
         assertTrue(output.contains("PASSED"));
         assertTrue(output.contains("KayttajatunnuksetTest sopivatKayvat"));
 
@@ -113,7 +110,7 @@ public class SubmissionInterpreterTest {
             throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, false);
+        String output = submissionInterpreter.resultSummary(url, false);
         assertFalse(output.contains("PASSED"));
         assertFalse(output.contains("KayttajatunnuksetTest sopivatKayvat"));
 
@@ -123,7 +120,7 @@ public class SubmissionInterpreterTest {
     public void resultWithCheckstyleContainsCheckstyleErrors() throws InterruptedException {
         initFailedCheckstyle();
 
-        String output = SI.resultSummary(url, true);
+        String output = submissionInterpreter.resultSummary(url, true);
         assertTrue(output.contains("checkstyle"));
         assertTrue(output.contains("Class length is 478 lines (max allowed is 300)"));
         assertTrue(output.contains("',' is not followed by whitespace."));
@@ -133,7 +130,7 @@ public class SubmissionInterpreterTest {
     public void resultWithCheckstyleContainsLineNumberMarkings() throws InterruptedException {
         initFailedCheckstyle();
 
-        String output = SI.resultSummary(url, true);
+        String output = submissionInterpreter.resultSummary(url, true);
         assertTrue(output.contains("On line: 421 Column: 24"));
         assertTrue(output.contains("On line: 202 Column: 18"));
     }
@@ -142,7 +139,7 @@ public class SubmissionInterpreterTest {
     public void resultWithNoCheckstyleDoesntContainCheckstyleErrors() throws InterruptedException {
         initSuccessMock();
 
-        String output = SI.resultSummary(url, true);
+        String output = submissionInterpreter.resultSummary(url, true);
         assertFalse(output.contains("checkstyle"));
     }
 
@@ -150,7 +147,7 @@ public class SubmissionInterpreterTest {
     public void resultWithValgridShowsValgrind() throws InterruptedException {
         initFailedValgrind();
 
-        String output = SI.resultSummary(url, true);
+        String output = submissionInterpreter.resultSummary(url, true);
         assertTrue(output.contains(": srunner_run_all (in /tmc/t"));
         assertTrue(output.contains("stack size used in this run was 8388608."));
     }
@@ -159,7 +156,7 @@ public class SubmissionInterpreterTest {
     public void resultWithNoValgrindShowsNoValgrind() throws InterruptedException {
         initFailedMock();
 
-        String output = SI.resultSummary(url, true);
+        String output = submissionInterpreter.resultSummary(url, true);
         assertFalse(output.contains("Access not within mapped region at address"));
 
     }

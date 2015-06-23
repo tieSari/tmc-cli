@@ -1,27 +1,26 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.base.Optional;
 
-public class ReplyToPing extends Command {
+public class ReplyToPing extends Command<String> {
 
     private final String answer = "pong";
-
-    public ReplyToPing(FrontendListener front) {
-        super(front);
-    }
-
-    /**
-     * print pong to the frontend.
-     */
-    @Override
-    protected void functionality() {
-        this.frontend.printLine(answer);
-    }
 
     /**
      * Does nothing, this command requires no data.
      */
     @Override
     public void checkData() {
+    }
+
+    @Override
+    public String call() {
+        return answer;
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        String response = (String) data;
+        return Optional.of(response);
     }
 }

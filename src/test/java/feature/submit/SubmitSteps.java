@@ -23,6 +23,8 @@ import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
+import hy.tmc.cli.testhelpers.Wiremocker;
+import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -44,6 +46,7 @@ public class SubmitSteps {
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
+    private String submitCommand;
 
     /**
      * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
@@ -59,6 +62,7 @@ public class SubmitSteps {
         serverThread.start();
         testClient = new TestClient(port);
 
+<<<<<<< HEAD
         TmcServiceScheduler.disablePolling();
         Mailbox.create();
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());
@@ -137,11 +141,19 @@ public class SubmitSteps {
                                         .withBody(returnBody)
                         )
         );
+=======
+        Wiremocker mocker = new Wiremocker();
+        wireMockServer = mocker.wiremockSubmitPaths();
+        mocker.wireMockSuccesfulSubmit(wireMockServer);
+        mocker.wireMockExpiredSubmit(wireMockServer);
+        mocker.wiremockFailingSubmit(wireMockServer);
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
+<<<<<<< HEAD
         checkForMessages();
     }
 
@@ -157,30 +169,49 @@ public class SubmitSteps {
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
         checkForMessages();
+=======
+        Thread.sleep(300);
     }
 
-    @When("^user gives command submit with expired path \"(.*?)\" and exercise \"(.*?)\"$")
+    @When("^user gives command submit with path \"(.*?)\" and exercise \"(.*?)\"$")
+    public void user_gives_command_submit_with_path_and_exercise(String path, String exercise) throws Throwable {
+        submitCommand = "submit path " + System.getProperty("user.dir") + path + File.separator + exercise;
+    }
+    
+    @When("^flag \"(.*?)\"$")
+    public void flag(String flag) throws Throwable {
+        this.submitCommand += " " + flag;
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
+    }
 
-    public void user_gives_command_submit_with_expired_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
+    @When("^user executes the command$")
+    public void user_executes_the_command() throws Throwable {
         testClient.init();
+<<<<<<< HEAD
         String submitCommand = "submit path ";
         String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
         final String message = submitCommand + submitPath;
         testClient.sendMessage(message);
         checkForMessages();
+=======
+        testClient.sendMessage(submitCommand);
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     @Then("^user will see all test passing$")
     public void user_will_see_all_test_passing() throws Throwable {
-        String result = testClient.reply();
+        final String result = testClient.reply();
         assertTrue(result.contains("All tests passed"));
     }
 
+<<<<<<< HEAD
     @Then("^user will see the some test passing$")
     public void user_will_see_the_some_test_passing() throws Throwable {
         final String result = testClient.reply().toLowerCase();
         assertTrue(result.contains("some tests failed"));
     }
+=======
+>>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 
     @Then("^user will see a message which tells that exercise is expired\\.$")
     public void user_will_see_a_message_which_tells_that_exercise_is_expired() throws Throwable {
