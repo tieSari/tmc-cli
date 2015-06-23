@@ -1,5 +1,6 @@
 package feature.runtests;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -10,11 +11,12 @@ import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.FrontendStub;
+import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 
 public class TmcTestsSteps {
 
@@ -77,16 +79,40 @@ public class TmcTestsSteps {
     @Then("^the user sees both passed and failed tests$")
     public void theUserSeesBothPassedAndFailedTests() {
         String output = front.getMostRecentLine();
-        System.out.println("Output: " + output);
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
-
     }
-    
+
+    @Given("^the user has mail in the mailbox and exercise path is \"(.*?)\"$")
+    public void the_user_has_mail_in_the_mailbox_and_exercise_path_is(String path) throws Throwable {
+        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
+        testRunner = new RunTests(front);
+        testRunner.setParameter("path", path);
+    }
+
+    @Then("^user will see the new mail$")
+    public void user_will_see_the_new_mail() throws Throwable {
+        String output = front.getMostRecentLine();
+        assertTrue(output.contains("Bossman Samu"));
+    }
+
+    @Given("^polling for reviews is not in progress and exercise path is \"(.*?)\"$")
+    public void polling_for_reviews_is_not_in_progress_and_exercise_path_is(String path) throws Throwable {
+        testRunner = new RunTests(front);
+        testRunner.setParameter("path", path);
+        assertFalse(TmcServiceScheduler.isRunning());
+    }
+
+    @Then("^the polling will be started$")
+    public void the_polling_will_be_started() throws Throwable {
+        assertTrue(TmcServiceScheduler.isRunning());
+    }
+
     @After
     public void clean() throws InterruptedException {
         //Thread.sleep(5000);
         Mailbox.destroy();
+        TmcServiceScheduler.getScheduler().stop();
         ClientData.clearUserData();
     }
 }

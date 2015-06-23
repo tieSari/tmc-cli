@@ -18,11 +18,11 @@ Feature: Test command
 
 
     Scenario: runtests will show mail in the mailbox
-        Given the user has mail in the mailbox
+        Given the user has mail in the mailbox and exercise path is "testResources/successExercise/viikko1/Viikko1_001.Nimi"
         When the user runs the tests
         Then user will see the new mail
 
     Scenario: runtests will start the polling
-        Given polling for reviews is not in progress
+        Given polling for reviews is not in progress and exercise path is "testResources/successExercise/viikko1/Viikko1_001.Nimi"
         When the user runs the tests
         Then the polling will be started

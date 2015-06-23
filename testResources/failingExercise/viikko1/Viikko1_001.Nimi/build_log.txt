@@ -42,12 +42,12 @@
 init:
 
 -deps-jar-init:
-   [delete] Deleting: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+   [delete] Deleting: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
 
 deps-jar:
 
 -warn-already-built-jar:
-[propertyfile] Updating property file: /media/ExternalSD/Other/OhTu/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
+[propertyfile] Updating property file: /home/samutamm/Komentorivireeni/Ohtuprojekti/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/built-jar.properties
 
 -check-automatic-build:
 
@@ -64,9 +64,6 @@ deps-jar:
 -compile-depend:
 
 -do-compile:
-    [javac] Compiling 1 source file to /media/ExternalSD/Other/OhTu/tmc-cli/testResources/failingExercise/viikko1/Viikko1_001.Nimi/build/classes
-    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
-    [javac] 1 warning
 
 -post-compile:
 
@@ -85,4 +82,4 @@ compile:
 compile-test:
 
 BUILD SUCCESSFUL
-Total time: 1 second
+Total time: 0 seconds
