@@ -62,6 +62,7 @@ public class SocketRunnable implements Runnable {
             return null;
         }
         try {
+            
             return core.getCommand(input);
         }
         catch (ProtocolException ex) {
