@@ -24,7 +24,7 @@ public class TmcJsonParser {
     /**
      * Get JSON-data from url.
      *
-     * @param url url from which the object data is fetched
+     * @param url from which the object data is fetched
      * @return JSON-object
      */
     private static JsonObject getJsonFrom(String url) {
@@ -34,45 +34,6 @@ public class TmcJsonParser {
         String data = httpResult.getData();
         final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         return json;
-    }
-
-    /**
-     * Get the names of all courses on the server specified by ServerData.
-     *
-     * @return String containing all course names separated by newlines
-     */
-    public static String getCourseNames() {
-        List<Course> courses = getCourses();
-        return getCourseNames(courses);
-
-    }
-
-    public static String getCourseNames(List<Course> courses) {
-        StringBuilder result = new StringBuilder();
-        for (Course course : courses) {
-            String name = course.getName();
-            result = addSpaces(result, name);
-            result.append(name).append(", id:")
-                    .append(course.getId());
-            result.append("\n");
-        }
-
-        return result.toString();
-    }
-
-    /**
-     * Add
-     *
-     * @param result
-     * @param name
-     * @return
-     */
-    public static StringBuilder addSpaces(StringBuilder result, String name) {
-        int spaces = 50 - name.length();
-        for (int i = 0; i < spaces; i++) {
-            result.append(" ");
-        }
-        return result;
     }
 
     /**

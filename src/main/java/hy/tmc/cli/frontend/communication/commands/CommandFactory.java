@@ -138,13 +138,4 @@ public class CommandFactory {
     public static Command paste() {
         return new Paste();
     }
-
-    /**
-     * Takes the command map and returns a set of command names.
-     *
-     * @return a set of all available command names.
-     */
-    public static Set<String> allCommandNames() {
-        return createCommandMap().keySet();
-    }
 }

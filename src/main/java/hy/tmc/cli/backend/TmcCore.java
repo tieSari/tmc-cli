@@ -10,6 +10,7 @@ import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
+import hy.tmc.cli.frontend.communication.commands.StopProcess;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
 import java.net.URI;
@@ -202,19 +203,6 @@ public class TmcCore {
         ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) runCommand("paste path " + path);
         return stringListenableFuture;
     }
-    
-    
-    /**
-     * Destroys all commands in thread pool. Waits 3 seconds for peaceful termination.
-     * 
-     * @return true or false for success or failure
-     * @throws Exception if something went wrong during stopping 
-     */
-    public boolean stopProcess() throws Exception {
-        StopProcess stopper = new StopProcess(threadPool);
-        return stopper.call();
-    }
-    
 
     /**
      * Parses the input String for command syntax and submits the corresponding Command object into the thread pool.
