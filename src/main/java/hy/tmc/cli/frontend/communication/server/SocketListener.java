@@ -36,7 +36,17 @@ public class SocketListener implements Runnable {
         catch (InterruptedException | ExecutionException ex) {
             System.err.println(Arrays.toString(ex.getStackTrace()));
             writeToOutput(ex.getCause().getMessage());
+            printLog(ex);
         }
+    }
+    
+     /**
+     * printLog prints exception to scripts/log.txt
+     *
+     * @param ex exception which can be any exception
+     */
+    private void printLog(Exception ex) {
+        System.err.println(ex.getMessage() + "\n" + Arrays.toString(ex.getCause().getStackTrace()) + "\n" +  Arrays.toString(ex.getStackTrace()));
     }
 
     private void writeToOutput(final String commandOutput) {
