@@ -27,7 +27,7 @@ public class SocketRunnableTest {
         serverSocket = new ServerSocket(0);
         testClient = new TestClient(serverSocket.getLocalPort());
         socket = serverSocket.accept();
-        socketRunnable = new SocketRunnable(socket, tmcCore);
+        socketRunnable = new SocketRunnable(socket, tmcCore, null);
     }
 
     @After
@@ -74,7 +74,7 @@ public class SocketRunnableTest {
     public void whenSocketIsClosedRunCommmandIsNotInvoked() throws IOException, ProtocolException {
         socket = new Socket();
         socket.close();
-        socketRunnable = new SocketRunnable(socket, tmcCore);
+        socketRunnable = new SocketRunnable(socket, tmcCore, null);
         
         testClient.sendMessage("help");
         socketRunnable.run();

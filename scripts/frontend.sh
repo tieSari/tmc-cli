@@ -144,12 +144,12 @@ function send_command_wait_output () {
 control_c()
 # run if user hits control-c
 {
-  echo -en "\Cancelling\n"
+  echo "Cancelling"
+  send_command "stopProcess"
   exit $?
 }
 
-
-# catch crtl_c and run function control_c if user hits ctrl-c
+# catch ^C and run function control_c if user hits ^C
 trap control_c SIGINT
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

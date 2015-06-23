@@ -1,35 +1,40 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.frontend.FrontendListener;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.util.concurrent.TimeUnit;
 
+public class StopProcess extends Command<Boolean> {
 
-public class StopProcess extends Command<String> {
+    private ListeningExecutorService threadPool;
 
-    /**
-     * Exit java virtual machine
-     */
-    protected Optional<String> functionality() {
-        System.exit(0);
-        return Optional.absent();
+    public StopProcess(ListeningExecutorService threadPool) {
+        this.threadPool = threadPool;
     }
 
-    /**
-     * Does nothing, this command does not require data.
-     * @throws ProtocolException 
-     */
     @Override
     public void checkData() throws ProtocolException {
     }
 
-    @Override
-    public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ListeningExecutorService getThreadPool() {
+        return threadPool;
     }
 
     @Override
-    public String call() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Optional<String> parseData(Object data) {
+        Boolean result = (Boolean) data;
+        if (result) {
+            return Optional.of("Processes killed.");
+        }
+        return Optional.of("Failed to kill processes.");
+    }
+
+    @Override
+    public Boolean call() throws Exception {
+        threadPool.shutdown();
+        threadPool.awaitTermination(3, TimeUnit.SECONDS);
+        threadPool.shutdownNow();
+        return threadPool.isShutdown();
     }
 }

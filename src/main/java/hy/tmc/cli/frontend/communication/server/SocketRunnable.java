@@ -5,7 +5,6 @@ import hy.tmc.cli.backend.TmcCore;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
@@ -13,10 +12,12 @@ public class SocketRunnable implements Runnable {
 
     protected Socket socket;
     private TmcCore core;
+    private Server server;
 
-    public SocketRunnable(Socket clientSocket, TmcCore core) {
+    public SocketRunnable(Socket clientSocket, TmcCore core, Server server) {
         this.socket = clientSocket;
         this.core = core;
+        this.server = server;
     }
 
     /**
@@ -31,19 +32,20 @@ public class SocketRunnable implements Runnable {
                 DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 handleInput(inputReader, outputStream);
             }
-        } catch (IOException ex) {
+        }
+        catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
     }
-    
+
     /**
-     * Finds command-future and attach listener to it.
+     * Finds command-future and attaches listener to it.
      *
      * @param inputReader
      * @param outputStream
      */
-    private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException {
+    private void handleInput(BufferedReader inputReader, DataOutputStream outputStream) throws Exception {
+
         Command command = parseCommand(inputReader, outputStream);
         final ListenableFuture<?> commandFuture = core.submitTask(command);
         if (commandFuture != null) {
@@ -56,12 +58,16 @@ public class SocketRunnable implements Runnable {
      * Reads input and starts corresponding command-object.
      */
     private Command parseCommand(BufferedReader inputReader, DataOutputStream stream)
-            throws IOException {
+            throws Exception {
         String input = inputReader.readLine();
         if (input == null) {
             return null;
         }
         try {
+            if (input.trim().equals("stopProcess")) {
+                server.killCommands();
+                return null;
+            }
             return core.getCommand(input);
         }
         catch (ProtocolException ex) {

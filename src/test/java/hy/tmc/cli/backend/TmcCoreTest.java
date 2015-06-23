@@ -2,6 +2,7 @@ package hy.tmc.cli.backend;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
 import hy.tmc.cli.domain.submission.SubmissionResult;
@@ -29,9 +30,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -86,7 +91,7 @@ public class TmcCoreTest {
         when(fakeCommandMap.get("setServer").call()).thenReturn(true);
         assertEquals(Boolean.class, tmcCore.selectServer("uusServu").get().getClass());
     }
-    
+
     @Test(expected = ExecutionException.class)
     public void selectServerFailswithInvalidServeraddress() throws ProtocolException, InterruptedException, ExecutionException, Exception {
         when(fakeCommandMap.get("setServer").call()).thenThrow(new ProtocolException("ei kelpaaa"));
@@ -145,27 +150,41 @@ public class TmcCoreTest {
         when(fakeCommandMap.get("downloadExercises").call()).thenThrow(new ProtocolException("Bad path"));
         try {
             tmcCore.downloadExercises("Really/Solid/path/with/no/exercise", "2").get();
-        } catch (ExecutionException e) {
+        }
+        catch (ExecutionException e) {
             assertEquals("Bad path", e.getCause().getMessage());
         }
     }
+
     @Test
     public void submitThrowsCorrectExceptionWithBadPath() throws Exception {
         when(fakeCommandMap.get("submit").call()).thenThrow(new ProtocolException("Bad path"));
         try {
             tmcCore.submit("Really/Solid/path").get();
-        } catch (ExecutionException e) {
+        }
+        catch (ExecutionException e) {
             assertEquals("Bad path", e.getCause().getMessage());
         }
     }
+
     @Test
     public void downloadExercisesThrowsCorrectExceptionWithBadCourseID() throws Exception {
         when(fakeCommandMap.get("downloadExercises").call()).thenThrow(new ProtocolException("Bad course ID"));
         try {
             tmcCore.downloadExercises("Really/Solid/path", "jeahh").get();
-        } catch (ExecutionException e) {
+        }
+        catch (ExecutionException e) {
             assertEquals("Bad course ID", e.getCause().getMessage());
         }
     }
-    
+
+    @Test
+    public void stopProcessCallsPoolMethods() throws Exception {
+        ListeningExecutorService threadPool = mock(ListeningExecutorService.class);
+        TmcCore tmcCore = new TmcCore(threadPool);
+        tmcCore.stopProcess();
+        verify(threadPool).awaitTermination(anyInt(), any(TimeUnit.class));
+        verify(threadPool).shutdown();
+    }
+
 }

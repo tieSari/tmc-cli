@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Server implements FrontendListener, Runnable {
 
@@ -107,7 +108,7 @@ public class Server implements FrontendListener, Runnable {
             try {
                 if (!serverSocket.isClosed()) {
                     Socket clientSocket = serverSocket.accept();
-                    socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore));
+                    socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore, this));
                 }
             }
             catch (IOException e) {
@@ -125,6 +126,15 @@ public class Server implements FrontendListener, Runnable {
         isRunning = false;
         serverSocket.close();
         socketThreadPool.shutdown();
+    }
+    
+    
+    /**
+     * Gives a 3-second grace period and then shuts down the sockets and commands. 
+     */
+    public void killCommands() throws Exception {
+        socketThreadPool.shutdownNow();
+        tmcCore.stopProcess();
     }
 
     @Override
