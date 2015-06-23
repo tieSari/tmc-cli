@@ -107,8 +107,7 @@ public class Server implements FrontendListener, Runnable {
                     Socket clientSocket = serverSocket.accept();
                     socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore));
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -194,8 +193,7 @@ public class Server implements FrontendListener, Runnable {
         JsonObject req = getAnswersJson();
         try {
             UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
         }
     }
