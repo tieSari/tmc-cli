@@ -40,28 +40,6 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesCourseNamesCorrectly() {
-        new TmcJsonParser();
-        String courses = TmcJsonParser.getCourseNames();
-        assertTrue(courses.contains("s2014-tira"));
-        assertTrue(courses.contains("k2015-ohpe"));
-        assertTrue(courses.contains("checkstyle-demo"));
-        assertTrue(courses.contains("2014-mooc-no-deadline"));
-        assertTrue(courses.contains("c-demo"));
-    }
-
-    @Test
-    public void coursesDontContainWeirdNames() {
-        String courses = TmcJsonParser.getCourseNames();
-        assertFalse(courses.contains("Chang"));
-        assertFalse(courses.contains("Ilari"));
-        assertFalse(courses.contains("Pihla"));
-        assertFalse(courses.contains("Kristian"));
-        assertFalse(courses.contains("Samu"));
-        assertFalse(courses.contains("Jani"));
-    }
-
-    @Test
     public void getsExercisesCorrectlyFromCourseJson() {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito

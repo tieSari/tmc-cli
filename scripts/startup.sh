@@ -17,6 +17,4 @@ if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
   eval "(cd $CLIENTPATH && nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null) &"
   PID=$!
   echo $PID > $CONFIGPATH
-  echo "Server started"
-  sleep 1
 fi
