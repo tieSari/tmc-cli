@@ -27,8 +27,6 @@ public class CommandFactory {
         commandsByName.put("submit", submit());
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
-        commandsByName.put("stopProcess", stopProcess());
-        //commandsByName.put("answerQuestion", answerQuestion());
 
         return commandsByName;
     }
@@ -130,16 +128,6 @@ public class CommandFactory {
      */
     public static Command submit() {
         return new Submit();
-    }
-
-    /**
-     * Stops the whole process and exits java virtual machine.
-     *
-     * @param that the command will use
-     * @return StopProcess object
-     */
-    private static Command stopProcess() {
-        return new StopProcess();
     }
 
     /**

@@ -202,12 +202,33 @@ public class TmcCore {
         ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) runCommand("paste path " + path);
         return stringListenableFuture;
     }
+    
+    
+    /**
+     * Destroys all commands in thread pool. Waits 3 seconds for peaceful termination.
+     * 
+     * @return true or false for success or failure
+     * @throws Exception if something went wrong during stopping 
+     */
+    public boolean stopProcess() throws Exception {
+        StopProcess stopper = new StopProcess(threadPool);
+        return stopper.call();
+    }
+    
 
+    /**
+     * Parses the input String for command syntax and submits the corresponding Command object into the thread pool.
+     * 
+     * @param inputLine String with command name and params
+     * @return A future object of any type
+     * @throws ProtocolException if command not called properly
+     */
+    
     public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
         checkParameters(inputLine);
         @SuppressWarnings("unchecked")
-        ListenableFuture submit = threadPool.submit(parser.getCommand(inputLine));
-        return submit;
+        ListenableFuture result = threadPool.submit(parser.getCommand(inputLine));
+        return result;
     }
 
     public Command getCommand(String inputLine) throws ProtocolException {

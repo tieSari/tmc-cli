@@ -3,6 +3,7 @@ package hy.tmc.cli.frontend.communication.commands;
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseDownloader;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
@@ -18,8 +19,8 @@ public class DownloadExercises extends Command<String> {
     }
 
     /**
-     * Checks that command has required parameters courseID is the id of the
-     * course and path is the path of where files are downloaded and extracted.
+     * Checks that command has required parameters courseID is the id of the course and path is the
+     * path of where files are downloaded and extracted.
      *
      * @throws ProtocolException if path isn't supplied
      */
@@ -28,6 +29,9 @@ public class DownloadExercises extends Command<String> {
         checkCourseId();
         if (!this.data.containsKey("path")) {
             throw new ProtocolException("Path required");
+        }
+        if (!ClientData.userDataExists()) {
+            throw new ProtocolException("You need to login first.");
         }
     }
 
@@ -42,7 +46,8 @@ public class DownloadExercises extends Command<String> {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             throw new ProtocolException("Given course id is not a number");
         }
     }
