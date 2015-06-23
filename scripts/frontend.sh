@@ -81,6 +81,10 @@ function command_download () {
   send_command "downloadExercises path `pwd` courseID $1"
 }
 
+function command_mail() {
+ send_command "getMail path `pwd`"
+}
+
 function command_paste () {
   send_command "paste path `pwd`"
 }
@@ -164,5 +168,6 @@ case "$1" in
     "test") command_test $2;;
     "paste") command_paste $2;;
     "listExercises") command_listExercises;;
+    "mail") command_mail;;
     *) command_default $@;;
 esac
