@@ -41,7 +41,7 @@ public class SocketListener implements Runnable {
     }
     
      /**
-     * printLog prints exception to log
+     * printLog prints exception to scripts/log.txt
      *
      * @param ex exception which can be any exception
      */
