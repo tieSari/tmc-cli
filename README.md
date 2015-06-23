@@ -19,13 +19,9 @@ Current core functionality includes:
 
 ## Usage
 
-1. Start by logging in.
+1. Start by logging in. ![login animation](docs/gifs/login.gif)
 
-![asd](docs/gifs/login.gif)
-
-2. If you don't know the id of the course you want to download, you can list courses with listCourses command.
-
-![asd](docs/gifs/listcourses.gif)
+2. If you don't know the id of the course you want to download, you can list courses with tmc listCourses command. ![asd](docs/gifs/listcourses.gif)
 
 3. You can download a course to your current folder by typing tmc download <course id>
 
