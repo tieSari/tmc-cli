@@ -82,4 +82,4 @@ compile:
 compile-test:
 
 BUILD SUCCESSFUL
-Total time: 0 seconds
+Total time: 1 second
