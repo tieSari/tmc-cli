@@ -21,7 +21,7 @@ Current core functionality includes:
 
 1. Start by logging in. ![login animation](docs/gifs/login.gif)
 
-2. If you don't know the id of the course you want to download, you can list courses with tmc listCourses command. ![listCourses animation](docs/gifs/listcourses.gif)
+2. Downloading exercises requires course's id in TMC server. If you don't know the id of the course you want to download, you can list courses with tmc listCourses command. ![listCourses animation](docs/gifs/listcourses.gif)
 
 3. You can download a course to your current folder by typing tmc download <course id>
 
