@@ -98,6 +98,7 @@ public class TmcTestsSteps {
 
     @Given("^polling for reviews is not in progress and exercise path is \"(.*?)\"$")
     public void polling_for_reviews_is_not_in_progress_and_exercise_path_is(String path) throws Throwable {
+        TmcServiceScheduler.enablePolling();
         testRunner = new RunTests(front);
         testRunner.setParameter("path", path);
         assertFalse(TmcServiceScheduler.isRunning());
@@ -106,11 +107,11 @@ public class TmcTestsSteps {
     @Then("^the polling will be started$")
     public void the_polling_will_be_started() throws Throwable {
         assertTrue(TmcServiceScheduler.isRunning());
+        TmcServiceScheduler.disablePolling();
     }
 
     @After
     public void clean() throws InterruptedException {
-        //Thread.sleep(5000);
         Mailbox.destroy();
         TmcServiceScheduler.getScheduler().stop();
         ClientData.clearUserData();
