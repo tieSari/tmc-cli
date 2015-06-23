@@ -9,10 +9,12 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 CONFIGPATH=$DIR
 CONFIGPATH+="/config"
+LOGPATH=$DIR
+LOGPATH+="/log.txt"
 
 CLIENTPATH=$DIR
 if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
-  eval "(cd $CLIENTPATH && nohup java -jar tmc-client.jar &> /dev/null) &"
+  eval "(cd $CLIENTPATH && nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null) &"
   PID=$!
   echo $PID > $CONFIGPATH
   echo "Server started"
