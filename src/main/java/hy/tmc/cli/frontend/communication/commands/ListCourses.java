@@ -25,13 +25,16 @@ public class ListCourses extends Command<List<Course>> {
     public Optional<String> parseData(Object data) {
         @SuppressWarnings("unchecked")
         List<Course> courses = (List<Course>) data;
-
-        return Optional.of(TmcJsonParser.getCourseNames(courses));
+        String courselist = TmcJsonParser.getCourseNames(courses);
+        if(courselist == null){
+            return Optional.absent();
+        } else {
+            return Optional.of(courselist);
+        }
     }
 
     @Override
     public List<Course> call() throws Exception {
-        checkData();
         return TmcJsonParser.getCourses();
     }
 }

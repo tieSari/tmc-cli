@@ -20,7 +20,6 @@ public class Help extends Command<String> {
 
     @Override
     public String call() {
-        checkData();
         String commands = "Available commands: \n";
         commands += Joiner.on(", ").join(CommandFactory.allCommandNames());
         return commands;
