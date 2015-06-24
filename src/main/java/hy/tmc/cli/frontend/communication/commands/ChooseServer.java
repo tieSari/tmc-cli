@@ -51,6 +51,7 @@ public class ChooseServer extends Command<Boolean> {
 
     @Override
     public Boolean call() throws ProtocolException {
+        checkData();
 
         String address = data.get("tmc-server");
         try {

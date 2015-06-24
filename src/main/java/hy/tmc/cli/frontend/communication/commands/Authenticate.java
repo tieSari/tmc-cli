@@ -42,6 +42,7 @@ public class Authenticate extends Command<Boolean> {
     
     @Override
     public Boolean call() throws ProtocolException {
+        checkData();
         if (Integer.toString(makeRequest()).matches(httpOk)) {
             ClientData.setUserData((String)data.get("username"), (String)data.get("password"));
             return true;

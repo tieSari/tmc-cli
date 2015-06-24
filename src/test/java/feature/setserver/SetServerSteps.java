@@ -44,7 +44,6 @@ public class SetServerSteps {
     public void serverChanged(String serverName) throws Exception {
         try {
             command.setParameter("tmc-server", serverName);
-            command.checkData();
             output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
         }
@@ -56,7 +55,6 @@ public class SetServerSteps {
     @When ("^the user uses the command without parameters$")
     public void noParamsGiven() throws Exception {
         try {
-            command.checkData();
             output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
             return;
