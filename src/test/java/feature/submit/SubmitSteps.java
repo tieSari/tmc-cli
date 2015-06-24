@@ -92,6 +92,7 @@ public class SubmitSteps {
         testClient.init();
         checkForMessages();
         testClient.sendMessage(submitCommand);
+        checkForMessages();
     }
 
     @Then("^user will see all test passing$")

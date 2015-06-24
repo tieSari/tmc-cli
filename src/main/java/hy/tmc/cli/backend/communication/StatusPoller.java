@@ -35,7 +35,7 @@ public class StatusPoller extends AbstractScheduledService {
 
         Optional<List<Review>> reviews = checkReviews();
         if (reviews.isPresent()) {
-            Mailbox.emptyMailbox();
+            Mailbox.emptyMailbox(); // TODO poll only new mails without clearing all
             Mailbox.getMailbox().get().fill(reviews.get());
         }
     }
