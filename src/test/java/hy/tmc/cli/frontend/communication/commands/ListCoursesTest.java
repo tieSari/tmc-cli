@@ -1,3 +1,4 @@
+
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.HttpResult;
