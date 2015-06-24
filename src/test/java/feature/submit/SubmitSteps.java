@@ -2,11 +2,6 @@
 package feature.submit;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import cucumber.api.PendingException;
 import cucumber.api.java.After;
@@ -19,7 +14,6 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
@@ -29,7 +23,6 @@ import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 
@@ -62,12 +55,15 @@ public class SubmitSteps {
         serverThread.start();
         testClient = new TestClient(port);
 
-<<<<<<< HEAD
         TmcServiceScheduler.disablePolling();
         Mailbox.create();
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());
 
-        startWireMock();
+        Wiremocker mocker = new Wiremocker();
+        wireMockServer = mocker.wiremockSubmitPaths();
+        mocker.wireMockSuccesfulSubmit(wireMockServer);
+        mocker.wireMockExpiredSubmit(wireMockServer);
+        mocker.wiremockFailingSubmit(wireMockServer);
     }
 
     /**
@@ -84,76 +80,9 @@ public class SubmitSteps {
         ClientData.setProjectRootFinder(null);
     }
 
-    /*
-     * Starts wiremock and defines routes.
-     */
-    private void startWireMock() {
-        wireMockServer = new WireMockServer();
-        wireMockServer.start();
-
-        wireMockServer.stubFor(get(urlEqualTo("/user"))
-                        .withHeader("Authorization", containing("Basic "))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                        )
-        );
-        wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
-        wireMockSuccesfulScenario();
-        wiremockFailingScenario();
-        wireMockExpiredScenario();
-    }
-
-    private void wiremockFailingScenario() {
-        wiremockGET("/courses/313.json?api_version=7", ExampleJson.failingCourse);
-        wiremockPOST("/exercises/285/submissions.json?api_version=7", ExampleJson.failedSubmitResponse);
-        wiremockGET("/submissions/7777.json?api_version=7", ExampleJson.failedSubmission);
-    }
-
-    private void wireMockSuccesfulScenario() {
-        wiremockGET("/courses/3.json?api_version=7", ExampleJson.courseExample);
-        wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.submitResponse);
-        wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
-    }
-
-    private void wireMockExpiredScenario() {
-        wiremockGET("/courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
-    }
-
-    /*
-     * When httpGet-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-     */
-    private void wiremockGET(final String urlToMock, final String returnBody) {
-        wireMockServer.stubFor(get(urlEqualTo(urlToMock))
-                        .willReturn(aResponse()
-                                        .withBody(returnBody)
-                        )
-        );
-    }
-    
-    /*
-    * When httpPost-request is sent to http://127.0.0.1:8080/ + urlToMock, wiremock returns returnBody
-    */
-
-    private void wiremockPOST(final String urlToMock, final String returnBody) {
-        wireMockServer.stubFor(post(urlEqualTo(urlToMock))
-                        .willReturn(aResponse()
-                                        .withBody(returnBody)
-                        )
-        );
-=======
-        Wiremocker mocker = new Wiremocker();
-        wireMockServer = mocker.wiremockSubmitPaths();
-        mocker.wireMockSuccesfulSubmit(wireMockServer);
-        mocker.wireMockExpiredSubmit(wireMockServer);
-        mocker.wiremockFailingSubmit(wireMockServer);
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
-    }
-
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
-<<<<<<< HEAD
         checkForMessages();
     }
 
@@ -163,39 +92,19 @@ public class SubmitSteps {
 
     @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
     public void user_gives_command_submit_with_valid_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
-        testClient.init();
-        String submitCommand = "submit path ";
-        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
-        final String message = submitCommand + submitPath;
-        testClient.sendMessage(message);
-        checkForMessages();
-=======
-        Thread.sleep(300);
-    }
-
-    @When("^user gives command submit with path \"(.*?)\" and exercise \"(.*?)\"$")
-    public void user_gives_command_submit_with_path_and_exercise(String path, String exercise) throws Throwable {
-        submitCommand = "submit path " + System.getProperty("user.dir") + path + File.separator + exercise;
+        submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
     }
     
     @When("^flag \"(.*?)\"$")
     public void flag(String flag) throws Throwable {
         this.submitCommand += " " + flag;
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     @When("^user executes the command$")
     public void user_executes_the_command() throws Throwable {
         testClient.init();
-<<<<<<< HEAD
-        String submitCommand = "submit path ";
-        String submitPath = System.getProperty("user.dir") + pathFromProjectRoot + "/" + exercise;
-        final String message = submitCommand + submitPath;
-        testClient.sendMessage(message);
         checkForMessages();
-=======
         testClient.sendMessage(submitCommand);
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     @Then("^user will see all test passing$")
@@ -204,14 +113,11 @@ public class SubmitSteps {
         assertTrue(result.contains("All tests passed"));
     }
 
-<<<<<<< HEAD
     @Then("^user will see the some test passing$")
     public void user_will_see_the_some_test_passing() throws Throwable {
         final String result = testClient.reply().toLowerCase();
         assertTrue(result.contains("some tests failed"));
     }
-=======
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 
     @Then("^user will see a message which tells that exercise is expired\\.$")
     public void user_will_see_a_message_which_tells_that_exercise_is_expired() throws Throwable {
@@ -240,5 +146,10 @@ public class SubmitSteps {
     @Then("^the polling will be started$")
     public void the_polling_will_be_started() throws Throwable {
         assertTrue(TmcServiceScheduler.isRunning());
+    }
+
+    @When("^user gives command submit with path \"([^\"]*)\" and exercise \"([^\"]*)\"$")
+    public void user_gives_command_submit_with_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
+        submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
     }
 }

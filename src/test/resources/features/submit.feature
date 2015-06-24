@@ -23,16 +23,19 @@ Feature: Submit command
     Scenario: submit works from exercise folder
       Given user has logged in with username "test" and password "1234"
       When user gives command submit with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
+      And user executes the command
       Then user will see all test passing
 
     Scenario: submit will show mail in the mailbox
       Given user has logged in with username "test" and password "1234"
-      Given the user has mail in the mailbox
+      And the user has mail in the mailbox
       When user gives command submit with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
+      And user executes the command
       Then user will see the new mail
 
     Scenario: submit will start the polling
       Given user has logged in with username "test" and password "1234"
-      Given polling for reviews is not in progress
+      And polling for reviews is not in progress
       When user gives command submit with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
+      And user executes the command
       Then the polling will be started

@@ -14,11 +14,8 @@ public class DownloadExercises extends Command<String> {
      * ExerciseDownloader that is used for downloading.
      */
     private ExerciseDownloader exerciseDownloader;
-    private MailChecker mail;
-    private Course current;
 
     public DownloadExercises() {
-        this.mail = new MailChecker();
         this.exerciseDownloader = new ExerciseDownloader();
     }
 
