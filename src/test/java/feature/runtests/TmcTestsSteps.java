@@ -10,22 +10,13 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import hy.tmc.cli.frontend.communication.commands.RunTests;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
-
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 
 public class TmcTestsSteps {
@@ -58,7 +49,7 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees that all tests have passed\\.$")
     public void theUserSeesAllTestsPassing() {
-        assertEquals("\u001B[32mAll tests passed.\u001B[0m You can now submit", output);
+        assertTrue(output.contains("\u001B[32mAll tests passed.\u001B[0m You can now submit"));
     }
 
     /**
@@ -66,7 +57,7 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees which tests have failed$")
     public void theUserSeesWhichTestsHaveFailed() {
-        assertEquals("Some tests failed:", output.substring(0, 18));
+        assertTrue(output.contains("Some tests failed:"));
         assertTrue(output.contains("\u001B[31m1 tests failed:\n"));
         assertTrue(output.contains("  NimiTest test failed: Et tulostanut mitään!"));
     }
@@ -89,7 +80,6 @@ public class TmcTestsSteps {
 
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
-        String output = testRunner.parseData(testRunner.call()).get();
         assertTrue(output.contains("Bossman Samu"));
     }
 
@@ -114,7 +104,7 @@ public class TmcTestsSteps {
 
     @Then("^the user sees that all tests have passed formatted with vim formatter\\.$")
     public void the_user_sees_that_all_tests_have_passed_formatted_with_vim_formatter() throws Throwable {
-        assertEquals("All tests passed. You can now submit", output);
+        assertTrue(output.contains("All tests passed. You can now submit"));
     }
 
     @After
