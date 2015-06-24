@@ -94,8 +94,7 @@ public class RunTestsTest {
         File file = new File(filepath);
         run.setParameter("path", file.getAbsolutePath());
 
-        String result = null;
-        result = run.parseData(run.call()).get();
+        String result = run.parseData(run.call()).get();
 
         assertTrue(result.contains("Some tests failed:"));
         assertTrue(result.contains("No tests passed"));

@@ -189,6 +189,7 @@ public class DownloadExercisesSteps {
      */
     @After
     public void closeServer() throws IOException, InterruptedException {
+        Mailbox.destroy();
         tempDir.toFile().delete();
         WireMock.reset();
         wireMockServer.stop();

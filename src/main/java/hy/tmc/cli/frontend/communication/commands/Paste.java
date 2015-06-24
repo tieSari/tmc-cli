@@ -24,11 +24,7 @@ public class Paste extends Command<URI> {
     private MailChecker mail;
 
     public Paste() {
-        submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector()),
-                new Zipper()
-        );
-        mail = new MailChecker();
+        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()),new Zipper()));
     }
 
     /**
@@ -37,8 +33,8 @@ public class Paste extends Command<URI> {
      * @param submitter can inject submitter mock.
      */
     public Paste(CourseSubmitter submitter) {
-        mail = new MailChecker();
         this.submitter = submitter;
+        this.mail = new MailChecker();
     }
 
 

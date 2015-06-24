@@ -66,6 +66,7 @@ public class PasteSteps {
 
     @After
     public void closeAll() throws IOException, InterruptedException {
+        Mailbox.destroy();
         server.close();
         serverThread.interrupt();
         wireMockServer.stop();
@@ -128,7 +129,7 @@ public class PasteSteps {
 
     @Then("^user will see the paste url$")
     public void user_will_see_the_paste_url() throws Throwable {
-        String result = testClient.reply();
+        String result = testClient.getAllFromSocket();
         assertTrue(result.contains("Paste submitted"));
     }
 
@@ -143,6 +144,7 @@ public class PasteSteps {
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
         String fullReply = testClient.getAllFromSocket();
+        System.out.println("fullReply: " + fullReply);
         assertContains(fullReply, "There are 3 unread code reviews");
         assertContains(fullReply, "rainfall reviewed by Bossman Samu");
         assertContains(fullReply, "Keep up the good work.");

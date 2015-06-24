@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import org.junit.Test;
 
@@ -11,10 +12,12 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
+        ClientData.setUserData("mister", "Kristian");
         DownloadExercises de = new DownloadExercises();
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         de.checkData();
+        ClientData.clearUserData();
     }
 
     /**
