@@ -32,11 +32,7 @@ public class DownloadExercises extends Command<String> {
             throw new ProtocolException("Path required");
         }
         if (!ClientData.userDataExists()) {
-<<<<<<< HEAD
-            throw new ProtocolException("Please authorize first.");
-=======
             throw new ProtocolException("You need to login first.");
->>>>>>> 8455d444abaefe7ec9d4ee10e6298a287c2d1b65
         }
     }
 

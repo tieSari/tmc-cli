@@ -27,14 +27,12 @@ public class CommandFactory {
         commandsByName.put("submit", submit());
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
-<<<<<<< HEAD
-        commandsByName.put("stopProcess", stopProcess());
         commandsByName.put("getMail", getMail());
-=======
-
->>>>>>> 8455d444abaefe7ec9d4ee10e6298a287c2d1b65
+        commandsByName.put("stopProcess", stopProcess());
         return commandsByName;
     }
+
+
 
     /**
      * Create Help Command object.
@@ -43,6 +41,14 @@ public class CommandFactory {
      */
     public static Command help() {
         return new Help();
+    }
+
+    /**
+     * Create StopProcess object
+     * @return a stopProcess object
+     */
+    public static Command stopProcess() {
+        return new StopProcess();
     }
 
     /**
@@ -143,7 +149,6 @@ public class CommandFactory {
     public static Command paste() {
         return new Paste();
     }
-<<<<<<< HEAD
     
     public static Command getMail() {
         return new MailChecker();
@@ -157,6 +162,4 @@ public class CommandFactory {
     public static Set<String> allCommandNames() {
         return createCommandMap().keySet();
     }
-=======
->>>>>>> 8455d444abaefe7ec9d4ee10e6298a287c2d1b65
 }
