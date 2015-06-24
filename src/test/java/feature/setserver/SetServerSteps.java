@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -18,9 +17,9 @@ import java.io.IOException;
 public class SetServerSteps {
     
     private ConfigHandler handler;
-    private FrontendStub front;
     private ChooseServer command;
     private String origServer;
+    private String output;
     
     /**
      * Set up confighandler, frontend stub & choose server command.
@@ -28,8 +27,7 @@ public class SetServerSteps {
     @Before
     public void setup() {
         handler = new ConfigHandler("testResources/test.properties");
-        front = new FrontendStub();
-        command = new ChooseServer(handler, front);
+        command = new ChooseServer(handler);
     }
 
     @Given ("^the server is \"(.*)\"$")
@@ -43,10 +41,10 @@ public class SetServerSteps {
      * @param serverName server name
      */
     @When ("^the user changes the server to \"(.*)\"$")
-    public void serverChanged(String serverName) {
+    public void serverChanged(String serverName) throws Exception {
         try {
             command.setParameter("tmc-server", serverName);
-            command.execute();
+            output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
         }
     }
@@ -55,9 +53,9 @@ public class SetServerSteps {
      * User user command without parameters.
      */
     @When ("^the user uses the command without parameters$")
-    public void noParamsGiven() {
+    public void noParamsGiven() throws Exception {
         try {
-            command.execute();
+            output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
             return;
         }

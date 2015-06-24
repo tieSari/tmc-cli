@@ -1,53 +1,60 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
-public class Authenticate extends Command {
+public class Authenticate extends Command<Boolean> {
 
     /**
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
 
-    public Authenticate(FrontendListener front) {
-        super(front);
-    }
-
-    private String returnResponse(int statusCode) {
-        if (Integer.toString(statusCode).matches(httpOk)) {
-            ClientData.setUserData(data.get("username"), data.get("password"));
-            return "Auth successful. Saved userdata in session";
-        }
-        return "Auth unsuccessful. Check your connection and/or credentials";
-    }
-
     @Override
     public final void setParameter(String key, String value) {
-        data.put(key, value);
+        getData().put(key, value);
     }
 
     @Override
     public void checkData() throws ProtocolException {
-        if (!this.data.containsKey("username")) {
+        String username = this.data.get("username");
+        if (username == null || username.isEmpty()) {
             throw new ProtocolException("username must be set!");
         }
-        if (!this.data.containsKey("password")) {
+        String password = this.data.get("password");
+        if (password == null || password.isEmpty()) {
             throw new ProtocolException("password must be set!");
         }
     }
 
-    @Override
-    protected void functionality() {
+    private int makeRequest() {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),
                 auth
         ).getStatusCode();
-        this.frontend.printLine(returnResponse(code));
+        return code;
+    }
+    
+    @Override
+    public Boolean call() throws ProtocolException {
+        checkData();
+        if (Integer.toString(makeRequest()).matches(httpOk)) {
+            ClientData.setUserData((String)data.get("username"), (String)data.get("password"));
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<String> parseData(Object data) {
+        Boolean result = (Boolean) data;
+        if (result) {
+            return Optional.of("Auth successful. Saved userdata in session");
+        }
+        return Optional.of("Auth unsuccessful. Check your connection and/or credentials");
     }
 }

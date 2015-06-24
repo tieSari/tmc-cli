@@ -1,25 +1,18 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 
-public class StopProcess extends Command {
-
-    /**
-     * StopProcess command. 
-     * @param front 
-     */
-    public StopProcess(FrontendListener front) {
-        super(front);
-    }
+public class StopProcess extends Command<String> {
 
     /**
      * Exit java virtual machine
      */
-    @Override
-    protected void functionality() {
+    protected Optional<String> functionality() {
         System.exit(0);
+        return Optional.absent();
     }
 
     /**
@@ -28,6 +21,15 @@ public class StopProcess extends Command {
      */
     @Override
     public void checkData() throws ProtocolException {
-        
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String call() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

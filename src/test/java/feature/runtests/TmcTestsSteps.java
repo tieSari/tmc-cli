@@ -5,35 +5,31 @@ import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 
 public class TmcTestsSteps {
 
     private RunTests testRunner;
-    private FrontendStub front;
-
-    public TmcTestsSteps() {
-        front = new FrontendStub();
-    }
-
+    private String output;
+    
     /**
-     * Create RunTests command and set filepath parameter.
+     * Create RunTests command and set path parameter.
      *
      * @param exerciseDirectory directory path
      */
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
-        testRunner = new RunTests(front);
-        testRunner.setParameter("filepath", exerciseDirectory);
+        testRunner = new RunTests();
+        testRunner.setParameter("path", exerciseDirectory);
     }
 
     @When("^the user runs the tests$")
-    public void theUserRunsTheTests() throws ProtocolException {
-        testRunner.execute();
+    public void theUserRunsTheTests() throws ProtocolException, NoLanguagePluginFoundException {
+        output = testRunner.parseData(testRunner.call()).get();
     }
 
     /**
@@ -41,7 +37,6 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees that all tests have passed\\.$")
     public void theUserSeesAllTestsPassing() {
-        String output = front.getMostRecentLine();
         assertEquals("\u001B[32mAll tests passed.\u001B[0m You can now submit", output);
     }
 
@@ -50,7 +45,6 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees which tests have failed$")
     public void theUserSeesWhichTestsHaveFailed() {
-        String output = front.getMostRecentLine();
         assertEquals("Some tests failed:", output.substring(0, 18));
         assertTrue(output.contains("\u001B[31m1 tests failed:\n"));
         assertTrue(output.contains("  NimiTest test failed: Et tulostanut mitään!"));
@@ -61,10 +55,8 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees both passed and failed tests$")
     public void theUserSeesBothPassedAndFailedTests() {
-        String output = front.getMostRecentLine();
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
-
     }
 
     @Given("^the user gives the vim flag$")
@@ -74,7 +66,6 @@ public class TmcTestsSteps {
 
     @Then("^the user sees that all tests have passed formatted with vim formatter\\.$")
     public void the_user_sees_that_all_tests_have_passed_formatted_with_vim_formatter() throws Throwable {
-        String output = front.getMostRecentLine();
         assertEquals("All tests passed. You can now submit", output);
     }
 }

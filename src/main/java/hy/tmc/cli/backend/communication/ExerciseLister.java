@@ -3,8 +3,12 @@ package hy.tmc.cli.backend.communication;
 import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.ColorFormatter;
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import hy.tmc.cli.frontend.CommandLineColor;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
+import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
@@ -31,45 +35,74 @@ public class ExerciseLister {
     }
 
     /**
-     * Returns a list of exercises of a current directory in which a course exists. Also gives
-     * information about passed exercises
+     * Returns a list of exercises of a current directory in which a course exists.
      *
      * @param path directory path to lookup course from
      * @return String with a list of exercises.
      */
-    public String listExercises(String path) {
+    public List<Exercise> listExercises(String path) throws ProtocolException {
         Optional<Course> course = finder.getCurrentCourse(path);
-        
+
         if (!course.isPresent()) {
-            return "No course found";
+            throw new ProtocolException("No course found");
         }
-        
+
         List<Exercise> exercises = TmcJsonParser.getExercises(course.get());
         if (exercises == null || exercises.isEmpty()) {
-            return "No exercises found";
+            throw new ProtocolException("No exercises found");
         }
 
-        return buildExercisesInfo(exercises);
+        return exercises;
     }
 
-    private String buildExercisesInfo(List<Exercise> exercises) {
+    /**
+     * Builds a printout of the exercises given.
+     *
+     * @param exercises to build info from
+     * @return String containing information
+     */
+    public String buildExercisesInfo(List<Exercise> exercises) {
         StringBuilder builder = new StringBuilder();
 
         for (Exercise exercise : exercises) {
-            builder.append(exercise.getName())
-                    .append(buildSuccessOrFailMessage(exercise))
+            builder.append(buildSuccessOrFailMessage(exercise))
+                    .append(exercise.getName())
                     .append("\n");
+                    
         }
+        builder.append(endSummary(exercises));
         return builder.toString();
     }
 
     private String buildSuccessOrFailMessage(Exercise exercise) {
         if (exercise.isCompleted()) {
-            return ColorFormatter.coloredString(" [x]", CommandLineColor.GREEN);
+            return coloredString("[x] ", CommandLineColor.GREEN);
         } else if (exercise.isAttempted()) {
-            return ColorFormatter.coloredString(" [ ]", CommandLineColor.RED);
+            return coloredString("[ ] ", CommandLineColor.RED);
         } else {
-            return ColorFormatter.coloredString(" [ ]", CommandLineColor.WHITE);
+            return coloredString("[ ] ", CommandLineColor.WHITE);
         }
+    }
+
+    private String endSummary(List<Exercise> exercises) {
+        int completed = 0;
+        int attempted = 0;
+        int total = 0;
+
+        for (Exercise exercise : exercises) {
+            if (exercise.isCompleted()) {
+                completed++;
+            } else if (exercise.isAttempted()) {
+                attempted++;
+            }
+            total++;
+        }
+        return coloredString("Completed: " + completed + percentage(completed, total), GREEN) + " "
+                + coloredString("Attempted: " + attempted + percentage(attempted, total), RED) + " "
+                + coloredString("Total: " + total, WHITE);
+    }
+
+    private String percentage(int amount, int total) {
+        return " (" + 100.0 * amount / total + "%)";
     }
 }

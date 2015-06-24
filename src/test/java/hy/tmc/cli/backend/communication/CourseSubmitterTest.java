@@ -142,6 +142,7 @@ public class CourseSubmitterTest {
                 .thenReturn(fakeResult);
     }
 
+    @SuppressWarnings("unchecked")
     private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito

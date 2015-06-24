@@ -5,6 +5,7 @@ import hy.tmc.cli.frontend.FrontendListener;
 
 import java.util.List;
 
+@Deprecated
 public class ServerMock implements FrontendListener{
 
     private StringBuilder printedLines;
@@ -18,7 +19,6 @@ public class ServerMock implements FrontendListener{
         
     }
 
-    @Override
     public void printLine(String line) {
         this.printedLines.append(line);
     }

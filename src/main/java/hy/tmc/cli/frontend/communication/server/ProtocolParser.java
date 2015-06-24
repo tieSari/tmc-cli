@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
  * ProtocolParser parses user input to executable command.
  */
@@ -24,7 +25,11 @@ public class ProtocolParser {
      */
     public ProtocolParser(FrontendListener server) {
         this.server = server;
-        this.commandsByName = createCommandMap(this.server);
+        this.commandsByName = createCommandMap();
+    }
+
+    public ProtocolParser() {
+        this.commandsByName = createCommandMap();
     }
 
     /**

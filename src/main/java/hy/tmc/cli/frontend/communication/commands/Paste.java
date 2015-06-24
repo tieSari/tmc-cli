@@ -1,29 +1,25 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import java.io.IOException;
+import java.net.URI;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.lingala.zip4j.exception.ZipException;
 
-public class Paste extends Command {
+public class Paste extends Command<URI> {
 
     CourseSubmitter submitter;
-    
-    public Paste(FrontendListener front) {
-        super(front);
+
+    public Paste() {
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(
-                        new DefaultRootDetector()
-                ),
+                new ProjectRootFinder(new DefaultRootDetector()),
                 new Zipper()
         );
     }
@@ -31,40 +27,10 @@ public class Paste extends Command {
     /**
      * Constructor for mocking.
      *
-     * @param front frontend.
      * @param submitter can inject submitter mock.
      */
-
-    public Paste(FrontendListener front, CourseSubmitter submitter) {
-        super(front);
+    public Paste(CourseSubmitter submitter) {
         this.submitter = submitter;
-    }
-
-    /**
-     * Takes a pwd command's output in "path" and prints out the URL for the paste.
-     *
-     */
-    @Override
-    protected void functionality() {
-        try {
-            String returnUrl = submitter.submitPaste(data.get("path"));
-            frontend.printLine("Paste submitted. Here it is: \n  " + returnUrl);
-        }
-        catch (IOException ex) {
-            frontend.printLine(ex.getMessage());
-        }
-        catch (ParseException ex) {
-            frontend.printLine(ex.getMessage());
-        }
-        catch (ExpiredException ex) {
-            frontend.printLine("Exercise has expired.");
-        }
-        catch (IllegalArgumentException ex) {
-            frontend.printLine(ex.getMessage());
-        }
-        catch (ZipException ex) {
-            frontend.printLine(ex.getMessage());
-        } 
     }
 
     /**
@@ -80,5 +46,28 @@ public class Paste extends Command {
         if (!this.data.containsKey("path")) {
             throw new ProtocolException("pwd not supplied");
         }
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        URI returnURI = (URI) data;
+        return Optional.of("Paste submitted. Here it is: \n  " + returnURI);
+    }
+
+    /**
+     * Takes a pwd command's output in "path" and prints out the URL for the
+     * paste.
+     *
+     * @return 
+     * @throws java.io.IOException
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
+     * @throws net.lingala.zip4j.exception.ZipException
+     * @throws hy.tmc.cli.frontend.communication.server.ProtocolException
+     */
+    @Override
+    public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+        checkData();
+        return URI.create(submitter.submitPaste(data.get("path")));
     }
 }

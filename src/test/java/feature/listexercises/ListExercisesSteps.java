@@ -91,6 +91,7 @@ public class ListExercisesSteps {
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
+        testClient.reply();
         testClient.init();
     }
 

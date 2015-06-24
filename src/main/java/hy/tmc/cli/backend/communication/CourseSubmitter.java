@@ -113,7 +113,7 @@ public class CourseSubmitter {
         Exercise currentExercise = searchExercise(currentPath);
         if(isExpired(currentExercise) || !currentExercise.isReturnable()){
             deleteZipIfExists();
-            throw new ExpiredException();
+            throw new ExpiredException("Exercise is expired.");
         }
         return currentExercise;
     }

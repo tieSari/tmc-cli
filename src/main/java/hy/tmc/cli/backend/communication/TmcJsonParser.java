@@ -24,7 +24,7 @@ public class TmcJsonParser {
     /**
      * Get JSON-data from url.
      *
-     * @param url url from which the object data is fetched
+     * @param url from which the object data is fetched
      * @return JSON-object
      */
     private static JsonObject getJsonFrom(String url) {
@@ -34,40 +34,6 @@ public class TmcJsonParser {
         String data = httpResult.getData();
         final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         return json;
-    }
-
-    /**
-     * Get the names of all courses on the server specified by ServerData.
-     *
-     * @return String containing all course names separated by newlines
-     */
-    public static String getCourseNames() {
-        List<Course> courses = getCourses();
-
-        StringBuilder result = new StringBuilder();
-        for (Course course : courses) {
-            String name = course.getName();
-            result = addSpaces(result, name);
-            result.append(name).append(", id:")
-                    .append(course.getId());
-            result.append("\n");
-        }
-
-        return result.toString();
-    }
-
-    /**
-     * Add
-     * @param result
-     * @param name
-     * @return 
-     */
-    public static StringBuilder addSpaces(StringBuilder result, String name) {
-        int spaces = 50 - name.length();
-        for (int i = 0; i < spaces; i++) {
-            result.append(" ");
-        }
-        return result;
     }
 
     /**
@@ -148,7 +114,7 @@ public class TmcJsonParser {
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects. If no course is found, 
+     * @return List of all exercises as Exercise-objects. If no course is found,
      * empty list will be returned.
      */
     public static List<Exercise> getExercises(String courseUrl) {
@@ -180,21 +146,20 @@ public class TmcJsonParser {
     public static String getSubmissionUrl(HttpResult result) {
         return getPropertyFromResult(result, "submission_url");
     }
-    
+
     /**
      * Parses the submission result paste URL from a HttpResult with JSON.
-     * 
+     *
      * @param result HTTPResult containing JSON with paste url.
      * @return url where paste is located.
      */
-    
     public static String getPasteUrl(HttpResult result) {
         return getPropertyFromResult(result, "paste_url");
     }
-    
+
     private static String getPropertyFromResult(HttpResult result, String property) {
-        JsonElement jelement = new JsonParser().parse(result.getData());        
-        JsonObject  jobject = jelement.getAsJsonObject();
+        JsonElement jelement = new JsonParser().parse(result.getData());
+        JsonObject jobject = jelement.getAsJsonObject();
         return jobject.get(property).getAsString();
     }
 }

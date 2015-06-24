@@ -1,11 +1,11 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,6 @@ import java.io.File;
 
 public class RunTestsTest {
 
-    private FrontendStub front;
     private RunTests runTests;
 
     /**
@@ -22,81 +21,61 @@ public class RunTestsTest {
      */
     @Before
     public void setup() {
-        front = new FrontendStub();
-        runTests = new RunTests(front);
+        runTests = new RunTests();
     }
 
     /**
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() {
-        RunTests rt = new RunTests(front);
-        rt.setParameter("filepath", "/home/tmccli/uolevipuistossa");
-        try {
-            rt.checkData();
-        } catch (ProtocolException p) {
-            fail("testCheckDataSuccess failed");
-        }
+    public void testCheckDataSuccess() throws ProtocolException {
+        RunTests rt = new RunTests();
+        rt.setParameter("path", "/home/tmccli/uolevipuistossa");
+        rt.checkData();
     }
 
     /**
      * Check that if user didn't give correct data, data checking fails.
      */
-    @Test
-    public void testCheckDataFail() {
-        RunTests rt = new RunTests(front);
-        try {
-            rt.checkData();
-            fail("testCheckDataFail should have failed");
-        } catch (ProtocolException p) {
-            return;
-        }
+    @Test(expected = ProtocolException.class)
+    public void testCheckDataFail() throws ProtocolException {
+        RunTests rt = new RunTests();
+        rt.checkData();
     }
-    
+
     /**
      * Test that failing exercise output is correct.
      */
     @Test(timeout = 15000)
-    public void testFailedExercise() {
-        RunTests run = new RunTests(front);
+    public void testFailedExercise() throws NoLanguagePluginFoundException, ProtocolException {
+        RunTests run = new RunTests();
         String folders = "testResources" + File.separator + "failingExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
-        run.setParameter("filepath", file.getAbsolutePath());
-        try {
-            run.execute();
-        } catch (ProtocolException ex) {
-            fail("Test executing failed");
-        }
-        
-        assertTrue(front.getMostRecentLine().contains("Some tests failed:"));
-        
-        assertTrue(front.getMostRecentLine().contains("No tests passed"));
-        assertTrue(front.getMostRecentLine().contains("1 tests failed:"));
-        
-        assertTrue(front.getMostRecentLine().contains("NimiTest"));
-        assertTrue(front.getMostRecentLine().contains("Et tulostanut"));
+        run.setParameter("path", file.getAbsolutePath());
+        String result = null;
+        result = run.parseData(run.call()).get();
+
+        assertTrue(result.contains("Some tests failed:"));
+        assertTrue(result.contains("No tests passed"));
+        assertTrue(result.contains("1 tests failed:"));
+        assertTrue(result.contains("NimiTest"));
+        assertTrue(result.contains("Et tulostanut"));
     }
-    
+
     /**
-     * Check that successfull exercise output is correct.
+     * Check that successful exercise output is correct.
      */
     @Test(timeout = 15000)
-    public void testSuccessfulExercise() {
-        RunTests run = new RunTests(front);
+    public void testSuccessfulExercise() throws ProtocolException, NoLanguagePluginFoundException {
+        RunTests run = new RunTests();
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
-        run.setParameter("filepath", file.getAbsolutePath());
-        try {
-            run.execute();
-        } catch (ProtocolException ex) {
-            fail("Test executing failed");
-        }
-        
-        assertFalse(front.getMostRecentLine().contains("tests failed:"));
-        
-        assertTrue(front.getMostRecentLine().contains("All tests passed"));
+        run.setParameter("path", file.getAbsolutePath());
+        String result = null;
+        result = run.parseData(run.call()).get();
+        assertFalse(result.contains("tests failed:"));
+        assertTrue(result.contains("All tests passed"));
     }
 }

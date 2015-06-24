@@ -1,61 +1,42 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-
+import com.google.common.base.Optional;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class LogoutTest {
 
-    private FrontendStub front;
-    private Command logout;
+    private Logout logout;
 
     @Before
     public void setup() {
-        front = new FrontendStub();
-        logout = new Logout(front);
+        logout = new Logout();
     }
 
     @Test
-    public void clearsUserData() {
+    public void clearsUserData() throws ProtocolException {
         ClientData.setUserData("Chang", "Samu");
-        try {
-            logout.execute();
-            assertFalse(ClientData.userDataExists());
-        } catch (ProtocolException ex) {
-            fail("Something went wrong");
-        }
+        logout.call();
+        assertFalse(ClientData.userDataExists());
     }
 
     @Test
-    public void messageCorrectIfLoggedOut() {
+    public void messageCorrectIfLoggedOut() throws ProtocolException {
         ClientData.setUserData("Chang", "Paras");
-        try {
-            logout.execute();
-            String response = front.getMostRecentLine();
-            assertTrue(response.contains("clear"));
-        } catch (ProtocolException ex) {
-            fail("Something went wrong");
-        }
+        Optional<String> response = logout.parseData(logout.call());
+        assertTrue(response.get().contains("clear"));
     }
 
     @Test
-    public void messageCorrectIfNobodyLoggedIn() {
+    public void messageCorrectIfNobodyLoggedIn() throws ProtocolException {
         ClientData.clearUserData();
-        try {
-            logout.execute();
-            String response = front.getMostRecentLine();
-            assertTrue(response.contains("Nobody"));
-        } catch (ProtocolException e) {
-            fail("Something went wrong");
-        }
+        Optional<String> response = logout.parseData(logout.call());
+        assertTrue(response.get().contains("Nobody"));
     }
-
 }

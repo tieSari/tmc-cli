@@ -6,14 +6,17 @@ import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.domain.submission.TestCase;
 import hy.tmc.cli.domain.submission.ValidationError;
+import static hy.tmc.cli.frontend.CommandLineColor.BLUE;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
 /**
- * CommandLineSubmissionResultFormatter gives submissionresult explainings for command line user interface.
- * ResultInterpreter class uses this class.
+ * CommandLineSubmissionResultFormatter gives submissionresult explainings for command line user
+ * interface. ResultInterpreter class uses this class.
  */
 public class CommandLineSubmissionResultFormatter implements SubmissionResultFormatter {
 
@@ -24,23 +27,24 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
 
     /**
      * Tells if TestCase object is passed or failed, if failed, also information about failures.
-     * @param testCase 
+     *
+     * @param testCase
      * @return toString of StrinBuilder content
      */
     @Override
     public String testCaseDescription(TestCase testCase) {
-        StringBuilder des = new StringBuilder();
+        StringBuilder destination = new StringBuilder();
         if (testCase.isSuccessful()) {
-            des.append(" PASSED: ").append(testCase.getName());
-            return des.toString();
+            destination.append(coloredString(" PASSED: ", GREEN)).append(testCase.getName());
+            return destination.toString();
         }
-        des.append(" FAILED: ").append(testCase.getName()).append("\n  ").append(testCase.getMessage());
-        return des.toString();
+        destination.append(coloredString(" FAILED: ", RED)).append(testCase.getName()).append(testCase.getMessage()).append("\n  ");
+        return destination.toString();
     }
 
     @Override
     public String allTestsPassed() {
-        return "All tests passed. Points awarded: ";
+        return coloredString("All tests passed. Points awarded: ", GREEN);
     }
 
     /**
@@ -48,11 +52,11 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
      */
     @Override
     public String viewModelSolution(String solutionUrl) {
-        return "View model solution: \n" + solutionUrl;
+        return "View model solution: \n" + coloredString(solutionUrl, BLUE);
     }
 
     /**
-     * Gives information about result points. 
+     * Gives information about result points.
      */
     @Override
     public String getPointsInformation(SubmissionResult result) {

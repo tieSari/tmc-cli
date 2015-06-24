@@ -1,37 +1,27 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseLister;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.FrontendListener;
+import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.util.List;
 
-public class ListExercises extends Command {
+public class ListExercises extends Command<List<Exercise>> {
 
     private ExerciseLister lister;
 
-    public ListExercises(FrontendListener front) {
-        super(front);
+    public ListExercises() {
         lister = new ExerciseLister();
     }
 
     /**
      * For dependency injection for tests.
      *
-     * @param front
      * @param lister mocked lister object.
      */
-    public ListExercises(FrontendListener front, ExerciseLister lister) {
-        super(front);
+    public ListExercises(ExerciseLister lister) {
         this.lister = lister;
-    }
-
-    /**
-     * Get a list of the exercises of the course which the current directory
-     * belongs to.
-     */
-    @Override
-    protected void functionality() {
-        this.frontend.printLine(lister.listExercises(data.get("path")));
     }
 
     /**
@@ -47,5 +37,19 @@ public class ListExercises extends Command {
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("Please authorize first.");
         }
+    }
+
+    @Override
+    public Optional<String> parseData(Object data) {
+        @SuppressWarnings("unchecked")
+        List<Exercise> result = (List<Exercise>) data;
+
+        return Optional.of(lister.buildExercisesInfo(result));
+    }
+
+    @Override
+    public List<Exercise> call() throws ProtocolException {
+        checkData();
+        return lister.listExercises(data.get("path"));
     }
 }

@@ -4,10 +4,11 @@ import hy.tmc.cli.domain.submission.FeedbackQuestion;
 
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 
 public abstract class FeedbackHandlerAbstract {
     protected final FrontendListener server;
-    protected final ArrayDeque<FeedbackQuestion> feedbackQueue;
+    protected final Queue<FeedbackQuestion> feedbackQueue;
     protected int lastQuestionId;
     private String feedbackUrl;
     protected String lastKind;
@@ -52,13 +53,13 @@ public abstract class FeedbackHandlerAbstract {
      * is available through a getter.
      */
     public void askQuestion() {
-        FeedbackQuestion nextQuestion = this.feedbackQueue.removeFirst();
+        FeedbackQuestion nextQuestion = this.feedbackQueue.remove();
         lastQuestionId = nextQuestion.getId();
         lastKind = nextQuestion.getKind();
-        server.printLine(nextQuestion.getQuestion());
+//        server.printLine(nextQuestion.getQuestion());
         String instructions = instructions(nextQuestion.getKind());
         if (!instructions.isEmpty()) {
-            server.printLine(instructions);
+//            server.printLine(instructions);
         }
     }
 
