@@ -81,8 +81,7 @@ public class PasteTest {
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
-        Paste pasteCommand = new Paste();
-        pasteCommand.setParameter("path", "/home/tmccli/uolevipuistossa");
+        paste.setParameter("path", "/home/tmccli/uolevipuistossa");
         paste.checkData();
     }
 

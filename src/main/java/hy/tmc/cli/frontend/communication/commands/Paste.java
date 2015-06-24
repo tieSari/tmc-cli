@@ -37,6 +37,7 @@ public class Paste extends Command<URI> {
      * @param submitter can inject submitter mock.
      */
     public Paste(CourseSubmitter submitter) {
+        mail = new MailChecker();
         this.submitter = submitter;
     }
 

@@ -1,4 +1,0 @@
-Jun 24, 2015 9:57:19 AM com.google.common.util.concurrent.ServiceManager$ServiceListener startTimer
-INFO: Starting StatusPoller [NEW]
-Jun 24, 2015 9:57:19 AM com.google.common.util.concurrent.ServiceManager$ServiceListener finishedStarting
-INFO: Started StatusPoller [RUNNING] in 15 ms.

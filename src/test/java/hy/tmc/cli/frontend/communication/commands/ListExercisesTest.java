@@ -119,7 +119,7 @@ public class ListExercisesTest {
         Mockito.when(lister.buildExercisesInfo(eq(exampleExercises))).thenReturn(found);
         list.setParameter("path", "any");
         String result = list.parseData(list.call()).get();
-        assertEquals(found, result);
+        assertTrue(result.contains(found));
 
     }
 

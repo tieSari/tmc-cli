@@ -4,7 +4,6 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 
@@ -60,6 +59,7 @@ public class MailCheckerTest {
 
     @Test
     public void ifMailboxHasMessagesItPrintsThemToFrontend() throws ProtocolException {
+        mailChecker.data.put("path", "asd");
         String result = mailChecker.call();
         assertTrue(
                 result.contains(" unread code reviews")

@@ -156,7 +156,7 @@ control_c()
 # catch crtl_c and run function control_c if user hits ctrl-c
 trap control_c SIGINT
 
-jarpath="$( dirname "${BASH_SOURCE[0]}" )/tmc-cli.jar"
+jarpath="$( dirname "${BASH_SOURCE[0]}" )/tmc-client.jar"
 
 if [ ! -f "$jarpath" ];
 then
