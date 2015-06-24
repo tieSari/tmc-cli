@@ -92,12 +92,14 @@ public class ListExercisesTest {
     public void throwsErrorIfNoUser() throws ProtocolException, IOException {
         ClientData.clearUserData();
         list.setParameter("path", "any");
+        list.checkData();
         list.call();
     }
 
     @Test(expected = ProtocolException.class)
     public void throwsErrorIfNoCourseSpecified() throws ProtocolException, IOException {
         ClientData.clearUserData();
+        list.checkData();
         list.call();
     }
 

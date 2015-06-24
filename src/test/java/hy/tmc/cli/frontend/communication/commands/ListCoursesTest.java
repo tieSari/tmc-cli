@@ -62,6 +62,7 @@ public class ListCoursesTest {
     @Test(expected = ProtocolException.class)
     public void testNoAuthThrowsException() throws ProtocolException, Exception {
         ClientData.setUserData("", "");
+        list.checkData();
         list.call();
     }
 

@@ -60,7 +60,7 @@ public class AuthenticateTest {
         PowerMockito.mockStatic(UrlCommunicator.class);
         powerMockWithCredentials("test:1234", 200);
         powerMockWithCredentials("samu:salis", 400);
-
+        auth.checkData();
         return auth.parseData(auth.call()).get();
 
     }
