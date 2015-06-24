@@ -1,11 +1,18 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import org.junit.Before;
 import org.junit.Test;
 
 public class DownloadExercisesTest {
 
+    @Before
+    public void setup() {
+        ClientData.setUserData("Bossman", "Samu");
+    }
+    
     /**
      * Check that data checking success.
      */

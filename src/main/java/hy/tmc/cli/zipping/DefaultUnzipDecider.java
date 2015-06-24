@@ -13,6 +13,7 @@ import java.util.Map;
 public class DefaultUnzipDecider implements UnzipDecider {
 
     protected List<String> additionalStudentFiles;
+    private String studentFilesKey = "extra_student_files";
 
     /**
      * Default movedecider, which decides whether something can be overwritten in a Maven or an Ant
@@ -41,8 +42,8 @@ public class DefaultUnzipDecider implements UnzipDecider {
     }
 
     /**
-     * Find and read .tmcproject.yml. The ziphandler will invoke this method.
-     * SupressWarnings required for xlint.
+     * Find and read .tmcproject.yml. The ziphandler will invoke this method. SupressWarnings
+     * required for xlint.
      *
      * @param ymlFilePath path that the project has been unzipped to initially
      */
@@ -51,12 +52,15 @@ public class DefaultUnzipDecider implements UnzipDecider {
         String contents;
         try {
             contents = FileUtils.readFileToString(ymlFilePath.toFile());
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             return;
         }
         Yaml yaml = new Yaml();
         @SuppressWarnings("unchecked")
         Map<String, List<String>> map = (Map<String, List<String>>) yaml.load(contents);
-        this.additionalStudentFiles = map.get("extra_student_files");
+        if (map.containsKey(studentFilesKey)) {
+            this.additionalStudentFiles = map.get(studentFilesKey);
+        }
     }
 }

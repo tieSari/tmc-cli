@@ -10,6 +10,7 @@ import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
+import hy.tmc.cli.frontend.communication.commands.StopProcess;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
 import java.net.URI;
@@ -35,9 +36,9 @@ public class TmcCore {
     }
 
     /**
-     * For dependency injection of threadPool.
+     * For dependency injection of threadpool.
      *
-     * @param pool Thread threadPool which to use with the core
+     * @param pool thread threadpool which to use with the core
      */
     public TmcCore(ListeningExecutorService pool) {
         commands = CommandFactory.createCommandMap();
@@ -54,7 +55,7 @@ public class TmcCore {
      *
      * @param username to authenticate with
      * @param password to authenticate with
-     * @return A Future-object containing true or false on success or fail
+     * @return A future-object containing true or false on success or fail
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<Boolean> login(String username, String password) throws ProtocolException {
@@ -68,7 +69,7 @@ public class TmcCore {
      * Logs the user out, in other words clears the saved userdata from memory.
      * Always clears the user data.
      *
-     * @return A Future-object containing true if user was logged in previously,
+     * @return A future-object containing true if user was logged in previously,
      * and false if nobody was logged in
      * @throws ProtocolException if something in the given input was wrong
      */
@@ -83,7 +84,7 @@ public class TmcCore {
      * submits, etc. will be made to that server.
      *
      * @param serverAddress this will be the new TMC-server address
-     * @return A Future-object containing true or false on success or fail
+     * @return A future-object containing true or false on success or fail
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<Boolean> selectServer(String serverAddress) throws ProtocolException {
@@ -100,7 +101,7 @@ public class TmcCore {
      *
      * @param path where it downloads the exercises
      * @param courseId ID of course to download
-     * @return A Future-object containing true or false on success or fail
+     * @return A future-object containing true or false on success or fail
      * @throws ProtocolException if something in the given input was wrong
      */
     public ListenableFuture<String> downloadExercises(String path, String courseId) throws ProtocolException {
@@ -114,7 +115,7 @@ public class TmcCore {
      * Displays a help message containing the names of valid commands on the
      * server side.
      *
-     * @return Future-object containing a String with the help information.
+     * @return future-object containing a string with the help information.
      * @throws ProtocolException if something went wrong.
      */
     public ListenableFuture<String> help() throws ProtocolException {
@@ -127,7 +128,7 @@ public class TmcCore {
      * Gives a list of all the courses on the current server, to which the
      * current user has access. Doesn't require login.
      *
-     * @return List containing course-objects parsed from JSON
+     * @return list containing course-objects parsed from JSON
      * @throws ProtocolException if something went wrong
      */
     public ListenableFuture<List<Course>> listCourses() throws ProtocolException {
@@ -141,7 +142,7 @@ public class TmcCore {
      * by path. Requires login.
      *
      * @param path to any directory inside a course directory
-     * @return List containing exercise-objects parsed from JSON
+     * @return list containing exercise-objects parsed from JSON
      * @throws ProtocolException if there was no course in the given path, or if
      * the path was erroneous
      */
@@ -203,11 +204,19 @@ public class TmcCore {
         return stringListenableFuture;
     }
 
+    /**
+     * Parses the input String for command syntax and submits the corresponding Command object into the thread pool.
+     * 
+     * @param inputLine String with command name and params
+     * @return A future object of any type
+     * @throws ProtocolException if command not called properly
+     */
+    
     public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
         checkParameters(inputLine);
         @SuppressWarnings("unchecked")
-        ListenableFuture submit = threadPool.submit(parser.getCommand(inputLine));
-        return submit;
+        ListenableFuture result = threadPool.submit(parser.getCommand(inputLine));
+        return result;
     }
 
     public Command getCommand(String inputLine) throws ProtocolException {
