@@ -62,9 +62,9 @@ public class ConcurrencySteps {
 
     @Then("^user A gets output of submit and user B gets output of help$")
     public void user_A_gets_output_of_submit_and_user_B_gets_output_of_help() throws Throwable {
-        final String replyA = testClientA.reply();
+        final String replyA = testClientA.getAllFromSocket();
         assertTrue(replyA.contains("All tests passed"));
-        final String replyB = testClientB.reply();
+        final String replyB = testClientB.getAllFromSocket();
         assertTrue(replyB.contains("Available commands"));
     }
 

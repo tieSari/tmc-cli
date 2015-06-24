@@ -150,22 +150,12 @@ public class DownloadExercisesSteps {
                 + File.separator + "viikko1").exists());
     }
 
-    /**
-     * Verifies that downloading gives information about progress.
-     *
-     * @throws Throwable if something fails
-     */
     @Then("^information about download progress\\.$")
     public void information_about_download_progress()
             throws Throwable {
-        assertEquals("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%", output.split("\n")[0]);
+        assertContains(output, "Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%");
     }
 
-    /**
-     * Closes server after test.
-     *
-     * @throws IOException if server operations fail
-     */
     @Then("^\\.zip -files are removed\\.$")
     public void zip_files_are_removed() throws Throwable {
         String filepath = tempDir.toAbsolutePath().toString();
@@ -178,7 +168,6 @@ public class DownloadExercisesSteps {
         }
         assertFalse(zips);
     }
-
 
     /**
      * Get the files under the directory specified
