@@ -86,7 +86,11 @@ public class TmcJsonParser {
         JsonObject courseJson = getJsonFrom(courseUrl);
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
-        return Optional.of(course);
+        if(course == null){
+            return Optional.absent();
+        } else {
+            return Optional.of(course);
+        }
     }
 
     /**
