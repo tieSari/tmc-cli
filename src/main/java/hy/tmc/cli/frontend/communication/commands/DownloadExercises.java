@@ -63,8 +63,6 @@ public class DownloadExercises extends Command<String> {
      */
     @Override
     public String call() throws ProtocolException {
-        checkData();
-
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt((String) this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
