@@ -59,7 +59,7 @@ public class MailCheckerTest {
 
     @Test
     public void ifMailboxHasMessagesItPrintsThemToFrontend() throws ProtocolException {
-        mailChecker.data.put("path", "asd");
+        mailChecker.data.put("path", "/2014-mooc-no-deadline");
         String result = mailChecker.call();
         assertTrue(
                 result.contains(" unread code reviews")
