@@ -1,26 +1,4 @@
-Jun 23, 2015 3:58:21 PM com.google.common.util.concurrent.ServiceManager$ServiceListener startTimer
+Jun 24, 2015 9:57:19 AM com.google.common.util.concurrent.ServiceManager$ServiceListener startTimer
 INFO: Starting StatusPoller [NEW]
-[java.util.concurrent.FutureTask.report(FutureTask.java:122), java.util.concurrent.FutureTask.get(FutureTask.java:192), hy.tmc.cli.frontend.communication.server.SocketListener.run(SocketListener.java:29), java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142), java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617), java.lang.Thread.run(Thread.java:745)]
-java.lang.IllegalStateException: Not logged in.
-[hy.tmc.cli.configuration.ClientData.getCurrentCourse(ClientData.java:56), hy.tmc.cli.frontend.communication.commands.RunTests.checkData(RunTests.java:48), hy.tmc.cli.frontend.communication.commands.RunTests.call(RunTests.java:69), hy.tmc.cli.frontend.communication.commands.RunTests.call(RunTests.java:21), java.util.concurrent.FutureTask.run(FutureTask.java:266), java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142), java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617), java.lang.Thread.run(Thread.java:745)]
-[java.util.concurrent.FutureTask.report(FutureTask.java:122), java.util.concurrent.FutureTask.get(FutureTask.java:192), hy.tmc.cli.frontend.communication.server.SocketListener.run(SocketListener.java:29), java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142), java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617), java.lang.Thread.run(Thread.java:745)]
-Jun 23, 2015 3:58:21 PM com.google.common.util.concurrent.ServiceManager$ServiceListener finishedStarting
-INFO: Started StatusPoller [RUNNING] in 25 ms.
-Jun 23, 2015 3:58:26 PM com.google.common.util.concurrent.ServiceManager$ServiceListener failed
-SEVERE: Service StatusPoller [FAILED] has failed in the RUNNING state.
-java.lang.IllegalStateException: No mailbox initialized.
-	at hy.tmc.cli.backend.communication.StatusPoller.runOneIteration(StatusPoller.java:34)
-	at com.google.common.util.concurrent.AbstractScheduledService$1$1.run(AbstractScheduledService.java:172)
-	at com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler$ReschedulableCallable.call(AbstractScheduledService.java:414)
-	at com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler$ReschedulableCallable.call(AbstractScheduledService.java:381)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
-	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-
-warning: Supported source version 'RELEASE_7' from annotation processor 'fi.helsinki.cs.tmc.langs.java.testscanner.TestMethodAnnotationProcessor' less than -source '1.8'
-1 warning
-warning: Supported source version 'RELEASE_7' from annotation processor 'fi.helsinki.cs.tmc.langs.java.testscanner.TestMethodAnnotationProcessor' less than -source '1.8'
-1 warning
+Jun 24, 2015 9:57:19 AM com.google.common.util.concurrent.ServiceManager$ServiceListener finishedStarting
+INFO: Started StatusPoller [RUNNING] in 15 ms.
