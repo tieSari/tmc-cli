@@ -25,12 +25,8 @@ public class ListCourses extends Command<List<Course>> {
     public Optional<String> parseData(Object data) {
         @SuppressWarnings("unchecked")
         List<Course> courses = (List<Course>) data;
-        String courselist = getCourseNames(courses);
-        if(courselist == null){
-            return Optional.absent();
-        } else {
-            return Optional.of(courselist);
-        }
+
+        return Optional.of(getCourseNames(courses));
     }
 
     private int getLongest(List<Course> courses) {

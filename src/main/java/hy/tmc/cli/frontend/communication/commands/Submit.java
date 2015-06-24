@@ -75,6 +75,7 @@ public class Submit extends Command<SubmissionResult> {
 
     @Override
     public SubmissionResult call() throws ProtocolException, IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException {
+        checkData();
         interpreter = getInterpreter();
         String returnUrl = submitter.submit((String) data.get("path"));
         return interpreter.getSubmissionResult(returnUrl);

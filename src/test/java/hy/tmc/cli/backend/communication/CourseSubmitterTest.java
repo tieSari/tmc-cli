@@ -64,9 +64,8 @@ public class CourseSubmitterTest {
     }
 
     @After
-    public void clear() throws IOException {
+    public void clear() {
         ClientData.clearUserData();
-        new ConfigHandler().writeServerAddress("");
     }
 
     @Test
