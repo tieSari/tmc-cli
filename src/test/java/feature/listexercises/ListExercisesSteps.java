@@ -98,7 +98,7 @@ public class ListExercisesSteps {
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
         this.connectionUsed = true;
-        Thread.sleep(300); //To avoid calling listExercises too fast, without being actually authed.
+        testClient.getAllFromSocket();
         testClient.init();
     }
 
@@ -153,7 +153,7 @@ public class ListExercisesSteps {
 
     @Then("^the polling will be started$")
     public void the_polling_will_be_started() throws Throwable {
-        Thread.sleep(500);
+        testClient.getAllFromSocket();
         assertTrue(TmcServiceScheduler.isRunning());
     }
 
