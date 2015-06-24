@@ -1,6 +1,5 @@
 package feature.runtests;
 
-<<<<<<< HEAD
 import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -18,7 +17,6 @@ import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-=======
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -29,17 +27,11 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 
 public class TmcTestsSteps {
 
     private RunTests testRunner;
-<<<<<<< HEAD
-    private FrontendStub front;
-
-    public TmcTestsSteps() {
-        front = new FrontendStub();
-    }
+    private String output;
 
     @Before
     public void setUp() {
@@ -50,25 +42,9 @@ public class TmcTestsSteps {
         TmcServiceScheduler.disablePolling();
     }
 
-    /**
-     * Create RunTests command and set filepath parameter.
-=======
-    private String output;
-    
-    /**
-     * Create RunTests command and set path parameter.
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
-     *
-     * @param exerciseDirectory directory path
-     */
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
-<<<<<<< HEAD
-        testRunner = new RunTests(front);
-        System.getProperty("user.dir");
-=======
         testRunner = new RunTests();
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         testRunner.setParameter("path", exerciseDirectory);
     }
 
@@ -104,24 +80,23 @@ public class TmcTestsSteps {
         assertTrue(output.contains("2 tests failed"));
     }
 
-<<<<<<< HEAD
     @Given("^the user has mail in the mailbox and exercise path is \"(.*?)\"$")
     public void the_user_has_mail_in_the_mailbox_and_exercise_path_is(String path) throws Throwable {
         Mailbox.getMailbox().get().fill(MailExample.reviewExample());
-        testRunner = new RunTests(front);
+        testRunner = new RunTests();
         testRunner.setParameter("path", path);
     }
 
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
-        String output = front.getMostRecentLine();
+        String output = testRunner.parseData(testRunner.call()).get();
         assertTrue(output.contains("Bossman Samu"));
     }
 
     @Given("^polling for reviews is not in progress and exercise path is \"(.*?)\"$")
     public void polling_for_reviews_is_not_in_progress_and_exercise_path_is(String path) throws Throwable {
         TmcServiceScheduler.enablePolling();
-        testRunner = new RunTests(front);
+        testRunner = new RunTests();
         testRunner.setParameter("path", path);
         assertFalse(TmcServiceScheduler.isRunning());
     }
@@ -132,12 +107,6 @@ public class TmcTestsSteps {
         TmcServiceScheduler.disablePolling();
     }
 
-    @After
-    public void clean() throws InterruptedException {
-        Mailbox.destroy();
-        TmcServiceScheduler.getScheduler().stop();
-        ClientData.clearUserData();
-=======
     @Given("^the user gives the vim flag$")
     public void gives_the_vim_flag() throws Throwable {
         testRunner.setParameter("--vim", "");
@@ -146,6 +115,12 @@ public class TmcTestsSteps {
     @Then("^the user sees that all tests have passed formatted with vim formatter\\.$")
     public void the_user_sees_that_all_tests_have_passed_formatted_with_vim_formatter() throws Throwable {
         assertEquals("All tests passed. You can now submit", output);
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
+    }
+
+    @After
+    public void clean() throws InterruptedException {
+        Mailbox.destroy();
+        TmcServiceScheduler.getScheduler().stop();
+        ClientData.clearUserData();
     }
 }

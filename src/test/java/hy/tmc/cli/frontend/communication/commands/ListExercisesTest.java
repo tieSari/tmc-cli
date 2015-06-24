@@ -11,7 +11,6 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.ExerciseLister;
 
 import hy.tmc.cli.configuration.ClientData;
-<<<<<<< HEAD
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
@@ -24,22 +23,25 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-=======
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.when;
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ClientData.class)
@@ -65,14 +67,10 @@ public class ListExercisesTest {
     }
 
     @Before
-<<<<<<< HEAD
-    public void setup() {
+    public void setup() throws ProtocolException {
         Mailbox.create();
         TmcServiceScheduler.disablePolling();
-=======
-    public void setup() throws ProtocolException {
         buildExample();
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         ClientData.setUserData("Chang", "Jamo");
         mock();
         lister = Mockito.mock(ExerciseLister.class);
@@ -111,31 +109,16 @@ public class ListExercisesTest {
     @Test
     public void getsExerciseName() throws Exception {
         list.setParameter("path", "any");
-<<<<<<< HEAD
-        list.execute();
-        System.out.println(front.getMostRecentLine());
-        assertTrue(front.getMostRecentLine().contains("Viikko1"));
-=======
         when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
-        try {
-            String result = list.parseData(list.call()).get();
-            assertTrue(result.contains("1 tehtävä"));
-            assertTrue(result.contains("3 tehtävä"));
-        } catch (ProtocolException ex) {
-            fail("unexpected exception");
-        }
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
+        String result = list.parseData(list.call()).get();
+        assertTrue(result.contains("1 tehtävä"));
+        assertTrue(result.contains("3 tehtävä"));
     }
 
     @Test
     public void returnsFailIfBadPath() throws ProtocolException, Exception {
         String found = "No course found";
-<<<<<<< HEAD
-        Mockito.when(lister.listExercises(Mockito.anyString()))
-                .thenReturn(found);
-=======
         Mockito.when(lister.buildExercisesInfo(eq(exampleExercises))).thenReturn(found);
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         list.setParameter("path", "any");
         String result = list.parseData(list.call()).get();
         assertEquals(found, result);
@@ -163,6 +146,5 @@ public class ListExercisesTest {
 
         String result = list.parseData(list.call()).get();
         assertFalse(result.contains("Ilari"));
-
     }
 }

@@ -63,21 +63,10 @@ public class ListCoursesTest {
     }
 
     @Test
-<<<<<<< HEAD
-    public void testWithAuthPrintsCourses() {
-        Mailbox.create();
-        try {
-            list.execute();
-            assertTrue(front.getMostRecentLine().contains("WEPAMOOC-STAGE"));
-        } catch (ProtocolException ex) {
-            System.err.println(ex.getMessage());
-            fail("unexpected exception" + ex.getMessage());
-        }
-=======
     public void testWithAuthPrintsCourses() throws Exception {
+        Mailbox.create();
         String testResult = list.parseData(list.call()).get();
         assertTrue(testResult.contains("WEPAMOOC-STAGE"));
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     @Test
@@ -86,11 +75,7 @@ public class ListCoursesTest {
             String testResult = list.parseData(list.call()).get();
             assertTrue(testResult.contains("WEPATEST"));
         } catch (ProtocolException ex) {
-<<<<<<< HEAD
             fail("unexpected exception: " + ex.getMessage());
-=======
-            fail("unexpected exception");
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         }
     }
 
@@ -102,5 +87,4 @@ public class ListCoursesTest {
             fail("listcourses should not throw exception from checkData");
         }
     }
-
 }

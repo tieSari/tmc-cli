@@ -17,14 +17,12 @@ import static org.junit.Assert.assertTrue;
 public class MailCheckerTest {
 
     private MailChecker mailChecker;
-    private FrontendStub frontendStub;
 
     @Before
     public void before() throws Exception {
         Mailbox.create();
         Mailbox.getMailbox().get().fill(MailExample.reviewExample());
-        this.frontendStub = new FrontendStub();
-        this.mailChecker = new MailChecker(frontendStub);
+        this.mailChecker = new MailChecker();
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());
 
     }
@@ -61,13 +59,10 @@ public class MailCheckerTest {
     }
 
     @Test
-    public void ifMailboxHasMessagesItPrintsThemToFrontend() {
-        mailChecker.functionality();
+    public void ifMailboxHasMessagesItPrintsThemToFrontend() throws ProtocolException {
+        String result = mailChecker.call();
         assertTrue(
-                frontendStub.getMostRecentLine().contains(" unread code reviews")
+                result.contains(" unread code reviews")
         );
-
     }
-
-
 } 

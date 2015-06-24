@@ -44,14 +44,10 @@ public class SetServerSteps {
     public void serverChanged(String serverName) throws Exception {
         try {
             command.setParameter("tmc-server", serverName);
-<<<<<<< HEAD
-            command.execute();
-        } catch (ProtocolException ex) {}
-=======
             output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
+            System.err.println(ex.getMessage());
         }
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
     
     /**

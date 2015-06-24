@@ -97,13 +97,9 @@ public class ListExercisesSteps {
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
-<<<<<<< HEAD
         this.connectionUsed = true;
-        Thread.sleep(500);
-=======
         Thread.sleep(300); //To avoid calling listExercises too fast, without being actually authed.
         testClient.init();
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
     }
 
     @When("^user gives command listExercises with path \"(.*?)\"\\.$")
@@ -117,18 +113,7 @@ public class ListExercisesSteps {
 
     @Then("^output should contain more than one line$")
     public void output_should_contain_more_than_one_line() throws Throwable {
-<<<<<<< HEAD
         String result = testClient.getAllFromSocket();
-=======
-        String reply = testClient.reply();
-        StringBuilder replybuffer = new StringBuilder();
-        while (reply != null) {
-            replybuffer.append(reply);
-            reply = testClient.reply();
-        }
-        String result = replybuffer.toString();
-        System.out.println(result);
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         assertTrue(result.contains("viikko1-Viikko1_000.Hiekkalaatikko"));
         assertTrue(result.contains("viikko1-Viikko1_001.Nimi"));
     }

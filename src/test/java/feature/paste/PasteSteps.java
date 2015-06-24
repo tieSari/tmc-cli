@@ -25,11 +25,7 @@ import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
-<<<<<<< HEAD
-
-=======
 import java.io.File;
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -64,11 +60,7 @@ public class PasteSteps {
         serverThread.start();
         testClient = new TestClient(port);
         ClientData.setUserData("Chuck", "Norris");
-<<<<<<< HEAD
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());
-=======
-
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         startWireMock();
     }
 
