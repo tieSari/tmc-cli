@@ -15,7 +15,7 @@ public abstract class Command<E> implements Callable<E> {
 
     Map<String, String> data;
     private Class returnType;
-    private ProgressObserver observer;
+    protected ProgressObserver observer;
 
     /**
      * Command can return any type of object. For example SubmissionResult etc.

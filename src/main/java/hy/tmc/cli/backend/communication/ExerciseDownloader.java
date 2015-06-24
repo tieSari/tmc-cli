@@ -53,6 +53,18 @@ public class ExerciseDownloader {
         return downloadFiles(exercises, path, null);
     }
 
+    public String createCourseFolder(String path, String folderName) {
+        path = getCorrectPath(path);
+        if (!isNullOrEmpty(folderName)) {
+            path += folderName + File.separator;
+        }
+        File coursePath = new File(path);
+        if (!coursePath.exists()) {
+            coursePath.mkdirs();
+        }
+        return path;
+    }
+
     /**
      * Method for downloading files if path where to download is defined. Also requires seperate
      * folder name that will be created to defined path.
@@ -65,14 +77,7 @@ public class ExerciseDownloader {
     public Optional<String> downloadFiles(List<Exercise> exercises, String path, String folderName) {
         StringBuilder exercisesListed = new StringBuilder();
         int exCount = 0;
-        path = getCorrectPath(path);
-        if (!isNullOrEmpty(folderName)) {
-            path += folderName + File.separator;
-        }
-        File coursePath = new File(path);
-        if (!coursePath.exists()) {
-            coursePath.mkdirs();
-        }
+        path = createCourseFolder(path, folderName);
         for (Exercise exercise : exercises) {
             exercisesListed.append(handleSingleExercise(exercise, exCount, exercises.size(), path));
             exCount++;
@@ -87,15 +92,13 @@ public class ExerciseDownloader {
      *
      * @param exercise Exercise which will be downloaded
      * @param exCount order number of exercise in downloading
-     * @param exercises list of exercises which will be downloaded
+     * @param totalCount amount of all exercises
      * @param path path where single exercise will be downloaded
      */
-    private String handleSingleExercise(Exercise exercise, int exCount,
-            int totalCount, String path) {
+    public String handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
         if (exercise.isLocked()) {
-            return coloredString("Skipping locked exercise: ", YELLOW) + exercise.getName() +"\n";
+            return coloredString("Skipping locked exercise: ", YELLOW) + exercise.getName() + "\n";
         }
-
         String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";
         downloadFile(exercise.getZipUrl(), filePath);
