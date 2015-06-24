@@ -10,13 +10,8 @@ public class DownloadExercisesTest {
      * Check that data checking success.
      */
     @Test
-<<<<<<< HEAD
-    public void testCheckDataSuccess() {
-        DownloadExercises de = new DownloadExercises(front);
-=======
     public void testCheckDataSuccess() throws ProtocolException {
         DownloadExercises de = new DownloadExercises();
->>>>>>> 7061d626a3951db33faf53d915810654bf6c1720
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         de.checkData();

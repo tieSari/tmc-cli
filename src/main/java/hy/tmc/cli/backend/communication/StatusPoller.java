@@ -29,6 +29,7 @@ public class StatusPoller extends AbstractScheduledService {
 
     @Override
     protected void runOneIteration() {
+        System.out.println("Polled once");
         if (!Mailbox.hasMailboxInitialized()) {
             throw new IllegalStateException("No mailbox initialized.");
         }
