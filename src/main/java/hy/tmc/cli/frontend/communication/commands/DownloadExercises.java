@@ -69,7 +69,7 @@ public class DownloadExercises extends Command<String> {
 
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt((String) this.data.get("courseID")));
         if (courseResult.isPresent()) {
-            Optional<String> downloadFiles = downloadFiles(courseResult.get());
+            Optional<String> downloadFiles = downloadExercises(courseResult.get());
             if (downloadFiles.isPresent()) {
                 return downloadFiles.get();
             }
@@ -77,15 +77,19 @@ public class DownloadExercises extends Command<String> {
         throw new ProtocolException("Failed to fetch exercises. Check your internet connection.");
     }
 
-    private Optional<String> downloadFiles(Course course) {
+    private Optional<String> downloadExercises(Course course) {
         int exCount = 0;
         int totalCount = course.getExercises().size();
+        int downloaded = 0;
         String path = exerciseDownloader.createCourseFolder(data.get("path"), course.getName());
         for (Exercise exercise : course.getExercises()) {
-            exerciseDownloader.handleSingleExercise(exercise, exCount++, totalCount, path);
+            String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
+            exCount++;
+            if (!message.contains("Skip")) {
+                downloaded++;
+            }
+            this.observer.progress(100.0*exCount/totalCount, message);
         }
-        
-        return exerciseDownloader.downloadFiles(
-                course.getExercises(), data.get("path"), course.getName());
+        return Optional.of(downloaded+" exercises downloaded");
     }
 }

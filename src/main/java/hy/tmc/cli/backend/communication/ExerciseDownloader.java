@@ -112,7 +112,7 @@ public class ExerciseDownloader {
      */
     public String handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
         if (exercise.isLocked()) {
-            return coloredString("Skipping locked exercise: ", YELLOW) + exercise.getName() + "\n";
+            return coloredString("Skipping locked exercise: ", YELLOW) + exercise.getName();
         }
         String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";
@@ -157,9 +157,7 @@ public class ExerciseDownloader {
      */
     private String tellStateForUser(Exercise exercise, int exCount,
             int totalCount) {
-        String output = "Downloading exercise " + exercise.getName()
-                + " " + (getPercents(exCount, totalCount)) + "%\n";
-        return output;
+        return "downloaded " + exercise.getName();
     }
 
     /**

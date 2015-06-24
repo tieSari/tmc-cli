@@ -169,7 +169,7 @@ public class DownloadExercisesSteps {
     @Then("^information about download progress\\.$")
     public void information_about_download_progress()
             throws Throwable {
-        assertTrue(output.get(0).contains("Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%"));
+        assertTrue(output.get(0).contains("downloaded viikko1-Viikko1_000.Hiekkalaatikko"));
     }
 
     /**

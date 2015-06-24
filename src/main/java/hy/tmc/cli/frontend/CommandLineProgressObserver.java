@@ -15,8 +15,7 @@ public class CommandLineProgressObserver implements ProgressObserver{
     @Override
     public void progress(double completionPercentage, String message) {
         try {
-            output.write((message + completionPercentage + "%").getBytes());
-            output.flush();
+            output.write((message + " " + completionPercentage + "%\n").getBytes());
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
