@@ -64,9 +64,8 @@ public class CourseSubmitterTest {
     }
 
     @After
-    public void clear() throws IOException {
+    public void clear() {
         ClientData.clearUserData();
-        new ConfigHandler().writeServerAddress("");
     }
 
     @Test
@@ -78,7 +77,7 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testFindCourseByCorrectPath() {
+    public void testFindCourseByCorrectPath() throws IOException {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
         Optional<Course> course = realFinder.findCourseByPath(path.split("/"));
         assertEquals(7, course.get().getId());
@@ -135,7 +134,7 @@ public class CourseSubmitterTest {
         String result = courseSubmitter.submit(testPath);
     }
 
-     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {
+     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),

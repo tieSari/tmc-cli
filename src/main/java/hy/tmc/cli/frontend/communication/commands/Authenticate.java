@@ -40,11 +40,12 @@ public class Authenticate extends Command<Boolean> {
         ).getStatusCode();
         return code;
     }
-    
+
     @Override
     public Boolean call() throws ProtocolException, IOException {
+        checkData();
         if (Integer.toString(makeRequest()).matches(httpOk)) {
-            ClientData.setUserData((String)data.get("username"), (String)data.get("password"));
+            ClientData.setUserData((String) data.get("username"), (String) data.get("password"));
             return true;
         }
         return false;

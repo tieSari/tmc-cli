@@ -12,6 +12,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
+import java.io.IOException;
 import java.util.List;
 
 public class ExerciseLister {
@@ -40,7 +41,7 @@ public class ExerciseLister {
      * @param path directory path to lookup course from
      * @return String with a list of exercises.
      */
-    public List<Exercise> listExercises(String path) throws ProtocolException {
+    public List<Exercise> listExercises(String path) throws ProtocolException, IOException {
         Optional<Course> course = finder.getCurrentCourse(path);
 
         if (!course.isPresent()) {

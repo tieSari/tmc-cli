@@ -74,7 +74,20 @@ public class TmcJsonParser {
      */
     public static Optional<Course> getCourse(int courseID) throws IOException {
         ConfigHandler confighandler = new ConfigHandler();
+        if (!courseExists(courseID)) {
+            return Optional.absent();
+        }
         return getCourse(confighandler.getCourseUrl(courseID));
+    }
+
+    private static boolean courseExists(int courseID) throws IOException {
+        List<Course> allCourses = getCourses();
+        for (Course course : allCourses) {
+            if (course.getId() == courseID) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

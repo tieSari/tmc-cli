@@ -41,7 +41,7 @@ public class ExerciseDownloader {
      * @param courseUrl course url
      * @return info about downloading.
      */
-    public Optional<String> downloadExercises(String courseUrl) {
+    public Optional<String> downloadExercises(String courseUrl) throws IOException {
         List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
         if (exercises.isEmpty()) {
             return Optional.of("No exercises to download.");

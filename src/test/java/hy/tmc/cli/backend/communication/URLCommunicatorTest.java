@@ -27,7 +27,7 @@ public class URLCommunicatorTest {
     public WireMockRule wireMockRule = new WireMockRule();
 
     @Test
-    public void okWithValidParams() {
+    public void okWithValidParams() throws IOException {
         new UrlCommunicator();
         stubFor(get(urlEqualTo("/"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
@@ -41,7 +41,7 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void badRequestWithoutValidURL() {
+    public void badRequestWithoutValidURL() throws IOException {
         stubFor(get(urlEqualTo("/vaaraurl"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
@@ -55,7 +55,7 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void notFoundWithoutValidParams() {
+    public void notFoundWithoutValidParams() throws IOException {
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
         assertEquals(403, result.getStatusCode());
     }
@@ -82,8 +82,8 @@ public class URLCommunicatorTest {
         assertEquals("All tests passed", result.getData());
     }
 
-    @Test
-    public void badGetRequestIsCatched() {
+    @Test(expected=IOException.class)
+    public void badGetRequestIsThrown() throws IOException {
         HttpResult makeGetRequest = UrlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
         assertEquals(UrlCommunicator.BAD_REQUEST, makeGetRequest.getStatusCode());
     }

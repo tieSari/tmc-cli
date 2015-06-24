@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -42,7 +43,7 @@ public class ListExercisesTest {
     }
 
     @Before
-    public void setup() throws ProtocolException {
+    public void setup() throws ProtocolException, IOException {
         buildExample();
         ClientData.setUserData("Chang", "Jamo");
         lister = Mockito.mock(ExerciseLister.class);
@@ -88,22 +89,20 @@ public class ListExercisesTest {
     }
 
     @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoUser() throws ProtocolException {
+    public void throwsErrorIfNoUser() throws ProtocolException, IOException {
         ClientData.clearUserData();
         list.setParameter("path", "any");
-        list.checkData();
         list.call();
     }
 
     @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoCourseSpecified() throws ProtocolException {
+    public void throwsErrorIfNoCourseSpecified() throws ProtocolException, IOException {
         ClientData.clearUserData();
-        list.checkData();
         list.call();
     }
 
     @Test
-    public void doesntContainWeirdName() throws ProtocolException {
+    public void doesntContainWeirdName() throws ProtocolException, IOException {
         list.setParameter("path", "any");
         when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
 

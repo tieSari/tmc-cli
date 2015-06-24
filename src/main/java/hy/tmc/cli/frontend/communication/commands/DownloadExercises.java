@@ -7,6 +7,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.IOException;
 
 public class DownloadExercises extends Command<String> {
 
@@ -64,15 +65,17 @@ public class DownloadExercises extends Command<String> {
      * @return
      */
     @Override
-    public String call() throws ProtocolException {
-        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt((String) this.data.get("courseID")));
+    public String call() throws ProtocolException, IOException {
+        checkData();
+
+        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Optional<String> downloadFiles = downloadExercises(courseResult.get());
             if (downloadFiles.isPresent()) {
                 return downloadFiles.get();
             }
         }
-        throw new ProtocolException("Failed to fetch exercises. Check your internet connection.");
+        throw new ProtocolException("Failed to fetch exercises. Check your internet connection or course ID");
     }
 
     private Optional<String> downloadExercises(Course course) {

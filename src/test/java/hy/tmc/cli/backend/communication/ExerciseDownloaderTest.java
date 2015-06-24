@@ -112,7 +112,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void exerciseListIsEmpty() {
+    public void exerciseListIsEmpty() throws IOException {
         Optional<String> output = exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
         assertTrue(output.or("").contains("No exercises to download."));
     }

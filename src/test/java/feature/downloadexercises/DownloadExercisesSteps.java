@@ -75,6 +75,14 @@ public class DownloadExercisesSteps {
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)));
+        
+        wireMockServer.stubFor(get(urlEqualTo("/courses.json?api_version=7"))
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(ExampleJson.allCoursesExample
+                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
 
         wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
@@ -82,7 +90,8 @@ public class DownloadExercisesSteps {
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
                         .withBody(ExampleJson.courseExample
-                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
+                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055")
+                                .replaceFirst("3", "21"))));
 
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
@@ -235,7 +244,7 @@ public class DownloadExercisesSteps {
     @Then("^output should contain error message\\.$")
     public void output_should_contain_error_message() throws Throwable {
         System.out.println("output"+output);
-        assertTrue(output.get(0).contains("Failed to fetch exercises."));
+        assertTrue(output.get(0).contains("Failed to fetch exercises. Check your internet connection or course ID"));
     }
 
     /**
