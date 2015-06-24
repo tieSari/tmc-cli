@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.testhelpers.ExampleJson;
+import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class TmcJsonParserTest {
      * Mocks UrlCommunicator.
      */
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
@@ -40,7 +41,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsExercisesCorrectlyFromCourseJson() {
+    public void getsExercisesCorrectlyFromCourseJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -54,7 +55,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsLastExerciseOfCourseJson() {
+    public void getsLastExerciseOfCourseJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -71,7 +72,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesSubmissionUrlFromJson() {
+    public void parsesSubmissionUrlFromJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -81,7 +82,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesPasteUrlFromJson() {
+    public void parsesPasteUrlFromJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.pasteResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),

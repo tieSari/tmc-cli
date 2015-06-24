@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.Map;
@@ -109,7 +110,7 @@ public class CourseSubmitter {
      * @throws ParseException to frontend
      * @throws ExpiredException to frontend
      */
-    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException {
+    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException, IOException {
         Exercise currentExercise = searchExercise(currentPath);
         if(isExpired(currentExercise) || !currentExercise.isReturnable()){
             deleteZipIfExists();
@@ -118,7 +119,7 @@ public class CourseSubmitter {
         return currentExercise;
     }
 
-    private Exercise searchExercise(String currentPath) throws IllegalArgumentException {
+    private Exercise searchExercise(String currentPath) throws IllegalArgumentException, IOException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
         if (!currentExercise.isPresent()) {
             deleteZipIfExists();
@@ -134,7 +135,7 @@ public class CourseSubmitter {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)),
                 url + pasteExtensionForTmcServer,
-                Optional.<Map<String, String>>absent()
+                new HashMap<String, String>()
         );
         return TmcJsonParser.getPasteUrl(result);
     }
@@ -165,16 +166,16 @@ public class CourseSubmitter {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)), 
                 url, 
-                Optional.<Map<String, String>>absent()
+                new HashMap<String, String>()
         );
         return TmcJsonParser.getSubmissionUrl(result);
     }
 
-    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException {
+    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException {
         return findCurrentExercise(findCourseExercises(currentPath), currentPath);
     }
 
-    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException {
+    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException {
         Optional<Course> currentCourse = new ProjectRootFinder(
                 new DefaultRootDetector()).getCurrentCourse(currentPath);
         if (!currentCourse.isPresent()) {

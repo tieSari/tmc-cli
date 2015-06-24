@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.backend.TmcCore;
+import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -45,6 +46,10 @@ public class SocketRunnable implements Runnable {
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException {
         Command command = parseCommand(inputReader, outputStream);
+        if (command == null) {
+            return;
+        }
+        command.setObserver(new CommandLineProgressObserver(outputStream));
         final ListenableFuture<?> commandFuture = core.submitTask(command);
         if (commandFuture != null) {
             final DataOutputStream output = outputStream;

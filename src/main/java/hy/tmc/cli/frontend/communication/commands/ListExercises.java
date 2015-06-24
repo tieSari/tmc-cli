@@ -5,6 +5,7 @@ import hy.tmc.cli.backend.communication.ExerciseLister;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.IOException;
 import java.util.List;
 
 public class ListExercises extends Command<List<Exercise>> {
@@ -48,7 +49,8 @@ public class ListExercises extends Command<List<Exercise>> {
     }
 
     @Override
-    public List<Exercise> call() throws ProtocolException {
+    public List<Exercise> call() throws ProtocolException, IOException {
+        checkData();
         return lister.listExercises(data.get("path"));
     }
 }

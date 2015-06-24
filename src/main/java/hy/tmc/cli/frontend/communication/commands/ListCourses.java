@@ -5,6 +5,7 @@ import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.IOException;
 import java.util.List;
 
 public class ListCourses extends Command<List<Course>> {
@@ -65,7 +66,7 @@ public class ListCourses extends Command<List<Course>> {
     }
 
     @Override
-    public List<Course> call() throws ProtocolException {
+    public List<Course> call() throws ProtocolException, IOException {
         checkData();
         return TmcJsonParser.getCourses();
     }

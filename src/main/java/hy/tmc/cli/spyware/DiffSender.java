@@ -83,7 +83,7 @@ public class DiffSender {
     private HttpResult makePostRequest(ContentBody diffFile, String url, Map<String, String> headers) {
         HttpResult result = null;
         try {
-            result = UrlCommunicator.makePostWithFile(diffFile, url, Optional.of(headers));
+            result = UrlCommunicator.makePostWithFile(diffFile, url, headers);
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
