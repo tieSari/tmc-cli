@@ -16,14 +16,12 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import java.io.IOException;
 import java.text.ParseException;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

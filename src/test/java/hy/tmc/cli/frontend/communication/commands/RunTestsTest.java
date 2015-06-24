@@ -8,11 +8,9 @@ import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
 import org.junit.Test;

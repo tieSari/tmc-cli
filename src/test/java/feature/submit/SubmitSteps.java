@@ -66,19 +66,6 @@ public class SubmitSteps {
         mocker.wiremockFailingSubmit(wireMockServer);
     }
 
-    /**
-     * Returns everything to it's original state.
-     */
-    @After
-    public void closeAll() throws IOException {
-        server.close();
-        serverThread.interrupt();
-        wireMockServer.stop();
-        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
-        ClientData.clearUserData();
-        Mailbox.destroy();
-        ClientData.setProjectRootFinder(null);
-    }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
@@ -87,7 +74,7 @@ public class SubmitSteps {
     }
 
     private void checkForMessages() throws IOException, InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(300);
     }
 
     @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
@@ -105,11 +92,12 @@ public class SubmitSteps {
         testClient.init();
         checkForMessages();
         testClient.sendMessage(submitCommand);
+        checkForMessages();
     }
 
     @Then("^user will see all test passing$")
     public void user_will_see_all_test_passing() throws Throwable {
-        final String result = testClient.reply();
+        final String result = testClient.getAllFromSocket();
         assertTrue(result.contains("All tests passed"));
     }
 
@@ -133,7 +121,6 @@ public class SubmitSteps {
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
         String result = testClient.getAllFromSocket();
-        System.out.println("Result: " + result);
         assertTrue(result.contains("unread code reviews"));
     }
 
@@ -146,10 +133,25 @@ public class SubmitSteps {
     @Then("^the polling will be started$")
     public void the_polling_will_be_started() throws Throwable {
         assertTrue(TmcServiceScheduler.isRunning());
+        TmcServiceScheduler.getScheduler().stop();
     }
 
     @When("^user gives command submit with path \"([^\"]*)\" and exercise \"([^\"]*)\"$")
     public void user_gives_command_submit_with_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
         submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
+    }
+
+    /**
+     * Returns everything to it's original state.
+     */
+    @After
+    public void closeAll() throws IOException {
+        server.close();
+        serverThread.interrupt();
+        wireMockServer.stop();
+        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
+        ClientData.clearUserData();
+        Mailbox.destroy();
+        ClientData.setProjectRootFinder(null);
     }
 }

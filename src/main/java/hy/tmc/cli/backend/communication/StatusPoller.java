@@ -29,13 +29,13 @@ public class StatusPoller extends AbstractScheduledService {
 
     @Override
     protected void runOneIteration() {
-        System.out.println("Polled once");
         if (!Mailbox.hasMailboxInitialized()) {
             throw new IllegalStateException("No mailbox initialized.");
         }
 
         Optional<List<Review>> reviews = checkReviews();
         if (reviews.isPresent()) {
+            Mailbox.emptyMailbox(); // TODO poll only new mails without clearing all
             Mailbox.getMailbox().get().fill(reviews.get());
         }
     }

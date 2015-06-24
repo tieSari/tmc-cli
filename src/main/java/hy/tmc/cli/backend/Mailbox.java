@@ -93,6 +93,16 @@ public class Mailbox {
         mailbox = null;
     }
 
+    /**
+     * Empties the whole mailbox
+     */
+    public static void emptyMailbox() {
+        Optional<Mailbox> box = getMailbox();
+        if (box.isPresent()) {
+            box.get().getUnreadReviews().clear();
+        }
+    }
+
     public static boolean hasMailboxInitialized() {
         return getMailbox().isPresent();
     }
