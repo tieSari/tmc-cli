@@ -83,7 +83,7 @@ public class PasteTest {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
         Paste pasteCommand = new Paste();
         pasteCommand.setParameter("path", "/home/tmccli/uolevipuistossa");
-        paste.checkData();
+        pasteCommand.checkData();
     }
 
     /**
