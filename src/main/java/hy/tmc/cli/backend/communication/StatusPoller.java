@@ -16,4 +16,14 @@ public class StatusPoller extends AbstractScheduledService {
         return newFixedRateSchedule(0, 30, TimeUnit.SECONDS);
     }
 
+    @Override
+    protected void startUp() throws Exception {
+        
+    }
+
+    @Override
+    protected void shutDown() throws Exception {
+        
+    }
+
 }

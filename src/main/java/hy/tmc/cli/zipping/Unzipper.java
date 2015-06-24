@@ -1,5 +1,6 @@
 package hy.tmc.cli.zipping;
 
+import java.io.File;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
@@ -60,7 +61,7 @@ public class Unzipper {
             FileHeader fileHeader = (FileHeader) object;
             if (fileHeader.getFileName().endsWith(specFileName)) {
                 zipFile.extractFile(fileHeader, unzipDestination);
-                Path tmcYmlPath = Paths.get(unzipDestination + "/" + fileHeader.getFileName());
+                Path tmcYmlPath = Paths.get(unzipDestination + File.separator + fileHeader.getFileName());
                 this.movedecider.readTmcprojectYml(tmcYmlPath);
             }
         }
@@ -81,7 +82,7 @@ public class Unzipper {
 
         for (Object object : fileHeaders) {
             FileHeader fileHeader = (FileHeader) object;
-            String fullFileName = unzipDestination + "/" + fileHeader.getFileName();
+            String fullFileName = unzipDestination + File.separator + fileHeader.getFileName();
             if (movedecider.canBeOverwritten(fullFileName)) {
                 zipFile.extractFile(fileHeader, unzipDestination);
             }

@@ -132,4 +132,19 @@ public class ExerciseListerTest {
         assertFalse(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
 
     }
+    
+    @Test
+    public void outputContainsPercentage() throws ProtocolException {
+        List<Exercise> exercises = new ArrayList<>();
+
+        exercises.add(new Exercise());
+        Exercise ex = new Exercise();
+        ex.setAttempted(true);
+        exercises.add(ex);
+
+        mockExercisesWith(exercises);
+        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("%"));
+        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Attempted"));
+        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Total"));
+    }
 }

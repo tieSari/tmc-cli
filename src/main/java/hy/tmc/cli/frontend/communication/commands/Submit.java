@@ -69,7 +69,7 @@ public class Submit extends Command<SubmissionResult> {
             throw new ProtocolException("User must be authorized first");
         }
         if (!this.data.containsKey("path")) {
-            throw new ProtocolException("pwd not supplied");
+            throw new ProtocolException("path not supplied");
         }
     }
 

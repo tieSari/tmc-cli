@@ -23,9 +23,16 @@ public class HelpTest {
     }
 
     @Test
-    public void testFunctionality() throws ProtocolException, Exception {
+    public void outputWorks() throws ProtocolException, Exception {
         String output = help.parseData(help.call()).get();
         assertTrue(output.contains("help"));
-        assertTrue(output.contains("auth"));
+        assertTrue(output.contains("login"));
+    }
+    
+    @Test
+    public void outputHasParameters() throws ProtocolException, Exception {
+        String output = help.parseData(help.call()).get();
+        assertTrue(output.contains("<course ID>"));
+        assertTrue(output.contains("<tmc-server address>"));
     }
 }
