@@ -24,7 +24,7 @@ public class Paste extends Command<URI> {
     private MailChecker mail;
 
     public Paste() {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()),new Zipper()));
+        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
     }
 
     /**

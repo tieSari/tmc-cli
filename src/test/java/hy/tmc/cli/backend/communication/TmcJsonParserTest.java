@@ -42,6 +42,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void parsesCourseNamesCorrectly() {
         new TmcJsonParser();
         String courses = TmcJsonParser.getCourseNames(new ConfigHandler()
@@ -66,6 +67,8 @@ public class TmcJsonParserTest {
     }
 
     @Test
+=======
+>>>>>>> 8455d444abaefe7ec9d4ee10e6298a287c2d1b65
     public void getsExercisesCorrectlyFromCourseJson() {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito

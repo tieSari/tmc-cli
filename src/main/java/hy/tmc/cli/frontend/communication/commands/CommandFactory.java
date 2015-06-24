@@ -27,8 +27,12 @@ public class CommandFactory {
         commandsByName.put("submit", submit());
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
+<<<<<<< HEAD
         commandsByName.put("stopProcess", stopProcess());
         commandsByName.put("getMail", getMail());
+=======
+
+>>>>>>> 8455d444abaefe7ec9d4ee10e6298a287c2d1b65
         return commandsByName;
     }
 
@@ -132,16 +136,6 @@ public class CommandFactory {
     }
 
     /**
-     * Stops the whole process and exits java virtual machine.
-     *
-     * @param that the command will use
-     * @return StopProcess object
-     */
-    private static Command stopProcess() {
-        return new StopProcess();
-    }
-
-    /**
      * Create a Paste Command object.
      *
      * @return a Paste object
@@ -149,6 +143,7 @@ public class CommandFactory {
     public static Command paste() {
         return new Paste();
     }
+<<<<<<< HEAD
     
     public static Command getMail() {
         return new MailChecker();
@@ -162,4 +157,6 @@ public class CommandFactory {
     public static Set<String> allCommandNames() {
         return createCommandMap().keySet();
     }
+=======
+>>>>>>> 8455d444abaefe7ec9d4ee10e6298a287c2d1b65
 }

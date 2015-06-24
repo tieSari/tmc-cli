@@ -23,6 +23,7 @@ import java.util.List;
 public class TmcJsonParser {
 
     /**
+<<<<<<< HEAD
      * Get the names of all courses on the server specified by ServerData.
      *
      * @return String containing all course names separated by newlines
@@ -62,6 +63,20 @@ public class TmcJsonParser {
             result.append(" ");
         }
         return result;
+=======
+     * Get JSON-data from url.
+     *
+     * @param url from which the object data is fetched
+     * @return JSON-object
+     */
+    private static JsonObject getJsonFrom(String url) {
+        HttpResult httpResult = UrlCommunicator.makeGetRequest(
+                url, ClientData.getFormattedUserData()
+        );
+        String data = httpResult.getData();
+        final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        return json;
+>>>>>>> 8455d444abaefe7ec9d4ee10e6298a287c2d1b65
     }
 
     /**
