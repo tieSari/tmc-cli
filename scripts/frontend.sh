@@ -156,6 +156,14 @@ control_c()
 # catch crtl_c and run function control_c if user hits ctrl-c
 trap control_c SIGINT
 
+jarpath="$( dirname "${BASH_SOURCE[0]}" )/tmc-cli.jar"
+
+if [ ! -f "$jarpath" ];
+then
+    echo 'FATAL: tmc client jarfile not found'
+    exit
+fi
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"
