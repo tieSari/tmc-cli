@@ -67,21 +67,11 @@ public class TmcTestsSteps {
      */
     @Then("^the user sees both passed and failed tests$")
     public void theUserSeesBothPassedAndFailedTests() {
+        // TODO this throws still code did not compile. Investigate
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
     }
 
-    @Given("^the user has mail in the mailbox and exercise path is \"(.*?)\"$")
-    public void the_user_has_mail_in_the_mailbox_and_exercise_path_is(String path) throws Throwable {
-        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
-        testRunner = new RunTests();
-        testRunner.setParameter("path", path);
-    }
-
-    @Then("^user will see the new mail$")
-    public void user_will_see_the_new_mail() throws Throwable {
-        assertTrue(output.contains("Bossman Samu"));
-    }
 
     @Given("^polling for reviews is not in progress and exercise path is \"(.*?)\"$")
     public void polling_for_reviews_is_not_in_progress_and_exercise_path_is(String path) throws Throwable {
@@ -89,12 +79,6 @@ public class TmcTestsSteps {
         testRunner = new RunTests();
         testRunner.setParameter("path", path);
         assertFalse(TmcServiceScheduler.isRunning());
-    }
-
-    @Then("^the polling will be started$")
-    public void the_polling_will_be_started() throws Throwable {
-        assertTrue(TmcServiceScheduler.isRunning());
-        TmcServiceScheduler.disablePolling();
     }
 
     @Given("^the user gives the vim flag$")
