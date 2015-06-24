@@ -14,7 +14,6 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.FrontendStub;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +23,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import java.util.ArrayList;
 import java.util.List;

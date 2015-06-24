@@ -42,7 +42,6 @@ public class TmcServiceScheduler {
      * @param timeunit in milliseconds, seconds, minutes, hours etc.
      */
     public static void startIfNotRunning(Course course, long interval, TimeUnit timeunit) {
-        System.out.println("STATE: running: " + isRunning() + " isDisabled: " + isDisabled);
         if (!isRunning()) {
             getScheduler().addService(
                     new StatusPoller(course, new PollScheduler(interval, timeunit))
