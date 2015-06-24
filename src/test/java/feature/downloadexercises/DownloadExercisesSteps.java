@@ -218,6 +218,26 @@ public class DownloadExercisesSteps {
         assertTrue(output.get(0).contains("Skipping locked exercise:"));
     }
 
+    @When("^user gives a download exercises command and course id that isnt a real id\\.$")
+    public void user_gives_a_download_exercises_command_and_course_id_that_isnt_a_real_id() throws Throwable {
+        createTestClient();
+        testClient.sendMessage("downloadExercises courseID 9999 path " + tempDir.toAbsolutePath());
+        while (true) {
+            String out = testClient.reply();
+            if (out != null && !out.equals("fail")) {
+                output.add(out);
+            } else {
+                break;
+            }
+        }
+    }
+
+    @Then("^output should contain error message\\.$")
+    public void output_should_contain_error_message() throws Throwable {
+        System.out.println("output"+output);
+        assertTrue(output.get(0).contains("Failed to fetch exercises."));
+    }
+
     /**
      * Get the files under the directory specified
      *

@@ -12,3 +12,8 @@ Feature: Downloading exercises -command
         Given user has logged in with username "pihla" and password "juuh".
         When user gives a download exercises command and course id with locked exercises.
         Then output should contain skipping locked exercises.
+
+    Scenario: Download exercises with a wrong course id
+        Given user has logged in with username "pihla" and password "juuh".
+        When user gives a download exercises command and course id that isnt a real id.
+        Then output should contain error message.

@@ -32,7 +32,6 @@ public class UrlCommunicator {
 
     public static final int BAD_REQUEST = 400;
 
-
     /**
      * Creates and executes post-request to specified URL.
      *
@@ -68,13 +67,9 @@ public class UrlCommunicator {
      * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HttpResult makeGetRequest(String url, String... params) {
-        try {
-            HttpGet httpGet = createGet(url, params);
-            return getResponseResult(httpGet);
-        } catch (IOException e) {
-            return new HttpResult("", BAD_REQUEST, false);
-        }
+    public static HttpResult makeGetRequest(String url, String... params) throws IOException {
+        HttpGet httpGet = createGet(url, params);
+        return getResponseResult(httpGet);
     }
 
     private static HttpGet createGet(String url, String[] params)
@@ -140,7 +135,7 @@ public class UrlCommunicator {
      * @param headers to be included.
      */
     private static void addHeadersTo(HttpRequestBase httpRequest,
-                                     Optional<Map<String, String>> headers) {
+            Optional<Map<String, String>> headers) {
         if (headers.isPresent()) {
             for (String header : headers.get().keySet()) {
                 httpRequest.addHeader(header, headers.get().get(header));
