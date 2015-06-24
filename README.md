@@ -19,7 +19,7 @@ Current core functionality includes:
 
 ## Usage
 
-1. Start by logging in. ![login animation](docs/gifs/login.gif)
+1. Start logging in by using `tmc login` command. ![login animation](docs/gifs/login.gif)
 
 2. Downloading exercises requires course's id in TMC server. If you don't know the id of the course you want to download, you can list courses with `tmc listCourses` command. ![listCourses animation](docs/gifs/listcourses.gif)
 
