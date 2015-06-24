@@ -5,6 +5,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
+import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
 
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
@@ -44,6 +46,7 @@ public class ExerciseDownloader {
 
     /**
      * Method for downloading files if path where to download is defined.
+     *
      * @return info about downloading.
      */
     public Optional<String> downloadFiles(List<Exercise> exercises, String path) {
@@ -71,11 +74,11 @@ public class ExerciseDownloader {
             coursePath.mkdirs();
         }
         for (Exercise exercise : exercises) {
-            exercisesListed.append(handleSingleExercise(exercise, exCount, exercises, path));
+            exercisesListed.append(handleSingleExercise(exercise, exCount, exercises.size(), path));
             exCount++;
         }
         exercisesListed.append(exercises.size())
-                       .append(" exercises downloaded.");
+                .append(" exercises downloaded.");
         return Optional.of(exercisesListed.toString());
     }
 
@@ -88,8 +91,12 @@ public class ExerciseDownloader {
      * @param path path where single exercise will be downloaded
      */
     private String handleSingleExercise(Exercise exercise, int exCount,
-            List<Exercise> exercises, String path) {
-        String exerciseInfo = tellStateForUser(exercise, exCount, exercises);
+            int totalCount, String path) {
+        if (exercise.isLocked()) {
+            return coloredString("Skipping locked exercise: ", YELLOW) + exercise.getName() +"\n";
+        }
+
+        String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";
         downloadFile(exercise.getZipUrl(), filePath);
         try {
@@ -98,7 +105,7 @@ public class ExerciseDownloader {
         }
         catch (IOException | ZipException ex) {
             System.err.println(ex.getMessage());
-            exerciseInfo = "Unzipping exercise failed.";
+            exerciseInfo = "Unzipping exercise failed.\n";
         }
         return exerciseInfo;
     }
@@ -132,9 +139,9 @@ public class ExerciseDownloader {
      * @param exCount order number of which exercise is in downloading
      */
     private String tellStateForUser(Exercise exercise, int exCount,
-            List<Exercise> exercises) {
+            int totalCount) {
         String output = "Downloading exercise " + exercise.getName()
-                + " " + (getPercents(exCount, exercises.size())) + "%";
+                + " " + (getPercents(exCount, totalCount)) + "%\n";
         return output;
     }
 

@@ -38,7 +38,11 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
             destination.append(coloredString(" PASSED: ", GREEN)).append(testCase.getName());
             return destination.toString();
         }
-        destination.append(coloredString(" FAILED: ", RED)).append(testCase.getName()).append(testCase.getMessage()).append("\n  ");
+        destination.append(coloredString(" FAILED: ", RED))
+                .append(testCase.getName())
+                .append(" ")
+                .append(testCase.getMessage())
+                .append("\n");
         return destination.toString();
     }
 
