@@ -42,9 +42,7 @@ public class UrlCommunicator {
      * @throws java.io.IOException if file is invalid.
      */
     public static HttpResult makePostWithFile(ContentBody fileBody,
-            String destinationUrl,
-            Optional<Map<String, String>> headers)
-            throws IOException {
+            String destinationUrl, Map<String, String> headers) throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         addFileToRequest(fileBody, httppost);
@@ -134,11 +132,10 @@ public class UrlCommunicator {
      * @param httpRequest where to put headers.
      * @param headers to be included.
      */
-    private static void addHeadersTo(HttpRequestBase httpRequest,
-            Optional<Map<String, String>> headers) {
-        if (headers.isPresent()) {
-            for (String header : headers.get().keySet()) {
-                httpRequest.addHeader(header, headers.get().get(header));
+    private static void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
+        if (!headers.isEmpty()) {
+            for (String header : headers.keySet()) {
+                httpRequest.addHeader(header, headers.get(header));
             }
         }
     }

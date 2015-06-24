@@ -15,6 +15,7 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.entity.mime.content.FileBody;
 
@@ -77,12 +78,13 @@ public class URLCommunicatorTest {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(testFile),
                 "http://127.0.0.1:8080/kivaurl",
-                Optional.<Map<String,String>>absent());
+                new HashMap<String, String>());
+
         ClientData.clearUserData();
         assertEquals("All tests passed", result.getData());
     }
 
-    @Test(expected=IOException.class)
+    @Test(expected = IOException.class)
     public void badGetRequestIsThrown() throws IOException {
         HttpResult makeGetRequest = UrlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
         assertEquals(UrlCommunicator.BAD_REQUEST, makeGetRequest.getStatusCode());

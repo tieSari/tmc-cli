@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.Map;
@@ -134,7 +135,7 @@ public class CourseSubmitter {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)),
                 url + pasteExtensionForTmcServer,
-                Optional.<Map<String, String>>absent()
+                new HashMap<String, String>()
         );
         return TmcJsonParser.getPasteUrl(result);
     }
@@ -165,7 +166,7 @@ public class CourseSubmitter {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)), 
                 url, 
-                Optional.<Map<String, String>>absent()
+                new HashMap<String, String>()
         );
         return TmcJsonParser.getSubmissionUrl(result);
     }

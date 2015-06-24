@@ -22,10 +22,10 @@ public class ExerciseDownloader {
 
     private UnzipDecider decider;
 
-    
     public ExerciseDownloader() {
         decider = new DefaultUnzipDecider();
     }
+    
     /**
      * Constructor for dependency injection.
      * 
@@ -69,7 +69,7 @@ public class ExerciseDownloader {
     }
 
     public String createCourseFolder(String path, String folderName) {
-        path = getCorrectPath(path);
+        path = formatPath(path);
         if (!isNullOrEmpty(folderName)) {
             path += folderName + File.separator;
         }
@@ -166,7 +166,7 @@ public class ExerciseDownloader {
      * @param path the pathname to be corrected
      * @return corrected path
      */
-    public String getCorrectPath(String path) {
+    public String formatPath(String path) {
         if (path == null) {
             path = "";
         } else if (!path.isEmpty() && !path.endsWith(File.separator)) {
