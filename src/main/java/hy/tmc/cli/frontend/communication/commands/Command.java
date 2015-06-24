@@ -1,6 +1,8 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.frontend.CommandLineProgressObserver;
+import hy.tmc.cli.frontend.ProgressObserver;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,12 +15,18 @@ public abstract class Command<E> implements Callable<E> {
 
     Map<String, String> data;
     private Class returnType;
+    private ProgressObserver observer;
 
     /**
      * Command can return any type of object. For example SubmissionResult etc.
      */
     public Command() {
         data = new HashMap<String, String>();
+    }
+    
+    public Command(ProgressObserver observer) {
+        this();
+        this.observer = observer;
     }
 
     public Map<String, String> getData() {
@@ -55,6 +63,10 @@ public abstract class Command<E> implements Callable<E> {
 
     private void cleanData() {
         data.clear();
+    }
+
+    public void setObserver(ProgressObserver observer) {
+        this.observer = observer;
     }
 
 }
