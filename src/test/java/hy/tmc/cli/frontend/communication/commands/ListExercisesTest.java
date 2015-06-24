@@ -78,7 +78,7 @@ public class ListExercisesTest {
         list = new ListExercises(lister);
     }
 
-    private void mock() {
+    private void mock() throws ProtocolException {
 
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito

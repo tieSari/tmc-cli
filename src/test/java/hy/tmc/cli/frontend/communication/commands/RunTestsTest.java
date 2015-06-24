@@ -34,14 +34,14 @@ public class RunTestsTest {
      * Create FrontendStub and RunTests command.
      */
     @Before
-    public void setup() {
+    public void setup() throws ProtocolException {
         TmcServiceScheduler.disablePolling();
         ClientData.setUserData("test", "1234");
         runTests = new RunTests();
         mock();
     }
 
-    private void mock() {
+    private void mock() throws ProtocolException {
         Course c = new Course();
         c.setName("2014-mooc-no-deadline");
         c.setId(0);

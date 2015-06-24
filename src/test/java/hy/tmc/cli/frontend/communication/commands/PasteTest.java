@@ -39,7 +39,7 @@ public class PasteTest {
      * Mocks CourseSubmitter and injects it into Paste command.
      */
     @Before
-    public void setup() throws IOException, InterruptedException, IOException, ParseException, ExpiredException, ZipException {
+    public void setup() throws Exception {
         Mailbox.create();
         mock();
         ClientData.setUserData("Bossman", "Samu");
@@ -51,7 +51,7 @@ public class PasteTest {
 
     }
 
-    private void mock() throws ParseException, ExpiredException, IOException {
+    private void mock() throws ParseException, ExpiredException, IOException, ProtocolException {
         ClientData.setUserData("Massbon", "Samu");
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito

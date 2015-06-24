@@ -43,7 +43,7 @@ public class SubmitTest {
     private SubmissionInterpreter interpreter;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
 
-    private void mock() throws ParseException, ExpiredException, IOException, ZipException {
+    private void mock() throws ParseException, ExpiredException, IOException, ZipException, ProtocolException {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito
