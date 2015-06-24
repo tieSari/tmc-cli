@@ -33,7 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-
 public class DownloadExercisesSteps {
 
     private String originalServerAddress;
@@ -49,8 +48,10 @@ public class DownloadExercisesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 5055;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+
     /**
      * Set up server.
+     *
      * @throws IOException if server initializing fails
      */
     @Before
@@ -80,7 +81,8 @@ public class DownloadExercisesSteps {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
+                        .withBody(ExampleJson.courseExample
+                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
 
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
@@ -92,6 +94,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Create test client.
+     *
      * @throws IOException if creating fails
      */
     private void createTestClient() throws IOException {
@@ -100,6 +103,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Tests that user sends login request.
+     *
      * @param username string
      * @param password string
      * @throws Throwable if something fails
@@ -123,6 +127,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Verifies that user gives a download exercises command and course id.
+     *
      * @throws Throwable if test fails
      */
     @When("^user gives a download exercises command and course id\\.$")
@@ -145,6 +150,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Verifies that output contains zip files and folders contain unzipped files.
+     *
      * @throws Throwable if something fails
      */
     @Then("^output should contain zip files and folders containing unzipped files$")
@@ -157,6 +163,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Verifies that downloading gives information about progress.
+     *
      * @throws Throwable if something fails
      */
     @Then("^information about download progress\\.$")
@@ -167,6 +174,7 @@ public class DownloadExercisesSteps {
 
     /**
      * Closes server after test.
+     *
      * @throws IOException if server operations fail
      */
     @Then("^\\.zip -files are removed\\.$")
@@ -181,9 +189,38 @@ public class DownloadExercisesSteps {
         }
         assertFalse(zips);
     }
-    
+
+    @When("^user gives a download exercises command and course id with locked exercises\\.$")
+    public void user_gives_a_download_exercises_command_and_course_id_with_locked_exercises() throws Throwable {
+        wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(ExampleJson.courseExample
+                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055")
+                                .replaceFirst("\"locked\": false", "\"locked\": true"))));
+
+        createTestClient();
+        testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
+        while (true) {
+            String out = testClient.reply();
+            if (out != null && !out.equals("fail")) {
+                output.add(out);
+            } else {
+                break;
+            }
+        }
+    }
+
+    @Then("^output should contain skipping locked exercises\\.$")
+    public void output_should_contain_skipping_locked_exercises() throws Throwable {
+        assertTrue(output.get(0).contains("Skipping locked exercise:"));
+    }
+
     /**
      * Get the files under the directory specified
+     *
      * @param filepath the directory
      */
     public File[] getFileArray(String filepath) {

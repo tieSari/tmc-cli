@@ -20,6 +20,21 @@ import java.util.List;
 
 public class ExerciseDownloader {
 
+    private UnzipDecider decider;
+
+    
+    public ExerciseDownloader() {
+        decider = new DefaultUnzipDecider();
+    }
+    /**
+     * Constructor for dependency injection.
+     * 
+     * @param decider UnzipDecider which decides which files to unzip
+     */
+    public ExerciseDownloader(UnzipDecider decider) {
+        this.decider = decider;
+    }
+    
     /**
      * Download exercises by course url.
      *
@@ -130,7 +145,6 @@ public class ExerciseDownloader {
      * @param destinationPath destination path
      */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        UnzipDecider decider = new DefaultUnzipDecider();
         Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
         zipHandler.unzip();
     }
