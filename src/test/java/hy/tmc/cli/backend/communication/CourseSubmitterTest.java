@@ -19,6 +19,7 @@ import hy.tmc.cli.testhelpers.ZipperStub;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
@@ -77,10 +78,10 @@ public class CourseSubmitterTest {
     @Test
     public void testFindCourseByCorrectPath() throws IOException {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
-        Optional<Course> course = realFinder.findCourseByPath(path.split("/"));
+        Optional<Course> course = realFinder.findCourseByPath(path.split(File.separator));
         assertEquals(7, course.get().getId());
         final String path2 = "/home/kansio/toinen/OLEMATON/viikko_01";
-        Optional<Course> course2 = realFinder.findCourseByPath(path2.split("/"));
+        Optional<Course> course2 = realFinder.findCourseByPath(path2.split(File.separator));
         assertFalse(course2.isPresent());
     }
 
