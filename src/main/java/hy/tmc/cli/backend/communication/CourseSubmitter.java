@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
@@ -19,8 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import java.util.Map;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.entity.mime.content.FileBody;
@@ -86,7 +85,7 @@ public class CourseSubmitter {
      * @throws java.text.ParseException
      * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
-    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -100,7 +99,7 @@ public class CourseSubmitter {
      * @throws java.text.ParseException
      * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
-    public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -110,7 +109,7 @@ public class CourseSubmitter {
      * @throws ParseException to frontend
      * @throws ExpiredException to frontend
      */
-    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException, IOException {
+    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException, IOException, ProtocolException {
         Exercise currentExercise = searchExercise(currentPath);
         if(isExpired(currentExercise) || !currentExercise.isReturnable()){
             deleteZipIfExists();
@@ -119,7 +118,7 @@ public class CourseSubmitter {
         return currentExercise;
     }
 
-    private Exercise searchExercise(String currentPath) throws IllegalArgumentException, IOException {
+    private Exercise searchExercise(String currentPath) throws IllegalArgumentException, IOException, ProtocolException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
         if (!currentExercise.isPresent()) {
             deleteZipIfExists();
@@ -130,7 +129,7 @@ public class CourseSubmitter {
 
     private String sendSubmissionToServerWithPaste(
             String submissionZipPath,
-            String url) throws IOException {
+            String url) throws IOException, ProtocolException {
         final String pasteExtensionForTmcServer = "&paste=1";
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)),
@@ -140,7 +139,7 @@ public class CourseSubmitter {
         return TmcJsonParser.getPasteUrl(result);
     }
 
-    private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException {
+    private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException, ProtocolException {
         final String submissionExtension = "/submission.zip";
         this.submissionZipPath = currentPath + submissionExtension;
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
@@ -162,7 +161,7 @@ public class CourseSubmitter {
         ).get().toString();
     }
 
-     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
+     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException, ProtocolException {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)), 
                 url, 
@@ -171,11 +170,11 @@ public class CourseSubmitter {
         return TmcJsonParser.getSubmissionUrl(result);
     }
 
-    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException {
+    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException, ProtocolException {
         return findCurrentExercise(findCourseExercises(currentPath), currentPath);
     }
 
-    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException {
+    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException, ProtocolException {
         Optional<Course> currentCourse = new ProjectRootFinder(
                 new DefaultRootDetector()).getCurrentCourse(currentPath);
         if (!currentCourse.isPresent()) {

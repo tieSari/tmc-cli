@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.AbstractScheduledService;
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Review;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.PollScheduler;
 import java.io.IOException;
 
@@ -29,7 +30,7 @@ public class StatusPoller extends AbstractScheduledService {
     }
 
     @Override
-    protected void runOneIteration() throws IOException {
+    protected void runOneIteration() throws IOException, ProtocolException {
         if (!Mailbox.hasMailboxInitialized()) {
             throw new IllegalStateException("No mailbox initialized.");
         }
@@ -46,7 +47,7 @@ public class StatusPoller extends AbstractScheduledService {
         return this.pollScheduler;
     }
 
-    private Optional<List<Review>> checkReviews() throws IOException {
+    private Optional<List<Review>> checkReviews() throws IOException, ProtocolException {
         List<Review> currentReviews = TmcJsonParser.getReviews(this.currentCourse.getReviewsUrl());
         currentReviews = filter(currentReviews);
 

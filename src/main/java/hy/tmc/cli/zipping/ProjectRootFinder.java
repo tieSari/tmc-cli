@@ -53,7 +53,7 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course-object containing information of the course found.
      */
     @Override
-    public Optional<Course> getCurrentCourse(String path) throws IOException {
+    public Optional<Course> getCurrentCourse(String path) throws IOException, ProtocolException {
         String[] foldersOfPwd = path.split(File.separator);
         try {
             checkPwd(foldersOfPwd);
@@ -70,7 +70,7 @@ public class ProjectRootFinder implements RootFinder {
      * @param foldersPath contains the names of the folders in path
      * @return Course
      */
-    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException {
+    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException, ProtocolException {
         String address = new ConfigHandler()
                 .readCoursesAddress();
         List<Course> courses = TmcJsonParser.getCourses(address);

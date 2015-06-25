@@ -45,7 +45,7 @@ public class SubmissionInterpreter {
      * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
-    private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
+    private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException, ProtocolException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = TmcJsonParser.getSubmissionResult(url);
             if (result.getStatus() == null || !result.getStatus().equals("processing")) {
@@ -84,7 +84,7 @@ public class SubmissionInterpreter {
      * Organizes SubmissionResult into human-readable form from the URL.
      *
      */
-    public String resultSummary(String url, boolean detailed) throws InterruptedException, IOException {
+    public String resultSummary(String url, boolean detailed) throws InterruptedException, IOException, ProtocolException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (result.isPresent()) {
             return summarize(result.get(), detailed);

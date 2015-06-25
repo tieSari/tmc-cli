@@ -3,6 +3,7 @@ package hy.tmc.cli.backend.communication;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class TmcJsonParserTest {
      * Mocks UrlCommunicator.
      */
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, ProtocolException {
         TmcServiceScheduler.getScheduler().stop();
         PowerMockito.mockStatic(UrlCommunicator.class);
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
@@ -37,7 +38,7 @@ public class TmcJsonParserTest {
     }
     
     @Test
-    public void getsExercisesCorrectlyFromCourseJson() throws IOException {
+    public void getsExercisesCorrectlyFromCourseJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -51,7 +52,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsLastExerciseOfCourseJson() throws IOException {
+    public void getsLastExerciseOfCourseJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -68,7 +69,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesSubmissionUrlFromJson() throws IOException {
+    public void parsesSubmissionUrlFromJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -78,7 +79,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesPasteUrlFromJson() throws IOException {
+    public void parsesPasteUrlFromJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.pasteResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),

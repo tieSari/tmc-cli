@@ -12,6 +12,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.domain.submission.SubmissionResult;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class TmcJsonParser {
      * @param courseAddress address of json
      * @return List of Course-objects
      */
-    public static List<Course> getCourses(String courseAddress) throws IOException {
+    public static List<Course> getCourses(String courseAddress) throws IOException, ProtocolException {
         JsonObject jsonObject = getJsonFrom(courseAddress);
         Gson mapper = new Gson();
         Course[] courses = mapper
@@ -43,7 +44,7 @@ public class TmcJsonParser {
      * @param url url from which the object data is fetched
      * @return JSON-object
      */
-    private static JsonObject getJsonFrom(String url) throws IOException {
+    private static JsonObject getJsonFrom(String url) throws IOException, ProtocolException {
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
                 url, ClientData.getFormattedUserData()
         );
@@ -56,7 +57,7 @@ public class TmcJsonParser {
      *
      * @return List of Course-objects
      */
-    public static List<Course> getCourses() throws IOException {
+    public static List<Course> getCourses() throws IOException, ProtocolException {
         return getCourses(new ConfigHandler().readCoursesAddress());
     }
 
@@ -66,7 +67,7 @@ public class TmcJsonParser {
      * @param reviewUrl which is found from course-object
      * @return List of reviews
      */
-    public static List<Review> getReviews(String reviewUrl) throws IOException {
+    public static List<Review> getReviews(String reviewUrl) throws IOException, ProtocolException {
         JsonObject jsonObject = getJsonFrom(withApiVersion(reviewUrl));
         Gson mapper = new Gson();
         Review[] reviews = mapper
@@ -80,7 +81,7 @@ public class TmcJsonParser {
      * @param courseUrl url of the course we are interested in
      * @return String of all exercise names separated by newlines
      */
-    public static String getExerciseNames(String courseUrl) throws IOException {
+    public static String getExerciseNames(String courseUrl) throws IOException, ProtocolException {
         List<Exercise> exercises = getExercises(courseUrl);
         StringBuilder asString = new StringBuilder();
         for (Exercise exercise : exercises) {
@@ -108,7 +109,7 @@ public class TmcJsonParser {
      * @param courseID
      * @return an course Object (parsed from JSON)
      */
-    public static Optional<Course> getCourse(int courseID) throws IOException {
+    public static Optional<Course> getCourse(int courseID) throws IOException, ProtocolException {
         ConfigHandler confighandler = new ConfigHandler();
         if (!courseExists(courseID)) {
             return Optional.absent();
@@ -116,7 +117,7 @@ public class TmcJsonParser {
         return getCourse(confighandler.getCourseUrl(courseID));
     }
 
-    private static boolean courseExists(int courseID) throws IOException {
+    private static boolean courseExists(int courseID) throws IOException, ProtocolException {
         List<Course> allCourses = getCourses();
         for (Course course : allCourses) {
             if (course.getId() == courseID) {
@@ -132,7 +133,7 @@ public class TmcJsonParser {
      * @param courseUrl URL path to course JSON
      * @return an Course object (parsed from JSON)
      */
-    public static Optional<Course> getCourse(String courseUrl) throws IOException {
+    public static Optional<Course> getCourse(String courseUrl) throws IOException, ProtocolException {
         JsonObject courseJson = getJsonFrom(courseUrl);
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
@@ -150,7 +151,7 @@ public class TmcJsonParser {
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
      */
-    public static List<Exercise> getExercises(Course course) throws IOException {
+    public static List<Exercise> getExercises(Course course) throws IOException, ProtocolException {
         return getExercises(course.getId());
     }
 
@@ -160,7 +161,7 @@ public class TmcJsonParser {
      * @param id id of the course we are interested in
      * @return List of a all exercises as Exercise-objects
      */
-    public static List<Exercise> getExercises(int id) throws IOException {
+    public static List<Exercise> getExercises(int id) throws IOException, ProtocolException {
         ConfigHandler confighandler = new ConfigHandler();
         return getExercises(confighandler.getCourseUrl(id));
     }
@@ -172,7 +173,7 @@ public class TmcJsonParser {
      * @return List of all exercises as Exercise-objects. If no course is found,
      * empty list will be returned.
      */
-    public static List<Exercise> getExercises(String courseUrl) throws IOException {
+    public static List<Exercise> getExercises(String courseUrl) throws IOException, ProtocolException {
         Optional<Course> course = getCourse(courseUrl);
         if (course.isPresent()) {
             return course.get().getExercises();
@@ -186,7 +187,7 @@ public class TmcJsonParser {
      * @param url to make request to
      * @return A SubmissionResult object which contains data of submission.
      */
-    public static SubmissionResult getSubmissionResult(String url) throws IOException {
+    public static SubmissionResult getSubmissionResult(String url) throws IOException, ProtocolException {
         JsonObject submission = getJsonFrom(url);
         Gson mapper = new Gson();
         return mapper.fromJson(submission, SubmissionResult.class);

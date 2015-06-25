@@ -34,7 +34,7 @@ public class ExerciseListerTest {
     Exercise fakeExercise2;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, ProtocolException {
         ClientData.setUserData("chang", "paras");
         setupFakeCourses();
 
@@ -49,7 +49,7 @@ public class ExerciseListerTest {
 
     }
 
-    private void mockExercisesWith(List<Exercise> exercises) throws IOException {
+    private void mockExercisesWith(List<Exercise> exercises) throws IOException, ProtocolException {
         PowerMockito
                 .when(TmcJsonParser.getExercises((Course) Mockito.any()))
                 .thenReturn(exercises);

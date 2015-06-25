@@ -34,7 +34,7 @@ public class Authenticate extends Command<Boolean> {
         }
     }
 
-    private int makeRequest() throws IOException {
+    private int makeRequest() throws IOException, ProtocolException {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),

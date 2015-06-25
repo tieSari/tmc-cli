@@ -5,8 +5,6 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.backend.communication.authorization.Authorization;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +63,7 @@ public class AuthenticateTest {
 
     }
 
-    private void powerMockWithCredentials(String credentials, int status) throws IOException {
+    private void powerMockWithCredentials(String credentials, int status) throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult("", status, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(
