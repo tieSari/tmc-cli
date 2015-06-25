@@ -1,6 +1,7 @@
 package hy.tmc.cli.domain;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -9,7 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CourseTest {
     
@@ -93,5 +96,27 @@ public class CourseTest {
     public void testSetDetailsUrl() {
         course.setDetailsUrl("http://cs.helsinki.fi");
         assertEquals("http://cs.helsinki.fi", course.getDetailsUrl());
+    }
+
+    @Test
+    public void equalsWorksViaId() {
+        Course c1 = new Course();
+        Course c2 = new Course();
+        c1.setId(1);
+        c2.setId(1);
+
+        assertTrue(c1.equals(c2));
+    }
+
+    @Test
+    public void hashCodeGeneratedFromId() {
+        Set<Course> courses = new HashSet<>();
+        Course c1 = new Course();
+        c1.setId(1);
+        courses.add(c1);
+
+        Course c2 = new Course();
+        c2.setId(1);
+        assertTrue(courses.contains(c2));
     }
 }

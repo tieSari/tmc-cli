@@ -4,7 +4,7 @@ public class Nimi {
         // Kirjoita ohjelmasi tähän alle
       
         // Mikäli et vielä ole vastannut vielä kyselyyn, tee se HETI
-        // osoitteessa: http://laatu.mooc.fi/ 
+        // osoitteessa: http://laatu.jamo.fi/ 
 
     }
 

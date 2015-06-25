@@ -7,6 +7,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+
 import java.io.IOException;
 
 public class DownloadExercises extends Command<String> {
@@ -56,7 +57,7 @@ public class DownloadExercises extends Command<String> {
 
     @Override
     public Optional<String> parseData(Object data) {
-        return Optional.of((String) data);
+        return Optional.of((String)data);
     }
 
     /**

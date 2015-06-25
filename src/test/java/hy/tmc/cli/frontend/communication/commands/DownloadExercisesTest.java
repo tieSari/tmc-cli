@@ -18,10 +18,12 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
+        ClientData.setUserData("mister", "Kristian");
         DownloadExercises de = new DownloadExercises();
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         de.checkData();
+        ClientData.clearUserData();
     }
 
     /**

@@ -44,7 +44,6 @@ public class ExampleJson {
         return readFile("src/test/resources/noFeedback.json");
     }
 
-
     private static String trivialNoFeedback() {
         return readFile("src/test/resources/trivialNoFeedback.json");
     }
@@ -92,8 +91,7 @@ public class ExampleJson {
     private static String readFile(final String path) {
         try {
             return FileUtils.readFileToString(new File(path));
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
             return "";
         }
