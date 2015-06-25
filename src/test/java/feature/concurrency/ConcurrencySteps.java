@@ -48,7 +48,7 @@ public class ConcurrencySteps {
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         startWireMock();
         testClientA.sendMessage("login username " + username + " password " + password);
-        assertTrue(testClientA.reply().contains("Auth successful"));
+        assertTrue(testClientA.getAllFromSocket().contains("Auth successful"));
         testClientA.init();
     }
 
