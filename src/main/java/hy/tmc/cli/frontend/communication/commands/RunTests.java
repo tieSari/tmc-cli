@@ -63,8 +63,10 @@ public class RunTests extends Command<RunResult> {
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!exercise.isPresent()) {
+            this.cleanData();
             throw new ProtocolException("Not an exercise. (null)");
         }
+        this.cleanData();
         return runTests(exercise.get());
     }
 }

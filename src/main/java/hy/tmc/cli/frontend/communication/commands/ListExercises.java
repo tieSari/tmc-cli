@@ -51,6 +51,8 @@ public class ListExercises extends Command<List<Exercise>> {
     @Override
     public List<Exercise> call() throws ProtocolException, IOException {
         checkData();
-        return lister.listExercises(data.get("path"));
+        List<Exercise> exercises = lister.listExercises(data.get("path"));
+        this.cleanData();
+        return exercises;
     }
 }

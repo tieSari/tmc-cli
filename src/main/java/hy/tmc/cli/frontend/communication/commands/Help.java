@@ -20,6 +20,7 @@ public class Help extends Command<String> {
 
     @Override
     public String call() {
+        this.cleanData();
         return helpMessage();
     }
 

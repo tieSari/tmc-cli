@@ -73,9 +73,11 @@ public class DownloadExercises extends Command<String> {
         if (courseResult.isPresent()) {
             Optional<String> downloadFiles = downloadExercises(courseResult.get());
             if (downloadFiles.isPresent()) {
+                this.cleanData();
                 return downloadFiles.get();
             }
         }
+        this.cleanData();
         throw new ProtocolException("Failed to fetch exercises. Check your internet connection or course ID");
     }
 

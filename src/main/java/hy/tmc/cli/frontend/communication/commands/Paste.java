@@ -67,6 +67,8 @@ public class Paste extends Command<URI> {
      */
     @Override
     public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
-        return URI.create(submitter.submitPaste(data.get("path")));
+        URI uri = URI.create(submitter.submitPaste(data.get("path")));
+        this.cleanData();
+        return uri;
     }
 }

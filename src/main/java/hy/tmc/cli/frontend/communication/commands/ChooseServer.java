@@ -55,9 +55,11 @@ public class ChooseServer extends Command<Boolean> {
         String address = data.get("tmc-server");
         try {
             handler.writeServerAddress(address);
+            this.cleanData();
             return true;
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
+            this.cleanData();
             return false;
         }
     }

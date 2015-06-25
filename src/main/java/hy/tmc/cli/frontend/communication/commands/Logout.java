@@ -29,8 +29,10 @@ public class Logout extends Command<Boolean> {
     public Boolean call() throws ProtocolException {
         if (ClientData.userDataExists()) {
             ClientData.clearUserData();
+            this.cleanData();
             return true;
         } else {
+            this.cleanData();
             return false;
         }
     }

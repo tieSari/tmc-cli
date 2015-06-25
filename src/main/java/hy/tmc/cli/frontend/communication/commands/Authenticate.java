@@ -46,8 +46,10 @@ public class Authenticate extends Command<Boolean> {
         checkData();
         if (Integer.toString(makeRequest()).matches(httpOk)) {
             ClientData.setUserData((String) data.get("username"), (String) data.get("password"));
+            this.cleanData();
             return true;
         }
+        this.cleanData();
         return false;
     }
 
