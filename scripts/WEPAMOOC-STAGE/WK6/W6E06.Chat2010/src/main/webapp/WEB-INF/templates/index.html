@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+    </head>
+    <body>
+        <form th:action="@{/login}" method="POST">
+            <p>Channel:</p>
+            <input type="text" name="channel" value="default"/> 
+            <p>Name:</p>
+            <input type="text" name="name"/>
+            <p>&nbsp;</p>
+            <input type="submit" name="Start chatting!"/>            
+        </form>
+    </body>
+</html>

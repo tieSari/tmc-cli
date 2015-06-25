@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+    </head>
+    <body>
+        <div>
+            <p><input type="text" name="message" id="message"/><input type="button" onclick="send();" value="Say!"/></p>
+            <div id="messages">
+                <p th:each="message: ${messages}" th:text="${message}"></p>
+            </div>
+        </div>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+        <script th:inline="javascript">
+                var client = null;
+                // not a secure way to handle this, but works as a demo
+                var username = /*[[${username}]]*/ "jack bauer";
+                var channel = /*[[${channel}]]*/ "default";
+
+                function send() {
+                    client.send("/ws/messages", {}, JSON.stringify({'username': username, 'channel': channel, 'content': document.getElementById('message').value}));
+                }
+
+                function displayMessage(message) {
+                    var paragraph = document.createElement("p");
+                    var textNode = document.createTextNode(message.username + ": " + message.content);
+                    paragraph.appendChild(textNode);
+                    document.getElementById("messages").appendChild(paragraph);
+                }
+
+                // messages defined in websocket config
+                client = Stomp.over(new SockJS('/register'));
+                client.connect({}, function (frame) {
+                    var subscribeTo = '/channel/' + channel;
+                    client.subscribe(subscribeTo, function (response) {
+                        displayMessage(JSON.parse(response.body));
+                    });
+                });
+
+                // does not work in opera :/ -- this is also triggered
+                // on some old IEs when clicking anchor links
+                window.onbeforeunload = function () {
+                    client.disconnect();
+                }
+        </script>
+    </body>
+</html>

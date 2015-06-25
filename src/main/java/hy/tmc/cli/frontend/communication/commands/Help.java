@@ -36,10 +36,10 @@ public class Help extends Command<String> {
                 .append("test\n")
                 .append("submit\n")
                 .append("paste\n")
-                .append("listExercises\n")
-                .append("listCourses\n")
-                .append("downloadExercises <course ID>\n")
-                .append("setServer <tmc-server address>\n")
+                .append("list exercises\n")
+                .append("list courses\n")
+                .append("download <course ID>\n")
+                .append("set server <tmc-server address>\n")
                 .append("login\n")
                 .append("logout");
 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title th:text="${location.name}">Lorem ipsum</title>
+
+        <style>
+            #map {
+                width: 400px;
+                height: 400px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div th:replace="fragments/template :: navigation">
+            add stuff
+        </div>
+
+        <h2 th:text="${location.name}">Kumpula</h2>
+
+        <div id="map"></div>
+
+        <h3>Weather entries</h3>
+        
+        <ol>
+            <li th:each="entry : ${location.weatherEntries}"><span th:text="${#calendars.format(entry.targetDate,'yyyy.MM.dd HH:mm')}">pvm</span>: Lämpötila <span th:text="${entry.degrees}">30</span>, Sateen todennäköisyys <span th:text="${entry.chanceOfRain}">30</span>%</li>
+        </ol>
+        
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script th:inline="javascript">
+            var lat = /*[[${location.latitude}]]*/ 1.0;
+            var lng = /*[[${location.longitude}]]*/ 1.0;
+
+            var options = {
+                center: new google.maps.LatLng(lat, lng),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+
+            var map = new google.maps.Map(document.getElementById('map'), options);
+        </script>
+    </body>
+</html>

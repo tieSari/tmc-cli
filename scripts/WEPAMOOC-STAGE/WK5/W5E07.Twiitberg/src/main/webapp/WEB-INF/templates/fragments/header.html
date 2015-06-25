@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>header template</title>
+    </head>
+    <body>
+        <div th:fragment="header">
+            <ul>
+                <li><a href="#" th:href="@{/twiits}">Twiits</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="#" th:href="@{/twiiter}">Meh</a></li>
+                <li sec:authorize="isAuthenticated()"><a href="#" onclick="document.getElementById('logout-form').submit();">Logout</a></li>
+                <li sec:authorize="isAnonymous()"><a href="#" th:href="@{/login}">Login</a></li>
+            </ul>
+
+            <form style="visibility: hidden" id ="logout-form" method="post" action="#" th:action="@{/logout}"><input type="submit" value="Logout"/></form>
+
+            <div sec:authorize="isAuthenticated()">
+                <form method="POST" th:action="@{/twiits}" enctype="multipart/form-data">
+                    <textarea name="content"></textarea>
+                    <input type="file" name="file"/>
+                    <input type="submit" value="Twiit!"/>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

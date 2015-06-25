@@ -18,8 +18,11 @@ build/*
 /scripts/config.properties
 /**/test.properties
 /**/build_log.*
+**/build_errors.txt
 /**/built-jar.*
 /**/config
 /testResources/successExercise/viikko1/Viikko1_001.Nimi/nbproject/private/
 /scripts/2014-mooc-no-deadline/viikko1/Viikko1_006.Yhteenlasku/build/
 **/log.txt
+*.swp
+*nfs*

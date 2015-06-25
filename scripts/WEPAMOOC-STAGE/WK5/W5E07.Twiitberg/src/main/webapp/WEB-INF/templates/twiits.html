@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>Twiitberg!</title>
+    </head>
+    <body>
+        <div th:include="fragments/header">
+            here be a header
+        </div>
+
+        <div th:if="${twiiter != null}">
+            <h2 th:text="${twiiter.name}">name of the twiiter</h2>           
+        </div>
+
+        <div th:each="twiit : ${twiits}">
+            <div>
+                <p><a th:href="@{/twiiters/{id}(id=${twiit.twiiter.id})}"><span th:text="${twiit.twiiter.name}">twiiter</span></a> <span th:text="${twiit.created}">created</span></p>
+
+                <div th:if="${twiit.twiitPic != null}">
+                    <img th:src="@{/twiits/{id}/imagedata/{name}(id=${twiit.id},name=${twiit.twiitPic.name})}"/>
+                </div>
+
+                <p th:text="${twiit.content}">content</p>
+
+            </div>
+        </div>
+
+        <div th:include="fragments/footer">
+            here be a footer
+        </div>
+    </body>
+</html>

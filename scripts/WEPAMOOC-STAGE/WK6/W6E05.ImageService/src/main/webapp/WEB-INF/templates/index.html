@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>Images</title>
+    </head>
+    <body>
+        <h1 th:if="${message != null}" th:text="${message}">bla</h1>
+        
+        <div th:if="${image != null}">
+            <h2>Image</h2>
+            <p>Metadata: <span th:if="${image.metadata != null}" th:text="${image.metadata}">unknown</span></p>
+            <p>Original content id: <span th:if="${image.original != null}" th:text="${image.original.id}">unknown</span></p>
+            <p>Thumbnail id: <span th:if="${image.thumbnail != null}" th:text="${image.thumbnail.id}">unknown</span></p>
+            <img th:if="${image.thumbnail != null}" th:src="@{/images/thumbnails/{id}(id=${image.thumbnail.id})}"/>
+        </div>
+
+        <div th:if="${images != null}">
+            <div th:each="image: ${images}">
+                <h2>Existing image <span th:text="${image.id}">id</span></h2>
+                <p>Original content id: <span th:if="${image.original != null}" th:text="${image.original.id}">unknown</span></p>
+                <p>Thumbnail id: <span th:if="${image.thumbnail != null}" th:text="${image.thumbnail.id}">unknown</span></p>
+                <img th:if="${image.thumbnail != null}" th:src="@{/images/thumbnails/{id}(id=${image.thumbnail.id})}"/>
+            </div>
+        </div>
+
+        <hr/>
+
+        <p>Add new image:</p>
+
+        <form method="POST" th:action="@{/images}" enctype="multipart/form-data">
+            <label for="metadata">Metadata</label><input type="text" name="metadata" id="metadata"/><br/>
+            <label for="file">File</label><input type="file" name="file" id="file"/><br/>
+            <input type="submit" value="Add!"/>
+        </form>
+    </body>
+</html>

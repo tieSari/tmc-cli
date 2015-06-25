@@ -40,17 +40,17 @@ public class CommandLineProgressObserverTest {
     @Test
     public void testProgress() throws IOException {
         observer.progress(88.7, "hello world");
-        verify(stream).write(eq("hello world 88.7%\n".getBytes()));
+        verify(stream).write(eq("hello world (88.7% done)\n".getBytes()));
     }
     
     @Test
     public void testProgressManyTimes() throws IOException {
         observer.progress(88.7, "hello world");
-        verify(stream).write(eq("hello world 88.7%\n".getBytes()));
-        observer.progress(57.3, "ducktales");
-        verify(stream).write(eq("ducktales 57.3%\n".getBytes()));
-        observer.progress(1.0, "hello world");
-        verify(stream).write(eq("hello world 1.0%\n".getBytes()));
+        verify(stream).write(eq("hello world (88.7% done)\n".getBytes()));
+        observer.progress(57.33138958, "ducktales");
+        verify(stream).write(eq("ducktales (57.3% done)\n".getBytes()));
+        observer.progress(1.023408, "hello world");
+        verify(stream).write(eq("hello world (1.0% done)\n".getBytes()));
     }
     
 }
