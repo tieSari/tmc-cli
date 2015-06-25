@@ -20,19 +20,22 @@ And create the java executable
 ```shell
 $ mvn package
 ```
-**Optionally** add an alias to .bash_aliases (if using bash) to make the client easily runnable from anywhere.
-Open up .bash_aliases:
+Open up ~/.bashrc, or equivalent if using another terminal:
 ```shell
-$ nano .bash_aliases
+$ nano ~/.bashrc
 ```
-And add the following line if you installed directly under ~/.tmc-cli:
+And add the following lines if you installed directly under ~/.tmc-cli:
 ```shell
-alias tmc='$HOME/.tmc-cli/scripts/frontend.sh'
+PATH="$HOME/.tmc-cli/scripts:$PATH"
+export PATH
 ```
 
 Otherwise, replace the path with the path you cloned the repo in.
 
-You can use the program by calling the shell script in the scripts directory directly, or by using the alias.
+You will have to either restart your terminal the first time after editing .bashrc or run 
+```shell
+source ~/.bashrc
+```
 
 Type the following to get started:
 ```shell
