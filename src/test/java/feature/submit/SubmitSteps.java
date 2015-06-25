@@ -103,7 +103,7 @@ public class SubmitSteps {
 
     @Then("^user will see the some test passing$")
     public void user_will_see_the_some_test_passing() throws Throwable {
-        final String result = testClient.reply().toLowerCase();
+        final String result = testClient.getAllFromSocket().toLowerCase();
         assertTrue(result.contains("some tests failed"));
     }
 
