@@ -81,7 +81,8 @@ public class Paste extends Command<URI> {
     public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         TmcServiceScheduler.startIfNotRunning(course);
         checkData();
-        return URI.create(submitter.submitPaste(data.get("path")));
+        URI uri = URI.create(submitter.submitPaste(data.get("path")));
+        return uri;
     }
 
     /**

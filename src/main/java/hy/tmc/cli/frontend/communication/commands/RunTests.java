@@ -49,7 +49,6 @@ public class RunTests extends Command<RunResult> {
     @Override
     public Optional<String> parseData(Object data) {
         RunResult result = (RunResult) data;
-
         boolean showStackTrace = this.data.containsKey("verbose");
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         return Optional.of(resInt.interpret(showStackTrace));

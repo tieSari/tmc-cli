@@ -46,6 +46,7 @@ public class Authenticate extends Command<Boolean> {
     @Override
     public Boolean call() throws ProtocolException, IOException {
         checkData();
+
         if (isOk(makeRequest())) {
             ClientData.setUserData(data.get("username"), data.get("password"));
             Mailbox.create();
