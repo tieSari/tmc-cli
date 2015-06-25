@@ -1,7 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import com.google.common.base.Optional;
 
@@ -22,6 +21,7 @@ import java.text.ParseException;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -61,9 +61,9 @@ public class SubmitTest {
         interpreter = Mockito.mock(SubmissionInterpreter.class);
     }
 
+    @Before
     public void setup() throws
             IOException, InterruptedException, IOException, ParseException, ExpiredException, Exception {
-        ClientData.setUserData("Bossman", "Samu");
         Mailbox.create();
         TmcServiceScheduler.disablePolling();
         mock();
@@ -103,14 +103,10 @@ public class SubmitTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() {
+    public void testCheckDataSuccess() throws ProtocolException {
         Submit submitCommand = new Submit();
         submitCommand.setParameter("path", "/home/tmccli/testi");
-        try {
-            submitCommand.checkData();
-        } catch (ProtocolException p) {
-            fail("testCheckDataSuccess failed");
-        }
+        submitCommand.checkData();
     }
 
     /**

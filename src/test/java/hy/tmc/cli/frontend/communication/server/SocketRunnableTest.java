@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import hy.tmc.cli.backend.TmcCore;
+import hy.tmc.cli.testhelpers.CommandStub;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -38,12 +39,14 @@ public class SocketRunnableTest {
     @Test
     public void whenCommandHelpIsSentThroughSocketTmcCoreIsInvokedWithCorrectCommandName() throws IOException, ProtocolException {
         testClient.sendMessage("help");
+        when(tmcCore.getCommand(anyString())).thenReturn(new CommandStub());
         socketRunnable.run();
         verify(tmcCore).submitTask(any(Callable.class));
     }
 
     @Test
     public void whenCommandHelpIsSentThroughSocketTmcCoreIsNotInvokedWithFalseName() throws ProtocolException, IOException {
+        when(tmcCore.getCommand(anyString())).thenReturn(new CommandStub());
         testClient.sendMessage("help");
 
         socketRunnable.run();
@@ -53,6 +56,7 @@ public class SocketRunnableTest {
 
     @Test
     public void whenThreeCommandsAreSentTmcCoreIsInvokedThreeTimes() throws IOException, ProtocolException, InterruptedException {
+        when(tmcCore.getCommand(anyString())).thenReturn(new CommandStub());
         for (int i = 0; i < 3; i++) {
             testClient.sendMessage("ping");
             socketRunnable.run();

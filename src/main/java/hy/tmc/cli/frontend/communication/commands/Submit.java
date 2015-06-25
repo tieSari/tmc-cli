@@ -54,6 +54,7 @@ public class Submit extends Command<SubmissionResult> {
     public Submit(CourseSubmitter submitter, SubmissionInterpreter interpreter) {
         this.interpreter = interpreter;
         this.submitter = submitter;
+        mail = new MailChecker();
     }
 
     private SubmissionInterpreter getInterpreter() {

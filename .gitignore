@@ -13,3 +13,4 @@ build/*
 /**/build_log.*
 /**/config
 **/log.txt
+/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/nbproject/private/

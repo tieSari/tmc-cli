@@ -1,5 +1,0 @@
-
-BUILD FAILED
-/media/ExternalSD/Other/OhTu/tmc-cli/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/nbproject/build-impl.xml:208: Must set src.dir
-
-Total time: 1 second

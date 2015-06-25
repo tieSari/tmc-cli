@@ -1,23 +1,24 @@
 package feature.runtests;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
+import fi.helsinki.cs.tmc.langs.RunResult;
+import java.io.UnsupportedEncodingException;
+import java.util.Map.Entry;
 
 public class TmcTestsSteps {
 
@@ -66,8 +67,7 @@ public class TmcTestsSteps {
      * User should get both information about passed tests and failed tests.
      */
     @Then("^the user sees both passed and failed tests$")
-    public void theUserSeesBothPassedAndFailedTests() {
-        // TODO this throws still code did not compile. Investigate
+    public void theUserSeesBothPassedAndFailedTests() throws UnsupportedEncodingException {
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
     }
