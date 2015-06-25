@@ -14,10 +14,11 @@ import java.util.Properties;
  */
 public class ConfigHandler {
 
+    public static final String apiVersion = "7";
+
     private String configFilePath;
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
-    public final String apiVersion = "7";
     public final String apiParam = "api_version=" + apiVersion;
     public final String coursesExtension = "/courses.json?" + apiParam;
     public final String authExtension = "/user";

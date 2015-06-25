@@ -1,16 +1,19 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
+import hy.tmc.cli.configuration.ClientData;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import org.junit.After;
 
 public class RunTestsTest {
 
@@ -21,6 +24,8 @@ public class RunTestsTest {
      */
     @Before
     public void setup() {
+        TmcServiceScheduler.disablePolling();
+        ClientData.setUserData("test", "1234");
         runTests = new RunTests();
     }
 
@@ -53,8 +58,7 @@ public class RunTestsTest {
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("path", file.getAbsolutePath());
-        String result = null;
-        result = run.parseData(run.call()).get();
+        String result = run.parseData(run.call()).get();
 
         assertTrue(result.contains("Some tests failed:"));
         assertTrue(result.contains("No tests passed"));
@@ -73,9 +77,14 @@ public class RunTestsTest {
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
         run.setParameter("path", file.getAbsolutePath());
-        String result = null;
-        result = run.parseData(run.call()).get();
+        String result = run.parseData(run.call()).get();
         assertFalse(result.contains("tests failed:"));
         assertTrue(result.contains("All tests passed"));
+    }
+    
+    @After
+    public void clear() {
+        TmcServiceScheduler.enablePolling();
+        ClientData.clearUserData();
     }
 }

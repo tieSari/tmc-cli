@@ -28,12 +28,15 @@ public class TestClient {
         this.output = new PrintWriter(socket.getOutputStream(), true);
         this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
+    
+    public boolean checkForMessages() throws IOException {
+        return input.ready();
+    }
 
-    public boolean isClosedFromServer() {
+    private boolean isClosedFromServer() {
         try {
             input.read();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return false;
         }
         return true;
@@ -47,15 +50,36 @@ public class TestClient {
         output.println(message);
     }
 
-    public boolean hasNewMessages() throws IOException {
-        return input.ready();
+    /**
+     * Reads while socket is open.
+     * @return all lines read from the socket
+     * @throws IOException if reading fails
+     */
+    public String getAllFromSocket() throws IOException {
+        StringBuilder replybuffer = new StringBuilder();
+        String reply = input.readLine();
+        while (reply != null) {
+            replybuffer.append(reply).append("\n");
+            reply = input.readLine();
+        }
+        return replybuffer.toString();
     }
 
+    /**
+     * Reads one line from the socket.
+     * Waits for input.
+     *
+     * @return last reply from frontend
+     */
     public String reply() {
         try {
-            return input.readLine();
-        }
-        catch (IOException ex) {
+            String reply = input.readLine();
+            if (reply == null) {
+                this.init();
+                return input.readLine();
+            }
+            return reply;
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
             return "fail";
         }
@@ -64,5 +88,8 @@ public class TestClient {
     public boolean isReadyToBeRead() throws IOException {
         return input.ready();
     }
-    
+
+    public boolean hasNewMessages() throws IOException {
+        return input.ready();
+    }
 }

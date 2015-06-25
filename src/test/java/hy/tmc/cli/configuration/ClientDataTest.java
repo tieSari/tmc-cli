@@ -11,12 +11,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import hy.tmc.cli.domain.Course;
 
 import org.junit.Before;
 import org.junit.Test;
-
-
 
 public class ClientDataTest {
 
@@ -65,26 +62,6 @@ public class ClientDataTest {
         String password = "";
         ClientData.setUserData(username, password);
         assertEquals("", ClientData.getUsername());
-    }
-
-    /**
-     * Test of getCurrentCourse method, of class ClientData.
-     */
-    @Test
-    public final void testGetCurrentCourse() {
-        Course expResult = null;
-        Course result = ClientData.getCurrentCourse();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of setCurrentCourse method, of class ClientData.
-     */
-    @Test
-    public void testSetCurrentCourse() {
-        Course currentCourse = null;
-        ClientData.setCurrentCourse(currentCourse);
-        assertEquals(currentCourse, ClientData.getCurrentCourse());
     }
 
     /**

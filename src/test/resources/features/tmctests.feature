@@ -21,3 +21,4 @@ Feature: Test command
         And the user gives the vim flag
         When the user runs the tests
         Then the user sees that all tests have passed formatted with vim formatter.
+
