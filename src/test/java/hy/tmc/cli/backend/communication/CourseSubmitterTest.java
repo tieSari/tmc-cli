@@ -8,9 +8,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import hy.tmc.cli.backend.communication.CourseSubmitter;
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -22,9 +19,9 @@ import hy.tmc.cli.testhelpers.ZipperStub;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Map;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.entity.mime.content.FileBody;
 import org.junit.After;
@@ -64,8 +61,9 @@ public class CourseSubmitterTest {
     }
 
     @After
-    public void clear() {
+    public void clear() throws IOException {
         ClientData.clearUserData();
+        new ConfigHandler().writeServerAddress("");
     }
 
     @Test
@@ -77,7 +75,7 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testFindCourseByCorrectPath() {
+    public void testFindCourseByCorrectPath() throws IOException {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
         Optional<Course> course = realFinder.findCourseByPath(path.split("/"));
         assertEquals(7, course.get().getId());
@@ -134,7 +132,7 @@ public class CourseSubmitterTest {
         String result = courseSubmitter.submit(testPath);
     }
 
-     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) {
+     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
@@ -147,7 +145,7 @@ public class CourseSubmitterTest {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
-                                Mockito.contains(url), Mockito.any(Optional.class)))
+                                Mockito.contains(url), Mockito.any(Map.class)))
                 .thenReturn(fakeResult);
     }
 }

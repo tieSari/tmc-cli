@@ -1,3 +1,4 @@
+
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.communication.HttpResult;
@@ -5,6 +6,7 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +33,7 @@ public class ListCoursesTest {
      * result.
      */
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         list = new ListCourses();
 
         PowerMockito.mockStatic(UrlCommunicator.class);
@@ -60,6 +62,7 @@ public class ListCoursesTest {
     @Test(expected = ProtocolException.class)
     public void testNoAuthThrowsException() throws ProtocolException, Exception {
         ClientData.setUserData("", "");
+        list.checkData();
         list.call();
     }
 
