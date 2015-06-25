@@ -8,9 +8,8 @@ tmc-cli.iml
 build/*
 **/test.properties
 **/build_errors.*
-**/*.properties
+**/*config.properties
 /**/test.properties
 /**/build_log.*
 /**/config
 **/log.txt
-/testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/nbproject/private/
