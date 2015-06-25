@@ -31,7 +31,7 @@ public class TmcServiceScheduler {
         return instance;
     }
 
-    public static void startIfNotRunning(Course course) {
+    public static synchronized void startIfNotRunning(Course course) {
         startIfNotRunning(course, 5, TimeUnit.SECONDS);
     }
 
@@ -41,7 +41,7 @@ public class TmcServiceScheduler {
      * @param interval when tasks are executed
      * @param timeunit in milliseconds, seconds, minutes, hours etc.
      */
-    public static void startIfNotRunning(Course course, long interval, TimeUnit timeunit) {
+    public static synchronized void startIfNotRunning(Course course, long interval, TimeUnit timeunit) {
         if (!isRunning()) {
             getScheduler().addService(
                     new StatusPoller(course, new PollScheduler(interval, timeunit))
@@ -57,7 +57,7 @@ public class TmcServiceScheduler {
     /**
      * Disables scheduled tasks until it enablePolling is called.
      */
-    public static void disablePolling() {
+    public static synchronized void disablePolling() {
         if (isRunningTasks) {
             getScheduler().stop();
         }
@@ -68,7 +68,7 @@ public class TmcServiceScheduler {
     /**
      * Enables scheduled tasks to be executed.
      */
-    public static void enablePolling() {
+    public static synchronized void enablePolling() {
         if (isDisabled) {
             isDisabled = false;
             isRunningTasks = false;

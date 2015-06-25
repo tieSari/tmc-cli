@@ -10,12 +10,16 @@ import cucumber.api.java.en.When;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
+
 import java.io.File;
 import java.io.IOException;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import org.junit.Rule;
 
 public class ConcurrencySteps {
@@ -42,6 +46,7 @@ public class ConcurrencySteps {
         serverThread.start();
         testClientA = new TestClient(port);
         testClientB = new TestClient(port);
+        TmcServiceScheduler.disablePolling();
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
@@ -71,11 +76,10 @@ public class ConcurrencySteps {
     @Then("^user A gets output after user B$")
     public void user_A_gets_output_after_user_B() throws Throwable {
         for (int i = 0; i < 10; i++) {
-           if (testClientA.isReadyToBeRead() && !testClientB.isReadyToBeRead()) {
-               fail("Test client A was ready first, in other words no concurrency");
-           }
-            Thread.sleep(50);
-        }    
+            if (testClientA.isReadyToBeRead() && !testClientB.isReadyToBeRead()) {
+                fail("Test client A was ready first, in other words no concurrency");
+            }
+        }
     }
 
     @After
