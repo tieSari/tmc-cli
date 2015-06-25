@@ -140,7 +140,8 @@ public class CourseSubmitter {
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException, ProtocolException {
-        final String submissionExtension = "/submission.zip";
+        String submissionExtension = File.separator + "submission.zip";
+
         this.submissionZipPath = currentPath + submissionExtension;
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
         deleteZipIfExists();
@@ -200,7 +201,7 @@ public class CourseSubmitter {
             deleteZipIfExists();
             throw new IllegalArgumentException("Could not find exercise directory");
         }
-        String[] path = rootDir.get().toString().split("/");
+        String[] path = rootDir.get().toString().split(File.separator);
         String directory = path[path.length - 1];
         return getExerciseByName(directory, courseExercises);
     }
@@ -215,7 +216,7 @@ public class CourseSubmitter {
     }
 
     public String[] getExerciseName(String directoryPath) {
-        return directoryPath.split("/");
+        return directoryPath.split(File.separator);
     }
 
     /**

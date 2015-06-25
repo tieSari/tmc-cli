@@ -22,6 +22,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +152,8 @@ public class FeedbackSteps {
 
     @When("^the exercise is submitted$")
     public void theExerciseIsSubmitted() throws Throwable {
-        sendExercise("/testResources/tmc-testcourse/trivial");
+        sendExercise(File.separator + "testResources" + File.separator +
+                "tmc-testcourse" + File.separator + "trivial");
     }
 
     @Then("^feedback questions will not be asked$")
@@ -185,7 +187,8 @@ public class FeedbackSteps {
 
     @Given("^the user has submitted a successful exercise$")
     public void theUserHasSubmittedASuccessfulExercise() throws ProtocolException, IOException {
-        sendExercise("/testResources/tmc-testcourse/trivial");
+        sendExercise(File.separator + "testResources" + File.separator +
+                "tmc-testcourse" + File.separator + "trivial");
         checkForMessages();
     }
 

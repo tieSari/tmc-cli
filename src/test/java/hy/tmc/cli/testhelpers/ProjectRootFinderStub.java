@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.zipping.RootFinder;
+
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class ProjectRootFinderStub implements RootFinder {
     }
 
     public Optional<Course> getCurrentCourse(String path) {
-        String[] folders = path.split("/");
+        String[] folders = path.split(File.separator);
 
         for(String folder:folders) {
             if(courseStubs.containsKey(folder)) {

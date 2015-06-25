@@ -96,7 +96,8 @@ public class Submit extends Command<SubmissionResult> {
         checkData();
         interpreter = getInterpreter();
         String returnUrl = submitter.submit(data.get("path"));
-        return interpreter.getSubmissionResult(returnUrl);
+        SubmissionResult result = interpreter.getSubmissionResult(returnUrl);
+        return result;
     }
 
     @Override
