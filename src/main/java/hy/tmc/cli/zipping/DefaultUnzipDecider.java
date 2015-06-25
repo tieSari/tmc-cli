@@ -38,7 +38,7 @@ public class DefaultUnzipDecider implements UnzipDecider {
                 return false;
             }
         }
-        return !(path.contains("/src/") && new File(path).exists());
+        return !(path.contains(File.separator + "src" + File.separator) && new File(path).exists());
     }
 
     /**
