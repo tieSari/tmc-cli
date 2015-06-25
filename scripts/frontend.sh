@@ -104,7 +104,30 @@ function command_default () {
 }
 
 function command_listExercises () {
-  send_command "listExercises path `pwd`"
+    send_command "listExercises path `pwd`"
+}
+
+function command_listCourses () {
+    send_command "listCourses"
+}
+
+function command_list () {
+    case "$1" in
+        "exercises") command_listExercises;;
+        "courses") command_listCourses;;
+        *) echo "don't know how to list $1";;
+    esac
+}
+
+function command_setServer () {
+    send_command "setServer tmc-server $1"
+}
+
+function command_set () {
+    case "$1" in
+        "server") command_setServer $2;;
+        *) echo "don't know how to set $1";; 
+    esac
 }
 
 # Backend login
@@ -175,7 +198,8 @@ case "$1" in
     "download") command_download $2;;
     "test") command_test $2;;
     "paste") command_paste $2;;
-    "listExercises") command_listExercises;;
     "mail") command_mail;;
+    "list") command_list ${@:2};;
+    "set") command_set ${@:2};;
     *) command_default $@;;
 esac
