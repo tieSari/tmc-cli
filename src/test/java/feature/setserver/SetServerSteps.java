@@ -47,6 +47,7 @@ public class SetServerSteps {
             command.checkData();
             output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
+            System.err.println(ex.getMessage());
         }
     }
     

@@ -1,12 +1,15 @@
 
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
+
 import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +20,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -43,7 +44,7 @@ public class ListCoursesTest {
         ClientData.setUserData("mockattu", "ei tarvi");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(
-                                Mockito.anyString(), Mockito.anyString()))
+                        Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
 
     }
@@ -52,11 +53,7 @@ public class ListCoursesTest {
     public void testCheckDataSuccess() throws ProtocolException {
         ListCourses ls = new ListCourses();
         ClientData.setUserData("asdf", "bsdf");
-        try {
-            ls.checkData();
-        } catch (ProtocolException p) {
-            fail("testCheckDataSuccess failed");
-        }
+        ls.checkData();
     }
 
     @Test(expected = ProtocolException.class)
@@ -68,27 +65,19 @@ public class ListCoursesTest {
 
     @Test
     public void testWithAuthPrintsCourses() throws Exception {
+        Mailbox.create();
         String testResult = list.parseData(list.call()).get();
         assertTrue(testResult.contains("WEPAMOOC-STAGE"));
     }
 
     @Test
     public void testWithAuthPrintsSeveralCourses() throws Exception {
-        try {
-            String testResult = list.parseData(list.call()).get();
-            assertTrue(testResult.contains("WEPATEST"));
-        } catch (ProtocolException ex) {
-            fail("unexpected exception");
-        }
+        String testResult = list.parseData(list.call()).get();
+        assertTrue(testResult.contains("WEPATEST"));
     }
 
     @Test
-    public void checkDataTest() {
-        try {
-            list.checkData();
-        } catch (ProtocolException ex) {
-            fail("listcourses should not throw exception from checkData");
-        }
+    public void checkDataTest() throws ProtocolException {
+        list.checkData();
     }
-
 }

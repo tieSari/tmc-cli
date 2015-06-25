@@ -1,6 +1,8 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.backend.Mailbox;
 import com.google.common.base.Optional;
+
 import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.cli.configuration.ClientData;
@@ -44,12 +46,12 @@ public class Authenticate extends Command<Boolean> {
     @Override
     public Boolean call() throws ProtocolException, IOException {
         checkData();
-        if (Integer.toString(makeRequest()).matches(httpOk)) {
-            ClientData.setUserData((String) data.get("username"), (String) data.get("password"));
-            this.cleanData();
+
+        if (isOk(makeRequest())) {
+            ClientData.setUserData(data.get("username"), data.get("password"));
+            Mailbox.create();
             return true;
         }
-        this.cleanData();
         return false;
     }
 
@@ -59,5 +61,9 @@ public class Authenticate extends Command<Boolean> {
             return Optional.of("Auth successful. Saved userdata in session");
         }
         return Optional.of("Auth unsuccessful. Check your connection and/or credentials");
+    }
+
+    private boolean isOk(int code) {
+        return Integer.toString(code).matches(httpOk);
     }
 }

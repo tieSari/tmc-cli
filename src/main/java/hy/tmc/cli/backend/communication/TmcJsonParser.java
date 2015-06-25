@@ -10,6 +10,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,9 +24,23 @@ import java.util.List;
 public class TmcJsonParser {
 
     /**
+     * Get list of all the courses on the server specified by ServerData.
+     *
+     * @param courseAddress address of json
+     * @return List of Course-objects
+     */
+    public static List<Course> getCourses(String courseAddress) throws IOException {
+        JsonObject jsonObject = getJsonFrom(courseAddress);
+        Gson mapper = new Gson();
+        Course[] courses = mapper
+                .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
+        return Arrays.asList(courses);
+    }
+
+    /**
      * Get JSON-data from url.
      *
-     * @param url from which the object data is fetched
+     * @param url url from which the object data is fetched
      * @return JSON-object
      */
     private static JsonObject getJsonFrom(String url) throws IOException {
@@ -33,8 +48,7 @@ public class TmcJsonParser {
                 url, ClientData.getFormattedUserData()
         );
         String data = httpResult.getData();
-        final JsonObject json = new JsonParser().parse(data).getAsJsonObject();
-        return json;
+        return new JsonParser().parse(data).getAsJsonObject();
     }
 
     /**
@@ -43,12 +57,21 @@ public class TmcJsonParser {
      * @return List of Course-objects
      */
     public static List<Course> getCourses() throws IOException {
-        JsonObject jsonObject = getJsonFrom(new ConfigHandler()
-                .readCoursesAddress());
+        return getCourses(new ConfigHandler().readCoursesAddress());
+    }
+
+    /**
+     * Maps the JSON as review-objects.
+     *
+     * @param reviewUrl which is found from course-object
+     * @return List of reviews
+     */
+    public static List<Review> getReviews(String reviewUrl) throws IOException {
+        JsonObject jsonObject = getJsonFrom(withApiVersion(reviewUrl));
         Gson mapper = new Gson();
-        Course[] courses = mapper
-                .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
-        return Arrays.asList(courses);
+        Review[] reviews = mapper
+                .fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);
+        return Arrays.asList(reviews);
     }
 
     /**
@@ -66,10 +89,23 @@ public class TmcJsonParser {
         }
         return asString.toString();
     }
+    
+     /**
+     * Reads courses from string.
+     */
+    public static List<Course> getCoursesFromString(String jsonString) {
+        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        Gson mapper = new Gson();
+        Course[] courses = mapper
+                .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
+        return Arrays.asList(courses);
+    }
+
 
     /**
      * Get information about course specified by the course ID.
      *
+     * @param courseID
      * @return an course Object (parsed from JSON)
      */
     public static Optional<Course> getCourse(int courseID) throws IOException {
@@ -133,8 +169,8 @@ public class TmcJsonParser {
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
-     * returned.
+     * @return List of all exercises as Exercise-objects. If no course is found,
+     * empty list will be returned.
      */
     public static List<Exercise> getExercises(String courseUrl) throws IOException {
         Optional<Course> course = getCourse(courseUrl);
@@ -180,5 +216,13 @@ public class TmcJsonParser {
         JsonElement jelement = new JsonParser().parse(result.getData());
         JsonObject jobject = jelement.getAsJsonObject();
         return jobject.get(property).getAsString();
+    }
+
+    private static String withApiVersion(String url) {
+        String postfix = "?api_version=" + ConfigHandler.apiVersion;
+        if (!url.endsWith(postfix)) {
+            url += postfix;
+        }
+        return url;
     }
 }

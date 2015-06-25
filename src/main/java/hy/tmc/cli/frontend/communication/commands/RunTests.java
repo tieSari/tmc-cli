@@ -49,7 +49,6 @@ public class RunTests extends Command<RunResult> {
     @Override
     public Optional<String> parseData(Object data) {
         RunResult result = (RunResult) data;
-
         boolean showStackTrace = this.data.containsKey("verbose");
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         return Optional.of(resInt.interpret(showStackTrace));
@@ -63,10 +62,8 @@ public class RunTests extends Command<RunResult> {
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!exercise.isPresent()) {
-            this.cleanData();
             throw new ProtocolException("Not an exercise. (null)");
         }
-        this.cleanData();
         return runTests(exercise.get());
     }
 }

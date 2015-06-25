@@ -3,7 +3,6 @@ package hy.tmc.cli.frontend.communication.server;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import hy.tmc.cli.backend.TmcCore;
-import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
@@ -73,8 +72,7 @@ public class Server implements FrontendListener, Runnable {
         try {
             serverSocket = new ServerSocket(0);
             new ConfigHandler().writePort(serverSocket.getLocalPort());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println("Server creation failed");
             System.err.println(ex.getMessage());
         }
@@ -109,8 +107,7 @@ public class Server implements FrontendListener, Runnable {
                     Socket clientSocket = serverSocket.accept();
                     socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore));
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -196,8 +193,7 @@ public class Server implements FrontendListener, Runnable {
         JsonObject req = getAnswersJson();
         try {
             UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
         }
     }

@@ -81,6 +81,10 @@ function command_download () {
   send_command "downloadExercises path `pwd` courseID $1"
 }
 
+function command_mail() {
+ send_command "getMail path `pwd`"
+}
+
 function command_paste () {
   send_command "paste path `pwd`"
 }
@@ -175,6 +179,14 @@ control_c()
 # catch crtl_c and run function control_c if user hits ctrl-c
 trap control_c SIGINT
 
+jarpath="$( dirname "${BASH_SOURCE[0]}" )/tmc-client.jar"
+
+if [ ! -f "$jarpath" ];
+then
+    echo 'FATAL: tmc client jarfile not found'
+    exit
+fi
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"
@@ -186,7 +198,7 @@ case "$1" in
     "download") command_download $2;;
     "test") command_test $2;;
     "paste") command_paste $2;;
-    #"listExercises") command_listExercises;;
+    "mail") command_mail;;
     "list") command_list ${@:2};;
     "set") command_set ${@:2};;
     *) command_default $@;;

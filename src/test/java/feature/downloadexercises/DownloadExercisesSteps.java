@@ -9,6 +9,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -26,6 +27,8 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.testhelpers.MailExample;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +44,7 @@ public class DownloadExercisesSteps {
     private Server server;
     private TestClient testClient;
     private Path tempDir;
-    private ArrayList<String> output;
+    private String output;
     private ConfigHandler config;
     private WireMockServer wireMockServer;
 
@@ -56,15 +59,16 @@ public class DownloadExercisesSteps {
      */
     @Before
     public void setUpServer() throws IOException {
+        Mailbox.create();
         wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         config = new ConfigHandler();
         originalServerAddress = config.readServerAddress();
         config.writeServerAddress(SERVER_ADDRESS);
         server = new Server();
-        ClientData.setUserData("pihla", "juuh");
         port = server.getCurrentPort();
+        createTestClient();
         serverThread = new Thread(server);
-        output = new ArrayList<>();
+
         configureFor(SERVER_URI, SERVER_PORT);
         wireMockServer.start();
         serverThread.start();
@@ -119,16 +123,8 @@ public class DownloadExercisesSteps {
      */
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in(String username, String password) throws Throwable {
-        createTestClient();
         testClient.sendMessage("login username " + username + " password " + password);
-
-        // waiting for command to complete
-        while (true) {
-            String out = testClient.reply();
-            if (!(out != null && !out.equals("fail"))) {
-                break;
-            }
-        }
+        testClient.getAllFromSocket();
 
         verify(getRequestedFor(urlEqualTo("/user"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
@@ -143,14 +139,8 @@ public class DownloadExercisesSteps {
     public void user_gives_a_download_exercises_command_and_course_id() throws Throwable {
         createTestClient();
         testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
-        while (true) {
-            String out = testClient.reply();
-            if (out != null && !out.equals("fail")) {
-                output.add(out);
-            } else {
-                break;
-            }
-        }
+        output = testClient.getAllFromSocket();
+
         verify(getRequestedFor(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
         verify(getRequestedFor(urlMatching("/exercises/[0-9]+.zip"))
@@ -158,7 +148,8 @@ public class DownloadExercisesSteps {
     }
 
     /**
-     * Verifies that output contains zip files and folders contain unzipped files.
+     * Verifies that output contains zip files and folders contain unzipped
+     * files.
      *
      * @throws Throwable if something fails
      */
@@ -178,14 +169,10 @@ public class DownloadExercisesSteps {
     @Then("^information about download progress\\.$")
     public void information_about_download_progress()
             throws Throwable {
-        assertTrue(output.get(0).contains("downloaded viikko1-Viikko1_000.Hiekkalaatikko"));
+        assertContains(output, "downloaded viikko1-Viikko1_000.Hiekkalaatikko");
     }
 
-    /**
-     * Closes server after test.
-     *
-     * @throws IOException if server operations fail
-     */
+    
     @Then("^\\.zip -files are removed\\.$")
     public void zip_files_are_removed() throws Throwable {
         String filepath = tempDir.toAbsolutePath().toString();
@@ -212,39 +199,24 @@ public class DownloadExercisesSteps {
 
         createTestClient();
         testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
-        while (true) {
-            String out = testClient.reply();
-            if (out != null && !out.equals("fail")) {
-                output.add(out);
-            } else {
-                break;
-            }
-        }
+        output = testClient.getAllFromSocket();
     }
 
     @Then("^output should contain skipping locked exercises\\.$")
     public void output_should_contain_skipping_locked_exercises() throws Throwable {
-        assertTrue(output.get(0).contains("Skipping locked exercise:"));
+        assertContains(output, "Skipping locked exercise:");
     }
 
     @When("^user gives a download exercises command and course id that isnt a real id\\.$")
     public void user_gives_a_download_exercises_command_and_course_id_that_isnt_a_real_id() throws Throwable {
         createTestClient();
         testClient.sendMessage("downloadExercises courseID 9999 path " + tempDir.toAbsolutePath());
-        while (true) {
-            String out = testClient.reply();
-            if (out != null && !out.equals("fail")) {
-                output.add(out);
-            } else {
-                break;
-            }
-        }
+        output = testClient.getAllFromSocket();
     }
 
     @Then("^output should contain error message\\.$")
     public void output_should_contain_error_message() throws Throwable {
-        System.out.println("output"+output);
-        assertTrue(output.get(0).contains("Failed to fetch exercises. Check your internet connection or course ID"));
+        assertContains(output, "Failed to fetch exercises. Check your internet connection or course ID");
     }
 
     /**
@@ -258,11 +230,16 @@ public class DownloadExercisesSteps {
         return paths;
     }
 
+    private void assertContains(String testedString, String expectedContent) {
+        assertTrue(testedString.contains(expectedContent));
+    }
+
     /**
      * Close the server, so that the other tests will work.
      */
     @After
-    public void closeServer() throws IOException {
+    public void closeServer() throws IOException, InterruptedException {
+        Mailbox.destroy();
         tempDir.toFile().delete();
         WireMock.reset();
         wireMockServer.stop();

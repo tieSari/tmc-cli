@@ -1,12 +1,9 @@
 package hy.tmc.cli.backend.communication;
 
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.TmcJsonParser;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
@@ -28,10 +25,9 @@ public class TmcJsonParserTest {
      */
     @Before
     public void setup() throws IOException {
+        TmcServiceScheduler.getScheduler().stop();
         PowerMockito.mockStatic(UrlCommunicator.class);
-
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-
         ClientData.setUserData("chang", "paras");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -39,7 +35,7 @@ public class TmcJsonParserTest {
                 .thenReturn(fakeResult);
 
     }
-
+    
     @Test
     public void getsExercisesCorrectlyFromCourseJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
@@ -90,5 +86,4 @@ public class TmcJsonParserTest {
                 .thenReturn(fakeResult);
         assertEquals("https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ", TmcJsonParser.getPasteUrl(fakeResult));
     }
-
 }

@@ -1,0 +1,5 @@
+
+BUILD FAILED
+/media/ExternalSD/Other/OhTu/tmc-cli/testResources/2013_ohpeJaOhja/viikko1/Viikko1_002.HeiMaailma/nbproject/build-impl.xml:208: Must set src.dir
+
+Total time: 0 seconds

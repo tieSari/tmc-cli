@@ -15,7 +15,6 @@ public class ReplyToPing extends Command<String> {
 
     @Override
     public String call() {
-        this.cleanData();
         return answer;
     }
 

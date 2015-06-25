@@ -10,12 +10,16 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
+import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ListExercisesSteps {
@@ -24,6 +28,7 @@ public class ListExercisesSteps {
 
     private Thread serverThread;
     private Server server;
+    private boolean connectionUsed; // TODO: refactor this into the testClient
 
     private TestClient testClient;
 
@@ -39,6 +44,7 @@ public class ListExercisesSteps {
      */
     @Before
     public void setUpServer() throws IOException {
+        TmcServiceScheduler.disablePolling();
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
 
@@ -47,8 +53,17 @@ public class ListExercisesSteps {
         serverThread = new Thread(server);
         serverThread.start();
         testClient = new TestClient(port);
-
         startWireMock();
+        this.connectionUsed = false;
+    }
+
+    @After
+    public void closeServer() throws IOException {
+        server.close();
+        serverThread.interrupt();
+        wireMockServer.stop();
+        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
+        ClientData.clearUserData();
     }
 
     private void startWireMock() {
@@ -79,36 +94,26 @@ public class ListExercisesSteps {
 
     }
 
-    @After
-    public void closeServer() throws IOException {
-        server.close();
-        serverThread.interrupt();
-        wireMockServer.stop();
-        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
-        ClientData.clearUserData();
-    }
-
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
-        testClient.reply();
+        this.connectionUsed = true;
+        testClient.getAllFromSocket();
         testClient.init();
     }
 
     @When("^user gives command listExercises with path \"(.*?)\"\\.$")
     public void user_gives_command_listExercises_with_path(String path) throws Throwable {
+        if (connectionUsed) {
+            testClient.init();
+            // prevents an error due to closed socket. TODO: refactor into testClient
+        }
         testClient.sendMessage("listExercises path " + path);
     }
 
     @Then("^output should contain more than one line$")
     public void output_should_contain_more_than_one_line() throws Throwable {
-        String reply = testClient.reply();
-        StringBuilder replybuffer = new StringBuilder();
-        while (reply != null) {
-            replybuffer.append(reply);
-            reply = testClient.reply();
-        }
-        String result = replybuffer.toString();
+        String result = testClient.getAllFromSocket();
         assertTrue(result.contains("viikko1-Viikko1_000.Hiekkalaatikko"));
         assertTrue(result.contains("viikko1-Viikko1_001.Nimi"));
     }
@@ -121,6 +126,38 @@ public class ListExercisesSteps {
     @Then("^exception should be thrown$")
     public void exception_should_be_thrown() throws Throwable {
         String result = testClient.reply();
-        assertTrue(result.contains("Please authorize first."));
+        assertContains(result, "Please authorize first.");
+    }
+
+    @Given("^the user has mail in the mailbox$")
+    public void the_user_has_mail_in_the_mailbox() throws Throwable {
+        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
+    }
+
+    @Then("^user will see the new mail$")
+    public void user_will_see_the_new_mail() throws Throwable {
+        String fullReply = testClient.getAllFromSocket();
+        assertContains(fullReply, "There are 3 unread code reviews");
+        assertContains(fullReply, "rainfall reviewed by Bossman Samu");
+        assertContains(fullReply, "Keep up the good work.");
+        assertContains(fullReply, "good code");
+
+    }
+
+    @Given("^polling for reviews is not in progress$")
+    public void polling_for_reviews_is_not_in_progress() throws Throwable {
+        TmcServiceScheduler.enablePolling();
+        assertFalse(TmcServiceScheduler.isRunning());
+        testClient.sendMessage("login username test password 1234");
+    }
+
+    @Then("^the polling will be started$")
+    public void the_polling_will_be_started() throws Throwable {
+        testClient.getAllFromSocket();
+        assertTrue(TmcServiceScheduler.isRunning());
+    }
+
+    private void assertContains(String testedString, String expectedContent) {
+        assertTrue(testedString.contains(expectedContent));
     }
 }

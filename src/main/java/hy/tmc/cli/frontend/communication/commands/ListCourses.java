@@ -69,7 +69,6 @@ public class ListCourses extends Command<List<Course>> {
     public List<Course> call() throws ProtocolException, IOException {
         checkData();
         List<Course> courses = TmcJsonParser.getCourses();
-        this.cleanData();
         return courses;
     }
 }
