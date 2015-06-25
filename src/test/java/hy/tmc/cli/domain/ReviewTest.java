@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
+import java.io.IOException;
 import java.util.ArrayList;
 import static org.hamcrest.CoreMatchers.not;
 import org.junit.After;
@@ -29,8 +30,7 @@ public class ReviewTest {
     private Review review;
 
     @Before
-    public void setUp() {
-
+    public void setUp() throws IOException {
         PowerMockito.mockStatic(UrlCommunicator.class);
         PowerMockito
                 .when(UrlCommunicator.makePutRequest(argThat(not(putUrl)), any(Optional.class)))
@@ -76,14 +76,14 @@ public class ReviewTest {
     }
 
     @Test
-    public void markAsReadTest() {
+    public void markAsReadTest() throws IOException {
         review.setMarkedAsRead(false);
         review.markAs(true);
         assertTrue(review.isMarkedAsRead());
     }
 
     @Test
-    public void markAsUnreadTest() {
+    public void markAsUnreadTest() throws IOException {
         review.setMarkedAsRead(true);
         review.markAs(false);
         assertFalse(review.isMarkedAsRead());
@@ -138,5 +138,4 @@ public class ReviewTest {
     public void testGetCreatedAt() {
         assertEquals("10.6.2015", review.getCreatedAt());
     }
-
 }

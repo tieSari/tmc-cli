@@ -33,6 +33,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class UrlCommunicator {
@@ -86,8 +87,7 @@ public class UrlCommunicator {
      * @param body contains key-value -pairs.
      * @return Result which contains the result.
      */
-    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> body) {
-        try {
+    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
             HttpPut httpPut = new HttpPut(url);
             addCredentials(httpPut, ClientData.getFormattedUserData());
             List<NameValuePair> params = new ArrayList<>();
@@ -95,15 +95,9 @@ public class UrlCommunicator {
             for (String key : body.get().keySet()) {
                 String value = body.get().get(key);
                 params.add(new BasicNameValuePair(key, value));
-            }
-            
-            httpPut.setEntity(new UrlEncodedFormEntity(params));
-            
+            }            
+            httpPut.setEntity(new UrlEncodedFormEntity(params));           
             return getResponseResult(httpPut);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            return new HttpResult("", BAD_REQUEST, false);
-        }
     }
     
     private static HttpGet createGet(String url, String[] params)
@@ -131,6 +125,7 @@ public class UrlCommunicator {
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
             return true;
         } catch (IOException e) {
+            System.err.println(e.getMessage());
             return false;
         }
     }
@@ -175,8 +170,7 @@ public class UrlCommunicator {
         }
     }
     
-    private static HttpResult getResponseResult(HttpRequestBase httpRequest)
-            throws UnsupportedOperationException, IOException {
+    private static HttpResult getResponseResult(HttpRequestBase httpRequest) throws IOException {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();

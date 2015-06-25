@@ -5,6 +5,7 @@ import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ProjectRootFinder implements RootFinder {
      */
     @Override
     public Optional<Course> getCurrentCourse(String path) throws IOException {
-        String[] foldersOfPwd = path.split("/");
+        String[] foldersOfPwd = path.split(File.separator);
         try {
             checkPwd(foldersOfPwd);
         } catch (ProtocolException ex) {

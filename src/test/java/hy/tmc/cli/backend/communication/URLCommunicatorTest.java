@@ -81,7 +81,6 @@ public class URLCommunicatorTest {
         );
     }
 
-
     @Test
     public void badRequestWithoutValidURL() throws IOException {
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/vaaraurl", "test:1234");
@@ -114,7 +113,7 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void makePutRequestSendsPut() {
+    public void makePutRequestSendsPut() throws IOException {
         ClientData.setUserData("test", "1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");
@@ -123,7 +122,7 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void makePutRequestHasCorrectHeaders() {
+    public void makePutRequestHasCorrectHeaders() throws IOException {
         ClientData.setUserData("test", "1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");

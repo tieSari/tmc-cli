@@ -1,6 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.backend.MailFormatter.formatExercises;
 import static hy.tmc.cli.backend.MailFormatter.formatReviews;
 
 import com.google.common.base.Optional;
@@ -11,8 +10,6 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MailChecker extends Command<String> {
 
@@ -61,9 +58,6 @@ public class MailChecker extends Command<String> {
         String mail = "";
         if (mailbox.get().reviewsWaiting()) {
             mail += formatReviews(mailbox.get().getUnreadReviews());
-        } 
-        if (mailbox.get().updatesWaiting()) {
-            mail += formatExercises(mailbox.get().getExerciseUpdates(course.get()));
         }
         return mail;
     }

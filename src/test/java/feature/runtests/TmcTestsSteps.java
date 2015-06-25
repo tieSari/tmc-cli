@@ -64,7 +64,7 @@ public class TmcTestsSteps {
      * User should get both information about passed tests and failed tests.
      */
     @Then("^the user sees both passed and failed tests$")
-    public void theUserSeesBothPassedAndFailedTests() throws UnsupportedEncodingException {
+    public void theUserSeesBothPassedAndFailedTests() {
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
     }

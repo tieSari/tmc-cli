@@ -14,7 +14,5 @@ public class CacheTest {
         Thread.sleep(10);
         Cache.update(new HashMap<Integer, Course>());
         assertNotEquals(Cache.getLastUpdated().getTime(), date.getTime());
-
     }
-
 }

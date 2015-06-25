@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +140,7 @@ public class Review {
         this.updatedAt = updatedAt;
     }
 
-    public void markAs(boolean read) {
+    public void markAs(boolean read) throws IOException {
         Map<String, String> headers = addHeaders(read);
         HttpResult result = UrlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
         if (result.getData().contains("OK")) {

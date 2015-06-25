@@ -16,16 +16,6 @@ public class MailFormatter {
     public static String formatReviews(List<Review> reviews) {
         return reviewOutput(reviews);
     }
-
-    /**
-     *
-     * @param exercises
-     * @return
-     */
-    @Beta
-    public static String formatExercises(List<?> exercises) {
-        return "";
-    }
     
     private static String reviewOutput(List<Review> reviews) {
         StringBuilder builder = new StringBuilder();
