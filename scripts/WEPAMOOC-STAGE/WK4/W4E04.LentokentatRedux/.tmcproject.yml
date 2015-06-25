@@ -1,3 +1,0 @@
-extra_student_files:
-  - src/test/java/wad/service/AirportServiceTest.java
-  - src/test/java/wad/controller/AircraftControllerTest.java
