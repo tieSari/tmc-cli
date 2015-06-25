@@ -44,7 +44,7 @@ public class Paste extends Command<URI> {
      * @throws ProtocolException if no auth or no path supplied.
      */
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws ProtocolException, IOException {
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("User must be authorized first");
         }
@@ -60,7 +60,7 @@ public class Paste extends Command<URI> {
     }
 
     @Override
-    public Optional<String> parseData(Object data) {
+    public Optional<String> parseData(Object data) throws IOException {
         String mail = checkMail();
         URI returnURI = (URI) data;
         return Optional.of(mail + "\n"+"Paste submitted. Here it is: \n  " + returnURI);
@@ -92,7 +92,7 @@ public class Paste extends Command<URI> {
      *
      * @throws ProtocolException if unable to find necessary params.
      */
-    private String checkMail() {
+    private String checkMail() throws IOException {
         if (data.containsKey("courseID")) {
             mail.setParameter("courseID", data.get("courseID"));
         } else if (data.containsKey("path")) {

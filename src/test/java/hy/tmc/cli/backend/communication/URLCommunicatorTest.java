@@ -29,6 +29,13 @@ public class URLCommunicatorTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
+    @Test
+    public void okWithValidParams() throws IOException {
+        new UrlCommunicator();
+        HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080", "test:1234");
+        assertEquals(200, result.getStatusCode());
+    }
+
     @Before
     public void setUpWireMock() {
         stubFor(get(urlEqualTo("/"))
@@ -74,21 +81,15 @@ public class URLCommunicatorTest {
         );
     }
 
-    @Test
-    public void okWithValidParams() {
-        new UrlCommunicator();
-        HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080", "test:1234");
-        assertEquals(200, result.getStatusCode());
-    }
 
     @Test
-    public void badRequestWithoutValidURL() {
+    public void badRequestWithoutValidURL() throws IOException {
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/vaaraurl", "test:1234");
         assertEquals(400, result.getStatusCode());
     }
 
     @Test
-    public void notFoundWithoutValidParams() {
+    public void notFoundWithoutValidParams() throws IOException {
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
         assertEquals(403, result.getStatusCode());
     }
@@ -100,12 +101,14 @@ public class URLCommunicatorTest {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(testFile),
                 "http://127.0.0.1:8080/kivaurl",
-                Optional.<Map<String, String>>absent());
+                new HashMap<String, String>());
+
+        ClientData.clearUserData();
         assertEquals("All tests passed", result.getData());
     }
 
-    @Test
-    public void badGetRequestIsCatched() {
+    @Test(expected = IOException.class)
+    public void badGetRequestIsThrown() throws IOException {
         HttpResult makeGetRequest = UrlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
         assertEquals(UrlCommunicator.BAD_REQUEST, makeGetRequest.getStatusCode());
     }
@@ -132,5 +135,4 @@ public class URLCommunicatorTest {
     public void clearUser() {
         ClientData.clearUserData();
     }
-
 }

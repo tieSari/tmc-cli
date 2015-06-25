@@ -6,6 +6,7 @@ import hy.tmc.cli.frontend.communication.commands.Command;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +23,7 @@ public class SocketListener implements Runnable {
         this.socket = socket;
         this.command = command;
     }
-    
+
     @Override
     public void run() {
         try {
@@ -32,21 +33,24 @@ public class SocketListener implements Runnable {
             if (output.isPresent()) {
                 writeToOutput(output.get());
             }
-       }
-        catch (InterruptedException | ExecutionException ex) {
+        }
+        catch (InterruptedException | ExecutionException | IOException ex) {
             System.err.println(Arrays.toString(ex.getStackTrace()));
+            if (ex.getCause().getClass() == UnknownHostException.class) {
+                writeToOutput("Unable to reach server: ");
+            }
             writeToOutput(ex.getCause().getMessage());
             printLog(ex);
         }
     }
-    
-     /**
+
+    /**
      * printLog prints exception to scripts/log.txt
      *
      * @param ex exception which can be any exception
      */
     private void printLog(Exception ex) {
-        System.err.println(ex.getMessage() + "\n" + Arrays.toString(ex.getCause().getStackTrace()) + "\n" +  Arrays.toString(ex.getStackTrace()));
+        System.err.println(ex.getMessage() + "\n" + Arrays.toString(ex.getCause().getStackTrace()) + "\n" + Arrays.toString(ex.getStackTrace()));
     }
 
     private void writeToOutput(final String commandOutput) {

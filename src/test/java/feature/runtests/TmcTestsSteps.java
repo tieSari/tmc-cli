@@ -4,7 +4,6 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.commands.RunTests;
@@ -16,9 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
-import fi.helsinki.cs.tmc.langs.RunResult;
 import java.io.UnsupportedEncodingException;
-import java.util.Map.Entry;
 
 public class TmcTestsSteps {
 

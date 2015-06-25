@@ -103,7 +103,7 @@ public class SubmitTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() throws ProtocolException {
+    public void testCheckDataSuccess() throws ProtocolException, IOException {
         Submit submitCommand = new Submit();
         submitCommand.setParameter("path", "/home/tmccli/testi");
         submitCommand.checkData();
@@ -113,13 +113,13 @@ public class SubmitTest {
      * Check that if user didn't give correct data, data checking fails.
      */
     @Test(expected = ProtocolException.class)
-    public void testCheckDataFail() throws ProtocolException {
+    public void testCheckDataFail() throws ProtocolException, IOException {
         Submit submitCommand = new Submit();
         submitCommand.checkData();
     }
 
     @Test(expected = ProtocolException.class)
-    public void checkDataFailIfNoAuth() throws ProtocolException {
+    public void checkDataFailIfNoAuth() throws ProtocolException, IOException {
         Submit submitCommand = new Submit();
         ClientData.clearUserData();
         submitCommand.checkData();

@@ -1,24 +1,21 @@
 package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.TmcJsonParser;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.testhelpers.ExampleJson;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.contains;
 
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -32,7 +29,7 @@ public class JSONParserTest {
     String realAddress = "http://real.address.fi";
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
@@ -49,31 +46,7 @@ public class JSONParserTest {
         ClientData.clearUserData();
     }
 
-    @Test
-    public void parsesCourseNamesCorrectly() {
-        new TmcJsonParser();
-        String courses = TmcJsonParser.getCourseNames(new ConfigHandler()
-                .readCoursesAddress());
-        assertTrue(courses.contains("s2014-tira"));
-        assertTrue(courses.contains("k2015-ohpe"));
-        assertTrue(courses.contains("checkstyle-demo"));
-        assertTrue(courses.contains("2014-mooc-no-deadline"));
-        assertTrue(courses.contains("c-demo"));
-    }
-
-    @Test
-    public void coursesDontContainWeirdNames() {
-        String courses = TmcJsonParser.getCourseNames(new ConfigHandler()
-                .readCoursesAddress());
-        assertFalse(courses.contains("Chang"));
-        assertFalse(courses.contains("Ilari"));
-        assertFalse(courses.contains("Pihla"));
-        assertFalse(courses.contains("Kristian"));
-        assertFalse(courses.contains("Samu"));
-        assertFalse(courses.contains("Jani"));
-    }
-
-    private void mockCourse(String url) {
+    private void mockCourse(String url) throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq(url),
@@ -82,7 +55,7 @@ public class JSONParserTest {
     }
 
     @Test
-    public void getsExercisesCorrectlyFromCourseJSON() {
+    public void getsExercisesCorrectlyFromCourseJSON() throws IOException {
         mockCourse(realAddress);
         String names = TmcJsonParser.getExerciseNames(realAddress);
 
@@ -92,7 +65,7 @@ public class JSONParserTest {
     }
 
     @Test
-    public void getsLastExerciseOfCourseJSON() {
+    public void getsLastExerciseOfCourseJSON() throws IOException {
         mockCourse(realAddress);
         String names = TmcJsonParser.getExerciseNames(realAddress);
 
@@ -100,10 +73,10 @@ public class JSONParserTest {
     }
 
     @Test
-    public void canFetchOneCourse() {
+    public void canFetchOneCourse() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                .when(UrlCommunicator.makeGetRequest(contains("/courses/3"),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
 
@@ -113,7 +86,7 @@ public class JSONParserTest {
 
     }
 
-    private void mockSubmissionUrl() {
+    private void mockSubmissionUrl() throws IOException {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
@@ -124,11 +97,10 @@ public class JSONParserTest {
     }
 
     @Test
-    public void canFetchSubmissionData() {
+    public void canFetchSubmissionData() throws IOException {
         mockSubmissionUrl();
         SubmissionResult result = TmcJsonParser.getSubmissionResult("http://real.address.fi");
         assertNotNull(result);
         assertEquals("2014-mooc-no-deadline", result.getCourse());
     }
-
 }

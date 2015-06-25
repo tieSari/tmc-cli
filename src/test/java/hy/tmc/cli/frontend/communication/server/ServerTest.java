@@ -54,11 +54,6 @@ public class ServerTest {
     }
 
     @Test
-    public void whenNoCommandIsSentNeitherPoolIsCalled() throws ProtocolException {
-        verify(socketThreadPool, times(0)).submit(any(SocketRunnable.class));
-    }
-
-    @Test
     public void socketPoolIsGivenATaskWhenACommandIsSent() {
         sendMessageToServer(client, "help");
         verify(socketThreadPool).submit(Mockito.any(SocketRunnable.class));

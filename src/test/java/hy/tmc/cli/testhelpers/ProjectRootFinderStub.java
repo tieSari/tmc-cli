@@ -51,5 +51,4 @@ public class ProjectRootFinderStub implements RootFinder {
         }
         return Optional.absent();
     }
-
 }

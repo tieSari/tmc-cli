@@ -7,6 +7,7 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.synchronization.PollScheduler;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class StatusPoller extends AbstractScheduledService {
     }
 
     @Override
-    protected void runOneIteration() {
+    protected void runOneIteration() throws IOException {
         if (!Mailbox.hasMailboxInitialized()) {
             throw new IllegalStateException("No mailbox initialized.");
         }
@@ -45,7 +46,7 @@ public class StatusPoller extends AbstractScheduledService {
         return this.pollScheduler;
     }
 
-    private Optional<List<Review>> checkReviews() {
+    private Optional<List<Review>> checkReviews() throws IOException {
         List<Review> currentReviews = TmcJsonParser.getReviews(this.currentCourse.getReviewsUrl());
         currentReviews = filter(currentReviews);
 
@@ -74,5 +75,4 @@ public class StatusPoller extends AbstractScheduledService {
     protected void shutDown() throws Exception {
         
     }
-
 }

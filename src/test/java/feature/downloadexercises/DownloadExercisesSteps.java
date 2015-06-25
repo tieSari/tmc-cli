@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class DownloadExercisesSteps {
 
@@ -78,13 +79,23 @@ public class DownloadExercisesSteps {
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)));
+        
+        wireMockServer.stubFor(get(urlEqualTo("/courses.json?api_version=7"))
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(ExampleJson.allCoursesExample
+                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
 
         wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055"))));
+                        .withBody(ExampleJson.courseExample
+                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055")
+                                .replaceFirst("3", "21"))));
 
         wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
@@ -150,12 +161,18 @@ public class DownloadExercisesSteps {
                 + File.separator + "viikko1").exists());
     }
 
+    /**
+     * Verifies that downloading gives information about progress.
+     *
+     * @throws Throwable if something fails
+     */
     @Then("^information about download progress\\.$")
     public void information_about_download_progress()
             throws Throwable {
-        assertContains(output, "Downloading exercise viikko1-Viikko1_000.Hiekkalaatikko 0.0%");
+        assertContains(output, "downloaded viikko1-Viikko1_000.Hiekkalaatikko");
     }
 
+    
     @Then("^\\.zip -files are removed\\.$")
     public void zip_files_are_removed() throws Throwable {
         String filepath = tempDir.toAbsolutePath().toString();
@@ -167,6 +184,39 @@ public class DownloadExercisesSteps {
             }
         }
         assertFalse(zips);
+    }
+
+    @When("^user gives a download exercises command and course id with locked exercises\\.$")
+    public void user_gives_a_download_exercises_command_and_course_id_with_locked_exercises() throws Throwable {
+        wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(ExampleJson.courseExample
+                                .replace("https://tmc.mooc.fi/staging", "http://127.0.0.1:5055")
+                                .replaceFirst("\"locked\": false", "\"locked\": true"))));
+
+        createTestClient();
+        testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
+        output = testClient.getAllFromSocket();
+    }
+
+    @Then("^output should contain skipping locked exercises\\.$")
+    public void output_should_contain_skipping_locked_exercises() throws Throwable {
+        assertContains(output, "Skipping locked exercise:");
+    }
+
+    @When("^user gives a download exercises command and course id that isnt a real id\\.$")
+    public void user_gives_a_download_exercises_command_and_course_id_that_isnt_a_real_id() throws Throwable {
+        createTestClient();
+        testClient.sendMessage("downloadExercises courseID 9999 path " + tempDir.toAbsolutePath());
+        output = testClient.getAllFromSocket();
+    }
+
+    @Then("^output should contain error message\\.$")
+    public void output_should_contain_error_message() throws Throwable {
+        assertContains(output, "Failed to fetch exercises. Check your internet connection or course ID");
     }
 
     /**

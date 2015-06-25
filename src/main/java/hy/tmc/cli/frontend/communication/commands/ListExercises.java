@@ -4,11 +4,12 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseLister;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.Exercise;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
+import java.io.IOException;
 
-import hy.tmc.cli.domain.Exercise;
 import java.util.List;
 
 public class ListExercises extends Command<List<Exercise>> {
@@ -37,7 +38,7 @@ public class ListExercises extends Command<List<Exercise>> {
      * @throws ProtocolException if some data not specified
      */
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws ProtocolException, IOException {
         if (!data.containsKey("path")) {
             throw new ProtocolException("Path not recieved");
         }
@@ -53,7 +54,7 @@ public class ListExercises extends Command<List<Exercise>> {
     }
 
     @Override
-    public Optional<String> parseData(Object data) {
+    public Optional<String> parseData(Object data) throws IOException {
         String mail = checkMail();
         @SuppressWarnings("unchecked")
         List<Exercise> result = (List<Exercise>) data;
@@ -61,9 +62,9 @@ public class ListExercises extends Command<List<Exercise>> {
     }
 
     @Override
-    public List<Exercise> call() throws ProtocolException {
-        TmcServiceScheduler.startIfNotRunning(this.current);
+    public List<Exercise> call() throws ProtocolException, IOException {
         checkData();
+        TmcServiceScheduler.startIfNotRunning(this.current);
         return lister.listExercises(data.get("path"));
     }
 
@@ -75,7 +76,7 @@ public class ListExercises extends Command<List<Exercise>> {
      *
      * @throws ProtocolException if unable to find necessary params.
      */
-    private String checkMail() {
+    private String checkMail() throws IOException {
         if (data.containsKey("courseID")) {
             mail.setParameter("courseID", data.get("courseID"));
         } else if (data.containsKey("path")) {

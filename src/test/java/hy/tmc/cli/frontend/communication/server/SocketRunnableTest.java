@@ -23,8 +23,11 @@ public class SocketRunnableTest {
     TestClient testClient;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, ProtocolException {
         tmcCore = mock(TmcCore.class);
+        ProtocolParser parser = new ProtocolParser();
+        when(tmcCore.getCommand(eq("ping"))).thenReturn(parser.getCommand("ping"));
+        when(tmcCore.getCommand(eq("help"))).thenReturn(parser.getCommand("help"));
         serverSocket = new ServerSocket(0);
         testClient = new TestClient(serverSocket.getLocalPort());
         socket = serverSocket.accept();

@@ -74,7 +74,7 @@ public class Submit extends Command<SubmissionResult> {
      * @throws ProtocolException if no auth or no path supplied.
      */
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws ProtocolException, IOException {
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("User must be authorized first");
         }
@@ -100,7 +100,7 @@ public class Submit extends Command<SubmissionResult> {
     }
 
     @Override
-    public Optional<String> parseData(Object data) {
+    public Optional<String> parseData(Object data) throws IOException {
         String mail = checkMail();
         try {
             return Optional.of(mail + "\n" + interpreter.resultSummary(true));
@@ -117,7 +117,7 @@ public class Submit extends Command<SubmissionResult> {
      *
      * @throws ProtocolException if unable to find necessary params.
      */
-    private String checkMail() {
+    private String checkMail() throws IOException {
         if (data.containsKey("courseID")) {
             mail.setParameter("courseID", data.get("courseID"));
         } else if (data.containsKey("path")) {

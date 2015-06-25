@@ -39,7 +39,6 @@ public class UrlCommunicator {
     
     public static final int BAD_REQUEST = 407;
 
-
     /**
      * Creates and executes post-request to specified URL.
      *
@@ -51,9 +50,7 @@ public class UrlCommunicator {
      * @throws java.io.IOException if file is invalid.
      */
     public static HttpResult makePostWithFile(ContentBody fileBody,
-            String destinationUrl,
-            Optional<Map<String, String>> headers)
-            throws IOException {
+            String destinationUrl, Map<String, String> headers) throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         addFileToRequest(fileBody, httppost);
@@ -77,14 +74,9 @@ public class UrlCommunicator {
      * always username:password
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HttpResult makeGetRequest(String url, String... params) {
-        try {
-            HttpGet httpGet = createGet(url, params);
-            return getResponseResult(httpGet);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            return new HttpResult("", BAD_REQUEST, false);
-        }
+    public static HttpResult makeGetRequest(String url, String... params) throws IOException {
+        HttpGet httpGet = createGet(url, params);
+        return getResponseResult(httpGet);
     }
     
     /**
@@ -175,11 +167,10 @@ public class UrlCommunicator {
      * @param httpRequest where to put headers.
      * @param headers to be included.
      */
-    private static void addHeadersTo(HttpRequestBase httpRequest,
-                                     Optional<Map<String, String>> headers) {
-        if (headers.isPresent()) {
-            for (String header : headers.get().keySet()) {
-                httpRequest.addHeader(header, headers.get().get(header));
+    private static void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
+        if (!headers.isEmpty()) {
+            for (String header : headers.keySet()) {
+                httpRequest.addHeader(header, headers.get(header));
             }
         }
     }

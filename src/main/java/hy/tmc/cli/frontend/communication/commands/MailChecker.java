@@ -9,9 +9,10 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.domain.submission.SubmissionResult;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MailChecker extends Command<String> {
 
@@ -23,7 +24,7 @@ public class MailChecker extends Command<String> {
     }
 
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws ProtocolException, IOException {
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("Must be logged in first");
         }
@@ -32,7 +33,11 @@ public class MailChecker extends Command<String> {
             throw new ProtocolException("No mailbox found. Are you logged in?");
         }
         if (data.containsKey("courseID")) {
-            course = TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
+            try {
+                course = TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
         } else if (data.containsKey("path")) {
             String path = data.get("path");
             course = ClientData.getCurrentCourse(path);
@@ -51,14 +56,12 @@ public class MailChecker extends Command<String> {
     }
 
     @Override
-    public String call() throws ProtocolException {
+    public String call() throws ProtocolException, IOException {
         checkData();
         String mail = "";
         if (mailbox.get().reviewsWaiting()) {
             mail += formatReviews(mailbox.get().getUnreadReviews());
-        } else {
-            mail += "No mail for you :(";
-        }
+        } 
         if (mailbox.get().updatesWaiting()) {
             mail += formatExercises(mailbox.get().getExerciseUpdates(course.get()));
         }

@@ -79,7 +79,7 @@ public class PasteTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() throws ProtocolException {
+    public void testCheckDataSuccess() throws ProtocolException, IOException {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
         paste.setParameter("path", "/home/tmccli/uolevipuistossa");
         paste.checkData();

@@ -6,6 +6,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
+import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -58,7 +59,7 @@ public class MailCheckerTest {
     }
 
     @Test
-    public void ifMailboxHasMessagesItPrintsThemToFrontend() throws ProtocolException {
+    public void ifMailboxHasMessagesItPrintsThemToFrontend() throws ProtocolException, IOException {
         mailChecker.data.put("path", "/2014-mooc-no-deadline");
         String result = mailChecker.call();
         assertTrue(

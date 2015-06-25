@@ -6,6 +6,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
+import java.io.IOException;
 
 /**
  * This class will be initialized when Auth is successful. Use this to get data of user.
@@ -52,7 +53,7 @@ public final class ClientData {
      * @param currentPath path to navigate through.
      * @return optional which includes the course if found.
      */
-    public synchronized static Optional<Course> getCurrentCourse(String currentPath) throws ProtocolException {
+    public synchronized static Optional<Course> getCurrentCourse(String currentPath) throws ProtocolException, IOException {
         if (!userDataExists()) {
             throw new ProtocolException("Not logged in.");
         }

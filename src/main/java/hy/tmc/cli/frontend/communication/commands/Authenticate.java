@@ -8,6 +8,7 @@ import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.IOException;
 
 public class Authenticate extends Command<Boolean> {
 
@@ -33,7 +34,7 @@ public class Authenticate extends Command<Boolean> {
         }
     }
 
-    private int makeRequest() {
+    private int makeRequest() throws IOException {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),
@@ -43,7 +44,7 @@ public class Authenticate extends Command<Boolean> {
     }
 
     @Override
-    public Boolean call() throws ProtocolException {
+    public Boolean call() throws ProtocolException, IOException {
         checkData();
         if (isOk(makeRequest())) {
             ClientData.setUserData(data.get("username"), data.get("password"));
@@ -64,5 +65,4 @@ public class Authenticate extends Command<Boolean> {
     private boolean isOk(int code) {
         return Integer.toString(code).matches(httpOk);
     }
-
 }

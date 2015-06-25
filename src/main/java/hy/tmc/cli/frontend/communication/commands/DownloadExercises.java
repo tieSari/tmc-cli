@@ -5,8 +5,10 @@ import hy.tmc.cli.backend.communication.ExerciseDownloader;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
+
+import java.io.IOException;
 
 public class DownloadExercises extends Command<String> {
 
@@ -47,7 +49,8 @@ public class DownloadExercises extends Command<String> {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             throw new ProtocolException("Given course id is not a number");
         }
     }
@@ -63,18 +66,33 @@ public class DownloadExercises extends Command<String> {
      * @return
      */
     @Override
-    public String call() throws ProtocolException {
+    public String call() throws ProtocolException, IOException {
         checkData();
 
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
+
         if (courseResult.isPresent()) {
-            Course course = courseResult.get();
-            Optional<String> downloadFiles = exerciseDownloader.downloadFiles(
-                    course.getExercises(), data.get("path"), course.getName());
+            Optional<String> downloadFiles = downloadExercises(courseResult.get());
             if (downloadFiles.isPresent()) {
                 return downloadFiles.get();
             }
         }
-        throw new ProtocolException("Failed to fetch exercises. Check your internet connection.");
+        throw new ProtocolException("Failed to fetch exercises. Check your internet connection or course ID");
+    }
+
+    private Optional<String> downloadExercises(Course course) {
+        int exCount = 0;
+        int totalCount = course.getExercises().size();
+        int downloaded = 0;
+        String path = exerciseDownloader.createCourseFolder(data.get("path"), course.getName());
+        for (Exercise exercise : course.getExercises()) {
+            String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
+            exCount++;
+            if (!message.contains("Skip")) {
+                downloaded++;
+            }
+            this.observer.progress(100.0*exCount/totalCount, message);
+        }
+        return Optional.of(downloaded+" exercises downloaded");
     }
 }
