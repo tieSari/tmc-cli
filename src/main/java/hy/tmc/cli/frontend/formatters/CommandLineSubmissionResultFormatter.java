@@ -35,7 +35,9 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
     public String testCaseDescription(TestCase testCase) {
         StringBuilder destination = new StringBuilder();
         if (testCase.isSuccessful()) {
-            destination.append(coloredString(" PASSED: ", GREEN)).append(testCase.getName());
+            destination.append(coloredString(" PASSED: ", GREEN))
+                    .append(testCase.getName())
+                    .append("\n");
             return destination.toString();
         }
         destination.append(coloredString(" FAILED: ", RED))
