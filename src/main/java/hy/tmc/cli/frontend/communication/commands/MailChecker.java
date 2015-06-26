@@ -35,20 +35,20 @@ public class MailChecker extends Command<String> {
         checkCourseToPresent();
     }
 
-    public void setMailbox() throws ProtocolException {
+    private void setMailbox() throws ProtocolException {
         mailbox = Mailbox.getMailbox();
         if (!mailbox.isPresent()) {
             throw new ProtocolException("No mailbox found. Are you logged in?");
         }
     }
     
-    public void checkUserData() throws ProtocolException{
+    private void checkUserData() throws ProtocolException{
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("Must be logged in first");
         }
     }
 
-    public void setCourse() throws IOException, ProtocolException {
+    private void setCourse() throws IOException, ProtocolException {
         try {
             course = TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
         } catch (IOException ex) {
@@ -56,7 +56,7 @@ public class MailChecker extends Command<String> {
         }
     }
     
-    public void checkCourseToPresent() throws ProtocolException {
+    private void checkCourseToPresent() throws ProtocolException {
         if (!course.isPresent()) {
             String errorMsg = "Unable to determine the course. Are you sure this is a tmc course subdirectory?";
             throw new ProtocolException(errorMsg);

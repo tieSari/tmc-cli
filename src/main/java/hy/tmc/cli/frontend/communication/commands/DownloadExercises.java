@@ -49,8 +49,7 @@ public class DownloadExercises extends Command<String> {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new ProtocolException("Given course id is not a number");
         }
     }
@@ -68,9 +67,7 @@ public class DownloadExercises extends Command<String> {
     @Override
     public String call() throws ProtocolException, IOException {
         checkData();
-
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
-
         if (courseResult.isPresent()) {
             Optional<String> downloadFiles = downloadExercises(courseResult.get());
             if (downloadFiles.isPresent()) {
