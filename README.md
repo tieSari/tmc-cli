@@ -27,7 +27,7 @@ Current core functionality includes:
 
 4. You can now start doing exercises. If you want to see if tests pass, you can type `tmc test` in the exercise folder. ![test animation](docs/gifs/test.gif)
 
-5. You can submit the exercise by typing `tmc submit`.
+5. You can submit the exercise by typing `tmc submit`. ![submit animation](docs/gifs/submit.gif)
 
 ### List of commands:
 - login
