@@ -1,9 +1,7 @@
 package hy.tmc.cli.frontend;
 
 import hy.tmc.cli.testhelpers.FeedbackBuilder;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.util.List;
 

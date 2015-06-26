@@ -56,7 +56,7 @@ public class MailChecker extends Command<String> {
     public String call() throws ProtocolException, IOException {
         checkData();
         String mail = "";
-        if (mailbox.get().reviewsWaiting()) {
+        if (mailbox.get().hasNewReviews()) {
             mail += formatReviews(mailbox.get().getUnreadReviews());
         }
         return mail;
