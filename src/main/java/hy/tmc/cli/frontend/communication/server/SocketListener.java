@@ -34,15 +34,18 @@ public class SocketListener implements Runnable {
                 writeToOutput(output.get());
             }
             this.command.cleanData();
+        } catch (InterruptedException | ExecutionException | IOException ex) {
+            handleException(ex);
         }
-        catch (InterruptedException | ExecutionException | IOException ex) {
-            System.err.println(Arrays.toString(ex.getStackTrace()));
-            if (ex.getCause().getClass() == UnknownHostException.class) {
-                writeToOutput("Unable to reach server: ");
-            }
-            writeToOutput(ex.getCause().getMessage());
-            printLog(ex);
+    }
+
+    private void handleException(Exception ex) {
+        System.err.println(Arrays.toString(ex.getStackTrace()));
+        if (ex.getCause().getClass() == UnknownHostException.class) {
+            writeToOutput("Unable to reach server: ");
         }
+        writeToOutput(ex.getCause().getMessage());
+        printLog(ex);
     }
 
     /**
@@ -58,8 +61,7 @@ public class SocketListener implements Runnable {
         try {
             output.write((commandOutput + "\n").getBytes());
             socket.close();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println("Failed to print error message: ");
             System.err.println(ex.getMessage());
         }
