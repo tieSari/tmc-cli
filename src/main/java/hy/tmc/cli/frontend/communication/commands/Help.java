@@ -29,9 +29,9 @@ public class Help extends Command<String> {
      * @return a set of all available command names.
      */
     public String helpMessage() {
-        StringBuilder enterprise = new StringBuilder();
+        StringBuilder message = new StringBuilder();
 
-        enterprise.append("Available commands:\n")
+        message.append("Available commands:\n")
                 .append("help\n")
                 .append("test\n")
                 .append("submit\n")
@@ -43,6 +43,6 @@ public class Help extends Command<String> {
                 .append("login\n")
                 .append("logout");
 
-        return enterprise.toString();
+        return message.toString();
     }
 }
