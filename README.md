@@ -23,7 +23,7 @@ Current core functionality includes:
 
 2. Downloading exercises requires course's id in TMC server. If you don't know the id of the course you want to download, you can list courses with `tmc listCourses` command. ![listCourses animation](docs/gifs/listcourses.gif)
 
-3. You can download a course to your current folder by typing `tmc download <course id>`
+3. You can download a course to your current folder by typing `tmc download <course id>` ![download animation](docs/gifs/dl.gif)
 
 4. You can now start doing exercises. If you want to see if tests pass, you can type `tmc test` in the exercise folder. ![test animation](docs/gifs/test.gif)
 
