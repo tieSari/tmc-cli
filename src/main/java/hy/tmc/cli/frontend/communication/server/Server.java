@@ -123,9 +123,8 @@ public class Server implements FrontendListener, Runnable {
         serverSocket.close();
         socketThreadPool.shutdown();
     }
-
     
-    protected void sendToTmcServer() {
+    protected void sendToTmcServer() throws ProtocolException {
         JsonObject req = getAnswersJson();
         try {
             UrlCommunicator.makePostWithJson(req, getFeedbackUrl());

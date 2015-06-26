@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -140,7 +141,7 @@ public class Review {
         this.updatedAt = updatedAt;
     }
 
-    public void markAs(boolean read) throws IOException {
+    public void markAs(boolean read) throws IOException, ProtocolException {
         Map<String, String> headers = addHeaders(read);
         HttpResult result = UrlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
         if (result.getData().contains("OK")) {
@@ -169,5 +170,4 @@ public class Review {
         return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody + "\n"
                 + this.url;
     }
-
 }

@@ -59,6 +59,7 @@ public class ListExercisesSteps {
 
     @After
     public void closeServer() throws IOException {
+        TmcServiceScheduler.enablePolling();
         server.close();
         serverThread.interrupt();
         wireMockServer.stop();

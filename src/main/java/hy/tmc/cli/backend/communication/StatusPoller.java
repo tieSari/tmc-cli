@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.AbstractScheduledService;
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Review;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.PollScheduler;
 import java.io.IOException;
 
@@ -68,11 +69,9 @@ public class StatusPoller extends AbstractScheduledService {
 
     @Override
     protected void startUp() throws Exception {
-        
     }
 
     @Override
     protected void shutDown() throws Exception {
-        
     }
 }
