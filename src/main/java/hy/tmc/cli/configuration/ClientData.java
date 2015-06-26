@@ -28,6 +28,12 @@ public final class ClientData {
      * @param password of the current user
      */
     public synchronized static void setUserData(String username, String password) {
+        if (username == null) {
+            USERNAME = ""; 
+        }
+        if (password == null) {
+            PASSWORD = "";
+        }
         USERNAME = username;
         PASSWORD = password;
     }
