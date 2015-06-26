@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.Mailbox;
-import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.ExerciseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
@@ -29,7 +29,7 @@ import net.lingala.zip4j.exception.ZipException;
  */
 public class Submit extends Command<SubmissionResult> {
 
-    private CourseSubmitter submitter;
+    private ExerciseSubmitter submitter;
     private SubmissionInterpreter interpreter;
     private Course course;
     private MailChecker mail;
@@ -38,10 +38,7 @@ public class Submit extends Command<SubmissionResult> {
      * Constructor for Submit command, creates the courseSubmitter.
      */
     public Submit() {
-        submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector()),
-                new Zipper()
-        );
+        submitter = new ExerciseSubmitter(new ProjectRootFinder(), new Zipper());
         mail = new MailChecker();
     }
 
@@ -51,7 +48,7 @@ public class Submit extends Command<SubmissionResult> {
      * @param submitter   can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(CourseSubmitter submitter, SubmissionInterpreter interpreter) {
+    public Submit(ExerciseSubmitter submitter, SubmissionInterpreter interpreter) {
         this.interpreter = interpreter;
         this.submitter = submitter;
         mail = new MailChecker();

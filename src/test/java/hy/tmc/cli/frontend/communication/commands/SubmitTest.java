@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.base.Optional;
 
 import hy.tmc.cli.backend.Mailbox;
-import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.ExerciseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
@@ -38,13 +38,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class SubmitTest {
 
     private Submit submit;
-    CourseSubmitter submitterMock;
+    ExerciseSubmitter submitterMock;
     SubmissionResultFormatter formatter;
     private SubmissionInterpreter interpreter;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
 
     private void mock() throws ParseException, ExpiredException, IOException, ZipException, ProtocolException {
-        submitterMock = Mockito.mock(CourseSubmitter.class);
+        submitterMock = Mockito.mock(ExerciseSubmitter.class);
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito
                 .when(ClientData.getCurrentCourse(anyString()))
@@ -67,7 +67,7 @@ public class SubmitTest {
         Mailbox.create();
         TmcServiceScheduler.disablePolling();
         mock();
-        submitterMock = Mockito.mock(CourseSubmitter.class);
+        submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         formatter = Mockito.mock(CommandLineSubmissionResultFormatter.class);
         interpreter = Mockito.mock(SubmissionInterpreter.class);

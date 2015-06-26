@@ -1,14 +1,13 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.ExerciseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
 
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.Zipper;
 import net.lingala.zip4j.exception.ZipException;
@@ -19,12 +18,12 @@ import java.text.ParseException;
 
 public class Paste extends Command<URI> {
 
-    private CourseSubmitter submitter;
+    private ExerciseSubmitter submitter;
     private Course course;
     private MailChecker mail;
 
     public Paste() {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
+        this(new ExerciseSubmitter(new ProjectRootFinder(), new Zipper()));
     }
 
     /**
@@ -32,7 +31,7 @@ public class Paste extends Command<URI> {
      *
      * @param submitter can inject submitter mock.
      */
-    public Paste(CourseSubmitter submitter) {
+    public Paste(ExerciseSubmitter submitter) {
         this.submitter = submitter;
         this.mail = new MailChecker();
     }

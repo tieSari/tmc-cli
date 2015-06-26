@@ -8,7 +8,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
-import hy.tmc.cli.zipping.DefaultRootDetector;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
@@ -24,8 +24,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class CourseSubmitter {
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.entity.mime.content.FileBody;
 
+public class ExerciseSubmitter {
+
+    private final String pasteExtensionForTmcServer = "&paste=1";
     private RootFinder rootFinder;
     private ZipMaker zipper;
 
@@ -35,8 +39,8 @@ public class CourseSubmitter {
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
 
     private String submissionZipPath;
-
-    public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
+    
+    public ExerciseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
         this.zipper = zipper;
         this.rootFinder = rootFinder;
     }
@@ -51,6 +55,7 @@ public class CourseSubmitter {
         if (hasNoDeadline(currentExercise)) {
             return false;
         }
+
         Date deadlineDate = getDeadlineDate(currentExercise);
         Date current = new Date();
         return deadlineGone(current, deadlineDate);
@@ -76,6 +81,7 @@ public class CourseSubmitter {
      * Submits folder of exercise to TMC. Finds it from current directory.
      *
      * @param currentPath path from which this was called.
+
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip
      * @throws java.text.ParseException if deadline is wrongly formatted
@@ -83,7 +89,7 @@ public class CourseSubmitter {
      is already expired
      */
     public String submit(String currentPath)
-            throws ParseException, ExpiredException, IOException, ZipException {
+            throws ParseException, ExpiredException, IOException, ZipException, IllegalStateException, ProtocolException {
 
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
@@ -101,45 +107,47 @@ public class CourseSubmitter {
      is already expired
      */
     public String submitPaste(String currentPath)
-            throws IOException, ParseException, ExpiredException,
-            IllegalArgumentException, ZipException {
+            throws IOException, ParseException, ExpiredException, IllegalStateException,
+            IllegalStateException, ZipException, ProtocolException {
 
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
 
-    private Exercise initExercise(String currentPath)
-            throws ParseException, IOException, ExpiredException {
-
+    /**
+     * Search exercise and throw exception if exercise is expired or not
+     * returnable.
+     *
+     * @throws ParseException to frontend
+     * @throws ExpiredException to frontend
+     */
+    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalStateException, IOException, ProtocolException {
         Exercise currentExercise = searchExercise(currentPath);
-        if (isExpired(currentExercise) || !currentExercise.isReturnable()) {
-            deleteZipIfExists();
-            throw new ExpiredException("Exercise is expired.");
+
+        if (exerciseCanBeReturned(currentExercise)) {
+            return currentExercise;
         }
-        return currentExercise;
+        deleteZipIfExists();
+        throw new ExpiredException();
+
+    }
+
+    private boolean exerciseCanBeReturned(Exercise exercise) throws ParseException {
+        return !isExpired(exercise) && exercise.isReturnable();
     }
 
     private Exercise searchExercise(String currentPath)
-            throws IllegalArgumentException, IOException {
+            throws IllegalStateException, IOException, ProtocolException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
-        if (!currentExercise.isPresent()) {
-            deleteZipIfExists();
-            throw new IllegalArgumentException("Could not find exercise in this directory");
-        }
+        ensureValueIsPresent(currentExercise, "Could not find exercise in this directory");
         return currentExercise.get();
     }
 
-    private String sendSubmissionToServerWithPaste(
-            String submissionZipPath,
-            String url) throws IOException {
-
-        final String pasteExtensionForTmcServer = "&paste=1";
-
+    private String sendSubmissionToServerWithPaste(String submissionZipPath, String url)
+            throws IOException {
+        
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new FileBody(new File(submissionZipPath)),
-                url + pasteExtensionForTmcServer,
-                new HashMap<String, String>()
-        );
+                new File(submissionZipPath), url + pasteExtensionForTmcServer);
         return TmcJsonParser.getPasteUrl(result);
     }
 
@@ -149,15 +157,14 @@ public class CourseSubmitter {
         formSubmissionZipPath(currentPath);
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
         deleteZipIfExists();
-
-        zip(findExerciseFolderToZip(currentPath), submissionZipPath);
-        String resultUrl = sendSubmission(paste, returnUrl);
+        zipper.zip(findExerciseFolderToZip(currentPath), submissionZipPath);
+        String resultUrl = sendSubmission(returnUrl, paste);
         deleteZipIfExists();
-
         return resultUrl;
     }
-
-    private String sendSubmission(boolean paste, String returnUrl) throws IOException {
+    
+    
+    private String sendSubmission(String returnUrl, boolean paste) throws IOException {
         String resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(submissionZipPath, returnUrl);
@@ -173,52 +180,45 @@ public class CourseSubmitter {
     }
 
     private String findExerciseFolderToZip(String currentPath) {
-        return rootFinder.getRootDirectory(
-                Paths.get(currentPath)
-        ).get().toString();
+        return rootFinder.getRootDirectory(Paths.get(currentPath)).get().toString();
     }
 
-    private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
-        HttpResult result = UrlCommunicator.makePostWithFile(
-                new FileBody(new File(submissionZipPath)),
-                url,
-                new HashMap<String, String>()
-        );
+    private String sendSubmissionToServer(String submissionZipPath, String url) 
+            throws IOException {
+        HttpResult result = UrlCommunicator.makePostWithFile(new File(submissionZipPath), url);
         return TmcJsonParser.getSubmissionUrl(result);
     }
 
-    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException {
+    private Optional<Exercise> findExercise(String currentPath) 
+            throws IllegalStateException, IOException, ProtocolException {
         return findCurrentExercise(findCourseExercises(currentPath), currentPath);
     }
 
-    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException {
-        Optional<Course> currentCourse = new ProjectRootFinder(
-                new DefaultRootDetector()).getCurrentCourse(currentPath);
-        if (!currentCourse.isPresent()) {
-            deleteZipIfExists();
-            throw new IllegalArgumentException("Not under any course directory");
-        }
+    private List<Exercise> findCourseExercises(String currentPath) 
+            throws IllegalStateException, IOException, ProtocolException {
+        Optional<Course> currentCourse = rootFinder.getCurrentCourse(currentPath);
+        ensureValueIsPresent(currentCourse, "Not under a course directory");
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.get().getId());
         return courseExercises;
     }
-
-    private void zip(String exerciseFolderToZip, String currentPath) throws ZipException {
-        try {
-            this.zipper.zip(exerciseFolderToZip, currentPath);
-        } catch (ZipException ex) {
-            throw new ZipException("Zipping failed because of " + ex.getMessage());
+    
+    private void ensureValueIsPresent(Optional optional, String message) {
+        if (!optional.isPresent()) {
+            deleteZipIfExists();
+            throw new IllegalStateException(message);
         }
     }
 
-    private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, String currentDir) throws IllegalArgumentException {
+    private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, String currentDir) throws IllegalStateException {
         Optional<Path> rootDir = rootFinder.getRootDirectory(Paths.get(currentDir));
-        if (!rootDir.isPresent()) {
-            deleteZipIfExists();
-            throw new IllegalArgumentException("Could not find exercise directory");
-        }
-        String[] path = rootDir.get().toString().split(File.separator);
-        String directory = path[path.length - 1];
+        ensureValueIsPresent(rootDir, "Could not find exercise directory");
+        String directory = getDirectoryFromPath(rootDir.get().toString());
         return getExerciseByName(directory, courseExercises);
+    }
+    
+    private String getDirectoryFromPath(String path) {
+        String[] directories = path.split("\\"+File.separator);
+        return directories[directories.length - 1];
     }
 
     private Optional<Exercise> getExerciseByName(String name, List<Exercise> courseExercises) {
@@ -228,10 +228,6 @@ public class CourseSubmitter {
             }
         }
         return Optional.absent();
-    }
-
-    public String[] getExerciseName(String directoryPath) {
-        return directoryPath.split(File.separator);
     }
 
     /**

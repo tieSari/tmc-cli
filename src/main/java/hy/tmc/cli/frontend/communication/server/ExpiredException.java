@@ -4,9 +4,10 @@ package hy.tmc.cli.frontend.communication.server;
 public class ExpiredException extends Exception {
     /**
      * ExpiredException is thrown when user tries to submit or download expired exercise.
+     * Default error message to "Exercise is expired".
      */
     public ExpiredException() {
-        super();
+        super("Exercise is expired.");
     }
 
     /**
