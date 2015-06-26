@@ -16,11 +16,11 @@ public class Mailbox {
 
     private static Mailbox mailbox;
 
-    private boolean newReviews;
-    private boolean newUpdates;
-
     private List<Review> unreadReviews;
     private Map<Course, List<Exercise>> exerciseUpdates;
+
+    private boolean newReviews;
+    private boolean newUpdates;
 
     private Mailbox() {
         unreadReviews = new ArrayList<>();
