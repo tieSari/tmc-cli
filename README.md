@@ -39,7 +39,7 @@ Current core functionality includes:
   - If it's still not found, throws an error
 - submit
   - Submits an exercise in the current directory to the TMC server
-  - If no exercise is found, looks for it above
+  - If no exercise is found in the directory, looks for it in parent folder
   - If it's still not found, throws an error
 - listCourses
   - Lists courses that exist on the specified TMC server and their course IDs
