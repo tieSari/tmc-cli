@@ -70,14 +70,6 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testGetExerciseName() {
-        final String path = "/home/test/ohpe-test/viikko_01";
-        rootFinder.setReturnValue(path);
-        String[] names = courseSubmitter.getExerciseName(path);
-        assertEquals("viikko_01", names[names.length - 1]);
-    }
-
-    @Test
     public void testFindCourseByCorrectPath() throws IOException, ProtocolException {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
         Optional<Course> course = realFinder.findCourseByPath(path.split(File.separator));
@@ -114,21 +106,21 @@ public class CourseSubmitterTest {
         assertEquals(pastePath, result);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikeintehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
