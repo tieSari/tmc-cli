@@ -50,6 +50,10 @@ public class SocketRunnable implements Runnable {
             return;
         }
         command.setObserver(new CommandLineProgressObserver(outputStream));
+        createFuture(command, outputStream);
+    }
+    
+    private void createFuture(Command command, DataOutputStream outputStream){
         final ListenableFuture<?> commandFuture = core.submitTask(command);
         if (commandFuture != null) {
             final DataOutputStream output = outputStream;
@@ -71,10 +75,14 @@ public class SocketRunnable implements Runnable {
             if(command == null) return null;
             return command;
         } catch (ProtocolException ex) {
-            stream.write((ex.getMessage() + "\n").getBytes());
-            socket.close();
-            return null;
+            handleException(ex, stream);
+            return null;              
         }
+    }
+    
+    private void handleException(Exception ex, DataOutputStream stream) throws IOException{
+        stream.write((ex.getMessage() + "\n").getBytes());
+        socket.close();
     }
 
     private Command getCommand(String input) throws ProtocolException, IOException {

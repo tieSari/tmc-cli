@@ -7,8 +7,6 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
 import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.frontend.RangeFeedbackHandler;
-import hy.tmc.cli.frontend.TextFeedbackHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -26,32 +24,14 @@ public class Server implements FrontendListener, Runnable {
     private ExecutorService socketThreadPool;
     private BufferedReader in;
     private JsonArray feedbackAnswers = new JsonArray();
-    private RangeFeedbackHandler rangeFeedbackHandler;
-    private TextFeedbackHandler textFeedbackHandler;
-
     /**
      * Constructor for server. It finds a free port to be listened to.
      *
      * @throws IOException if failed to write port to configuration file
      */
     public Server() throws IOException {
-        this(new TmcCore(), Executors.newCachedThreadPool(), new RangeFeedbackHandler(null)); //NULL NULL NULL
+        this(new TmcCore(), Executors.newCachedThreadPool()); //NULL NULL NULL
     }
-    
-    /**
-     * Constructor for dependency injection.
-     *
-     * @throws IOException if failed to write port to configuration file
-     */
-    public Server(RangeFeedbackHandler handler) throws IOException {
-        this(new TmcCore(), Executors.newCachedThreadPool(), handler);
-    }
-
-    
-    public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
-        this(tmcCore, socketThreadPool, new RangeFeedbackHandler(null));
-    }
-    
     
     /**
      * Constructor for dependency injection.
@@ -59,12 +39,10 @@ public class Server implements FrontendListener, Runnable {
      * @param tmcCore
      * @param socketThreadPool
      */
-    public Server(TmcCore tmcCore, ExecutorService socketThreadPool, RangeFeedbackHandler handler) throws IOException {
+    public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
         this.tmcCore = tmcCore;
         this.socketThreadPool = socketThreadPool;
         initServerSocket();
-        this.rangeFeedbackHandler = handler;
-        this.textFeedbackHandler = new TextFeedbackHandler(this);
 
     }
 
@@ -123,23 +101,5 @@ public class Server implements FrontendListener, Runnable {
         serverSocket.close();
         socketThreadPool.shutdown();
     }
-    
-    protected void sendToTmcServer() throws ProtocolException {
-        JsonObject req = getAnswersJson();
-        try {
-            UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    private String getFeedbackUrl() {
-        return rangeFeedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam;
-    }
-
-    private JsonObject getAnswersJson() {
-        JsonObject req = new JsonObject();
-        req.add("answers", feedbackAnswers);
-        return req;
-    }
+     
 }
