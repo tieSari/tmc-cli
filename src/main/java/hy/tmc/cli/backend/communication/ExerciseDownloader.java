@@ -7,7 +7,6 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
@@ -42,7 +41,7 @@ public class ExerciseDownloader {
      * @param courseUrl course url
      * @return info about downloading.
      */
-    public Optional<String> downloadExercises(String courseUrl) throws IOException, ProtocolException {
+    public Optional<String> downloadExercises(String courseUrl) throws IOException {
         List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
         if (exercises.isEmpty()) {
             return Optional.of("No exercises to download.");

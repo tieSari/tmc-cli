@@ -30,7 +30,7 @@ public class StatusPoller extends AbstractScheduledService {
     }
 
     @Override
-    protected void runOneIteration() throws IOException, ProtocolException {
+    protected void runOneIteration() throws IOException {
         if (!Mailbox.hasMailboxInitialized()) {
             throw new IllegalStateException("No mailbox initialized.");
         }
@@ -47,7 +47,7 @@ public class StatusPoller extends AbstractScheduledService {
         return this.pollScheduler;
     }
 
-    private Optional<List<Review>> checkReviews() throws IOException, ProtocolException {
+    private Optional<List<Review>> checkReviews() throws IOException {
         List<Review> currentReviews = TmcJsonParser.getReviews(this.currentCourse.getReviewsUrl());
         currentReviews = filter(currentReviews);
 
@@ -69,11 +69,9 @@ public class StatusPoller extends AbstractScheduledService {
 
     @Override
     protected void startUp() throws Exception {
-        
     }
 
     @Override
     protected void shutDown() throws Exception {
-        
     }
 }

@@ -30,7 +30,7 @@ public class TmcJsonParser {
      * @param courseAddress address of json
      * @return List of Course-objects
      */
-    public static List<Course> getCourses(String courseAddress) throws IOException, ProtocolException {
+    public static List<Course> getCourses(String courseAddress) throws IOException {
         JsonObject jsonObject = getJsonFrom(courseAddress);
         Gson mapper = new Gson();
         Course[] courses = mapper
@@ -44,7 +44,7 @@ public class TmcJsonParser {
      * @param url url from which the object data is fetched
      * @return JSON-object
      */
-    private static JsonObject getJsonFrom(String url) throws IOException, ProtocolException {
+    private static JsonObject getJsonFrom(String url) throws IOException {
         HttpResult httpResult = UrlCommunicator.makeGetRequest(
                 url, ClientData.getFormattedUserData()
         );
@@ -67,7 +67,7 @@ public class TmcJsonParser {
      * @param reviewUrl which is found from course-object
      * @return List of reviews
      */
-    public static List<Review> getReviews(String reviewUrl) throws IOException, ProtocolException {
+    public static List<Review> getReviews(String reviewUrl) throws IOException {
         JsonObject jsonObject = getJsonFrom(withApiVersion(reviewUrl));
         Gson mapper = new Gson();
         Review[] reviews = mapper
@@ -81,7 +81,7 @@ public class TmcJsonParser {
      * @param courseUrl url of the course we are interested in
      * @return String of all exercise names separated by newlines
      */
-    public static String getExerciseNames(String courseUrl) throws IOException, ProtocolException {
+    public static String getExerciseNames(String courseUrl) throws IOException {
         List<Exercise> exercises = getExercises(courseUrl);
         StringBuilder asString = new StringBuilder();
         for (Exercise exercise : exercises) {
@@ -133,7 +133,7 @@ public class TmcJsonParser {
      * @param courseUrl URL path to course JSON
      * @return an Course object (parsed from JSON)
      */
-    public static Optional<Course> getCourse(String courseUrl) throws IOException, ProtocolException {
+    public static Optional<Course> getCourse(String courseUrl) throws IOException {
         JsonObject courseJson = getJsonFrom(courseUrl);
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
@@ -151,7 +151,7 @@ public class TmcJsonParser {
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
      */
-    public static List<Exercise> getExercises(Course course) throws IOException, ProtocolException {
+    public static List<Exercise> getExercises(Course course) throws IOException {
         return getExercises(course.getId());
     }
 
@@ -161,7 +161,7 @@ public class TmcJsonParser {
      * @param id id of the course we are interested in
      * @return List of a all exercises as Exercise-objects
      */
-    public static List<Exercise> getExercises(int id) throws IOException, ProtocolException {
+    public static List<Exercise> getExercises(int id) throws IOException {
         ConfigHandler confighandler = new ConfigHandler();
         return getExercises(confighandler.getCourseUrl(id));
     }
@@ -173,7 +173,7 @@ public class TmcJsonParser {
      * @return List of all exercises as Exercise-objects. If no course is found,
      * empty list will be returned.
      */
-    public static List<Exercise> getExercises(String courseUrl) throws IOException, ProtocolException {
+    public static List<Exercise> getExercises(String courseUrl) throws IOException {
         Optional<Course> course = getCourse(courseUrl);
         if (course.isPresent()) {
             return course.get().getExercises();
@@ -187,7 +187,7 @@ public class TmcJsonParser {
      * @param url to make request to
      * @return A SubmissionResult object which contains data of submission.
      */
-    public static SubmissionResult getSubmissionResult(String url) throws IOException, ProtocolException {
+    public static SubmissionResult getSubmissionResult(String url) throws IOException {
         JsonObject submission = getJsonFrom(url);
         Gson mapper = new Gson();
         return mapper.fromJson(submission, SubmissionResult.class);

@@ -1,6 +1,5 @@
 package hy.tmc.cli.spyware;
 
-import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;

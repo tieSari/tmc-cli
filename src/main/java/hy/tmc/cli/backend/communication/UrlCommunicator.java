@@ -50,7 +50,7 @@ public class UrlCommunicator {
      * @throws java.io.IOException if file is invalid.
      */
     public static HttpResult makePostWithFile(ContentBody fileBody,
-            String destinationUrl, Map<String, String> headers) throws IOException, ProtocolException {
+            String destinationUrl, Map<String, String> headers) throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         addFileToRequest(fileBody, httppost);
@@ -74,7 +74,7 @@ public class UrlCommunicator {
      * always username:password
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HttpResult makeGetRequest(String url, String... params) throws IOException, ProtocolException {
+    public static HttpResult makeGetRequest(String url, String... params) throws IOException {
         HttpGet httpGet = createGet(url, params);
         return getResponseResult(httpGet);
     }
@@ -86,7 +86,7 @@ public class UrlCommunicator {
      * @param body contains key-value -pairs.
      * @return Result which contains the result.
      */
-    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException, ProtocolException {
+    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
             HttpPut httpPut = new HttpPut(url);
             addCredentials(httpPut, ClientData.getFormattedUserData());
             List<NameValuePair> params = new ArrayList<>();
@@ -169,7 +169,7 @@ public class UrlCommunicator {
         }
     }
     
-    private static HttpResult getResponseResult(HttpRequestBase httpRequest) throws IOException, ProtocolException {
+    private static HttpResult getResponseResult(HttpRequestBase httpRequest) throws IOException {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();
@@ -182,7 +182,7 @@ public class UrlCommunicator {
      * Makes a POST HTTP request.
      */
     public static HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
-            throws IOException, ProtocolException {
+            throws IOException {
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();
         StringEntity feedbackJson = new StringEntity(jsonString);
@@ -197,10 +197,10 @@ public class UrlCommunicator {
      * @param result
      * @throws ProtocolException 
      */
-    private static void validateHttpResult(HttpResult result) throws ProtocolException {
+    private static void validateHttpResult(HttpResult result) throws TmcServerException {
         int statuscode = result.getStatusCode();
         if (statuscode >= 500 && statuscode < 600) {
-            throw new ProtocolException("Error occured on TMC-server (" + statuscode + "). Please check, that you are in exercise folder and your serveraddress is defined correctly.");
+            throw new TmcServerException("Error occured on TMC-server: statuscode " + statuscode);
         }
     }
 }
