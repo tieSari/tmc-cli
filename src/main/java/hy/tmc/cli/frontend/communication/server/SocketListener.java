@@ -30,17 +30,20 @@ public class SocketListener implements Runnable {
             Object result = commandResult.get();
             @SuppressWarnings("unchecked")
             Optional<String> output = this.command.parseData(result);
-            if (output.isPresent()) {
-                writeToOutput(output.get());
-            }
+            handleOutput(output);
             this.command.cleanData();
         } catch (InterruptedException | ExecutionException | IOException ex) {
             handleException(ex);
         }
     }
 
+    private void handleOutput(Optional<String> output) {
+        if (output.isPresent()) {
+            writeToOutput(output.get());
+        }
+    }
+
     private void handleException(Exception ex) {
-        System.err.println(Arrays.toString(ex.getStackTrace()));
         if (ex.getCause().getClass() == UnknownHostException.class) {
             writeToOutput("Unable to reach server: ");
         }

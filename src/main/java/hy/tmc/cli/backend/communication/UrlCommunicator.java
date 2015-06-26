@@ -33,11 +33,11 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import org.apache.http.entity.mime.content.FileBody;
 
 public class UrlCommunicator {
-    
-    public static final int BAD_REQUEST = 407;
 
     /**
      * Creates and executes post-request to specified URL.
@@ -55,6 +55,12 @@ public class UrlCommunicator {
         addHeadersTo(httppost, headers);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
+    }
+    
+    public static HttpResult makePostWithFile(File file, String destinationUrl) 
+            throws IOException {
+        return makePostWithFile(new FileBody(file), destinationUrl, new HashMap<String, String>());
+
     }
     
     private static void addFileToRequest(ContentBody fileBody, HttpPost httppost) {

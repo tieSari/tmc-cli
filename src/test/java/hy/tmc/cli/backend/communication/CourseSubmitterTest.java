@@ -30,12 +30,14 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
 public class CourseSubmitterTest {
 
-    private CourseSubmitter courseSubmitter;
+    private ExerciseSubmitter courseSubmitter;
     private ProjectRootFinderStub rootFinder;
     private ProjectRootFinder realFinder;
 
@@ -47,7 +49,7 @@ public class CourseSubmitterTest {
         new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
-        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
+        this.courseSubmitter = new ExerciseSubmitter(rootFinder, new ZipperStub());
         ClientData.setUserData("chang", "rajani");
 
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
@@ -65,14 +67,6 @@ public class CourseSubmitterTest {
     public void clear() throws IOException {
         ClientData.clearUserData();
         new ConfigHandler().writeServerAddress("");
-    }
-
-    @Test
-    public void testGetExerciseName() {
-        final String path = "/home/test/ohpe-test/viikko_01";
-        rootFinder.setReturnValue(path);
-        String[] names = courseSubmitter.getExerciseName(path);
-        assertEquals("viikko_01", names[names.length - 1]);
     }
 
     @Test
@@ -112,21 +106,21 @@ public class CourseSubmitterTest {
         assertEquals(pastePath, result);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikeintehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
@@ -147,6 +141,9 @@ public class CourseSubmitterTest {
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Map.class)))
+                .thenReturn(fakeResult);
+        PowerMockito
+                .when(UrlCommunicator.makePostWithFile(any(File.class), Mockito.contains(url)))
                 .thenReturn(fakeResult);
     }
 }

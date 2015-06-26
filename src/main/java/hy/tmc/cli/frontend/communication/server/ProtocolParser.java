@@ -56,8 +56,7 @@ public class ProtocolParser {
             throw new ProtocolException("Invalid command name");
         }
         Command command = commandsByName.get(commandName);
-        command = giveData(elements, command);
-        return command;
+        return giveData(elements, command);
     }
 
     private String[] getElements(String userInput) {
