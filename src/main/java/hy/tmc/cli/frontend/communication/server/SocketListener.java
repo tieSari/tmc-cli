@@ -40,7 +40,6 @@ public class SocketListener implements Runnable {
     }
 
     private void handleException(Exception ex) {
-        System.err.println(Arrays.toString(ex.getStackTrace()));
         if (ex.getCause().getClass() == UnknownHostException.class) {
             writeToOutput("Unable to reach server: ");
         }
