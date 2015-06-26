@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 
 public class TmcCore {
 
-    private Map<String, Command> commands;
     private ListeningExecutorService threadPool;
     private ProtocolParser parser = new ProtocolParser();
 
@@ -34,7 +33,6 @@ public class TmcCore {
      * functionalities as public methods.
      */
     public TmcCore() {
-        commands = CommandFactory.createCommandMap();
         threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 
@@ -44,7 +42,6 @@ public class TmcCore {
      * @param pool thread threadpool which to use with the core
      */
     public TmcCore(ListeningExecutorService pool) {
-        commands = CommandFactory.createCommandMap();
         this.threadPool = pool;
     }
 
