@@ -12,6 +12,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.domain.submission.SubmissionResult;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -56,7 +57,7 @@ public class TmcJsonParser {
      *
      * @return List of Course-objects
      */
-    public static List<Course> getCourses() throws IOException {
+    public static List<Course> getCourses() throws IOException, ProtocolException {
         return getCourses(new ConfigHandler().readCoursesAddress());
     }
 
@@ -108,7 +109,7 @@ public class TmcJsonParser {
      * @param courseID
      * @return an course Object (parsed from JSON)
      */
-    public static Optional<Course> getCourse(int courseID) throws IOException {
+    public static Optional<Course> getCourse(int courseID) throws IOException, ProtocolException {
         ConfigHandler confighandler = new ConfigHandler();
         if (!courseExists(courseID)) {
             return Optional.absent();
@@ -116,7 +117,7 @@ public class TmcJsonParser {
         return getCourse(confighandler.getCourseUrl(courseID));
     }
 
-    private static boolean courseExists(int courseID) throws IOException {
+    private static boolean courseExists(int courseID) throws IOException, ProtocolException {
         List<Course> allCourses = getCourses();
         for (Course course : allCourses) {
             if (course.getId() == courseID) {

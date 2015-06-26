@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.ArrayList;
 import static org.hamcrest.CoreMatchers.not;
@@ -30,7 +31,7 @@ public class ReviewTest {
     private Review review;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, ProtocolException {
         PowerMockito.mockStatic(UrlCommunicator.class);
         PowerMockito
                 .when(UrlCommunicator.makePutRequest(argThat(not(putUrl)), any(Optional.class)))
@@ -76,14 +77,14 @@ public class ReviewTest {
     }
 
     @Test
-    public void markAsReadTest() throws IOException {
+    public void markAsReadTest() throws IOException, ProtocolException {
         review.setMarkedAsRead(false);
         review.markAs(true);
         assertTrue(review.isMarkedAsRead());
     }
 
     @Test
-    public void markAsUnreadTest() throws IOException {
+    public void markAsUnreadTest() throws IOException, ProtocolException {
         review.setMarkedAsRead(true);
         review.markAs(false);
         assertFalse(review.isMarkedAsRead());

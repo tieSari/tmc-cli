@@ -12,6 +12,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import java.io.File;
 import java.io.IOException;
@@ -112,7 +113,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void exerciseListIsEmpty() throws IOException {
+    public void exerciseListIsEmpty() throws IOException, ProtocolException {
         Optional<String> output = exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
         assertTrue(output.or("").contains("No exercises to download."));
     }
