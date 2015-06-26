@@ -6,7 +6,6 @@ import hy.tmc.cli.synchronization.PollScheduler;
 import hy.tmc.cli.testhelpers.MailExample;
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.After;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -35,7 +34,7 @@ public class StatusPollerTest {
     @Test
     public void afterOneIterationThereShouldBeMessagesPolled() throws Exception {
         statusPoller.runOneIteration();
-        assertTrue(Mailbox.getMailbox().get().reviewsWaiting());
+        assertTrue(Mailbox.getMailbox().get().hasNewReviews());
     }
 
     @Test(expected = IllegalStateException.class)
