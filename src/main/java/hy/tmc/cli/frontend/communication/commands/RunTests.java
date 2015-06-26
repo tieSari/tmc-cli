@@ -52,7 +52,6 @@ public class RunTests extends Command<RunResult> {
         boolean showStackTrace = this.data.containsKey("verbose");
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         return Optional.of(resInt.interpret(showStackTrace));
-
     }
 
     @Override

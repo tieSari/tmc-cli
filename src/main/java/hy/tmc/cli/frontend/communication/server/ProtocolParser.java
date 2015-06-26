@@ -62,24 +62,8 @@ public class ProtocolParser {
 
     private String[] getElements(String userInput) {
         List<String> items = new ArrayList<String>();
-        boolean parsingLongValue = false;
-        String multiWordItem = "";
         for (String word : userInput.split(" ")) {
-            if (parsingLongValue) {
-                if (word.contains("}")) {
-                    parsingLongValue = false;
-                    items.add(multiWordItem.trim());
-                    multiWordItem = "";
-                } else {
-                    multiWordItem += " " + word;
-                }
-            } else {
-                if (word.contains("{")) {
-                    parsingLongValue = true;
-                } else {
-                    items.add(word);
-                }
-            }
+            items.add(word.trim());
         }
         String[] array = new String[items.size()];
         array = items.toArray(array);
@@ -94,7 +78,7 @@ public class ProtocolParser {
                 command.setParameter(key, "");
                 index++;
             } else {
-                String value = userInput[index + 1].replace("<newline>", "\n");
+                String value = userInput[index + 1];
                 command.setParameter(key, value);
                 index += 2;
             }
