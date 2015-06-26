@@ -2,6 +2,9 @@ package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
 
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.entity.mime.content.FileBody;
+
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
@@ -9,6 +12,7 @@ import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
 import hy.tmc.cli.zipping.ZipMaker;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -20,16 +24,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.http.entity.mime.content.FileBody;
-
 public class CourseSubmitter {
 
     private RootFinder rootFinder;
     private ZipMaker zipper;
 
     /**
-     * Exercise deadline is checked with this date format
+     * Exercise deadline is checked with this date format.
      */
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
 
@@ -42,18 +43,26 @@ public class CourseSubmitter {
 
     /**
      * Check if exercise is expired.
+     *
      * @param currentExercise Exercise
-     * @throws ParseException to frontend 
+     * @throws ParseException to frontend
      */
     private boolean isExpired(Exercise currentExercise) throws ParseException {
-        if (currentExercise.getDeadline() == null || currentExercise.getDeadline().equals("")) {
+        if (hasNoDeadline(currentExercise)) {
             return false;
         }
-        Date deadlineDate = new Date();
+        Date deadlineDate = getDeadlineDate(currentExercise);
         Date current = new Date();
-        DateFormat format = new SimpleDateFormat(DATE_FORMAT);
-        deadlineDate = format.parse(currentExercise.getDeadline());
         return deadlineGone(current, deadlineDate);
+    }
+
+    private Date getDeadlineDate(Exercise currentExercise) throws ParseException {
+        DateFormat format = new SimpleDateFormat(DATE_FORMAT);
+        return format.parse(currentExercise.getDeadline());
+    }
+
+    private boolean hasNoDeadline(Exercise currentExercise) {
+        return currentExercise.getDeadline() == null || currentExercise.getDeadline().equals("");
     }
 
     /**
@@ -68,11 +77,14 @@ public class CourseSubmitter {
      *
      * @param currentPath path from which this was called.
      * @return String with url from which to get results or null if exercise was not found.
-     * @throws IOException if failed to create zip.
-     * @throws java.text.ParseException
-     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
+     * @throws IOException if failed to create zip
+     * @throws java.text.ParseException if deadline is wrongly formatted
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException if exercise
+     is already expired
      */
-    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public String submit(String currentPath)
+            throws ParseException, ExpiredException, IOException, ZipException {
+
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -80,32 +92,35 @@ public class CourseSubmitter {
     /**
      * Submits folder of exercise to TMC. Finds it from current directory. Result includes URL of
      * paste.
+     *
      * @param currentPath path from which this was called.
      * @return String with url from which to get paste URL or null if exercise was not found.
-     * @throws IOException if failed to create zip.
-     * @throws java.text.ParseException
-     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
+     * @throws IOException if failed to create zip
+     * @throws java.text.ParseException if deadline is wrongly formatted
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException if exercise
+     is already expired
      */
-    public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public String submitPaste(String currentPath)
+            throws IOException, ParseException, ExpiredException,
+            IllegalArgumentException, ZipException {
+
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
-    
-    /**
-     * Search exercise and throw exception if exercise is expired or not returnable.
-     * @throws ParseException to frontend
-     * @throws ExpiredException to frontend
-     */
-    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException, IOException {
+
+    private Exercise initExercise(String currentPath)
+            throws ParseException, IOException, ExpiredException {
+
         Exercise currentExercise = searchExercise(currentPath);
-        if(isExpired(currentExercise) || !currentExercise.isReturnable()){
+        if (isExpired(currentExercise) || !currentExercise.isReturnable()) {
             deleteZipIfExists();
             throw new ExpiredException("Exercise is expired.");
         }
         return currentExercise;
     }
 
-    private Exercise searchExercise(String currentPath) throws IllegalArgumentException, IOException {
+    private Exercise searchExercise(String currentPath)
+            throws IllegalArgumentException, IOException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
         if (!currentExercise.isPresent()) {
             deleteZipIfExists();
@@ -117,7 +132,9 @@ public class CourseSubmitter {
     private String sendSubmissionToServerWithPaste(
             String submissionZipPath,
             String url) throws IOException {
+
         final String pasteExtensionForTmcServer = "&paste=1";
+
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)),
                 url + pasteExtensionForTmcServer,
@@ -126,21 +143,33 @@ public class CourseSubmitter {
         return TmcJsonParser.getPasteUrl(result);
     }
 
-    private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException {
-        String submissionExtension = File.separator + "submission.zip";
+    private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste)
+            throws IOException, ZipException {
 
-        this.submissionZipPath = currentPath + submissionExtension;
+        formSubmissionZipPath(currentPath);
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
         deleteZipIfExists();
+
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
+        String resultUrl = sendSubmission(paste, returnUrl);
+        deleteZipIfExists();
+
+        return resultUrl;
+    }
+
+    private String sendSubmission(boolean paste, String returnUrl) throws IOException {
         String resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(submissionZipPath, returnUrl);
         } else {
             resultUrl = sendSubmissionToServer(submissionZipPath, returnUrl);
         }
-        deleteZipIfExists();
         return resultUrl;
+    }
+
+    private void formSubmissionZipPath(String currentPath) {
+        String submissionExtension = File.separator + "submission.zip";
+        this.submissionZipPath = currentPath + submissionExtension;
     }
 
     private String findExerciseFolderToZip(String currentPath) {
@@ -149,10 +178,10 @@ public class CourseSubmitter {
         ).get().toString();
     }
 
-     private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
+    private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
         HttpResult result = UrlCommunicator.makePostWithFile(
-                new FileBody(new File(submissionZipPath)), 
-                url, 
+                new FileBody(new File(submissionZipPath)),
+                url,
                 new HashMap<String, String>()
         );
         return TmcJsonParser.getSubmissionUrl(result);
@@ -176,8 +205,7 @@ public class CourseSubmitter {
     private void zip(String exerciseFolderToZip, String currentPath) throws ZipException {
         try {
             this.zipper.zip(exerciseFolderToZip, currentPath);
-        }
-        catch (ZipException ex) {
+        } catch (ZipException ex) {
             throw new ZipException("Zipping failed because of " + ex.getMessage());
         }
     }
@@ -207,7 +235,7 @@ public class CourseSubmitter {
     }
 
     /**
-     * If class submissionZipPath is defined in sendZipFile-method 
+     * If class submissionZipPath is defined in sendZipFile-method
      * and the file in defined path exists, it will be removed.
      * This method should be invoked always when submit-function fails.
      */
