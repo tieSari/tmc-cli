@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import com.google.common.base.Optional;
 
 import hy.tmc.cli.backend.Mailbox;
-import hy.tmc.cli.backend.communication.CourseSubmitter;
+import hy.tmc.cli.backend.communication.ExerciseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
@@ -32,7 +32,7 @@ import java.text.ParseException;
 public class PasteTest {
 
     private Paste paste;
-    private CourseSubmitter submitterMock;
+    private ExerciseSubmitter submitterMock;
     private String pasteUrl = "http://legit.paste.url.fi";
 
     /**
@@ -45,7 +45,7 @@ public class PasteTest {
         ClientData.setUserData("Bossman", "Samu");
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());
         TmcServiceScheduler.disablePolling();
-        submitterMock = Mockito.mock(CourseSubmitter.class);
+        submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
         paste = new Paste(submitterMock);
 

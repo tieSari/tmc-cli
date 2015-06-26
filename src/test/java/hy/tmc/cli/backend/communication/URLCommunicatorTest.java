@@ -107,12 +107,6 @@ public class URLCommunicatorTest {
         assertEquals("All tests passed", result.getData());
     }
 
-    @Test(expected = IOException.class)
-    public void badGetRequestIsThrown() throws IOException, ProtocolException {
-        HttpResult makeGetRequest = UrlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
-        assertEquals(UrlCommunicator.BAD_REQUEST, makeGetRequest.getStatusCode());
-    }
-
     @Test
     public void makePutRequestSendsPut() throws IOException, ProtocolException {
         ClientData.setUserData("test", "1234");

@@ -30,12 +30,14 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
 public class CourseSubmitterTest {
 
-    private CourseSubmitter courseSubmitter;
+    private ExerciseSubmitter courseSubmitter;
     private ProjectRootFinderStub rootFinder;
     private ProjectRootFinder realFinder;
 
@@ -47,7 +49,7 @@ public class CourseSubmitterTest {
         new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
-        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
+        this.courseSubmitter = new ExerciseSubmitter(rootFinder, new ZipperStub());
         ClientData.setUserData("chang", "rajani");
 
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
@@ -147,6 +149,9 @@ public class CourseSubmitterTest {
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Map.class)))
+                .thenReturn(fakeResult);
+        PowerMockito
+                .when(UrlCommunicator.makePostWithFile(any(File.class), Mockito.contains(url)))
                 .thenReturn(fakeResult);
     }
 }

@@ -15,6 +15,13 @@ public class ProjectRootFinder implements RootFinder {
     private final ProjectRootDetector detector;
 
     /**
+     * Uses DefaultRootDetector by default.
+     */
+    public ProjectRootFinder() {
+        this.detector = new DefaultRootDetector();
+    }
+    
+    /**
      * A helper class that searches for a project root directory. It must be given a
      * ProjectRootDetector that corresponds with the project in question. For example, for a Maven
      * project a DefaultRootDetector can be used.
