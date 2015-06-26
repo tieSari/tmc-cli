@@ -1,6 +1,7 @@
 package hy.tmc.cli.synchronization;
 
 import com.google.common.util.concurrent.AbstractScheduledService.CustomScheduler;
+
 import java.util.concurrent.TimeUnit;
 
 public class PollScheduler extends CustomScheduler {
@@ -37,6 +38,10 @@ public class PollScheduler extends CustomScheduler {
 
     public long getInterval() {
         return interval;
+    }
+
+    public TimeUnit getTimeunit() {
+        return timeunit;
     }
 
 }
