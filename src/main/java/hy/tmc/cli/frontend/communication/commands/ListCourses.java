@@ -5,6 +5,7 @@ import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.IOException;
 import java.util.List;
 
 public class ListCourses extends Command<List<Course>> {
@@ -25,8 +26,12 @@ public class ListCourses extends Command<List<Course>> {
     public Optional<String> parseData(Object data) {
         @SuppressWarnings("unchecked")
         List<Course> courses = (List<Course>) data;
-
-        return Optional.of(getCourseNames(courses));
+        String courselist = getCourseNames(courses);
+        if(courselist == null){
+            return Optional.absent();
+        } else {
+            return Optional.of(courselist);
+        }
     }
 
     private int getLongest(List<Course> courses) {
@@ -61,8 +66,9 @@ public class ListCourses extends Command<List<Course>> {
     }
 
     @Override
-    public List<Course> call() throws ProtocolException {
+    public List<Course> call() throws ProtocolException, IOException {
         checkData();
-        return TmcJsonParser.getCourses();
+        List<Course> courses = TmcJsonParser.getCourses();
+        return courses;
     }
 }

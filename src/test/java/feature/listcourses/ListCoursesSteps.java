@@ -87,7 +87,7 @@ public class ListCoursesSteps {
     public void user_has_logged_in_with_username_and_password(String username,
                                                               String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
-        Thread.sleep(300);
+        testClient.getAllFromSocket();
         testClient.init();
     }
     

@@ -1,24 +1,29 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.frontend.ProgressObserver;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 public abstract class Command<E> implements Callable<E> {
 
+    protected Map<String, String> data;
     private String defaultErrorMessage = "Unexpected exception.";
-
-    Map<String, String> data;
-    private Class returnType;
+    protected ProgressObserver observer;
 
     /**
      * Command can return any type of object. For example SubmissionResult etc.
      */
     public Command() {
-        data = new HashMap<String, String>();
+        data = new HashMap<>();
+    }
+    
+    public Command(ProgressObserver observer) {
+        this();
+        this.observer = observer;
     }
 
     public Map<String, String> getData() {
@@ -41,7 +46,7 @@ public abstract class Command<E> implements Callable<E> {
      *
      * @throws ProtocolException if the command lacks some necessary data
      */
-    public abstract void checkData() throws ProtocolException;
+    public abstract void checkData() throws ProtocolException, IOException;
 
     /**
      * Command should define, how to format data when result is ready. This is
@@ -51,10 +56,14 @@ public abstract class Command<E> implements Callable<E> {
      * @param data SubmissionResult or String for example
      * @return String to be printed to user
      */
-    public abstract Optional<String> parseData(Object data);
+    public abstract Optional<String> parseData(Object data) throws IOException;
 
-    private void cleanData() {
+    public void cleanData() {
         data.clear();
+    }
+
+    public void setObserver(ProgressObserver observer) {
+        this.observer = observer;
     }
 
 }

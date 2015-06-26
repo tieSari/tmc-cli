@@ -41,7 +41,7 @@ public class RunTests extends Command<RunResult> {
 
     @Override
     public void checkData() throws ProtocolException {
-        if (!this.data.containsKey("path")) {
+        if (!this.data.containsKey("path") || this.data.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
     }
@@ -49,7 +49,6 @@ public class RunTests extends Command<RunResult> {
     @Override
     public Optional<String> parseData(Object data) {
         RunResult result = (RunResult) data;
-
         boolean showStackTrace = this.data.containsKey("verbose");
         ResultInterpreter resInt = new ResultInterpreter(result, formatter);
         return Optional.of(resInt.interpret(showStackTrace));
@@ -58,7 +57,6 @@ public class RunTests extends Command<RunResult> {
 
     @Override
     public RunResult call() throws ProtocolException, NoLanguagePluginFoundException {
-        checkData();
         formatter = getFormatter();
         String path = (String) this.data.get("path");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());

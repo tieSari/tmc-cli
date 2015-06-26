@@ -1,13 +1,12 @@
 package hy.tmc.cli.backend.communication;
 
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.TmcJsonParser;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
+import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -26,11 +25,10 @@ public class TmcJsonParserTest {
      * Mocks UrlCommunicator.
      */
     @Before
-    public void setup() {
+    public void setup() throws IOException, ProtocolException {
+        TmcServiceScheduler.getScheduler().stop();
         PowerMockito.mockStatic(UrlCommunicator.class);
-
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-
         ClientData.setUserData("chang", "paras");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -38,9 +36,9 @@ public class TmcJsonParserTest {
                 .thenReturn(fakeResult);
 
     }
-
+    
     @Test
-    public void getsExercisesCorrectlyFromCourseJson() {
+    public void getsExercisesCorrectlyFromCourseJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -54,7 +52,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsLastExerciseOfCourseJson() {
+    public void getsLastExerciseOfCourseJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -71,7 +69,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesSubmissionUrlFromJson() {
+    public void parsesSubmissionUrlFromJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -81,7 +79,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesPasteUrlFromJson() {
+    public void parsesPasteUrlFromJson() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.pasteResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -89,5 +87,4 @@ public class TmcJsonParserTest {
                 .thenReturn(fakeResult);
         assertEquals("https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ", TmcJsonParser.getPasteUrl(fakeResult));
     }
-
 }

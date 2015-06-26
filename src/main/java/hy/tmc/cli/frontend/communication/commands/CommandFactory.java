@@ -9,7 +9,6 @@ public class CommandFactory {
     /**
      * Maps command strings to objects.
      *
-     * @param that the commands will use
      * @return A map of names to corresponding commands
      */
     public static Map<String, Command> createCommandMap() {
@@ -27,9 +26,12 @@ public class CommandFactory {
         commandsByName.put("submit", submit());
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
-
+        commandsByName.put("getMail", getMail());
+        commandsByName.put("stopProcess", stopProcess());
         return commandsByName;
     }
+
+
 
     /**
      * Create Help Command object.
@@ -38,6 +40,14 @@ public class CommandFactory {
      */
     public static Command help() {
         return new Help();
+    }
+
+    /**
+     * Create StopProcess object
+     * @return a stopProcess object
+     */
+    public static Command stopProcess() {
+        return new StopProcess();
     }
 
     /**
@@ -137,5 +147,18 @@ public class CommandFactory {
      */
     public static Command paste() {
         return new Paste();
+    }
+    
+    public static Command getMail() {
+        return new MailChecker();
+    }
+
+    /**
+     * Takes the command map and returns a set of command names.
+     *
+     * @return a set of all available command names.
+     */
+    public static Set<String> allCommandNames() {
+        return createCommandMap().keySet();
     }
 }

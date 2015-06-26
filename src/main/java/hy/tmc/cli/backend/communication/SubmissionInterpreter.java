@@ -8,6 +8,7 @@ import hy.tmc.cli.domain.submission.TestCase;
 import hy.tmc.cli.domain.submission.ValidationError;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
+import java.io.IOException;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class SubmissionInterpreter {
      * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
-    private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException {
+    private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = TmcJsonParser.getSubmissionResult(url);
             if (result.getStatus() == null || !result.getStatus().equals("processing")) {
@@ -69,7 +70,8 @@ public class SubmissionInterpreter {
      * @param url the submission url
      */
     public SubmissionResult getSubmissionResult(String url) throws InterruptedException,
-            ProtocolException {
+            ProtocolException,
+            IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (!result.isPresent()) {
             throw new ProtocolException("Failed to receive response to submit.");
@@ -82,7 +84,7 @@ public class SubmissionInterpreter {
      * Organizes SubmissionResult into human-readable form from the URL.
      *
      */
-    public String resultSummary(String url, boolean detailed) throws InterruptedException {
+    public String resultSummary(String url, boolean detailed) throws InterruptedException, IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (result.isPresent()) {
             return summarize(result.get(), detailed);

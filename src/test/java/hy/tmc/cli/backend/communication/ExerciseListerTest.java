@@ -6,6 +6,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.ProjectRootFinder;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
@@ -33,7 +34,7 @@ public class ExerciseListerTest {
     Exercise fakeExercise2;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, ProtocolException {
         ClientData.setUserData("chang", "paras");
         setupFakeCourses();
 
@@ -48,7 +49,7 @@ public class ExerciseListerTest {
 
     }
 
-    private void mockExercisesWith(List<Exercise> exercises) {
+    private void mockExercisesWith(List<Exercise> exercises) throws IOException, ProtocolException {
         PowerMockito
                 .when(TmcJsonParser.getExercises((Course) Mockito.any()))
                 .thenReturn(exercises);
@@ -81,14 +82,14 @@ public class ExerciseListerTest {
     }
 
     @Test(expected=ProtocolException.class)
-    public void ifNoCourseIsFoundThenThrowsProtocolException() throws ProtocolException {
+    public void ifNoCourseIsFoundThenThrowsProtocolException() throws ProtocolException, IOException {
         Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))
                 .thenReturn(Optional.<Course>absent());
         lister.listExercises("polku/tuntemattomaan/tiedostoon");
     }
 
     @Test(expected=ProtocolException.class)
-    public void ifNoExercisesFoundThenThrowsProtocolException() throws ProtocolException {
+    public void ifNoExercisesFoundThenThrowsProtocolException() throws ProtocolException, IOException {
         String correct = "No exercises found";
 
         mockExercisesWith(null);
@@ -97,19 +98,19 @@ public class ExerciseListerTest {
     }
 
     @Test
-    public void withCorrectCourseAndExercisesOutputContainsNames() throws ProtocolException {
+    public void withCorrectCourseAndExercisesOutputContainsNames() throws ProtocolException, IOException {
         assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Nimi"));
         assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Kuusi"));
 
     }
 
     @Test
-    public void withOneDoneExerciseOutputContainsX() throws ProtocolException {
+    public void withOneDoneExerciseOutputContainsX() throws ProtocolException, IOException {
         assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
     }
 
     @Test
-    public void withNoDoneExercisesOutputContainsNoX() throws ProtocolException {
+    public void withNoDoneExercisesOutputContainsNoX() throws ProtocolException, IOException {
         List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
@@ -120,7 +121,7 @@ public class ExerciseListerTest {
     }
 
     @Test
-    public void withOneAttemptedExerciseOutputContainsNoX() throws ProtocolException {
+    public void withOneAttemptedExerciseOutputContainsNoX() throws ProtocolException, IOException {
         List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
@@ -134,7 +135,7 @@ public class ExerciseListerTest {
     }
     
     @Test
-    public void outputContainsPercentage() throws ProtocolException {
+    public void outputContainsPercentage() throws ProtocolException, IOException {
         List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());

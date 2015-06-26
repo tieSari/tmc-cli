@@ -17,9 +17,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-import java.util.Map;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.entity.mime.content.FileBody;
@@ -42,18 +41,6 @@ public class CourseSubmitter {
     }
 
     /**
-     * Submits folder of exercise to TMC.
-     *
-     * @param currentPath path from which this was called.
-     * @param exerciseName name of exercise to submit
-     * @return String with url from which to get results or null if exercise was not found.
-     * @throws IOException if failed to create zip.
-     */
-    public String submit(String currentPath, String exerciseName) throws IOException {
-        throw new UnsupportedOperationException("Doesnt work yet");
-    }
-
-    /**
      * Check if exercise is expired.
      * @param currentExercise Exercise
      * @throws ParseException to frontend 
@@ -73,11 +60,7 @@ public class CourseSubmitter {
      * Compare two dates and tell if deadline has gone.
      */
     private boolean deadlineGone(Date current, Date deadline) {
-        if (current.getTime() > deadline.getTime()) {
-            return true;
-        } else {
-            return false;
-        }
+        return current.getTime() > deadline.getTime();
     }
 
     /**
@@ -86,6 +69,8 @@ public class CourseSubmitter {
      * @param currentPath path from which this was called.
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
     public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
         Exercise currentExercise = initExercise(currentPath);
@@ -98,6 +83,8 @@ public class CourseSubmitter {
      * @param currentPath path from which this was called.
      * @return String with url from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
      */
     public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
         Exercise currentExercise = initExercise(currentPath);
@@ -109,7 +96,7 @@ public class CourseSubmitter {
      * @throws ParseException to frontend
      * @throws ExpiredException to frontend
      */
-    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException {
+    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException, IOException {
         Exercise currentExercise = searchExercise(currentPath);
         if(isExpired(currentExercise) || !currentExercise.isReturnable()){
             deleteZipIfExists();
@@ -118,7 +105,7 @@ public class CourseSubmitter {
         return currentExercise;
     }
 
-    private Exercise searchExercise(String currentPath) throws IllegalArgumentException {
+    private Exercise searchExercise(String currentPath) throws IllegalArgumentException, IOException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
         if (!currentExercise.isPresent()) {
             deleteZipIfExists();
@@ -134,13 +121,14 @@ public class CourseSubmitter {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)),
                 url + pasteExtensionForTmcServer,
-                Optional.<Map<String, String>>absent()
+                new HashMap<String, String>()
         );
         return TmcJsonParser.getPasteUrl(result);
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException {
-        final String submissionExtension = "/submission.zip";
+        String submissionExtension = File.separator + "submission.zip";
+
         this.submissionZipPath = currentPath + submissionExtension;
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
         deleteZipIfExists();
@@ -165,22 +153,22 @@ public class CourseSubmitter {
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)), 
                 url, 
-                Optional.<Map<String, String>>absent()
+                new HashMap<String, String>()
         );
         return TmcJsonParser.getSubmissionUrl(result);
     }
 
-    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException {
+    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException {
         return findCurrentExercise(findCourseExercises(currentPath), currentPath);
     }
 
-    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException {
+    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException {
         Optional<Course> currentCourse = new ProjectRootFinder(
                 new DefaultRootDetector()).getCurrentCourse(currentPath);
         if (!currentCourse.isPresent()) {
             deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");
-        };
+        }
         List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.get().getId());
         return courseExercises;
     }
@@ -200,7 +188,7 @@ public class CourseSubmitter {
             deleteZipIfExists();
             throw new IllegalArgumentException("Could not find exercise directory");
         }
-        String[] path = rootDir.get().toString().split("/");
+        String[] path = rootDir.get().toString().split(File.separator);
         String directory = path[path.length - 1];
         return getExerciseByName(directory, courseExercises);
     }
@@ -215,7 +203,7 @@ public class CourseSubmitter {
     }
 
     public String[] getExerciseName(String directoryPath) {
-        return directoryPath.split("/");
+        return directoryPath.split(File.separator);
     }
 
     /**

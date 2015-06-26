@@ -2,7 +2,11 @@ package hy.tmc.cli.zipping;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
+import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -49,8 +53,13 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course-object containing information of the course found.
      */
     @Override
-    public Optional<Course> getCurrentCourse(String path) {
-        String[] foldersOfPwd = path.split("/");
+    public Optional<Course> getCurrentCourse(String path) throws IOException {
+        String[] foldersOfPwd = path.split(File.separator);
+        try {
+            checkPwd(foldersOfPwd);
+        } catch (ProtocolException ex) {
+            return Optional.absent();
+        }
         return findCourseByPath(foldersOfPwd);
     }
 
@@ -61,16 +70,24 @@ public class ProjectRootFinder implements RootFinder {
      * @param foldersPath contains the names of the folders in path
      * @return Course
      */
-    public Optional<Course> findCourseByPath(String[] foldersPath) {
-        
-        List<Course> courses = TmcJsonParser.getCourses();
+    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException {
+        String address = new ConfigHandler()
+                .readCoursesAddress();
+        List<Course> courses = TmcJsonParser.getCourses(address);
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {
-                    return Optional.of(course);
+                    Optional<Course> courseOptional = Optional.of(course);
+                    return courseOptional;
                 }
             }
         }
         return Optional.absent();
+    }
+
+    private void checkPwd(String[] foldersOfPwd) throws ProtocolException {
+        if (foldersOfPwd.length == 0) {
+            throw new ProtocolException("No folders found from the path.");
+        }
     }
 }

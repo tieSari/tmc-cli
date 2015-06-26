@@ -12,20 +12,26 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class ExerciseDownloaderTest {
-    
+
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
     private ArrayList<Exercise> exercises;
@@ -54,26 +60,26 @@ public class ExerciseDownloaderTest {
                         .withStatus(200)
                         .withHeader("Content-Type", "text/xml")
                         .withBody("<response>Exercise 1</response>")));
-        
+
         stubFor(get(urlEqualTo("/emptyCourse.json"))
                 .willReturn(aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", "application/json")
-                .withBody("{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
-                        + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
-                        + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
-                        + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
-                        + "/21/reviews"
-                        + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
-                        + "comet\",\"spyware_urls\":[\"http://staging.spyware."
-                        + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}")));
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
+                                + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
+                                + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
+                                + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
+                                + "/21/reviews"
+                                + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
+                                + "comet\",\"spyware_urls\":[\"http://staging.spyware."
+                                + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}")));
 
         wireMockRule.stubFor(get(urlEqualTo("/ex2.zip"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/xml")
                         .withBody("<response>Exercise 2</response>")));
-        
+
         ClientData.setUserData("pihla", "juuh");
     }
 
@@ -82,7 +88,7 @@ public class ExerciseDownloaderTest {
         new File("Exercise1.zip").delete();
         new File("Exercise2.zip").delete();
     }
-    
+
     @Test
     public void downloadExercisesDoesRequests() {
         exDl.downloadFiles(exercises);
@@ -98,16 +104,16 @@ public class ExerciseDownloaderTest {
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
 
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip"))
-                .withHeader("Authorization",equalTo("Basic cGlobGE6anV1aA==")));
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
 
     @Test
     public void downloadingGivesOutput() {
         assertTrue(exDl.downloadFiles(exercises).or("").endsWith(" exercises downloaded."));
     }
-    
+
     @Test
-    public void exerciseListIsEmpty() {
+    public void exerciseListIsEmpty() throws IOException, ProtocolException {
         Optional<String> output = exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
         assertTrue(output.or("").contains("No exercises to download."));
     }
@@ -124,22 +130,37 @@ public class ExerciseDownloaderTest {
     @Test
     public void downloadedExercisesHasContent() {
         exDl.downloadFiles(exercises);
-        
+
         String ex1content;
         try {
             ex1content = new String(Files.readAllBytes(Paths.get("Exercise1.zip")));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println(e.getMessage());
             ex1content = "";
         }
         String ex2content;
         try {
             ex2content = new String(Files.readAllBytes(Paths.get("Exercise2.zip")));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println(e.getMessage());
             ex2content = "";
         }
         assertEquals("<response>Exercise 1</response>", ex1content);
         assertEquals("<response>Exercise 2</response>", ex2content);
-    }  
+    }
+
+    @Test
+    public void doesntCallUnzipOnLockedExercise() {
+        DefaultUnzipDecider mockedDecider = mock(DefaultUnzipDecider.class);
+        exDl = new ExerciseDownloader(mockedDecider);
+        exercises.get(0).setLocked(true);
+        exercises.get(1).setLocked(true);
+        exDl.downloadFiles(exercises);
+        
+
+        verify(mockedDecider, times(0)).canBeOverwritten(anyString());
+        verify(mockedDecider, times(0)).readTmcprojectYml(any(Path.class));
+    }
 }

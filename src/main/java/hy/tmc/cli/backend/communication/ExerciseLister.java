@@ -12,6 +12,9 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class ExerciseLister {
@@ -40,7 +43,7 @@ public class ExerciseLister {
      * @param path directory path to lookup course from
      * @return String with a list of exercises.
      */
-    public List<Exercise> listExercises(String path) throws ProtocolException {
+    public List<Exercise> listExercises(String path) throws ProtocolException, IOException {
         Optional<Course> course = finder.getCurrentCourse(path);
 
         if (!course.isPresent()) {
@@ -68,7 +71,7 @@ public class ExerciseLister {
             builder.append(buildSuccessOrFailMessage(exercise))
                     .append(exercise.getName())
                     .append("\n");
-                    
+
         }
         builder.append(endSummary(exercises));
         return builder.toString();
@@ -103,6 +106,9 @@ public class ExerciseLister {
     }
 
     private String percentage(int amount, int total) {
-        return " (" + 100.0 * amount / total + "%)";
+        double percentage = 100.0 * amount / total;
+        NumberFormat formatter = new DecimalFormat("#0.0");
+        
+        return " (" + formatter.format(percentage) +"%)";
     }
 }
