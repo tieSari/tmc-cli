@@ -34,7 +34,7 @@ public class ListCoursesTest {
      * result.
      */
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, ProtocolException {
         list = new ListCourses();
 
         PowerMockito.mockStatic(UrlCommunicator.class);

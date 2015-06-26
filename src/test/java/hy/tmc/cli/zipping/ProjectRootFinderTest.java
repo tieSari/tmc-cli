@@ -5,6 +5,7 @@ import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
@@ -31,7 +32,7 @@ public class ProjectRootFinderTest {
     String otherFakeName = "2013-tira";
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, ProtocolException {
         ClientData.setUserData("chang", "paras");
 
         finder = new ProjectRootFinder(new DefaultRootDetector());
@@ -43,7 +44,6 @@ public class ProjectRootFinderTest {
                 .when(TmcJsonParser.getCourses(new ConfigHandler()
                         .readCoursesAddress()))
                 .thenReturn(courses);
-
     }
 
     private List<Course> setupFakeCourses() {
@@ -89,7 +89,7 @@ public class ProjectRootFinderTest {
     }
 
     @Test
-    public void getsCourseNameFromPath() throws IOException {
+    public void getsCourseNameFromPath() throws IOException, ProtocolException {
         String[] paths = new String[3];
         paths[0] = "paras";
         paths[1] = "path";
@@ -99,9 +99,8 @@ public class ProjectRootFinderTest {
     }
 
     @Test
-    public void getsCurrentCourse() throws IOException {
+    public void getsCurrentCourse() throws IOException, ProtocolException {
         Optional<Course> course = finder.getCurrentCourse("path/that/contains/course/" + fakeName);
         assertEquals(fakeName, course.get().getName());
     }
-
 }

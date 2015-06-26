@@ -1,9 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.frontend.communication.server.Server;
 
 public class AnswerQuestion extends Command<String> {
 
