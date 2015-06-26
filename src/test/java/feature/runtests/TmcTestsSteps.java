@@ -57,7 +57,7 @@ public class TmcTestsSteps {
     public void theUserSeesWhichTestsHaveFailed() {
         assertTrue(output.contains("Some tests failed:"));
         assertTrue(output.contains("\u001B[31m1 tests failed:\n"));
-        assertTrue(output.contains("  NimiTest test failed: Et tulostanut mitään!"));
+        assertTrue(output.contains("FAILED \u001B[0mNimiTest test: Et tulostanut mitään!"));
     }
 
     /**

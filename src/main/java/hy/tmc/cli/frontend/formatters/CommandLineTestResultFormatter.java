@@ -3,6 +3,7 @@ package hy.tmc.cli.frontend.formatters;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.TestResult;
 import hy.tmc.cli.frontend.ColorFormatter;
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
 import static hy.tmc.cli.frontend.CommandLineColor.RED;
 import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
@@ -33,7 +34,7 @@ public class CommandLineTestResultFormatter implements TestResultFormatter {
           case PASSED:
               return ColorFormatter.coloredString("All tests passed.", GREEN) + " You can now submit";
           case COMPILE_FAILED:
-              return ColorFormatter.coloredString("Code did not compile.", RED, WHITE);
+              return ColorFormatter.coloredString("Code did not compile.", WHITE, RED);
           case GENERIC_ERROR:
               return ColorFormatter.coloredString("Failed due to an internal error", RED, WHITE);
           default:
@@ -67,7 +68,7 @@ public class CommandLineTestResultFormatter implements TestResultFormatter {
     @Override
     public String howMuchTestsPassed(int amount) {
         String passed = amount + " tests passed:\n";
-        return ColorFormatter.coloredString(passed, GREEN);
+        return coloredString(passed, GREEN);
     }
 
     /**
@@ -93,8 +94,9 @@ public class CommandLineTestResultFormatter implements TestResultFormatter {
     public String getFailedTestOutput(TestResult failed) {
         StringBuilder output = new StringBuilder();
         output.append(testPadding);
-        output.append(failed.name)
-                .append(" failed: ")
+        output.append(coloredString("FAILED ", RED))
+                .append(failed.name)
+                .append(": ")
                 .append(failed.errorMessage)
                 .append("\n");
         return output.toString();
