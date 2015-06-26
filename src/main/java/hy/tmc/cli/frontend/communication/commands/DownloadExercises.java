@@ -7,8 +7,8 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-
 import java.io.IOException;
+import java.util.List;
 
 public class DownloadExercises extends Command<String> {
 
@@ -82,7 +82,12 @@ public class DownloadExercises extends Command<String> {
         int totalCount = course.getExercises().size();
         int downloaded = 0;
         String path = exerciseDownloader.createCourseFolder(data.get("path"), course.getName());
-        for (Exercise exercise : course.getExercises()) {
+        downloaded = handleExercises(course.getExercises(), exCount, downloaded, totalCount, path);
+        return Optional.of(downloaded+" exercises downloaded");
+    }
+    
+    private int handleExercises(List<Exercise> exercises, int exCount, int downloaded, int totalCount, String path){
+        for (Exercise exercise : exercises) {
             String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
             if (!message.contains("Skip")) {
@@ -90,6 +95,6 @@ public class DownloadExercises extends Command<String> {
             }
             this.observer.progress(100.0*exCount/totalCount, message);
         }
-        return Optional.of(downloaded+" exercises downloaded");
+        return downloaded;
     }
 }
