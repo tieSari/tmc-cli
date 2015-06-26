@@ -30,12 +30,16 @@ public class SocketListener implements Runnable {
             Object result = commandResult.get();
             @SuppressWarnings("unchecked")
             Optional<String> output = this.command.parseData(result);
-            if (output.isPresent()) {
-                writeToOutput(output.get());
-            }
+            handleOutput(output);
             this.command.cleanData();
         } catch (InterruptedException | ExecutionException | IOException ex) {
             handleException(ex);
+        }
+    }
+
+    private void handleOutput(Optional<String> output) {
+        if (output.isPresent()) {
+            writeToOutput(output.get());
         }
     }
 
