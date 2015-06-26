@@ -37,6 +37,10 @@ public class Mailbox {
         newReviews = true;
         unreadReviews.addAll(reviews);
     }
+    
+    public synchronized void checkMail(){
+        
+    }
 
     /**
      * Fills the exercise updates related to the course.
