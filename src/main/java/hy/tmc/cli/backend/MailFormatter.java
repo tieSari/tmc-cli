@@ -1,22 +1,24 @@
 package hy.tmc.cli.backend;
 
-import com.google.common.annotations.Beta;
 import hy.tmc.cli.domain.Review;
 
 import java.util.List;
-
 
 public class MailFormatter {
 
     /**
      * Formats the list of reviews as user friendly string.
+     *
      * @param reviews to be formatted
      * @return formatted string which contains reviews
      */
     public static String formatReviews(List<Review> reviews) {
+        if (reviews == null) {
+            return "";
+        }
         return reviewOutput(reviews);
     }
-    
+
     private static String reviewOutput(List<Review> reviews) {
         StringBuilder builder = new StringBuilder();
         builder.append("There are ")

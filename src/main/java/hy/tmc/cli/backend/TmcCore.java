@@ -1,18 +1,21 @@
 package hy.tmc.cli.backend;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+
 import fi.helsinki.cs.tmc.langs.RunResult;
+
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.CommandFactory;
-import hy.tmc.cli.frontend.communication.commands.StopProcess;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +24,6 @@ import java.util.concurrent.Executors;
 
 public class TmcCore {
 
-    private Map<String, Command> commands;
     private ListeningExecutorService threadPool;
     private ProtocolParser parser = new ProtocolParser();
 
@@ -31,7 +33,6 @@ public class TmcCore {
      * functionalities as public methods.
      */
     public TmcCore() {
-        commands = CommandFactory.createCommandMap();
         threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 
@@ -41,7 +42,6 @@ public class TmcCore {
      * @param pool thread threadpool which to use with the core
      */
     public TmcCore(ListeningExecutorService pool) {
-        commands = CommandFactory.createCommandMap();
         this.threadPool = pool;
     }
 
