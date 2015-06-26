@@ -58,7 +58,7 @@ public abstract class Command<E> implements Callable<E> {
      */
     public abstract Optional<String> parseData(Object data) throws IOException;
 
-    private void cleanData() {
+    public void cleanData() {
         data.clear();
     }
 

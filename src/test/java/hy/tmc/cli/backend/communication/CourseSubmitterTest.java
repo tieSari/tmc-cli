@@ -8,17 +8,18 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ExpiredException;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.ZipperStub;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class CourseSubmitterTest {
      * Mocks components that use Internet.
      */
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, ProtocolException {
         new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
@@ -75,17 +76,17 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testFindCourseByCorrectPath() throws IOException {
+    public void testFindCourseByCorrectPath() throws IOException, ProtocolException {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
-        Optional<Course> course = realFinder.findCourseByPath(path.split("/"));
+        Optional<Course> course = realFinder.findCourseByPath(path.split(File.separator));
         assertEquals(7, course.get().getId());
         final String path2 = "/home/kansio/toinen/OLEMATON/viikko_01";
-        Optional<Course> course2 = realFinder.findCourseByPath(path2.split("/"));
+        Optional<Course> course2 = realFinder.findCourseByPath(path2.split(File.separator));
         assertFalse(course2.isPresent());
     }
 
     @Test
-    public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
@@ -94,7 +95,7 @@ public class CourseSubmitterTest {
     }
     
     @Test(expected = ExpiredException.class)
-    public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/k2015-tira/viikko01/tira1.1";
 
         rootFinder.setReturnValue(testPath);
@@ -103,7 +104,7 @@ public class CourseSubmitterTest {
     }
     
     @Test
-    public void submitWithPasteReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public void submitWithPasteReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
@@ -112,27 +113,27 @@ public class CourseSubmitterTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikeintehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
-     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {
+     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
@@ -141,7 +142,7 @@ public class CourseSubmitterTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException {
+    private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),

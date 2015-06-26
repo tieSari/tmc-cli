@@ -35,8 +35,8 @@ public class UnzipperTest {
         decider = new DefaultUnzipDecider();
         tempDir = Files.createTempDirectory(null);
         unzipPath = tempDir.toAbsolutePath().toString();
-        projectPath = unzipPath + "/viikko1/Viikko1_001.Nimi";
-        javaFile = projectPath + "/src/Nimi.java";
+        projectPath = unzipPath + File.separator + "viikko1" + File.separator + "Viikko1_001.Nimi";
+        javaFile = projectPath + File.separator + "src" + File.separator + "Nimi.java";
     }
 
     @Before
@@ -64,9 +64,11 @@ public class UnzipperTest {
     @Test
     public void oneFileUnzips() throws IOException, ZipException {
         handler.unzip();
-        assertTrue(new File(unzipPath + "/viikko1").exists());
-        assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/src").exists());
-        assertTrue(new File(unzipPath + "/viikko1/Viikko1_001.Nimi/lib").exists());
+        assertTrue(new File(unzipPath + File.separator + "viikko1").exists());
+        assertTrue(new File(unzipPath + File.separator + "viikko1" + File.separator
+                + "Viikko1_001.Nimi" + File.separator + "src").exists());
+        assertTrue(new File(unzipPath + File.separator + "viikko1" + File.separator +
+                "Viikko1_001.Nimi" + File.separator + "lib").exists());
     }
 
     @Test
@@ -90,7 +92,8 @@ public class UnzipperTest {
     @Test
     public void otherStuffIsOverwritten() throws IOException, ZipException {
         handler.unzip();
-        File file = new File(unzipPath + "/viikko1/Viikko1_001.Nimi/build.xml");
+        File file = new File(unzipPath + File.separator + "viikko1" + File.separator +
+                "Viikko1_001.Nimi" + File.separator + "build.xml");
         assertTrue(file.exists());
         helper.writeStuffToFile(file.getAbsolutePath());
         long modified = file.lastModified();
@@ -125,7 +128,7 @@ public class UnzipperTest {
 
     @Test
     public void doesntOverwriteSomethingInTmcprojectYml() throws IOException, ZipException {
-        String studentTestFile = projectPath + "/test/StudentTest.java";
+        String studentTestFile = projectPath + File.separator + "test" + File.separator + "StudentTest.java";
 
         handler.unzip();
 

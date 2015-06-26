@@ -33,6 +33,7 @@ public class SocketListener implements Runnable {
             if (output.isPresent()) {
                 writeToOutput(output.get());
             }
+            this.command.cleanData();
         }
         catch (InterruptedException | ExecutionException | IOException ex) {
             System.err.println(Arrays.toString(ex.getStackTrace()));

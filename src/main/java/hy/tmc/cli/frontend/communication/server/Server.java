@@ -153,7 +153,7 @@ public class Server implements FrontendListener, Runnable {
     /**
      * Takes the answer from a range feedback question.
      */
-    public void rangeFeedbackAnswer(String answer) {
+    public void rangeFeedbackAnswer(String answer) throws ProtocolException {
         JsonObject jsonAnswer = new JsonObject();
         jsonAnswer.addProperty("question_id", rangeFeedbackHandler.getLastId());
         String validAnswer = rangeFeedbackHandler.validateAnswer(answer);
@@ -175,7 +175,7 @@ public class Server implements FrontendListener, Runnable {
     /**
      * Takes the answer from a text feedback question.
      */
-    public void textFeedbackAnswer(String answer) {
+    public void textFeedbackAnswer(String answer) throws ProtocolException {
         JsonObject jsonAnswer = new JsonObject();
         jsonAnswer.addProperty("question_id", textFeedbackHandler.getLastId());
         jsonAnswer.addProperty("answer", answer);
@@ -189,7 +189,7 @@ public class Server implements FrontendListener, Runnable {
         }
     }
 
-    protected void sendToTmcServer() {
+    protected void sendToTmcServer() throws ProtocolException {
         JsonObject req = getAnswersJson();
         try {
             UrlCommunicator.makePostWithJson(req, getFeedbackUrl());

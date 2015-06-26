@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,14 +27,12 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class UrlCommunicator {
@@ -174,7 +173,9 @@ public class UrlCommunicator {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();
-        return new HttpResult(result.toString(), status, true);
+        HttpResult httpResult = new HttpResult(result.toString(), status, true);
+        validateHttpResult(httpResult);
+        return httpResult;
     }
 
     /**
@@ -189,5 +190,17 @@ public class UrlCommunicator {
         addCredentials(httppost, ClientData.getFormattedUserData());
         httppost.setEntity(feedbackJson);
         return getResponseResult(httppost);
+    }
+    
+    /**
+     * Validate httpResults. More logic could/should be implemented.
+     * @param result
+     * @throws ProtocolException 
+     */
+    private static void validateHttpResult(HttpResult result) throws TmcServerException {
+        int statuscode = result.getStatusCode();
+        if (statuscode >= 500 && statuscode < 600) {
+            throw new TmcServerException("Error occured on TMC-server: statuscode " + statuscode);
+        }
     }
 }
