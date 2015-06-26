@@ -123,72 +123,7 @@ public class Server implements FrontendListener, Runnable {
         serverSocket.close();
         socketThreadPool.shutdown();
     }
-
-    @Override
-    public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
-        if (feedbackQuestions.isEmpty()) {
-            return;
-        }
-
-        List<FeedbackQuestion> rangeQuestions = new ArrayList<>();
-        List<FeedbackQuestion> textQuestions = new ArrayList<>();
-        for (FeedbackQuestion feedbackQuestion : feedbackQuestions) {
-            if (feedbackQuestion.getKind().equals("text")) {
-                textQuestions.add(feedbackQuestion);
-            } else {
-                rangeQuestions.add(feedbackQuestion);
-            }
-        }
-
-        this.rangeFeedbackHandler.feedback(rangeQuestions, feedbackUrl);
-        this.textFeedbackHandler.feedback(textQuestions, feedbackUrl);
-
-        if (!rangeQuestions.isEmpty()) {
-            rangeFeedbackHandler.askQuestion(); // ask first questions
-        } else {
-            textFeedbackHandler.askQuestion();
-        }
-    }
-
-    /**
-     * Takes the answer from a range feedback question.
-     */
-    public void rangeFeedbackAnswer(String answer) throws ProtocolException {
-        JsonObject jsonAnswer = new JsonObject();
-        jsonAnswer.addProperty("question_id", rangeFeedbackHandler.getLastId());
-        String validAnswer = rangeFeedbackHandler.validateAnswer(answer);
-        jsonAnswer.addProperty("answer", validAnswer);
-        feedbackAnswers.add(jsonAnswer);
-
-        if (this.rangeFeedbackHandler.allQuestionsAsked()) {
-            if (textFeedbackHandler.allQuestionsAsked()) {
-                sendToTmcServer();
-                this.feedbackAnswers = new JsonArray();
-            } else {
-                textFeedbackHandler.askQuestion(); // start asking text questions
-            }
-        } else {
-            rangeFeedbackHandler.askQuestion();
-        }
-    }
-
-    /**
-     * Takes the answer from a text feedback question.
-     */
-    public void textFeedbackAnswer(String answer) throws ProtocolException {
-        JsonObject jsonAnswer = new JsonObject();
-        jsonAnswer.addProperty("question_id", textFeedbackHandler.getLastId());
-        jsonAnswer.addProperty("answer", answer);
-        feedbackAnswers.add(jsonAnswer);
-
-        if (this.textFeedbackHandler.allQuestionsAsked()) {
-            sendToTmcServer();
-            this.feedbackAnswers = new JsonArray();
-        } else {
-            textFeedbackHandler.askQuestion();
-        }
-    }
-
+    
     protected void sendToTmcServer() throws ProtocolException {
         JsonObject req = getAnswersJson();
         try {
