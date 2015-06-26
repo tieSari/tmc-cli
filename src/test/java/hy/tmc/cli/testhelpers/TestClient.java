@@ -8,13 +8,14 @@ package hy.tmc.cli.testhelpers;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class TestClient {
 
     private Socket socket;
-    private PrintWriter output;
+    private PrintStream output;
     private BufferedReader input;
     private final int portnumber;
 
@@ -24,8 +25,8 @@ public class TestClient {
     }
 
     public void init() throws IOException {
-        this.socket = new Socket("localhost", portnumber);
-        this.output = new PrintWriter(socket.getOutputStream(), true);
+        this.socket = new Socket("127.0.0.1", portnumber);
+        this.output = new PrintStream(socket.getOutputStream(), true);
         this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 

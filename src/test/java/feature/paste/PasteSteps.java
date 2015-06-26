@@ -112,6 +112,7 @@ public class PasteSteps {
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
         String result = testClient.getAllFromSocket();
+        testClient.init();
         assertTrue(result.contains("Auth successful. Saved userdata in session"));
     }
 

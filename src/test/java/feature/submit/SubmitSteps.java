@@ -89,7 +89,10 @@ public class SubmitSteps {
 
     @When("^user executes the command$")
     public void user_executes_the_command() throws Throwable {
+        testClient.init();
+        Thread.sleep(300);
         testClient.sendMessage(submitCommand);
+        Thread.sleep(300);
     }
 
     @Then("^user will see all test passing$")
