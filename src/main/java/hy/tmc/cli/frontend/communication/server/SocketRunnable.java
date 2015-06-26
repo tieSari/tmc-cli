@@ -21,8 +21,8 @@ public class SocketRunnable implements Runnable {
     }
 
     /**
-     * Reads the input from socket, starts command-object and when command is ready, prints the
-     * result back to socket.
+     * Reads the input from socket, starts command-object and when command is
+     * ready, prints the result back to socket.
      */
     @Override
     public void run() {
@@ -36,7 +36,7 @@ public class SocketRunnable implements Runnable {
             System.err.println(ex.getMessage());
         }
     }
-    
+
     /**
      * Finds command-future and attach listener to it.
      *
@@ -67,21 +67,28 @@ public class SocketRunnable implements Runnable {
             return null;
         }
         try {
-            Command command = core.getCommand(input);
-            if(command==null) return null;
-            command.checkData();
+            Command command = getCommand(input);
+            if(command == null) return null;
             return command;
-        }
-        catch (ProtocolException ex) {
+        } catch (ProtocolException ex) {
             stream.write((ex.getMessage() + "\n").getBytes());
             socket.close();
             return null;
         }
     }
 
+    private Command getCommand(String input) throws ProtocolException, IOException {
+        Command command = core.getCommand(input);
+        if (command == null) {
+            return null;
+        }
+        command.checkData();
+        return command;
+    }
+
     /**
-     * When command-future is ready, the listener will execute run-method; it will write the output
-     * of command back to calling socket.
+     * When command-future is ready, the listener will execute run-method; it
+     * will write the output of command back to calling socket.
      *
      * @param commandResult Command-object that has been started.
      * @param output stream where to write result.
