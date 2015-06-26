@@ -32,8 +32,6 @@ public class CommandFactory {
         return commandsByName;
     }
 
-
-
     /**
      * Create Help Command object.
      *

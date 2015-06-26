@@ -23,10 +23,6 @@ public class ServerMock implements FrontendListener{
         this.printedLines.append(line);
     }
 
-    @Override
-    public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
-
-    }
 
     public String getPrintedLine() {
         return printedLines.toString();

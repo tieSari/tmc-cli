@@ -21,9 +21,9 @@ public class MailboxTest {
 
     @Test
     public void whenFilledThereAreNewReviews() {
-        assertFalse(mail.reviewsWaiting());
+        assertFalse(mail.hasNewReviews());
         mail.fill(reviews("nice job", "lol", "hello world"));
-        assertTrue(mail.reviewsWaiting());
+        assertTrue(mail.hasNewReviews());
     }
 
     @Test
@@ -46,9 +46,9 @@ public class MailboxTest {
     @Test
     public void afterReadingReviewsTheMailboxIsEmptyOfReviews() {
         mail.fill(reviews("nice job", "lol", "hello world"));
-        assertTrue(mail.reviewsWaiting());
+        assertTrue(mail.hasNewReviews());
         mail.getUnreadReviews();
-        assertFalse(mail.reviewsWaiting());
+        assertFalse(mail.hasNewReviews());
     }
 
     @Test

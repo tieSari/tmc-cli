@@ -26,10 +26,6 @@ public class FrontendStub implements FrontendListener {
         allLines.add(line);
     }
 
-    @Override
-    public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
-
-    }
 
     public String getMostRecentLine() {
         return line;

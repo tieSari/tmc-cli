@@ -16,11 +16,11 @@ public class Mailbox {
 
     private static Mailbox mailbox;
 
-    private boolean newReviews;
-    private boolean newUpdates;
-
     private List<Review> unreadReviews;
     private Map<Course, List<Exercise>> exerciseUpdates;
+
+    private boolean newReviews;
+    private boolean newUpdates;
 
     private Mailbox() {
         unreadReviews = new ArrayList<>();
@@ -37,6 +37,10 @@ public class Mailbox {
         newReviews = true;
         unreadReviews.addAll(reviews);
     }
+    
+    public synchronized void checkMail(){
+        
+    }
 
     /**
      * Fills the exercise updates related to the course.
@@ -52,7 +56,7 @@ public class Mailbox {
     }
 
     /**
-     * Gets all unread reviews which are automatically removed.
+     * Gets all unread reviews which are automatically removed locally.
      *
      * @return list of code reviews
      */
@@ -77,10 +81,16 @@ public class Mailbox {
         return updates;
     }
 
-    public synchronized boolean reviewsWaiting() {
+    /**
+     * Checks if there are any new reviews for the user.
+     *
+     * @return true if there are new reviews - else false
+     */
+    public synchronized boolean hasNewReviews() {
         return this.newReviews;
     }
 
+    @Beta
     public synchronized boolean updatesWaiting() {
         return this.newUpdates;
     }
@@ -94,7 +104,7 @@ public class Mailbox {
     }
 
     /**
-     * Empties the whole mailbox
+     * Empties the whole mailbox.
      */
     public static void emptyMailbox() {
         Optional<Mailbox> box = getMailbox();
@@ -107,6 +117,12 @@ public class Mailbox {
         return getMailbox().isPresent();
     }
 
+    /**
+     * Gets the local mailbox which is unique for each user.
+     *
+     * @return Mailbox wrapped inside of the Optional-object - may be Optional.absent if no mailbox
+     is initialized
+     */
     public static Optional<Mailbox> getMailbox() {
         if (mailbox == null) {
             return Optional.absent();

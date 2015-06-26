@@ -41,7 +41,6 @@ public class ChooseServer extends Command<Boolean> {
     @Override
     public Optional<String> parseData(Object data) {
         Boolean result = (Boolean) data;
-
         String address = this.data.get("tmc-server");
         if (result) {
             return Optional.of("Address changed to " + address);
@@ -51,7 +50,6 @@ public class ChooseServer extends Command<Boolean> {
 
     @Override
     public Boolean call() throws ProtocolException {
-
         String address = data.get("tmc-server");
         try {
             handler.writeServerAddress(address);
