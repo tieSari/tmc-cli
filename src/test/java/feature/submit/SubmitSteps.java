@@ -1,9 +1,7 @@
-
 package feature.submit;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -20,9 +18,11 @@ import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import org.hamcrest.CoreMatchers;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
 
 import org.junit.Rule;
 
@@ -42,7 +42,8 @@ public class SubmitSteps {
     private String submitCommand;
 
     /**
-     * Writes wiremock-serveraddress to config-file, starts wiremock-server and defines routes for two scenario.
+     * Writes wiremock-serveraddress to config-file, starts wiremock-server and
+     * defines routes for two scenario.
      */
     @Before
     public void initializeServer() throws IOException {
@@ -66,22 +67,21 @@ public class SubmitSteps {
         mocker.wiremockFailingSubmit(wireMockServer);
     }
 
-
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
-        checkForMessages();
-    }
-
-    private void checkForMessages() throws IOException, InterruptedException {
-        Thread.sleep(300);
+        testClient.getAllFromSocket();
     }
 
     @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
     public void user_gives_command_submit_with_valid_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
+        testClient = new TestClient(port);
+
+        pathFromProjectRoot = Paths.get(pathFromProjectRoot).toString();
+        exercise = Paths.get(exercise).toString();
         submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
     }
-    
+
     @When("^flag \"(.*?)\"$")
     public void flag(String flag) throws Throwable {
         this.submitCommand += " " + flag;
@@ -89,16 +89,13 @@ public class SubmitSteps {
 
     @When("^user executes the command$")
     public void user_executes_the_command() throws Throwable {
-        testClient.init();
-        checkForMessages();
         testClient.sendMessage(submitCommand);
-        checkForMessages();
     }
 
     @Then("^user will see all test passing$")
     public void user_will_see_all_test_passing() throws Throwable {
         final String result = testClient.getAllFromSocket();
-        assertTrue(result.contains("All tests passed"));
+        assertThat(result, CoreMatchers.containsString("All tests passed"));
     }
 
     @Then("^user will see the some test passing$")
@@ -121,7 +118,6 @@ public class SubmitSteps {
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
         String result = testClient.getAllFromSocket();
-        System.out.println("Result: " + result);
         assertTrue(result.contains("unread code reviews"));
     }
 

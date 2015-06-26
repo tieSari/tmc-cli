@@ -19,6 +19,7 @@ import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
+import java.nio.file.Paths;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -105,6 +106,7 @@ public class ListExercisesSteps {
 
     @When("^user gives command listExercises with path \"(.*?)\"\\.$")
     public void user_gives_command_listExercises_with_path(String path) throws Throwable {
+        path = Paths.get(path).toString();
         if (connectionUsed) {
             testClient.init();
             // prevents an error due to closed socket. TODO: refactor into testClient
@@ -149,7 +151,6 @@ public class ListExercisesSteps {
     public void polling_for_reviews_is_not_in_progress() throws Throwable {
         TmcServiceScheduler.enablePolling();
         assertFalse(TmcServiceScheduler.isRunning());
-        testClient.sendMessage("login username test password 1234");
     }
 
     @Then("^the polling will be started$")

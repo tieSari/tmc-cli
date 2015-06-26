@@ -28,7 +28,7 @@ public class TestClient {
         this.output = new PrintWriter(socket.getOutputStream(), true);
         this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
-    
+
     public boolean checkForMessages() throws IOException {
         return input.ready();
     }
