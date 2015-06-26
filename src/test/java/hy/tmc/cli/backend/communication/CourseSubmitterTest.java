@@ -78,10 +78,10 @@ public class CourseSubmitterTest {
     @Test
     public void testFindCourseByCorrectPath() throws IOException {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
-        Optional<Course> course = realFinder.findCourseByPath(path.split(File.separator));
+        Optional<Course> course = realFinder.findCourseByPath(path.split("\\" + File.separator));
         assertEquals(7, course.get().getId());
         final String path2 = "/home/kansio/toinen/OLEMATON/viikko_01";
-        Optional<Course> course2 = realFinder.findCourseByPath(path2.split(File.separator));
+        Optional<Course> course2 = realFinder.findCourseByPath(path2.split("\\" + File.separator));
         assertFalse(course2.isPresent());
     }
 

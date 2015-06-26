@@ -52,22 +52,22 @@ public class TestClient {
 
     /**
      * Reads while socket is open.
+     *
      * @return all lines read from the socket
      * @throws IOException if reading fails
      */
     public String getAllFromSocket() throws IOException {
         StringBuilder replybuffer = new StringBuilder();
-        String reply = input.readLine();
-        while (reply != null) {
-            replybuffer.append(reply).append("\n");
+        String reply;
+        do {
             reply = input.readLine();
-        }
+            replybuffer.append(reply).append("\n");
+        } while (reply != null);
         return replybuffer.toString();
     }
 
     /**
-     * Reads one line from the socket.
-     * Waits for input.
+     * Reads one line from the socket. Waits for input.
      *
      * @return last reply from frontend
      */
@@ -84,7 +84,7 @@ public class TestClient {
             return "fail";
         }
     }
-    
+
     public boolean isReadyToBeRead() throws IOException {
         return input.ready();
     }

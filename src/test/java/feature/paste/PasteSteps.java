@@ -27,7 +27,7 @@ import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.File;
 import java.io.IOException;
-import static org.junit.Assert.assertEquals;
+import java.nio.file.Paths;
 import static org.junit.Assert.assertFalse;
 import org.junit.Rule;
 
@@ -113,6 +113,7 @@ public class PasteSteps {
     public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
         this.pasteCommand = "paste path ";
         String pastePath = System.getProperty("user.dir") + path + File.separator + exercise;
+        pastePath = Paths.get(pastePath).toString();
         this.pasteCommand = pasteCommand + pastePath;
     }
 
@@ -144,7 +145,6 @@ public class PasteSteps {
     @Then("^user will see the new mail$")
     public void user_will_see_the_new_mail() throws Throwable {
         String fullReply = testClient.getAllFromSocket();
-        System.out.println("fullReply: " + fullReply);
         assertContains(fullReply, "There are 3 unread code reviews");
         assertContains(fullReply, "rainfall reviewed by Bossman Samu");
         assertContains(fullReply, "Keep up the good work.");
