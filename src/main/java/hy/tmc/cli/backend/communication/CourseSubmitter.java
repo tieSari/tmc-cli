@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import java.util.Map;
-
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.entity.mime.content.FileBody;
 
@@ -40,18 +38,6 @@ public class CourseSubmitter {
     public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
         this.zipper = zipper;
         this.rootFinder = rootFinder;
-    }
-
-    /**
-     * Submits folder of exercise to TMC.
-     *
-     * @param currentPath path from which this was called.
-     * @param exerciseName name of exercise to submit
-     * @return String with url from which to get results or null if exercise was not found.
-     * @throws IOException if failed to create zip.
-     */
-    public String submit(String currentPath, String exerciseName) throws IOException {
-        throw new UnsupportedOperationException("Doesnt work yet");
     }
 
     /**
@@ -141,7 +127,8 @@ public class CourseSubmitter {
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException {
-        final String submissionExtension = File.separator + "submission.zip";
+        String submissionExtension = File.separator + "submission.zip";
+
         this.submissionZipPath = currentPath + submissionExtension;
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
         deleteZipIfExists();

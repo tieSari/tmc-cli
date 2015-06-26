@@ -1,6 +1,7 @@
 package hy.tmc.cli.backend.communication;
 
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class SubmissionInterpreterTest {
         ClientData.clearUserData();
     }
 
-    private void initFailedMock() throws IOException {
+    private void initFailedMock() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.failedSubmission, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -46,7 +47,7 @@ public class SubmissionInterpreterTest {
                 .thenReturn(fakeResult);
     }
 
-    private void initSuccessMock() throws IOException {
+    private void initSuccessMock() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -54,7 +55,7 @@ public class SubmissionInterpreterTest {
                 .thenReturn(fakeResult);
     }
 
-    private void initFailedCheckstyle() throws IOException {
+    private void initFailedCheckstyle() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.checkstyleFailed, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -62,7 +63,7 @@ public class SubmissionInterpreterTest {
                 .thenReturn(fakeResult);
     }
 
-    private void initFailedValgrind() throws IOException {
+    private void initFailedValgrind() throws IOException, ProtocolException {
         HttpResult fakeResult = new HttpResult(ExampleJson.valgrindFailed, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -71,14 +72,14 @@ public class SubmissionInterpreterTest {
     }
 
     @Test
-    public void passedResultOutputsPassed() throws InterruptedException, IOException {
+    public void passedResultOutputsPassed() throws InterruptedException, IOException, ProtocolException {
         initSuccessMock();
         String output = submissionInterpreter.resultSummary(url, false);
         assertTrue(output.contains("passed"));
     }
 
     @Test
-    public void failedResultOutputsFailed() throws InterruptedException, IOException {
+    public void failedResultOutputsFailed() throws InterruptedException, IOException, ProtocolException {
         initFailedMock();
 
         String output = submissionInterpreter.resultSummary(url, false);
@@ -88,7 +89,7 @@ public class SubmissionInterpreterTest {
 
     @Test
     public void failedResultOutputContainsFailedMessages()
-            throws InterruptedException, IOException {
+            throws InterruptedException, IOException, ProtocolException {
         initFailedMock();
 
         String output = submissionInterpreter.resultSummary(url, false);
@@ -97,7 +98,7 @@ public class SubmissionInterpreterTest {
 
     @Test
     public void succesfulResultOutputContainsPassedTestsIfDetailedOn()
-            throws InterruptedException, IOException {
+            throws InterruptedException, IOException, ProtocolException {
         initSuccessMock();
 
         String output = submissionInterpreter.resultSummary(url, true);
@@ -108,7 +109,7 @@ public class SubmissionInterpreterTest {
 
     @Test
     public void successfulResultOutputDoesntContainPassedTestsIfDetailedOn()
-            throws InterruptedException, IOException {
+            throws InterruptedException, IOException, ProtocolException {
         initSuccessMock();
 
         String output = submissionInterpreter.resultSummary(url, false);
@@ -118,7 +119,7 @@ public class SubmissionInterpreterTest {
     }
 
     @Test
-    public void resultWithCheckstyleContainsCheckstyleErrors() throws InterruptedException, IOException {
+    public void resultWithCheckstyleContainsCheckstyleErrors() throws InterruptedException, IOException, ProtocolException {
         initFailedCheckstyle();
 
         String output = submissionInterpreter.resultSummary(url, true);
@@ -128,7 +129,7 @@ public class SubmissionInterpreterTest {
     }
 
     @Test
-    public void resultWithCheckstyleContainsLineNumberMarkings() throws InterruptedException, IOException {
+    public void resultWithCheckstyleContainsLineNumberMarkings() throws InterruptedException, IOException, ProtocolException {
         initFailedCheckstyle();
 
         String output = submissionInterpreter.resultSummary(url, true);
@@ -137,7 +138,7 @@ public class SubmissionInterpreterTest {
     }
 
     @Test
-    public void resultWithNoCheckstyleDoesntContainCheckstyleErrors() throws InterruptedException, IOException {
+    public void resultWithNoCheckstyleDoesntContainCheckstyleErrors() throws InterruptedException, IOException, ProtocolException {
         initSuccessMock();
 
         String output = submissionInterpreter.resultSummary(url, true);
@@ -145,7 +146,7 @@ public class SubmissionInterpreterTest {
     }
 
     @Test
-    public void resultWithValgridShowsValgrind() throws InterruptedException, IOException {
+    public void resultWithValgridShowsValgrind() throws InterruptedException, IOException, ProtocolException {
         initFailedValgrind();
 
         String output = submissionInterpreter.resultSummary(url, true);
@@ -154,12 +155,11 @@ public class SubmissionInterpreterTest {
     }
 
     @Test
-    public void resultWithNoValgrindShowsNoValgrind() throws InterruptedException, IOException {
+    public void resultWithNoValgrindShowsNoValgrind() throws InterruptedException, IOException, ProtocolException {
         initFailedMock();
 
         String output = submissionInterpreter.resultSummary(url, true);
         assertFalse(output.contains("Access not within mapped region at address"));
 
     }
-
 }
