@@ -2,6 +2,7 @@ package hy.tmc.cli.synchronization;
 
 import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
+
 import hy.tmc.cli.backend.communication.StatusPoller;
 import hy.tmc.cli.domain.Course;
 
