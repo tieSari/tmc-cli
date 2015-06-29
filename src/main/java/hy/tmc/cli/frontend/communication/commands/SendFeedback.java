@@ -35,7 +35,10 @@ public class SendFeedback extends Command<HttpResult> {
             return Optional.absent();
         }
         HttpResult result = (HttpResult) data;
-        return Optional.of(result.getData());
+        if (result.getData() != null && result.getData().contains("{status:ok}")) {
+            return Optional.of("Feedback answers sent succesfully");
+        }
+        return Optional.of("Sending feedbackanswers failed");
     }
 
     @Override
