@@ -54,7 +54,7 @@ public class ProjectRootFinder implements RootFinder {
      */
     @Override
     public Optional<Course> getCurrentCourse(String path) throws IOException {
-        String[] foldersOfPwd = path.split(File.separator);
+        String[] foldersOfPwd = path.split("\\" + File.separator);
         try {
             checkPwd(foldersOfPwd);
         } catch (ProtocolException ex) {

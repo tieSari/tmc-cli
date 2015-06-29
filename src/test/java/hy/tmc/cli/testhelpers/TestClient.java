@@ -8,13 +8,14 @@ package hy.tmc.cli.testhelpers;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class TestClient {
 
     private Socket socket;
-    private PrintWriter output;
+    private PrintStream output;
     private BufferedReader input;
     private final int portnumber;
 
@@ -24,11 +25,11 @@ public class TestClient {
     }
 
     public void init() throws IOException {
-        this.socket = new Socket("localhost", portnumber);
-        this.output = new PrintWriter(socket.getOutputStream(), true);
+        this.socket = new Socket("127.0.0.1", portnumber);
+        this.output = new PrintStream(socket.getOutputStream(), true);
         this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
-    
+
     public boolean checkForMessages() throws IOException {
         return input.ready();
     }
@@ -52,22 +53,22 @@ public class TestClient {
 
     /**
      * Reads while socket is open.
+     *
      * @return all lines read from the socket
      * @throws IOException if reading fails
      */
     public String getAllFromSocket() throws IOException {
         StringBuilder replybuffer = new StringBuilder();
-        String reply = input.readLine();
-        while (reply != null) {
-            replybuffer.append(reply).append("\n");
+        String reply;
+        do {
             reply = input.readLine();
-        }
+            replybuffer.append(reply).append("\n");
+        } while (reply != null);
         return replybuffer.toString();
     }
 
     /**
-     * Reads one line from the socket.
-     * Waits for input.
+     * Reads one line from the socket. Waits for input.
      *
      * @return last reply from frontend
      */
@@ -84,7 +85,7 @@ public class TestClient {
             return "fail";
         }
     }
-    
+
     public boolean isReadyToBeRead() throws IOException {
         return input.ready();
     }

@@ -188,7 +188,7 @@ public class CourseSubmitter {
             deleteZipIfExists();
             throw new IllegalArgumentException("Could not find exercise directory");
         }
-        String[] path = rootDir.get().toString().split(File.separator);
+        String[] path = rootDir.get().toString().split("\\" + File.separator);
         String directory = path[path.length - 1];
         return getExerciseByName(directory, courseExercises);
     }
@@ -203,7 +203,7 @@ public class CourseSubmitter {
     }
 
     public String[] getExerciseName(String directoryPath) {
-        return directoryPath.split(File.separator);
+        return directoryPath.split("\\" + File.separator);
     }
 
     /**
