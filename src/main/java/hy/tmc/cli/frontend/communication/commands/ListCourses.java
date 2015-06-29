@@ -10,6 +10,10 @@ import java.util.List;
 
 public class ListCourses extends Command<List<Course>> {
 
+    
+    public ListCourses(){
+        
+    }
     /**
      * Checks that the user has authenticated, by verifying ClientData.
      *

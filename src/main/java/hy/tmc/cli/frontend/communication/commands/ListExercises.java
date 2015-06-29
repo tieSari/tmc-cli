@@ -32,6 +32,11 @@ public class ListExercises extends Command<List<Exercise>> {
         this.lister = lister;
     }
 
+    public ListExercises(String path) {
+        this(new ExerciseLister());
+        this.setParameter("path", path);
+    }
+
     /**
      * Check the path and ClientData.
      *

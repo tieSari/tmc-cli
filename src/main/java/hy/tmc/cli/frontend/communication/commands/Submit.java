@@ -44,6 +44,19 @@ public class Submit extends Command<SubmissionResult> {
         );
         mail = new MailChecker();
     }
+    
+     /**
+     * Constructor for Submit command, creates the courseSubmitter.
+     * @param path path which to submit
+     */
+    public Submit(String path) {
+        submitter = new CourseSubmitter(
+                new ProjectRootFinder(new DefaultRootDetector()),
+                new Zipper()
+        );
+        mail = new MailChecker();
+        this.setParameter("path", path);
+    }
 
     /**
      * Constructor for mocking.
