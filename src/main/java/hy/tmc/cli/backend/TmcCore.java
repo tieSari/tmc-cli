@@ -11,8 +11,18 @@ import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
+import hy.tmc.cli.frontend.communication.commands.Authenticate;
+import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.DownloadExercises;
+import hy.tmc.cli.frontend.communication.commands.Help;
+import hy.tmc.cli.frontend.communication.commands.ListCourses;
+import hy.tmc.cli.frontend.communication.commands.ListExercises;
+import hy.tmc.cli.frontend.communication.commands.Logout;
+import hy.tmc.cli.frontend.communication.commands.Paste;
+import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.commands.SendFeedback;
+import hy.tmc.cli.frontend.communication.commands.Submit;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
 import java.io.IOException;
@@ -61,8 +71,9 @@ public class TmcCore {
      */
     public ListenableFuture<Boolean> login(String username, String password) throws ProtocolException {
         checkParameters(username, password);
+        Authenticate login = new Authenticate(username, password);
         @SuppressWarnings("unchecked")
-        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("login username " + username + " password " + password);
+        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;
     }
 
@@ -76,7 +87,8 @@ public class TmcCore {
      */
     public ListenableFuture<Boolean> logout() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<Boolean> logout = (ListenableFuture<Boolean>) runCommand("logout");
+        Logout logoutCommand = new Logout();
+        ListenableFuture<Boolean> logout = (ListenableFuture<Boolean>) threadPool.submit(logoutCommand);
         return logout;
     }
 
@@ -91,7 +103,8 @@ public class TmcCore {
     public ListenableFuture<Boolean> selectServer(String serverAddress) throws ProtocolException {
         checkParameters(serverAddress);
         @SuppressWarnings("unchecked")
-        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("setServer tmc-server " + serverAddress);
+        ChooseServer chooseCommand = new ChooseServer(serverAddress);
+        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(chooseCommand);
         return stringListenableFuture;
     }
 
@@ -108,7 +121,8 @@ public class TmcCore {
     public ListenableFuture<String> downloadExercises(String path, String courseId) throws ProtocolException {
         checkParameters(path, courseId);
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("downloadExercises pwd " + path + " courseID " + courseId);
+        DownloadExercises downloadCommand = new DownloadExercises(path, courseId);
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
         return stringListenableFuture;
     }
 
@@ -121,7 +135,8 @@ public class TmcCore {
      */
     public ListenableFuture<String> help() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> help = (ListenableFuture<String>) runCommand("help");
+        Help helpCommand = new Help();
+        ListenableFuture<String> help = (ListenableFuture<String>) threadPool.submit(helpCommand);
         return help;
     }
 
@@ -134,7 +149,8 @@ public class TmcCore {
      */
     public ListenableFuture<List<Course>> listCourses() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) runCommand("listCourses");
+        ListCourses listCommand = new ListCourses();
+        ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) threadPool.submit(listCommand);
         return listCourses;
     }
 
@@ -150,7 +166,8 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> listExercises(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) runCommand("listExercises path " + path);
+        ListExercises listCommand = new ListExercises(path);
+        ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) threadPool.submit(listCommand);
         return listExercises;
     }
 
@@ -168,7 +185,8 @@ public class TmcCore {
     public ListenableFuture<SubmissionResult> submit(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) runCommand("submit path " + path);
+        Submit submit = new Submit(path);
+        ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) threadPool.submit(submit);
         return submissionResultListenableFuture;
     }
 
@@ -185,7 +203,8 @@ public class TmcCore {
     public ListenableFuture<RunResult> test(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) runCommand("runTests path " + path);
+        RunTests testCommand = new RunTests(path);
+        ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) threadPool.submit(testCommand);
         return runResultListenableFuture;
     }
 
@@ -209,7 +228,8 @@ public class TmcCore {
     public ListenableFuture<URI> paste(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) runCommand("paste path " + path);
+        Paste paste = new Paste(path);
+        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
         return stringListenableFuture;
     }
 

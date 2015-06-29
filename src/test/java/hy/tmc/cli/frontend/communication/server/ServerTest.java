@@ -80,4 +80,5 @@ public class ServerTest {
         int result = server.getCurrentPort();
         assertEquals(new ConfigHandler().readPort(), result);
     }
+  
 }
