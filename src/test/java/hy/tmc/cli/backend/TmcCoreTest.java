@@ -33,9 +33,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CommandFactory.class)
+@PowerMockIgnore("org.apache.http.conn.ssl.*")
 public class TmcCoreTest {
 
     private TmcCore tmcCore;

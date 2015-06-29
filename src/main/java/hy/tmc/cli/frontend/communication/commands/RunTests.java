@@ -18,6 +18,14 @@ public class RunTests extends Command<RunResult> {
 
     private TestResultFormatter formatter;
 
+    public RunTests(String path) {
+        this.setParameter("path", path);
+    }
+    
+    public RunTests(){
+        
+    }
+
     private TestResultFormatter getFormatter() {
         if (data.containsKey("--vim")) {
             return new VimTestResultFormatter();

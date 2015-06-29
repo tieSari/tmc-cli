@@ -24,12 +24,21 @@ public class SendFeedback extends Command<HttpResult> {
     
     @Override
     public void checkData() throws ProtocolException, IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (answers == null || url == null) {
+            throw new ProtocolException("must give answers and feedback url");
+        }
     }
 
     @Override
     public Optional<String> parseData(Object data) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (data.getClass() != HttpResult.class) {
+            return Optional.absent();
+        }
+        HttpResult result = (HttpResult) data;
+        if (result.getData() != null && result.getData().contains("{status:ok}")) {
+            return Optional.of("Feedback answers sent succesfully");
+        }
+        return Optional.of("Sending feedbackanswers failed");
     }
 
     @Override
@@ -43,7 +52,7 @@ public class SendFeedback extends Command<HttpResult> {
             jsonAnswer.addProperty("answer", e.getValue());
             feedbackAnswers.add(jsonAnswer);
         }
-        // send
+        
         JsonObject req = new JsonObject();
         req.add("answers", feedbackAnswers);
 

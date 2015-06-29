@@ -37,6 +37,11 @@ public class Paste extends Command<URI> {
         this.mail = new MailChecker();
     }
 
+    public Paste(String path) {
+        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
+        this.setParameter("path", path);
+    }
+
 
     /**
      * Requires auth and pwd in "path" parameter.
