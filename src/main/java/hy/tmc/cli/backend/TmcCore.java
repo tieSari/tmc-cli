@@ -4,22 +4,20 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.gson.JsonObject;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
+import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.SendFeedback;
+import hy.tmc.cli.frontend.communication.commands.SendSpywareDiffs;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
@@ -195,6 +193,12 @@ public class TmcCore {
         ListenableFuture<HttpResult> feedbackListenableFuture = 
                 (ListenableFuture<HttpResult>) threadPool.submit(feedback);
         return feedbackListenableFuture;
+    }
+    
+    public ListenableFuture<Boolean> sendSpywareDiffs(byte[] spywareDiffs, int courseId) {
+        SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, courseId);
+        ListenableFuture<Boolean> spywareFuture = (ListenableFuture<Boolean>) threadPool.submit(spyware);
+        return spywareFuture;
     }
 
     /**

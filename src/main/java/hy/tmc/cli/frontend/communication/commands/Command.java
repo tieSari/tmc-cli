@@ -49,8 +49,9 @@ public abstract class Command<E> implements Callable<E> {
     public abstract void checkData() throws ProtocolException, IOException;
 
     /**
-     * Command should define, how to format data when result is ready. This is
-     * ONLY for TMC-cli-client. Other (G)UI's like TMC-Netbeans define
+     * This is only for TMC-cli-client.
+     * Command should define, how to format data when result is ready. 
+     * Other (G)UI's like TMC-Netbeans define
      * themselves, how to parse ready commandResult.
      *
      * @param data SubmissionResult or String for example
@@ -62,8 +63,12 @@ public abstract class Command<E> implements Callable<E> {
         data.clear();
     }
 
+    /**
+     * This is only used in TMC-cli.
+     * The observer is used for printing realtime progress information to user.
+     * Observer knows the correct socket and is able to write there.
+     */
     public void setObserver(ProgressObserver observer) {
         this.observer = observer;
     }
-
 }
