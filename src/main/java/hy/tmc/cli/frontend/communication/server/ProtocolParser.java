@@ -16,7 +16,6 @@ import java.util.Map;
 public class ProtocolParser {
 
     private FrontendListener server;
-    private Map<String, Command> commandsByName = new HashMap<>();
 
     /**
      * Constructor for Protocol Parser.
@@ -25,11 +24,9 @@ public class ProtocolParser {
      */
     public ProtocolParser(FrontendListener server) {
         this.server = server;
-        this.commandsByName = createCommandMap();
     }
 
     public ProtocolParser() {
-        this.commandsByName = createCommandMap();
     }
 
     /**
@@ -39,7 +36,6 @@ public class ProtocolParser {
      */
     public ProtocolParser(FrontendListener server, HashMap<String, Command> availableCommands) {
         this.server = server;
-        this.commandsByName = availableCommands;
     }
 
     /**
@@ -52,6 +48,7 @@ public class ProtocolParser {
     public Command getCommand(String inputLine) throws ProtocolException {
         String[] elements = getElements(inputLine);
         String commandName = elements[0];
+        Map<String, Command> commandsByName = createCommandMap();
         if (!commandsByName.containsKey(commandName)) {
             throw new ProtocolException("Invalid command name");
         }
@@ -61,7 +58,7 @@ public class ProtocolParser {
     }
 
     private String[] getElements(String userInput) {
-        List<String> items = new ArrayList<String>();
+        List<String> items = new ArrayList<>();
         boolean parsingLongValue = false;
         String multiWordItem = "";
         for (String word : userInput.split(" ")) {

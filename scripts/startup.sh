@@ -12,9 +12,21 @@ CONFIGPATH+="/config"
 LOGPATH=$DIR
 LOGPATH+="/log.txt"
 
+PID=`cat $CONFIGPATH`
+
+if [[ -n "$PID" ]]
+then
+  if ps -p $PID > /dev/null
+  then
+    exit 0
+  fi
+fi
+          
+
 CLIENTPATH=$DIR
 if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
-  eval "(cd $CLIENTPATH && nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null) &"
+  cd $CLIENTPATH
+  nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null &
   PID=$!
   echo $PID > $CONFIGPATH
 fi

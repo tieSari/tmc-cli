@@ -9,7 +9,6 @@ public class CommandFactory {
     /**
      * Maps command strings to objects.
      *
-     * @param that the commands will use
      * @return A map of names to corresponding commands
      */
     public static Map<String, Command> createCommandMap() {
