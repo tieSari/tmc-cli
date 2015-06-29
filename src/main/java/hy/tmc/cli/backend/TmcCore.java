@@ -12,6 +12,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.SendFeedback;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
 import java.io.IOException;
@@ -188,9 +189,11 @@ public class TmcCore {
         return runResultListenableFuture;
     }
 
-    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers) throws ProtocolException {
+    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws ProtocolException {
+        SendFeedback feedback = new SendFeedback(answers, url);
         @SuppressWarnings("unchecked")
-        ListenableFuture<HttpResult> feedbackListenableFuture = (ListenableFuture<HttpResult>) runCommand("feedback");
+        ListenableFuture<HttpResult> feedbackListenableFuture = 
+                (ListenableFuture<HttpResult>) threadPool.submit(feedback);
         return feedbackListenableFuture;
     }
 

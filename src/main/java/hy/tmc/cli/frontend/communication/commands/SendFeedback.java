@@ -15,6 +15,12 @@ import java.util.Map.Entry;
 public class SendFeedback extends Command<HttpResult> {
 
     private Map<String, String> answers;
+    private String url;
+    
+    public SendFeedback(Map<String, String> answers, String url) {
+        this.answers = answers;
+        this.url = url;
+    }
     
     @Override
     public void checkData() throws ProtocolException, IOException {
@@ -41,7 +47,7 @@ public class SendFeedback extends Command<HttpResult> {
         JsonObject req = new JsonObject();
         req.add("answers", feedbackAnswers);
 
-        return UrlCommunicator.makePostWithJson(req, data.get("url"));
+        return UrlCommunicator.makePostWithJson(req, url);
     }
 
     
