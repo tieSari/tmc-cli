@@ -4,18 +4,22 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.gson.JsonObject;
 import fi.helsinki.cs.tmc.langs.RunResult;
+import hy.tmc.cli.backend.communication.HttpResult;
+import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Command;
-import hy.tmc.cli.frontend.communication.commands.CommandFactory;
-import hy.tmc.cli.frontend.communication.commands.StopProcess;
+import hy.tmc.cli.frontend.communication.commands.SendFeedback;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
@@ -185,6 +189,14 @@ public class TmcCore {
         return runResultListenableFuture;
     }
 
+    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws ProtocolException {
+        SendFeedback feedback = new SendFeedback(answers, url);
+        @SuppressWarnings("unchecked")
+        ListenableFuture<HttpResult> feedbackListenableFuture = 
+                (ListenableFuture<HttpResult>) threadPool.submit(feedback);
+        return feedbackListenableFuture;
+    }
+
     /**
      * Submits the current exercise to the TMC-server and requests for a paste
      * to be made.
@@ -202,13 +214,13 @@ public class TmcCore {
     }
 
     /**
-     * Parses the input String for command syntax and submits the corresponding Command object into the thread pool.
-     * 
+     * Parses the input String for command syntax and submits the corresponding
+     * Command object into the thread pool.
+     *
      * @param inputLine String with command name and params
      * @return A future object of any type
      * @throws ProtocolException if command not called properly
      */
-    
     public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
         checkParameters(inputLine);
         @SuppressWarnings("unchecked")
