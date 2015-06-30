@@ -17,6 +17,15 @@ public class Authenticate extends Command<Boolean> {
      */
     private final String httpOk = "2..";
 
+    public Authenticate(String username, String password) {
+        this.setParameter("username", username);
+        this.setParameter("password", password);
+    }
+    
+    public Authenticate(){
+        
+    }
+
     @Override
     public final void setParameter(String key, String value) {
         getData().put(key, value);
@@ -46,7 +55,6 @@ public class Authenticate extends Command<Boolean> {
     @Override
     public Boolean call() throws ProtocolException, IOException {
         checkData();
-
         if (isOk(makeRequest())) {
             ClientData.setUserData(data.get("username"), data.get("password"));
             Mailbox.create();

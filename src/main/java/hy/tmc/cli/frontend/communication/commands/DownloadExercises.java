@@ -21,6 +21,12 @@ public class DownloadExercises extends Command<String> {
         this.exerciseDownloader = new ExerciseDownloader();
     }
 
+    public DownloadExercises(String path, String courseId) {
+        this();
+        this.setParameter("path", path);
+        this.setParameter("courseID", courseId);
+    }
+
     /**
      * Checks that command has required parameters courseID is the id of the course and path is the
      * path of where files are downloaded and extracted.

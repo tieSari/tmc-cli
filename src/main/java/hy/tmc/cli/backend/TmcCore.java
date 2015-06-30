@@ -5,14 +5,26 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import fi.helsinki.cs.tmc.langs.RunResult;
+import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
+import hy.tmc.cli.frontend.communication.commands.Authenticate;
+import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.commands.Command;
-import hy.tmc.cli.frontend.communication.commands.CommandFactory;
-import hy.tmc.cli.frontend.communication.commands.StopProcess;
+import hy.tmc.cli.frontend.communication.commands.DownloadExercises;
+import hy.tmc.cli.frontend.communication.commands.Help;
+import hy.tmc.cli.frontend.communication.commands.ListCourses;
+import hy.tmc.cli.frontend.communication.commands.ListExercises;
+import hy.tmc.cli.frontend.communication.commands.Logout;
+import hy.tmc.cli.frontend.communication.commands.Paste;
+import hy.tmc.cli.frontend.communication.commands.RunTests;
+import hy.tmc.cli.frontend.communication.commands.SendFeedback;
+import hy.tmc.cli.frontend.communication.commands.SendSpywareDiffs;
+import hy.tmc.cli.frontend.communication.commands.Submit;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.ProtocolParser;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -57,8 +69,9 @@ public class TmcCore {
      */
     public ListenableFuture<Boolean> login(String username, String password) throws ProtocolException {
         checkParameters(username, password);
+        Authenticate login = new Authenticate(username, password);
         @SuppressWarnings("unchecked")
-        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("login username " + username + " password " + password);
+        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;
     }
 
@@ -72,7 +85,8 @@ public class TmcCore {
      */
     public ListenableFuture<Boolean> logout() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<Boolean> logout = (ListenableFuture<Boolean>) runCommand("logout");
+        Logout logoutCommand = new Logout();
+        ListenableFuture<Boolean> logout = (ListenableFuture<Boolean>) threadPool.submit(logoutCommand);
         return logout;
     }
 
@@ -87,7 +101,8 @@ public class TmcCore {
     public ListenableFuture<Boolean> selectServer(String serverAddress) throws ProtocolException {
         checkParameters(serverAddress);
         @SuppressWarnings("unchecked")
-        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) runCommand("setServer tmc-server " + serverAddress);
+        ChooseServer chooseCommand = new ChooseServer(serverAddress);
+        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(chooseCommand);
         return stringListenableFuture;
     }
 
@@ -104,7 +119,8 @@ public class TmcCore {
     public ListenableFuture<String> downloadExercises(String path, String courseId) throws ProtocolException {
         checkParameters(path, courseId);
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) runCommand("downloadExercises pwd " + path + " courseID " + courseId);
+        DownloadExercises downloadCommand = new DownloadExercises(path, courseId);
+        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
         return stringListenableFuture;
     }
 
@@ -117,7 +133,8 @@ public class TmcCore {
      */
     public ListenableFuture<String> help() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<String> help = (ListenableFuture<String>) runCommand("help");
+        Help helpCommand = new Help();
+        ListenableFuture<String> help = (ListenableFuture<String>) threadPool.submit(helpCommand);
         return help;
     }
 
@@ -130,7 +147,8 @@ public class TmcCore {
      */
     public ListenableFuture<List<Course>> listCourses() throws ProtocolException {
         @SuppressWarnings("unchecked")
-        ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) runCommand("listCourses");
+        ListCourses listCommand = new ListCourses();
+        ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) threadPool.submit(listCommand);
         return listCourses;
     }
 
@@ -146,7 +164,8 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> listExercises(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) runCommand("listExercises path " + path);
+        ListExercises listCommand = new ListExercises(path);
+        ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) threadPool.submit(listCommand);
         return listExercises;
     }
 
@@ -164,7 +183,8 @@ public class TmcCore {
     public ListenableFuture<SubmissionResult> submit(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) runCommand("submit path " + path);
+        Submit submit = new Submit(path);
+        ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) threadPool.submit(submit);
         return submissionResultListenableFuture;
     }
 
@@ -181,8 +201,40 @@ public class TmcCore {
     public ListenableFuture<RunResult> test(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) runCommand("runTests path " + path);
+        RunTests testCommand = new RunTests(path);
+        ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) threadPool.submit(testCommand);
         return runResultListenableFuture;
+    }
+
+    
+    /**
+     * Sends feedback to the tmc-server. Note that there is no separate command for getting the feedback
+     * questions, they will be found in the SubmissionResult.
+     * 
+     * @param answers A map of question ids to question answers.
+     * @param url The url where the feedback is sent.
+     * @return A future containing a HttpResult of the submission of the answers to the server
+     */
+    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws ProtocolException, IOException {
+        SendFeedback feedback = new SendFeedback(answers, url);
+        feedback.checkData();
+        @SuppressWarnings("unchecked")
+        ListenableFuture<HttpResult> feedbackListenableFuture = 
+                (ListenableFuture<HttpResult>) threadPool.submit(feedback);
+        return feedbackListenableFuture;
+    }
+    
+    /**
+     * Sends given diffs to spyware server of the course with the courseID given
+     * 
+     * @param spywareDiffs byte array containing information of changes to project files. 
+     * @param courseId used to find correct course
+     * @return A future object containing a Boolean that will be true iff sending was successful.
+     */
+    public ListenableFuture<Boolean> sendSpywareDiffs(byte[] spywareDiffs, int courseId) {
+        SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, courseId);
+        ListenableFuture<Boolean> spywareFuture = (ListenableFuture<Boolean>) threadPool.submit(spyware);
+        return spywareFuture;
     }
 
     /**
@@ -197,18 +249,19 @@ public class TmcCore {
     public ListenableFuture<URI> paste(String path) throws ProtocolException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) runCommand("paste path " + path);
+        Paste paste = new Paste(path);
+        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
         return stringListenableFuture;
     }
 
     /**
-     * Parses the input String for command syntax and submits the corresponding Command object into the thread pool.
-     * 
+     * Parses the input String for command syntax and submits the corresponding
+     * Command object into the thread pool.
+     *
      * @param inputLine String with command name and params
      * @return A future object of any type
      * @throws ProtocolException if command not called properly
      */
-    
     public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
         checkParameters(inputLine);
         @SuppressWarnings("unchecked")

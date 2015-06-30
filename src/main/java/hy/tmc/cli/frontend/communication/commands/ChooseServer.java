@@ -19,6 +19,11 @@ public class ChooseServer extends Command<Boolean> {
         handler = new ConfigHandler();
     }
 
+    public ChooseServer(String serverAddress) {
+        handler = new ConfigHandler();
+        this.setParameter("tmc-server", serverAddress);
+    }
+
     @Override
     public void checkData() throws ProtocolException {
         if (!this.data.containsKey("tmc-server")) {
