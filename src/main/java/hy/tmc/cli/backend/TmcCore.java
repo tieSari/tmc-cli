@@ -206,6 +206,15 @@ public class TmcCore {
         return runResultListenableFuture;
     }
 
+    
+    /**
+     * Sends feedback to the tmc-server. Note that there is no separate command for getting the feedback
+     * questions, they will be found in the SubmissionResult.
+     * 
+     * @param answers A map of question ids to question answers.
+     * @param url The url where the feedback is sent.
+     * @return A future containing a HttpResult of the submission of the answers to the server
+     */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws ProtocolException, IOException {
         SendFeedback feedback = new SendFeedback(answers, url);
         feedback.checkData();
@@ -215,6 +224,13 @@ public class TmcCore {
         return feedbackListenableFuture;
     }
     
+    /**
+     * Sends given diffs to spyware server of the course with the courseID given
+     * 
+     * @param spywareDiffs byte array containing information of changes to project files. 
+     * @param courseId used to find correct course
+     * @return A future object containing a Boolean that will be true iff sending was successful.
+     */
     public ListenableFuture<Boolean> sendSpywareDiffs(byte[] spywareDiffs, int courseId) {
         SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, courseId);
         ListenableFuture<Boolean> spywareFuture = (ListenableFuture<Boolean>) threadPool.submit(spyware);
