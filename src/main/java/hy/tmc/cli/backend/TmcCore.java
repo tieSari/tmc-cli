@@ -208,8 +208,9 @@ public class TmcCore {
         return runResultListenableFuture;
     }
 
-    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws ProtocolException {
+    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws ProtocolException, IOException {
         SendFeedback feedback = new SendFeedback(answers, url);
+        feedback.checkData();
         @SuppressWarnings("unchecked")
         ListenableFuture<HttpResult> feedbackListenableFuture = 
                 (ListenableFuture<HttpResult>) threadPool.submit(feedback);

@@ -7,6 +7,8 @@ import java.io.IOException;
 
 public class ExampleJson {
 
+    private static final String jsonFolder = "src/test/resources/json/";
+
     public static String courseExample = courseExample();
     public static String allCoursesExample = allCoursesExample();
     public static String successfulSubmission = successfulSubmission();
@@ -23,74 +25,79 @@ public class ExampleJson {
     public static String checkstyleFailed = checkstyleFailed();
     public static String valgrindFailed = valgrindFailed();
     public static String expiredCourseExample = expiredCourseExample();
+    public static String sentFeedbackExample = sentFeedbackExample();
+
+    private static String sentFeedbackExample() {
+        return readFile("sentFeedbackExample.json");
+    }
     
     private static String failingCourse() {
-        return readFile("src/test/resources/failingCourse.json");
+        return readFile("failingCourse.json");
     }
     
     private static String failedSubmitResponse() {
-        return readFile("src/test/resources/failedSubmitResponse.json");
+        return readFile("failedSubmitResponse.json");
     }
 
     private static String successfulSubmission() {
-        return readFile("src/test/resources/successfulSubmission.json");
+        return readFile("successfulSubmission.json");
     }
 
     private static String feedbackExample() {
-        return readFile("src/test/resources/feedback.json");
+        return readFile("feedback.json");
     }
 
     private static String noFeedbackExample() {
-        return readFile("src/test/resources/noFeedback.json");
+        return readFile("noFeedback.json");
     }
 
     private static String trivialNoFeedback() {
-        return readFile("src/test/resources/trivialNoFeedback.json");
+        return readFile("trivialNoFeedback.json");
     }
 
     private static String failedSubmission() {
-        return readFile("src/test/resources/failedSubmission.json");
+        return readFile("failedSubmission.json");
     }
 
     private static String courseExample() {
-        return readFile("src/test/resources/course.json");
+        return readFile("course.json");
     }
     
     private static String noDeadlineCourseExample(){
-        return readFile("src/test/resources/nodeadlinecourse.json");
+        return readFile("nodeadlinecourse.json");
     }
     
     private static String expiredCourseExample(){
-        return readFile("src/test/resources/expiredCourse.json");
+        return readFile("expiredCourse.json");
     }
    
     private static String allCoursesExample() {
-        return readFile("src/test/resources/courses.json");
+        return readFile("courses.json");
     }
 
     private static String feedbackCourseExample() {
-        return readFile("src/test/resources/feedbackCourse.json");
+        return readFile("feedbackCourse.json");
     }
 
     private static String submitResponse() {
-        return readFile("src/test/resources/submitResponse.json");
+        return readFile("submitResponse.json");
     }
 
     private static String pasteResponse() {
-        return readFile("src/test/resources/pasteResponse.json");
+        return readFile("pasteResponse.json");
     }
 
     private static String checkstyleFailed() {
-        return readFile("src/test/resources/checkstyleFailed.json");
+        return readFile("checkstyleFailed.json");
     }
 
     private static String valgrindFailed() {
-        return readFile("src/test/resources/valgrindFailed.json");
+        return readFile("valgrindFailed.json");
     }
 
     private static String readFile(final String path) {
         try {
-            return FileUtils.readFileToString(new File(path));
+            return FileUtils.readFileToString(new File(jsonFolder + path));
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
             return "";
