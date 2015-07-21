@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@Deprecated
 public class ExerciseDownloader {
 
     private UnzipDecider decider;

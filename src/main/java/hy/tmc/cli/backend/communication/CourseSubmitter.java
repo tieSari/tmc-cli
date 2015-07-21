@@ -23,6 +23,7 @@ import java.util.List;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.entity.mime.content.FileBody;
 
+@Deprecated
 public class CourseSubmitter {
 
     private RootFinder rootFinder;
