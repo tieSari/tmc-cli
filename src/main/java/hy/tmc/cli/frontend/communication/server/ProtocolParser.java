@@ -1,8 +1,10 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import static hy.tmc.cli.frontend.communication.commands.CommandFactory.createCommandMap;
 
 import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.core.ClientTmcSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.Map;
 public class ProtocolParser {
 
     private Server server;
+    private CoreUser coreUser;
 
     /**
      * Constructor for Protocol Parser.
@@ -23,6 +26,7 @@ public class ProtocolParser {
      */
     public ProtocolParser(Server server) {
         this.server = server;
+        this.coreUser = new CoreUser(new ClientTmcSettings());
     }
 
     public ProtocolParser() {
@@ -44,16 +48,11 @@ public class ProtocolParser {
      * @return Command that matches input
      * @throws ProtocolException if bad command name
      */
-    public Command getCommand(String inputLine) throws ProtocolException {
+    public ListenableFuture<?> getCommand(String inputLine) throws ProtocolException {
         String[] elements = getElements(inputLine);
         String commandName = elements[0];
-        Map<String, Command> commandsByName = createCommandMap();
-        if (!commandsByName.containsKey(commandName)) {
-            throw new ProtocolException("Invalid command name");
-        }
-        Command command = commandsByName.get(commandName);
-        command = giveData(elements, command);
-        return command;
+        HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
+        return coreUser.findAndExecute(commandName, params);
     }
 
     private String[] getElements(String userInput) {
@@ -82,19 +81,19 @@ public class ProtocolParser {
         return array;
     }
 
-    private Command giveData(String[] userInput, Command command) {
+    private HashMap<String, String> giveData(String[] userInput, HashMap<String, String> params) {
         int index = 1;
         while (index < userInput.length) {
             String key = userInput[index];
             if (userInput[index].charAt(0) == '-') {
-                command.setParameter(key, "");
+                params.put(key, "");
                 index++;
             } else {
                 String value = userInput[index + 1].replace("<newline>", "\n");
-                command.setParameter(key, value);
+                params.put(key, value);
                 index += 2;
             }
         }
-        return command;
+        return params;
     }
 }
