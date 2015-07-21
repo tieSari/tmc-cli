@@ -3,6 +3,7 @@ package hy.tmc.cli.domain.submission;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class Validations {
 
     private String strategy;

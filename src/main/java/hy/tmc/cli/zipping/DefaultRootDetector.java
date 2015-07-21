@@ -3,7 +3,7 @@ package hy.tmc.cli.zipping;
 import java.io.File;
 import java.nio.file.Path;
 
-
+@Deprecated
 public class DefaultRootDetector implements ProjectRootDetector{
     
     /**

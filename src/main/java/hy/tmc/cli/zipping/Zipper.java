@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Class for zipping stuff.
  */
-
+@Deprecated
 public class Zipper implements ZipMaker {    
     
     /**

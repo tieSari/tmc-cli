@@ -2,6 +2,7 @@ package hy.tmc.cli.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class TestCase {
 
     private String name;

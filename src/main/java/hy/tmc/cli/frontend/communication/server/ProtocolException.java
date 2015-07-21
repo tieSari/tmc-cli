@@ -3,6 +3,7 @@ package hy.tmc.cli.frontend.communication.server;
 /**
  * ProtocolException is thrown when something goes wrong with protocol rules.
  */
+@Deprecated
 public class ProtocolException extends Exception {
 
     /**

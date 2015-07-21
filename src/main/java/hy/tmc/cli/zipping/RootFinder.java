@@ -6,6 +6,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.nio.file.Path;
 
+@Deprecated
 public interface RootFinder {
 
     Optional<Path> getRootDirectory(Path zipRoot);

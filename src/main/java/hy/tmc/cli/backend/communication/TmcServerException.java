@@ -6,6 +6,7 @@ import java.io.IOException;
 /**
  * TmcServerException is thrown, if there occurs exception in TmcServer.
  */
+@Deprecated
 public class TmcServerException extends IOException {
 
     public TmcServerException() {

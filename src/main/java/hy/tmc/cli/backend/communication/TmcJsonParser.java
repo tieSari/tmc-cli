@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * A Utility class for handling JSONs downloaded from the TMC-server.
  */
+@Deprecated
 public class TmcJsonParser {
 
     /**

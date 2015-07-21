@@ -45,6 +45,7 @@ public class SubmissionInterpreter {
      * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
+    @Deprecated
     private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = TmcJsonParser.getSubmissionResult(url);
@@ -59,6 +60,7 @@ public class SubmissionInterpreter {
     /**
      * Returns feedback questions from the latest submission result.
      */
+    @Deprecated
     public List<FeedbackQuestion> getFeedbackQuestions() {
         return latestResult.getFeedbackQuestions();
     }
@@ -69,6 +71,7 @@ public class SubmissionInterpreter {
      *
      * @param url the submission url
      */
+    @Deprecated
     public SubmissionResult getSubmissionResult(String url) throws InterruptedException,
             ProtocolException,
             IOException {
@@ -84,6 +87,7 @@ public class SubmissionInterpreter {
      * Organizes SubmissionResult into human-readable form from the URL.
      *
      */
+    @Deprecated
     public String resultSummary(String url, boolean detailed) throws InterruptedException, IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (result.isPresent()) {

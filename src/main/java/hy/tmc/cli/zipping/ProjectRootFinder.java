@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+@Deprecated
 public class ProjectRootFinder implements RootFinder {
 
     private final ProjectRootDetector detector;

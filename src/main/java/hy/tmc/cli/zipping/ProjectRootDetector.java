@@ -2,6 +2,7 @@ package hy.tmc.cli.zipping;
 
 import java.nio.file.Path;
 
+@Deprecated
 public interface ProjectRootDetector {
     /**
      * Determine whether a directory is a project root directory.

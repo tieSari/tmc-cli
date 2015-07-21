@@ -1,6 +1,7 @@
 
 package hy.tmc.cli.frontend.communication.server;
 
+@Deprecated
 public class ExpiredException extends Exception {
     /**
      * ExpiredException is thrown when user tries to submit or download expired exercise.

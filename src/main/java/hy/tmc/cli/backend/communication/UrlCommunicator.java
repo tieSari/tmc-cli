@@ -35,6 +35,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.Map;
 
+@Deprecated
 public class UrlCommunicator {
     
     public static final int BAD_REQUEST = 407;

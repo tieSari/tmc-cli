@@ -1,7 +1,7 @@
 package hy.tmc.cli.domain.submission;
 
 
-
+@Deprecated
 public class ValidationError {
     private int column;
     private int line;

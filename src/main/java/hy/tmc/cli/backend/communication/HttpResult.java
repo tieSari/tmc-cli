@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend.communication;
 
+@Deprecated
 public class HttpResult {
 
     private String data;

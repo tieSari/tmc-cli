@@ -1,5 +1,6 @@
 package hy.tmc.cli.domain.submission;
 
+@Deprecated
 public class FeedbackQuestion {
     private int id;
     private String question;

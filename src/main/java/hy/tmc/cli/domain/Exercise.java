@@ -2,6 +2,7 @@ package hy.tmc.cli.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class Exercise {
 
     private int id; // = 284;

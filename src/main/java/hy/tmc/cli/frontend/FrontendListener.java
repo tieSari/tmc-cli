@@ -4,6 +4,7 @@ import hy.tmc.cli.domain.submission.FeedbackQuestion;
 
 import java.util.List;
 
+@Deprecated
 public interface FrontendListener {
     /**
      * Starts the Frontend Listener.

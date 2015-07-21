@@ -1,6 +1,6 @@
 package hy.tmc.cli.domain.submission;
 
-
+@Deprecated
 public class TestException {
 
     private String className;

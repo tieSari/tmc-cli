@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Handles unpacking zip files downloaded from TMC.
  */
+@Deprecated
 public class Unzipper {
 
     private String zipPath;
