@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend.formatters;
 
-import fi.helsinki.cs.tmc.langs.RunResult;
-import fi.helsinki.cs.tmc.langs.TestResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 import hy.tmc.cli.frontend.ColorFormatter;
 import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import static hy.tmc.cli.frontend.CommandLineColor.GREEN;

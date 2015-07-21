@@ -1,8 +1,8 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
-import fi.helsinki.cs.tmc.langs.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import hy.tmc.cli.frontend.ResultInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -41,7 +41,7 @@ public class RunTests extends Command<RunResult> {
      * @return String contaning results
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
-    public RunResult runTests(Path exercise) throws NoLanguagePluginFoundException {
+    public RunResult runTests(Path exercise) throws NoLanguagePluginFoundException, fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         return taskExecutor.runTests(exercise);
 
@@ -64,7 +64,7 @@ public class RunTests extends Command<RunResult> {
     }
 
     @Override
-    public RunResult call() throws ProtocolException, NoLanguagePluginFoundException {
+    public RunResult call() throws ProtocolException, NoLanguagePluginFoundException, fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException {
         formatter = getFormatter();
         String path = (String) this.data.get("path");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());

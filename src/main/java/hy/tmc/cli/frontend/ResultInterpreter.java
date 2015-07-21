@@ -1,10 +1,10 @@
 package hy.tmc.cli.frontend;
 
 
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
+import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.TESTS_FAILED;
 
-import fi.helsinki.cs.tmc.langs.RunResult;
-import fi.helsinki.cs.tmc.langs.TestResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 
 import hy.tmc.cli.frontend.formatters.TestResultFormatter;
 

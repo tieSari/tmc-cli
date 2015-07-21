@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend.formatters;
 
-import fi.helsinki.cs.tmc.langs.RunResult;
-import fi.helsinki.cs.tmc.langs.TestResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 import java.util.List;
 
 public class VimTestResultFormatter implements TestResultFormatter {

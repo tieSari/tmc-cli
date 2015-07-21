@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import hy.tmc.cli.configuration.ClientData;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

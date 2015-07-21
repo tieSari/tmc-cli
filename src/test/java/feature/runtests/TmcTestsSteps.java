@@ -14,7 +14,7 @@ import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import java.io.UnsupportedEncodingException;
 
 public class TmcTestsSteps {
@@ -38,7 +38,7 @@ public class TmcTestsSteps {
     }
 
     @When("^the user runs the tests$")
-    public void theUserRunsTheTests() throws ProtocolException, NoLanguagePluginFoundException {
+    public void theUserRunsTheTests() throws ProtocolException, NoLanguagePluginFoundException, fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException {
         output = testRunner.parseData(testRunner.call()).get();
     }
 

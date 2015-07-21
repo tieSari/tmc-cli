@@ -2,7 +2,7 @@ package hy.tmc.cli.testhelpers.testresults;
 
 import com.google.common.collect.ImmutableList;
 
-import fi.helsinki.cs.tmc.langs.TestResult;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 
 import java.util.ArrayList;
 import java.util.List;

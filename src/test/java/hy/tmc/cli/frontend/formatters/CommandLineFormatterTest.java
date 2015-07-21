@@ -1,12 +1,12 @@
 package hy.tmc.cli.frontend.formatters;
 
-import fi.helsinki.cs.tmc.langs.RunResult;
-import fi.helsinki.cs.tmc.langs.RunResult.Status;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.COMPILE_FAILED;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.GENERIC_ERROR;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.PASSED;
-import static fi.helsinki.cs.tmc.langs.RunResult.Status.TESTS_FAILED;
-import fi.helsinki.cs.tmc.langs.TestResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult.Status;
+import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.COMPILE_FAILED;
+import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.GENERIC_ERROR;
+import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.PASSED;
+import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.TESTS_FAILED;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 import hy.tmc.cli.testhelpers.testresults.RunResultBuilder;
 import hy.tmc.cli.testhelpers.testresults.TestResultFactory;
 import java.util.List;
