@@ -1,7 +1,5 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.backend.communication.authorization.Authorization;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
@@ -16,8 +14,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UrlCommunicator.class)
 public class AuthenticateTest {
 
     private final String testUsername = "test";

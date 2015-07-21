@@ -1,5 +1,6 @@
 package hy.tmc.cli.backend;
 
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.domain.Review;
 import java.util.ArrayList;
 import java.util.List;

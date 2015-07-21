@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import com.google.common.base.Optional;
 
 import static hy.tmc.cli.backend.communication.UrlCommunicator.makeGetRequest;

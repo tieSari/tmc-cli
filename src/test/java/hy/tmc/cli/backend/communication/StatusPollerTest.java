@@ -1,6 +1,6 @@
 package hy.tmc.cli.backend.communication;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.synchronization.PollScheduler;
 import hy.tmc.cli.testhelpers.MailExample;

@@ -7,7 +7,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;

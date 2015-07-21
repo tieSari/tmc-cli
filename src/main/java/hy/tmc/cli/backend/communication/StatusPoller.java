@@ -3,7 +3,7 @@ package hy.tmc.cli.backend.communication;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;

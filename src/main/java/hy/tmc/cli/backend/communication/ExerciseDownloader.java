@@ -3,7 +3,6 @@ package hy.tmc.cli.backend.communication;
 import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
 import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
@@ -185,17 +184,5 @@ public class ExerciseDownloader {
      */
     public double getPercents(int exCount, int exercisesSize) {
         return Math.round(1.0 * exCount / exercisesSize * 100);
-    }
-
-    /**
-     * Downloads single .zip file by using URLCommunicator.
-     *
-     * @param zipUrl url which will be downloaded
-     * @param path where to download
-     */
-    private static void downloadFile(String zipUrl, String path) {
-        File file = new File(path);
-        UrlCommunicator.downloadFile(zipUrl, file,
-                ClientData.getFormattedUserData());
     }
 }

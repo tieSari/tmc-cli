@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.configuration.ClientData;

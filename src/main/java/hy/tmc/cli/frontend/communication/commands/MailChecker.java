@@ -1,10 +1,10 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.backend.MailFormatter.formatReviews;
+import static hy.tmc.cli.mail.MailFormatter.formatReviews;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;

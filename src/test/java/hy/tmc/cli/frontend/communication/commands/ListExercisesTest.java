@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.backend.communication.ExerciseLister;
 
 import hy.tmc.cli.configuration.ClientData;

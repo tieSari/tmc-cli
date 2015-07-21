@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;

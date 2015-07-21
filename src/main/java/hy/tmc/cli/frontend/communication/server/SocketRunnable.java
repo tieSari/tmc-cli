@@ -1,9 +1,9 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.cli.backend.TmcCore;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.core.TmcCore;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
