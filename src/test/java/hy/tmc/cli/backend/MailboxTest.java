@@ -1,7 +1,7 @@
 package hy.tmc.cli.backend;
 
 import hy.tmc.cli.mail.Mailbox;
-import hy.tmc.cli.domain.Review;
+import hy.tmc.core.domain.Review;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;

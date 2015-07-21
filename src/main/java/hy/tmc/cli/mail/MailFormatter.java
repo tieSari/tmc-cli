@@ -1,8 +1,7 @@
 package hy.tmc.cli.mail;
 
-import com.google.common.annotations.Beta;
-import hy.tmc.cli.domain.Review;
 
+import hy.tmc.core.domain.Review;
 import java.util.List;
 
 

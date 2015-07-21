@@ -1,19 +1,20 @@
 package hy.tmc.cli.frontend;
 
-import hy.tmc.cli.domain.submission.FeedbackQuestion;
 
+import hy.tmc.cli.frontend.communication.server.Server;
+import hy.tmc.core.domain.submission.FeedbackQuestion;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
 public abstract class FeedbackHandlerAbstract {
-    protected final FrontendListener server;
+    protected final Server server;
     protected final Queue<FeedbackQuestion> feedbackQueue;
     protected int lastQuestionId;
     private String feedbackUrl;
     protected String lastKind;
 
-    public FeedbackHandlerAbstract(FrontendListener server) {
+    public FeedbackHandlerAbstract(Server server) {
         this.feedbackQueue = new ArrayDeque<>();
         this.server = server;
     }

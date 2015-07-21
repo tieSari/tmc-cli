@@ -2,10 +2,10 @@ package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.zipping.ProjectRootFinder;
+import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +15,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TmcJsonParser.class)
 public class ExerciseListerTest {
 
     String fakeName = "2014-mooc-no-deadline";
     String otherFakeName = "2013-tira";
-    ProjectRootFinder rootFinderMock;
     Course fakeCourse;
     ExerciseLister lister;
     Exercise fakeExercise;
@@ -38,21 +32,12 @@ public class ExerciseListerTest {
         ClientData.setUserData("chang", "paras");
         setupFakeCourses();
 
-        rootFinderMock = Mockito.mock(ProjectRootFinder.class);
-        Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.of(fakeCourse));
-        lister = new ExerciseLister(rootFinderMock);
+        lister = new ExerciseLister();
 
         PowerMockito.mockStatic(TmcJsonParser.class);
 
         mockExercisesWith(setupFakeExercises());
 
-    }
-
-    private void mockExercisesWith(List<Exercise> exercises) throws IOException, ProtocolException {
-        PowerMockito
-                .when(TmcJsonParser.getExercises((Course) Mockito.any()))
-                .thenReturn(exercises);
     }
 
     private List<Exercise> setupFakeExercises() {
@@ -81,32 +66,15 @@ public class ExerciseListerTest {
         ClientData.clearUserData();
     }
 
-    @Test(expected=ProtocolException.class)
-    public void ifNoCourseIsFoundThenThrowsProtocolException() throws ProtocolException, IOException {
-        Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.<Course>absent());
-        lister.listExercises("polku/tuntemattomaan/tiedostoon");
-    }
-
-    @Test(expected=ProtocolException.class)
-    public void ifNoExercisesFoundThenThrowsProtocolException() throws ProtocolException, IOException {
-        String correct = "No exercises found";
-
-        mockExercisesWith(null);
-
-        assertEquals(correct, lister.listExercises("any"));
-    }
-
     @Test
     public void withCorrectCourseAndExercisesOutputContainsNames() throws ProtocolException, IOException {
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Nimi"));
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Kuusi"));
-
+        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Nimi"));
+        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Kuusi"));
     }
 
     @Test
     public void withOneDoneExerciseOutputContainsX() throws ProtocolException, IOException {
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
+        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("x"));
     }
 
     @Test
@@ -117,7 +85,7 @@ public class ExerciseListerTest {
         exercises.add(new Exercise());
         mockExercisesWith(exercises);
 
-        assertFalse(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
+        assertFalse(lister.buildExercisesInfo(exampleExercises()).contains("x"));
     }
 
     @Test
@@ -130,7 +98,7 @@ public class ExerciseListerTest {
         exercises.add(ex);
 
         mockExercisesWith(exercises);
-        assertFalse(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
+        assertFalse(lister.buildExercisesInfo(exampleExercises()).contains("x"));
 
     }
     
@@ -144,8 +112,16 @@ public class ExerciseListerTest {
         exercises.add(ex);
 
         mockExercisesWith(exercises);
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("%"));
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Attempted"));
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Total"));
+        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("%"));
+        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Attempted"));
+        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Total"));
+    }
+
+    private void mockExercisesWith(List<Exercise> setupFakeExercises) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private List<Exercise> exampleExercises() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

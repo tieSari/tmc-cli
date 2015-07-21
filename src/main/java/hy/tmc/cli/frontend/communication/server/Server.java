@@ -1,11 +1,7 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.domain.submission.FeedbackQuestion;
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.TextFeedbackHandler;
 import hy.tmc.core.TmcCore;
@@ -13,12 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server implements FrontendListener, Runnable {
+public class Server implements Runnable {
 
     private ServerSocket serverSocket;
     private boolean isRunning;
@@ -85,7 +79,6 @@ public class Server implements FrontendListener, Runnable {
     /**
      * Start is general function to set up server listening for the frontend.
      */
-    @Override
     public void start() {
         this.run();
     }
@@ -122,89 +115,5 @@ public class Server implements FrontendListener, Runnable {
         isRunning = false;
         serverSocket.close();
         socketThreadPool.shutdown();
-    }
-
-    @Override
-    public void feedback(List<FeedbackQuestion> feedbackQuestions, String feedbackUrl) {
-        if (feedbackQuestions.isEmpty()) {
-            return;
-        }
-
-        List<FeedbackQuestion> rangeQuestions = new ArrayList<>();
-        List<FeedbackQuestion> textQuestions = new ArrayList<>();
-        for (FeedbackQuestion feedbackQuestion : feedbackQuestions) {
-            if (feedbackQuestion.getKind().equals("text")) {
-                textQuestions.add(feedbackQuestion);
-            } else {
-                rangeQuestions.add(feedbackQuestion);
-            }
-        }
-
-        this.rangeFeedbackHandler.feedback(rangeQuestions, feedbackUrl);
-        this.textFeedbackHandler.feedback(textQuestions, feedbackUrl);
-
-        if (!rangeQuestions.isEmpty()) {
-            rangeFeedbackHandler.askQuestion(); // ask first questions
-        } else {
-            textFeedbackHandler.askQuestion();
-        }
-    }
-
-    /**
-     * Takes the answer from a range feedback question.
-     */
-    public void rangeFeedbackAnswer(String answer) throws ProtocolException {
-        JsonObject jsonAnswer = new JsonObject();
-        jsonAnswer.addProperty("question_id", rangeFeedbackHandler.getLastId());
-        String validAnswer = rangeFeedbackHandler.validateAnswer(answer);
-        jsonAnswer.addProperty("answer", validAnswer);
-        feedbackAnswers.add(jsonAnswer);
-
-        if (this.rangeFeedbackHandler.allQuestionsAsked()) {
-            if (textFeedbackHandler.allQuestionsAsked()) {
-                sendToTmcServer();
-                this.feedbackAnswers = new JsonArray();
-            } else {
-                textFeedbackHandler.askQuestion(); // start asking text questions
-            }
-        } else {
-            rangeFeedbackHandler.askQuestion();
-        }
-    }
-
-    /**
-     * Takes the answer from a text feedback question.
-     */
-    public void textFeedbackAnswer(String answer) throws ProtocolException {
-        JsonObject jsonAnswer = new JsonObject();
-        jsonAnswer.addProperty("question_id", textFeedbackHandler.getLastId());
-        jsonAnswer.addProperty("answer", answer);
-        feedbackAnswers.add(jsonAnswer);
-
-        if (this.textFeedbackHandler.allQuestionsAsked()) {
-            sendToTmcServer();
-            this.feedbackAnswers = new JsonArray();
-        } else {
-            textFeedbackHandler.askQuestion();
-        }
-    }
-
-    protected void sendToTmcServer() throws ProtocolException {
-        JsonObject req = getAnswersJson();
-        try {
-            UrlCommunicator.makePostWithJson(req, getFeedbackUrl());
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    private String getFeedbackUrl() {
-        return rangeFeedbackHandler.getFeedbackUrl() + "?" + new ConfigHandler().apiParam;
-    }
-
-    private JsonObject getAnswersJson() {
-        JsonObject req = new JsonObject();
-        req.add("answers", feedbackAnswers);
-        return req;
     }
 }

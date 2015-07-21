@@ -2,13 +2,11 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.ProgressObserver;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public abstract class Command<E> implements Callable<E> {
+public abstract class Command<E> {
 
     protected Map<String, String> data;
     private String defaultErrorMessage = "Unexpected exception.";
@@ -39,14 +37,6 @@ public abstract class Command<E> implements Callable<E> {
     public void setParameter(String key, String value) {
         data.put(key, value);
     }
-
-    /**
-     * Command must have checkData method which throws ProtocolException if it
-     * doesn't have all data needed.
-     *
-     * @throws ProtocolException if the command lacks some necessary data
-     */
-    public abstract void checkData() throws ProtocolException, IOException;
 
     /**
      * This is only for TMC-cli-client.

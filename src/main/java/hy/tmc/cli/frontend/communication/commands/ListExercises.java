@@ -2,12 +2,11 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseLister;
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.domain.Exercise;
+
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
 import java.io.IOException;
 
 import java.util.List;
@@ -37,41 +36,12 @@ public class ListExercises extends Command<List<Exercise>> {
         this.setParameter("path", path);
     }
 
-    /**
-     * Check the path and ClientData.
-     *
-     * @throws ProtocolException if some data not specified
-     */
-    @Override
-    public void checkData() throws ProtocolException, IOException {
-        if (!data.containsKey("path")) {
-            throw new ProtocolException("Path not recieved");
-        }
-        if (!ClientData.userDataExists()) {
-            throw new ProtocolException("Please authorize first.");
-        }
-        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
-        if (currentCourse.isPresent()) {
-            this.current = currentCourse.get();
-        } else {
-            throw new ProtocolException("No course resolved from the path.");
-        }
-    }
-
     @Override
     public Optional<String> parseData(Object data) throws IOException {
         String mail = checkMail();
         @SuppressWarnings("unchecked")
         List<Exercise> result = (List<Exercise>) data;
         return Optional.of(mail + "\n" + lister.buildExercisesInfo(result));
-    }
-
-    @Override
-    public List<Exercise> call() throws ProtocolException, IOException {
-        checkData();
-        TmcServiceScheduler.startIfNotRunning(this.current);
-        List<Exercise> exercises = lister.listExercises(data.get("path"));
-        return exercises;
     }
 
     /**

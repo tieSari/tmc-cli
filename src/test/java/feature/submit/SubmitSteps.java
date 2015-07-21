@@ -58,7 +58,6 @@ public class SubmitSteps {
 
         TmcServiceScheduler.disablePolling();
         Mailbox.create();
-        ClientData.setProjectRootFinder(new ProjectRootFinderStub());
 
         Wiremocker mocker = new Wiremocker();
         wireMockServer = mocker.wiremockSubmitPaths();

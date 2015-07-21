@@ -2,22 +2,23 @@ package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
-
 import hy.tmc.cli.mail.Mailbox;
-import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.domain.Review;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+
 import hy.tmc.cli.synchronization.PollScheduler;
+import hy.tmc.core.TmcCore;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Review;
 import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
+
 public class StatusPoller extends AbstractScheduledService {
 
     private Course currentCourse;
     private PollScheduler pollScheduler;
+    private TmcCore core;
 
     /**
      * StatusPoller which polls code reviews. Has fixed time interval
@@ -28,6 +29,7 @@ public class StatusPoller extends AbstractScheduledService {
     public StatusPoller(Course currentCourse, PollScheduler schedule) {
         this.currentCourse = currentCourse;
         this.pollScheduler = schedule;
+        
     }
 
     @Override
@@ -36,7 +38,7 @@ public class StatusPoller extends AbstractScheduledService {
             throw new IllegalStateException("No mailbox initialized.");
         }
 
-        Optional<List<Review>> reviews = checkReviews();
+        Optional<List<Review>> reviews = getReviews();
         if (reviews.isPresent()) {
             Mailbox.emptyMailbox(); // TODO poll only new mails without clearing all
             Mailbox.getMailbox().get().fill(reviews.get());
@@ -48,15 +50,6 @@ public class StatusPoller extends AbstractScheduledService {
         return this.pollScheduler;
     }
 
-    private Optional<List<Review>> checkReviews() throws IOException {
-        List<Review> currentReviews = TmcJsonParser.getReviews(this.currentCourse.getReviewsUrl());
-        currentReviews = filter(currentReviews);
-
-        if (currentReviews.isEmpty()) {
-            return Optional.absent();
-        }
-        return Optional.of(currentReviews);
-    }
 
     private List<Review> filter(List<Review> currentReviews) {
         List<Review> filtered = new ArrayList<>();
@@ -74,5 +67,9 @@ public class StatusPoller extends AbstractScheduledService {
 
     @Override
     protected void shutDown() throws Exception {
+    }
+
+    private Optional<List<Review>> getReviews() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -42,6 +42,7 @@ public class SetServerSteps {
      */
     @When ("^the user changes the server to \"(.*)\"$")
     public void serverChanged(String serverName) throws Exception {
+        /*
         try {
             command.setParameter("tmc-server", serverName);
             command.checkData();
@@ -49,6 +50,8 @@ public class SetServerSteps {
         } catch (ProtocolException ex) {
             System.err.println(ex.getMessage());
         }
+        */ 
+        fail("reimplement");
     }
     
     /**
@@ -56,13 +59,16 @@ public class SetServerSteps {
      */
     @When ("^the user uses the command without parameters$")
     public void noParamsGiven() throws Exception {
+        /*
+                
         try {
             command.checkData();
             output = command.parseData(command.call()).get();
         } catch (ProtocolException ex) {
             return;
         }
-        fail("ProtocolException.");
+        */
+        fail("reimplement");
     }
     
     @Then ("^the server will be \"(.*)\"$")

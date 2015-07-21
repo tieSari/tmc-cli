@@ -13,7 +13,6 @@ import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
-import hy.tmc.cli.testhelpers.FrontendStub;
 import hy.tmc.cli.testhelpers.TestClient;
 
 import cucumber.api.java.After;
@@ -29,7 +28,6 @@ import java.util.List;
 
 public class FeedbackSteps {
 
-    private FrontendStub frontStub;
     private RangeFeedbackHandler handler;
 
     private int port;
@@ -59,8 +57,7 @@ public class FeedbackSteps {
         startWireMock();
         configHandler.writeServerAddress(wiremockAddress);
         System.out.println(wiremockAddress);
-        frontStub = new FrontendStub();
-        handler = new RangeFeedbackHandler(frontStub);
+        handler = new RangeFeedbackHandler(null); // FIXME
         server = new Server(handler);
 
         serverThread = new Thread(server);
