@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import hy.tmc.cli.backend.TmcCore;
+import hy.tmc.core.TmcCore;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.domain.submission.FeedbackQuestion;
