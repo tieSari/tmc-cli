@@ -1,10 +1,11 @@
 package hy.tmc.cli.frontend;
 
-import hy.tmc.cli.domain.submission.FeedbackQuestion;
+import hy.tmc.cli.frontend.communication.server.Server;
+
 
 public class TextFeedbackHandler extends FeedbackHandlerAbstract {
 
-    public TextFeedbackHandler(FrontendListener server) {
+    public TextFeedbackHandler(Server server) {
         super(server);
     }
 

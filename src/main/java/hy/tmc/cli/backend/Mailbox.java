@@ -2,9 +2,10 @@ package hy.tmc.cli.backend;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
-import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.domain.Review;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
+import hy.tmc.core.domain.Review;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;

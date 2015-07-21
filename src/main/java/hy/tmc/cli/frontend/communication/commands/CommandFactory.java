@@ -17,17 +17,14 @@ public class CommandFactory {
         commandsByName.put("auth", authenticate());
         commandsByName.put("help", help());
         commandsByName.put("login", login());
-        commandsByName.put("ping", replyToPing());
         commandsByName.put("listCourses", listCourses());
         commandsByName.put("listExercises", listExercises());
-        commandsByName.put("downloadExercises", downloadExercises());
         commandsByName.put("logout", logout());
         commandsByName.put("setServer", chooseServer());
         commandsByName.put("submit", submit());
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
         commandsByName.put("getMail", getMail());
-        commandsByName.put("stopProcess", stopProcess());
         return commandsByName;
     }
 
@@ -42,22 +39,8 @@ public class CommandFactory {
         return new Help();
     }
 
-    /**
-     * Create StopProcess object
-     * @return a stopProcess object
-     */
-    public static Command stopProcess() {
-        return new StopProcess();
-    }
 
-    /**
-     * Create ReplyToPing Command object.
-     *
-     * @return a replyToPing object
-     */
-    public static Command replyToPing() {
-        return new ReplyToPing();
-    }
+
 
     /**
      * Create RunTests command object.
@@ -102,15 +85,6 @@ public class CommandFactory {
      */
     public static Command listExercises() {
         return new ListExercises();
-    }
-
-    /**
-     * Create a DownloadExercises Command object.
-     *
-     * @return a downloadExercises object
-     */
-    public static Command downloadExercises() {
-        return new DownloadExercises();
     }
 
     /**

@@ -1,16 +1,15 @@
 package hy.tmc.cli.frontend;
 
-import hy.tmc.cli.domain.submission.FeedbackQuestion;
+import hy.tmc.cli.frontend.communication.server.Server;
 
-import java.util.ArrayDeque;
-import java.util.List;
+
 
 public class RangeFeedbackHandler extends FeedbackHandlerAbstract {
 
     private int lowerbound;
     private int upperbound;
 
-    public RangeFeedbackHandler(FrontendListener server) {
+    public RangeFeedbackHandler(Server server) {
         super(server);
     }
 

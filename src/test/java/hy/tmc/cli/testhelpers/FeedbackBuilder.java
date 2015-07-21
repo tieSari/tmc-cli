@@ -1,6 +1,6 @@
 package hy.tmc.cli.testhelpers;
 
-import hy.tmc.cli.domain.submission.FeedbackQuestion;
+import hy.tmc.core.domain.submission.FeedbackQuestion;
 import java.util.ArrayList;
 import java.util.List;
 

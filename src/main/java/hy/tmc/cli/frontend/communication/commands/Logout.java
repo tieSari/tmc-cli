@@ -12,9 +12,6 @@ import hy.tmc.cli.synchronization.TmcServiceScheduler;
 public class Logout extends Command<Boolean> {
 
     @Override
-    public void checkData() throws ProtocolException {}
-
-    @Override
     public Optional<String> parseData(Object data) {
         Boolean result = (Boolean) data;
         String message;
@@ -27,7 +24,6 @@ public class Logout extends Command<Boolean> {
         return Optional.of(message);
     }
 
-    @Override
     public Boolean call() throws ProtocolException {
         if (ClientData.userDataExists()) {
             TmcServiceScheduler.getScheduler().stop();

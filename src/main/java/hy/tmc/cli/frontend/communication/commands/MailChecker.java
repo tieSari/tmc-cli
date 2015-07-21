@@ -5,10 +5,10 @@ import static hy.tmc.cli.backend.MailFormatter.formatReviews;
 import com.google.common.base.Optional;
 
 import hy.tmc.cli.backend.Mailbox;
-import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.domain.Course;
 import java.io.IOException;
 
 public class MailChecker extends Command<String> {
@@ -20,7 +20,7 @@ public class MailChecker extends Command<String> {
         mailbox = Mailbox.getMailbox();
     }
 
-    @Override
+
     public void checkData() throws ProtocolException, IOException {
         if (!ClientData.userDataExists()) {
             throw new ProtocolException("Must be logged in first");
@@ -31,7 +31,7 @@ public class MailChecker extends Command<String> {
         }
         if (data.containsKey("courseID")) {
             try {
-                course = TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
+                course = ClientData.getCurrentCourse(data.get("path"));//TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
             }
@@ -52,7 +52,6 @@ public class MailChecker extends Command<String> {
         return Optional.of((String) data);
     }
 
-    @Override
     public String call() throws ProtocolException, IOException {
         checkData();
         String mail = "";

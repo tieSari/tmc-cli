@@ -1,7 +1,6 @@
 package hy.tmc.cli.testhelpers;
 
-import hy.tmc.cli.domain.Review;
-
+import hy.tmc.core.domain.Review;
 import java.util.ArrayList;
 import java.util.List;
 

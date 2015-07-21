@@ -1,11 +1,14 @@
 package hy.tmc.cli.configuration;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.domain.Course;
+import com.google.common.util.concurrent.ListenableFuture;
+
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.zipping.DefaultRootDetector;
-import hy.tmc.cli.zipping.ProjectRootFinder;
-import hy.tmc.cli.zipping.RootFinder;
+import hy.tmc.core.TmcCore;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.zipping.ProjectRootFinder;
+import hy.tmc.core.zipping.RootFinder;
+
 import java.io.IOException;
 
 /**
@@ -17,7 +20,8 @@ public final class ClientData {
     private static String USERNAME = "";
     private static String PASSWORD = "";
     private static RootFinder rootFinder;
-
+    private static Course currentCourse;
+    
     private ClientData() {
     }
 
@@ -40,7 +44,7 @@ public final class ClientData {
 
     private synchronized static RootFinder getProjectRootFinder() {
         if (rootFinder == null) {
-            rootFinder = new ProjectRootFinder(new DefaultRootDetector());
+            rootFinder = new ProjectRootFinder(null);
         }
         return rootFinder;
     }
@@ -60,10 +64,7 @@ public final class ClientData {
      * @return optional which includes the course if found.
      */
     public synchronized static Optional<Course> getCurrentCourse(String currentPath) throws ProtocolException, IOException {
-        if (!userDataExists()) {
-            throw new ProtocolException("Not logged in.");
-        }
-        return getProjectRootFinder().getCurrentCourse(currentPath);
+        return Optional.of(currentCourse);
     }
 
     public synchronized static boolean userDataExists() {

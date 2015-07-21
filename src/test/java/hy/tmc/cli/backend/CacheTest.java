@@ -1,6 +1,6 @@
 package hy.tmc.cli.backend;
 
-import hy.tmc.cli.domain.Course;
+import hy.tmc.core.domain.Course;
 import java.util.Date;
 import java.util.HashMap;
 import static org.junit.Assert.assertNotEquals;

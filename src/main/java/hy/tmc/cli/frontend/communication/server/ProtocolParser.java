@@ -2,7 +2,6 @@ package hy.tmc.cli.frontend.communication.server;
 
 import static hy.tmc.cli.frontend.communication.commands.CommandFactory.createCommandMap;
 
-import hy.tmc.cli.frontend.FrontendListener;
 import hy.tmc.cli.frontend.communication.commands.Command;
 
 import java.util.ArrayList;
@@ -15,14 +14,14 @@ import java.util.Map;
  */
 public class ProtocolParser {
 
-    private FrontendListener server;
+    private Server server;
 
     /**
      * Constructor for Protocol Parser.
      *
      * @param server frontend server
      */
-    public ProtocolParser(FrontendListener server) {
+    public ProtocolParser(Server server) {
         this.server = server;
     }
 
@@ -34,7 +33,7 @@ public class ProtocolParser {
      *
      * @param server frontend server
      */
-    public ProtocolParser(FrontendListener server, HashMap<String, Command> availableCommands) {
+    public ProtocolParser(Server server, HashMap<String, Command> availableCommands) {
         this.server = server;
     }
 

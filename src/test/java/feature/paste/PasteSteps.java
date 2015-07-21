@@ -27,11 +27,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import org.hamcrest.CoreMatchers;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 
@@ -64,7 +60,8 @@ public class PasteSteps {
         serverThread.start();
         testClient = new TestClient(port);
         ClientData.setUserData("Chuck", "Norris");
-        ClientData.setProjectRootFinder(new ProjectRootFinderStub());
+        // replace with tmc-core mock
+        //ClientData.setProjectRootFinder(new ProjectRootFinderStub()); 
         startWireMock();
     }
 

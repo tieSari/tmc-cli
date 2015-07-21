@@ -3,7 +3,8 @@ package hy.tmc.cli.synchronization;
 import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import hy.tmc.cli.backend.communication.StatusPoller;
-import hy.tmc.cli.domain.Course;
+import hy.tmc.core.domain.Course;
+
 
 import java.util.HashSet;
 import java.util.Set;
