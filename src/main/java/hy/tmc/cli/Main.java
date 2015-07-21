@@ -1,5 +1,9 @@
 package hy.tmc.cli;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> added CliSettings, implements core.TmcSettings and replaces ClientData
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.core.TmcCore;
 import java.io.File;
@@ -17,6 +21,10 @@ public class Main {
      * @throws java.lang.InterruptedException if server is interrupted. Starts
      * the server.
      */
+<<<<<<< HEAD
+=======
+
+>>>>>>> added CliSettings, implements core.TmcSettings and replaces ClientData
     public static void main(String[] args) throws IOException, InterruptedException, ProtocolException {
         File cacheFile = Paths.get("bin", "cache").toFile();
         if (!cacheFile.exists()) {

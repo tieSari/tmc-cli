@@ -19,7 +19,6 @@ public class CommandFactory {
         commandsByName.put("login", login());
         commandsByName.put("listCourses", listCourses());
         commandsByName.put("listExercises", listExercises());
-        commandsByName.put("logout", logout());
         commandsByName.put("setServer", chooseServer());
         commandsByName.put("submit", submit());
         commandsByName.put("runTests", runTests());
@@ -85,15 +84,6 @@ public class CommandFactory {
      */
     public static Command listExercises() {
         return new ListExercises();
-    }
-
-    /**
-     * Create a Logout Command object.
-     *
-     * @return a logout object
-     */
-    public static Command logout() {
-        return new Logout();
     }
 
     /**

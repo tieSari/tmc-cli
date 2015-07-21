@@ -1,5 +1,9 @@
 package hy.tmc.cli.backend;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> added CliSettings, implements core.TmcSettings and replaces ClientData
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.core.domain.Review;
 import java.util.ArrayList;
