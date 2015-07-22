@@ -3,20 +3,16 @@ package hy.tmc.cli.frontend.communication.commands;
 import static hy.tmc.cli.mail.MailFormatter.formatReviews;
 
 import com.google.common.base.Optional;
-<<<<<<< HEAD
-
-
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
-=======
-import hy.tmc.cli.CliSettings;
->>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
+
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.core.domain.Course;
 import java.io.IOException;
 
-public class MailChecker extends CommandResultParser<String> {
+public class MailChecker extends Command<String> {
 
     private Optional<Mailbox> mailbox;
     private Optional<Course> course;
@@ -48,7 +44,6 @@ public class MailChecker extends CommandResultParser<String> {
         }
     }
 
-    @Override
     public Optional<String> parseData(Object data) {
         return Optional.of((String) data);
     }
