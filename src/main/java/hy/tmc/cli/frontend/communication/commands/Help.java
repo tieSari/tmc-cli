@@ -6,20 +6,10 @@ public class Help extends Command<String> {
 
     private final String dataKey = "command";
 
-<<<<<<< HEAD
-    public Optional<String> parseData(Object data) {
-        return Optional.of((String) data);
-=======
     public Help(TmcCli cli) {
         super(cli);
->>>>>>> b75076cce3b517b65e21af1427a2a90866de48ab
     }
 
-    /**
-     * Takes the command map and returns a set of command names.
-     *
-     * @return a set of all available command names.
-     */
     public String mainHelpMessage() {
         StringBuilder enterprise = new StringBuilder();
 
@@ -40,10 +30,6 @@ public class Help extends Command<String> {
 
     @Override
     public String call() throws Exception {
-<<<<<<< HEAD
-        return null;
-       
-=======
         if (!data.containsKey(dataKey)) {
             return mainHelpMessage();
         } else {
@@ -82,6 +68,5 @@ public class Help extends Command<String> {
             default:
                 return "I cannot help you with " + command + " :(";
         }
->>>>>>> b75076cce3b517b65e21af1427a2a90866de48ab
     }
 }

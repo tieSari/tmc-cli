@@ -27,10 +27,10 @@ public class CoreUser {
     private ListeningExecutorService threadPool;
     private TmcCli tmcCli;
     
-    public CoreUser(DataOutputStream output, Socket socket, ListeningExecutorService pool) throws IOException {
-        this.core = new TmcCore();
+    public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) throws IOException {
+        this.core = tmcCli.getCore();
         this.threadPool = pool;
-        this.tmcCli = new TmcCli();
+        this.tmcCli = tmcCli;
     }
     
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
@@ -166,7 +166,17 @@ public class CoreUser {
      * @return a logout listenablefuture
      */
     public void logout(HashMap<String, String> params) {
-        
+        this.tmcCli.logout();
+        String message = "User data cleared!";
+        try {
+            output.write((message + "\n").getBytes());
+            socket.close();
+        }
+        catch (IOException ex) {
+            System.err.println("Failed to print error message: ");
+            System.err.println(ex.getMessage());
+        }
+
     }
 
     /**
@@ -175,10 +185,7 @@ public class CoreUser {
      * @return a chooseServer listenablefuture
      */
     public ListenableFuture<?> chooseServer(HashMap<String, String> params) throws ProtocolException {
-        if (!params.containsKey("tmc-server")) {
-            throw new ProtocolException("must specify new server");
-        }
-        
+
     }
 
     /**
