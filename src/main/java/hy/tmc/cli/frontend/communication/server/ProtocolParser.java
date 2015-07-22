@@ -3,6 +3,7 @@ package hy.tmc.cli.frontend.communication.server;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 
 import hy.tmc.cli.frontend.communication.commands.Command;
@@ -25,7 +26,7 @@ public class ProtocolParser {
     private DataOutputStream stream;
     private Socket socket;
     private ListeningExecutorService pool;
-
+    private TmcCli cli;
 
     /**
      * Constructor for Protocol Parser.
@@ -44,15 +45,16 @@ public class ProtocolParser {
         this.server = server;
     }
     
-    public ProtocolParser(DataOutputStream stream, Socket socket, ListeningExecutorService pool){
+    public ProtocolParser(DataOutputStream stream, Socket socket, ListeningExecutorService pool, TmcCli cli){
         this.stream = stream;
         this.socket = socket;
         this.pool = pool;
+        this.cli = cli;
     }
     
     public HashMap<String, Command> createCommandMap(){
         HashMap<String, Command> map = new HashMap<String, Command>();
-        map.put("help", new Help());
+        map.put("help", new Help(this.cli));
         map.put("setServer", new ChooseServer());
         return map;
     }

@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -20,17 +21,18 @@ public class Server implements Runnable {
     private TmcCore tmcCore;
     private ExecutorService socketThreadPool;
     private BufferedReader in;
+    private TmcCli cli;
 
     /**
      * Constructor for server. It finds a free port to be listened to.
      *
      * @throws IOException if failed to write port to configuration file
      */
-    public Server() throws IOException {
-        this(new TmcCore(), Executors.newCachedThreadPool());
+    public Server(TmcCli cli) throws IOException {
+        this(new TmcCore(), Executors.newCachedThreadPool(), cli);
     }
 
-    public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
+    public Server(TmcCore tmcCore, ExecutorService socketThreadPool, TmcCli cli) throws IOException {
         this.tmcCore = tmcCore;
         this.socketThreadPool = socketThreadPool;
         initServerSocket();

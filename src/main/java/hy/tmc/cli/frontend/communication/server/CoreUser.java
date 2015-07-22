@@ -7,7 +7,7 @@ import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.listeners.LoginListener;
-import hy.tmc.cli.frontend.communication.commands.ChooseServer;
+import hy.tmc.cli.frontend.communication.commands.SetServer;
 import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import hy.tmc.cli.frontend.communication.commands.Help;
 import hy.tmc.cli.listeners.ListCoursesListener;

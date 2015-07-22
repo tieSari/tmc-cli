@@ -4,6 +4,7 @@ import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.listeners.ResultListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -21,11 +22,13 @@ public class SocketRunnable implements Runnable {
     protected Socket socket;
     private TmcCore core;
     private ListeningExecutorService pool;
+    private TmcCli cli;
     
-    public SocketRunnable(Socket clientSocket, TmcCore core, ListeningExecutorService pool) {
+    public SocketRunnable(Socket clientSocket, TmcCore core, ListeningExecutorService pool, TmcCli cli) {
         this.socket = clientSocket;
         this.core = core;
         this.pool = pool;
+        this.cli = cli;
     }
 
     /**
@@ -57,7 +60,7 @@ public class SocketRunnable implements Runnable {
      */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException, ProtocolException, TmcCoreException {
-        ProtocolParser parser = new ProtocolParser(outputStream, this.socket, this.pool);
+        ProtocolParser parser = new ProtocolParser(outputStream, this.socket, this.pool, this.cli);
         // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
         String input = inputReader.readLine();
         if(input == null){

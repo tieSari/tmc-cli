@@ -18,12 +18,12 @@ import static org.junit.Assert.fail;
 
 public class ChooseServerTest {
 
-    private ChooseServer chooser;
+    private SetServer chooser;
     private final String path = "testResources/test.properties";
 
     @Before
     public void setup() {
-        this.chooser = new ChooseServer(new ConfigHandler(path));
+        this.chooser = new SetServer(new ConfigHandler(path));
     }
     
     @After

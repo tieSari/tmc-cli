@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
@@ -10,9 +11,16 @@ import java.util.regex.Pattern;
 public class ChooseServer extends Command<Boolean> {
 
     private ConfigHandler handler;
+    private TmcCli cli;
 
-    public ChooseServer(ConfigHandler handler) {
+    /**
+     *
+     * @param handler
+     * @param cli
+     */
+    public ChooseServer(ConfigHandler handler, TmcCli cli) {
         this.handler = handler;
+        this.cli = cli;
     }
 
     public ChooseServer() {
