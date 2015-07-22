@@ -1,4 +1,4 @@
-package hy.tmc.cli.backend;
+package hy.tmc.cli.mail;
 
 
 import hy.tmc.core.domain.Review;

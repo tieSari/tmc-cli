@@ -1,17 +1,18 @@
 package hy.tmc.cli.frontend.communication.commands;
 
-import static hy.tmc.cli.backend.MailFormatter.formatReviews;
+import static hy.tmc.cli.mail.MailFormatter.formatReviews;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.cli.backend.Mailbox;
+
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
 import java.io.IOException;
 
-public class MailChecker extends Command<String> {
+public class MailChecker extends CommandResultParser<String> {
 
     private Optional<Mailbox> mailbox;
     private Optional<Course> course;

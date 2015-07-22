@@ -12,7 +12,7 @@ import hy.tmc.cli.frontend.formatters.VimTestResultFormatter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RunTests extends Command<RunResult> {
+public class RunTests extends CommandResultParser<RunResult> {
 
     private TestResultFormatter formatter;
 

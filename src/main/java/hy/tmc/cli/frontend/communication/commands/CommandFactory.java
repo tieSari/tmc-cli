@@ -11,8 +11,8 @@ public class CommandFactory {
      *
      * @return A map of names to corresponding commands
      */
-    public static Map<String, Command> createCommandMap() {
-        HashMap<String, Command> commandsByName = new HashMap<>();
+    public static Map<String, CommandResultParser> createCommandMap() {
+        HashMap<String, CommandResultParser> commandsByName = new HashMap<>();
 
         commandsByName.put("auth", authenticate());
         commandsByName.put("help", help());
@@ -35,7 +35,7 @@ public class CommandFactory {
      *
      * @return a help object
      */
-    public static Command help() {
+    public static CommandResultParser help() {
         return new Help();
     }
 
@@ -47,7 +47,7 @@ public class CommandFactory {
      *
      * @return a help object
      */
-    public static Command runTests() {
+    public static CommandResultParser runTests() {
         return new RunTests();
     }
 
@@ -56,7 +56,7 @@ public class CommandFactory {
      *
      * @return an authenticate object
      */
-    public static Command authenticate() {
+    public static CommandResultParser authenticate() {
         return new Authenticate();
     }
 
@@ -65,7 +65,7 @@ public class CommandFactory {
      *
      * @return an authenticate object
      */
-    public static Command login() {
+    public static CommandResultParser login() {
         return new Authenticate(); // NOTE: login == authenticate
     }
 
@@ -74,7 +74,7 @@ public class CommandFactory {
      *
      * @return a listCourses object
      */
-    public static Command listCourses() {
+    public static CommandResultParser listCourses() {
         return new ListCourses();
     }
 
@@ -83,7 +83,7 @@ public class CommandFactory {
      *
      * @return a listExercises object
      */
-    public static Command listExercises() {
+    public static CommandResultParser listExercises() {
         return new ListExercises();
     }
 
@@ -92,7 +92,7 @@ public class CommandFactory {
      *
      * @return a logout object
      */
-    public static Command logout() {
+    public static CommandResultParser logout() {
         return new Logout();
     }
 
@@ -101,7 +101,7 @@ public class CommandFactory {
      *
      * @return a chooseServer object
      */
-    public static Command chooseServer() {
+    public static CommandResultParser chooseServer() {
         return new ChooseServer();
     }
 
@@ -110,7 +110,7 @@ public class CommandFactory {
      *
      * @return a Submit object
      */
-    public static Command submit() {
+    public static CommandResultParser submit() {
         return new Submit();
     }
 
@@ -119,11 +119,11 @@ public class CommandFactory {
      *
      * @return a Paste object
      */
-    public static Command paste() {
+    public static CommandResultParser paste() {
         return new Paste();
     }
     
-    public static Command getMail() {
+    public static CommandResultParser getMail() {
         return new MailChecker();
     }
 

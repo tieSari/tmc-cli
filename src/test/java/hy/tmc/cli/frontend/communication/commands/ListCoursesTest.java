@@ -1,7 +1,7 @@
 
 package hy.tmc.cli.frontend.communication.commands;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;

@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 
-public class Help extends Command<String> {
+public class Help extends CommandResultParser<String> {
 
 
     @Override

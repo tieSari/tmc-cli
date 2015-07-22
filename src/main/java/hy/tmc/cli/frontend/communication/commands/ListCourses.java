@@ -8,7 +8,7 @@ import hy.tmc.core.domain.Course;
 import java.io.IOException;
 import java.util.List;
 
-public class ListCourses extends Command<List<Course>> {
+public class ListCourses extends CommandResultParser<List<Course>> {
 
     
     public ListCourses(){

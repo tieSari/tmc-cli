@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -15,9 +15,9 @@ public class SocketListener implements Runnable {
     private ListenableFuture<?> commandResult;
     private DataOutputStream output;
     private Socket socket;
-    private Command command;
+    private CommandResultParser command;
 
-    public SocketListener(ListenableFuture<?> commandResult, DataOutputStream output, Socket socket, Command command) {
+    public SocketListener(ListenableFuture<?> commandResult, DataOutputStream output, Socket socket, CommandResultParser command) {
         this.commandResult = commandResult;
         this.output = output;
         this.socket = socket;

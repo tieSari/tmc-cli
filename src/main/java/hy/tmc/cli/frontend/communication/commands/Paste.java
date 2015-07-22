@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
 
-public class Paste extends Command<URI> {
+public class Paste extends CommandResultParser<URI> {
 
     private Course course;
     private MailChecker mail;

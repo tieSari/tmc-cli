@@ -2,10 +2,11 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.commands.Authenticate;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
-import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import hy.tmc.cli.frontend.communication.commands.Help;
 import hy.tmc.cli.frontend.communication.commands.ListCourses;
 import hy.tmc.cli.frontend.communication.commands.ListExercises;
@@ -17,16 +18,17 @@ import hy.tmc.cli.frontend.communication.commands.Submit;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class CoreUser {
     
     private TmcCore core;
-    private TmcSettings settings;
+    private SocketListener commandParser;
     
-    public CoreUser(TmcSettings settings){
+    public CoreUser(SocketListener commandParser){
         this.core = new TmcCore();
-        this.settings = settings;
+        this.commandParser = commandParser;
     }
     
     public ListenableFuture<?> findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException{
@@ -72,10 +74,27 @@ public class CoreUser {
      *
      * @return a runtests listenablefuture
      */
-    public ListenableFuture<?> runTests(HashMap<String, String> params) throws ProtocolException {
+    public ListenableFuture<?> runTests(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
+        CliSettings settings = new CliSettings();
+        settings.setMainDirectory(params.get("path"));
+        ListenableFuture<?> result = core.test(params.get("path"), settings);
+        commandParser.parseData(result);
+        return result;
+    }
+    
+    private boolean userDataNotExists(HashMap<String, String> params) throws ProtocolException{
+        String username = params.get("username");
+        if (username == null || username.isEmpty()) {
+            return  true;
+        }
+        String password = params.get("password");
+        if (password == null || password.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -83,15 +102,13 @@ public class CoreUser {
      *
      * @return authenticate listenable future
      */
-    public ListenableFuture<?> authenticate(HashMap<String, String> params) throws ProtocolException {
-        String username = params.get("username");
-        if (username == null || username.isEmpty()) {
-            throw new ProtocolException("username must be set!");
+    public ListenableFuture<?> authenticate(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+        if(userDataNotExists(params)){
+            throw new ProtocolException("Username and password must be given!");
         }
-        String password = params.get("password");
-        if (password == null || password.isEmpty()) {
-            throw new ProtocolException("password must be set!");
-        }
+        CliSettings settings = new CliSettings();
+        settings.setUserData(params.get("username"), params.get("password"));
+        ListenableFuture<?> result = core.verifyCredentials(settings);
     }
     
     
@@ -100,10 +117,13 @@ public class CoreUser {
      *
      * @return a listCourses listenablefuture
      */
-    public static ListenableFuture<?> listCourses(HashMap<String, String> params) throws ProtocolException {
-        if(params.get("username").isEmpty() || params.get("password").isEmpty()){
-            throw new ProtocolException("Username and password must be set!");
+    public ListenableFuture<?> listCourses(HashMap<String, String> params) throws ProtocolException {
+        if(userDataNotExists(params)){
+            throw new ProtocolException("Username or password must be given!");
         }
+        CliSettings settings = new CliSettings();
+        settings.setUserData(params.get("username"), params.get("password"));
+        ListenableFuture<?> result = core.listCourses(settings);
     }
 
     /**
@@ -111,13 +131,16 @@ public class CoreUser {
      *
      * @return a listexercises listenablefuture
      */
-    public static ListenableFuture<?> listExercises(HashMap<String, String> params) throws ProtocolException {
+    public ListenableFuture<?> listExercises(HashMap<String, String> params) throws ProtocolException {
         if (!params.containsKey("path")) {
             throw new ProtocolException("Path not recieved");
         }
-        if (params.get("username").isEmpty() || params.get("password").isEmpty()) {
-            throw new ProtocolException("Please authorize first.");
+        if(userDataNotExists(params)){
+            throw new ProtocolException("Username or password must be given!");
         }
+        CliSettings settings = new CliSettings();
+        settings.setPath(params.get("path"));
+        settings.setUserData(params.get("username"), params.get("password"));
     }
 
     /**
@@ -125,10 +148,14 @@ public class CoreUser {
      *
      * @return a downloadexercises listenablefuture
      */
-    public ListenableFuture<?> downloadExercises(HashMap<String, String> params) throws ProtocolException {
+    public ListenableFuture<?> downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
         if (params.get("path") == null || params.get("path").isEmpty() || params.get("courseID") == null || params.get("courseID").isEmpty()) {
             throw new ProtocolException("Path and courseID required");
         }
+        CliSettings settings = new CliSettings();
+        settings.setPath(params.get("path"));
+        settings.setCourseID(params.get("courseID"));
+        core.downloadExercises(params.get("path"), params.get("courseID"), settings);
     }
 
     /**
@@ -149,6 +176,7 @@ public class CoreUser {
         if (!params.containsKey("tmc-server")) {
             throw new ProtocolException("must specify new server");
         }
+        
     }
 
     /**
@@ -156,13 +184,17 @@ public class CoreUser {
      *
      * @return a Submit listenablefuture
      */
-    public ListenableFuture<?> submit(HashMap<String, String> params) throws ProtocolException {
-        if (params.get("username").isEmpty() || params.get("password").isEmpty()) {
-            throw new ProtocolException("User must be authorized first");
+    public ListenableFuture<?> submit(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+         if(userDataNotExists(params)){
+            throw new ProtocolException("Username or password must be given!");
         }
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
+        CliSettings settings = new CliSettings();
+        settings.setUserData(params.get("username"), params.get("password"));
+        settings.setPath(params.get("path"));
+        core.submit(params.get("path"), settings);
     }
     
     /**
@@ -170,18 +202,23 @@ public class CoreUser {
      *
      * @return a Paste listenablefuture
      */
-    public ListenableFuture<?> paste(HashMap<String, String> params) throws ProtocolException {
-        if (params.get("username").isEmpty() || params.get("password").isEmpty()) {
-            throw new ProtocolException("User must be authorized first");
+    public ListenableFuture<?> paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+         if(userDataNotExists(params)){
+            throw new ProtocolException("Username or password must be given!");
         }
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
+        
+        CliSettings settings = new CliSettings();
+        settings.setUserData(params.get("username"), params.get("password"));
+        settings.setPath(params.get("path"));
+        core.paste(params.get("path"), settings);
     }
     
     public ListenableFuture<?> getMail(HashMap<String, String> params) throws ProtocolException {
-        if (params.get("username").isEmpty() || params.get("password").isEmpty()) {
-            throw new ProtocolException("User must be authorized first");
+        if(userDataNotExists(params)){
+            throw new ProtocolException("Username or password must be given!");
         }
     }
 }

@@ -7,7 +7,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class ChooseServer extends Command<Boolean> {
+public class ChooseServer extends CommandResultParser<Boolean> {
 
     private ConfigHandler handler;
 

@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
 /**
  * Submit command for submitting exercises to TMC.
  */
-public class Submit extends Command<SubmissionResult> {
+public class Submit extends CommandResultParser<SubmissionResult> {
 
     private SubmissionInterpreter interpreter;
     private Course course;

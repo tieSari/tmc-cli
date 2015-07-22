@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Command<E> {
+public abstract class CommandResultParser<E> {
 
     protected Map<String, String> data;
     private String defaultErrorMessage = "Unexpected exception.";
@@ -15,11 +15,11 @@ public abstract class Command<E> {
     /**
      * Command can return any type of object. For example SubmissionResult etc.
      */
-    public Command() {
+    public CommandResultParser() {
         data = new HashMap<>();
     }
     
-    public Command(ProgressObserver observer) {
+    public CommandResultParser(ProgressObserver observer) {
         this();
         this.observer = observer;
     }

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.cli.backend.Mailbox;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;

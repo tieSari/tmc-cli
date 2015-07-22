@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import java.util.List;
 
-public class ListExercises extends Command<List<Exercise>> {
+public class ListExercises extends CommandResultParser<List<Exercise>> {
 
     private ExerciseLister lister;
     private Course current;

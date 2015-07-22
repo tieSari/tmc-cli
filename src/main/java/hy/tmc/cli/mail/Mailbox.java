@@ -1,4 +1,4 @@
-package hy.tmc.cli.backend;
+package hy.tmc.cli.mail;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;

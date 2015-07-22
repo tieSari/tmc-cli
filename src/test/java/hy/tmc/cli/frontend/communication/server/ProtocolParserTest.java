@@ -1,7 +1,7 @@
 
 package hy.tmc.cli.frontend.communication.server;
 
-import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class ProtocolParserTest {
     
     @Test
     public void testGiveDataWithVimflag() throws ProtocolException{
-        Command command = parser.getCommand("submit path /asd/lmao --vim");
+        CommandResultParser command = parser.getCommand("submit path /asd/lmao --vim");
         Assert.assertNotNull(command.getData().get("--vim"));
     }
 }

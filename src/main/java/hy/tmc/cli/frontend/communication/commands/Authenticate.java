@@ -1,8 +1,9 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.mail.Mailbox;
 import com.google.common.base.Optional;
 
-public class Authenticate extends Command<Boolean> {
+public class Authenticate extends CommandResultParser<Boolean> {
 
     /**
      * Regex for HTTP OK codes.

@@ -70,19 +70,19 @@ public class SendFeedbackTest {
     
     @Test (expected = ProtocolException.class)
     public void ensureParamsNotNull() throws ProtocolException, IOException {
-        Command command = new SendFeedback(null, "chewbac.ca");
+        CommandResultParser command = new SendFeedback(null, "chewbac.ca");
         command.checkData();
     }
     
     @Test (expected = ProtocolException.class)
     public void ensureParamsNotNull2() throws ProtocolException, IOException {
-        Command command = new SendFeedback(new HashMap<String, String>(), null);
+        CommandResultParser command = new SendFeedback(new HashMap<String, String>(), null);
         command.checkData();
     }
     
     @Test (expected = ProtocolException.class)
     public void ensureParamsNotNull3() throws ProtocolException, IOException {
-        Command command = new SendFeedback(null, null);
+        CommandResultParser command = new SendFeedback(null, null);
         command.checkData();
     }
 
