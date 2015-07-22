@@ -7,7 +7,6 @@ import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.listeners.*;
-import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
@@ -87,7 +86,7 @@ public class CoreUser {
         return result;
     }
     
-    private void userDataNotExists(HashMap<String, String> params) throws ProtocolException{
+    private void validateUserData(HashMap<String, String> params) throws ProtocolException{
         String username = params.get("username");
         if (username == null || username.isEmpty()) {
             throw new ProtocolException("Username must be given!");
@@ -104,7 +103,7 @@ public class CoreUser {
      * @return authenticate listenable future
      */
     public void authenticate(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        userDataNotExists(params);
+        validateUserData(params);
         CliSettings settings = new CliSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<Boolean> result = core.verifyCredentials(settings);
@@ -119,7 +118,7 @@ public class CoreUser {
      * @return a listCourses listenablefuture
      */
     public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        userDataNotExists(params);
+        validateUserData(params);
         CliSettings settings = new CliSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<List<Course>> coursesFuture = core.listCourses(settings);
@@ -136,7 +135,7 @@ public class CoreUser {
         if (!params.containsKey("path")) {
             throw new ProtocolException("Path not recieved");
         }
-        userDataNotExists(params);
+        validateUserData(params);
         CliSettings settings = new CliSettings();
         settings.setPath(params.get("path"));
         settings.setUserData(params.get("username"), params.get("password"));
@@ -188,7 +187,7 @@ public class CoreUser {
      * @return a Submit listenablefuture
      */
     public ListenableFuture<SubmissionResult> submit(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        userDataNotExists(params);
+        validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
@@ -204,7 +203,7 @@ public class CoreUser {
      * @return a Paste listenablefuture
      */
     public ListenableFuture<URI> paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        userDataNotExists(params);
+        validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
@@ -216,8 +215,5 @@ public class CoreUser {
     }
     
     public ListenableFuture<?> getMail(HashMap<String, String> params) throws ProtocolException {
-        if(userDataNotExists(params)){
-            throw new ProtocolException("Username or password must be given!");
-        }
     }
 }

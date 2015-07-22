@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.commands.ChooseServer;
+import hy.tmc.cli.frontend.communication.commands.SetServer;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import cucumber.api.java.Before;
@@ -17,7 +17,7 @@ import java.io.IOException;
 public class SetServerSteps {
     
     private ConfigHandler handler;
-    private ChooseServer command;
+    private SetServer command;
     private String origServer;
     private String output;
     
@@ -27,7 +27,7 @@ public class SetServerSteps {
     @Before
     public void setup() {
         handler = new ConfigHandler("testResources/test.properties");
-        command = new ChooseServer(handler);
+        command = new SetServer(handler);
     }
 
     @Given ("^the server is \"(.*)\"$")

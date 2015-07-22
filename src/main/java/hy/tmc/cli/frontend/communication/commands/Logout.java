@@ -10,6 +10,10 @@ import hy.tmc.cli.synchronization.TmcServiceScheduler;
  */
 public class Logout extends Command<Boolean> {
 
+    public Logout() {
+        super(null);
+    }
+
     public Optional<String> parseData(Object data) {
         Boolean result = (Boolean) data;
         String message;
