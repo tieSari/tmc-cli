@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.mail.Mailbox;
 import com.google.common.base.Optional;
+import hy.tmc.core.TmcCore;
 
 public class Authenticate extends CommandResultParser<Boolean> {
 
@@ -9,10 +10,12 @@ public class Authenticate extends CommandResultParser<Boolean> {
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
+    private TmcCore core;
 
     public Authenticate(String username, String password) {
         this.setParameter("username", username);
         this.setParameter("password", password);
+        this.core = new TmcCore();
     }
     
     public Authenticate(){

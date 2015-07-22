@@ -36,7 +36,7 @@ public class Server implements Runnable {
     public Server() throws IOException {
         this(new TmcCore(), Executors.newCachedThreadPool(), new RangeFeedbackHandler(null)); //NULL NULL NULL
     }
-    
+
     /**
      * Constructor for dependency injection.
      *
@@ -46,12 +46,12 @@ public class Server implements Runnable {
         this(new TmcCore(), Executors.newCachedThreadPool(), handler);
     }
 
-    
+
     public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
         this(tmcCore, socketThreadPool, new RangeFeedbackHandler(null));
     }
-    
-    
+
+
     /**
      * Constructor for dependency injection.
      *

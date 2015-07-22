@@ -40,7 +40,7 @@ public class SocketRunnable implements Runnable {
             Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Finds command-future and attach listener to it.
      *
@@ -93,7 +93,7 @@ public class SocketRunnable implements Runnable {
      * @param output stream where to write result.
      */
     private void addListenerToFuture(ListenableFuture<?> commandResult,
-            final DataOutputStream output, CommandResultParser command) {
-        commandResult.addListener(new SocketListener(commandResult, output, socket, command), core.getThreadPool());
+                                     final DataOutputStream output, CommandResultParser command) {
+       // commandResult.addListener(new SocketListener(commandResult, output, socket, command), core.getThreadPool());
     }
 }
