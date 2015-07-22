@@ -1,14 +1,16 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.Help;
-import hy.tmc.core.ClientTmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,9 @@ import java.util.List;
 public class ProtocolParser {
 
     private Server server;
+    private DataOutputStream stream;
+    private Socket socket;
+    private ListeningExecutorService pool;
 
 
     /**
@@ -37,6 +42,12 @@ public class ProtocolParser {
      */
     public ProtocolParser(Server server, HashMap<String, Command> availableCommands) {
         this.server = server;
+    }
+    
+    public ProtocolParser(DataOutputStream stream, Socket socket, ListeningExecutorService pool){
+        this.stream = stream;
+        this.socket = socket;
+        this.pool = pool;
     }
     
     public HashMap<String, Command> createCommandMap(){
@@ -59,7 +70,7 @@ public class ProtocolParser {
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
         HashMap<String, Command> commandMap = createCommandMap();
         ListenableFuture<?> result;
-        CoreUser coreUser = new CoreUser();
+        CoreUser coreUser = new CoreUser(stream, socket, pool);
         if(commandMap.containsKey(commandName)){
             Command command = commandMap.get(commandName);
             result = MoreExecutors.sameThreadExecutor().submit(command);

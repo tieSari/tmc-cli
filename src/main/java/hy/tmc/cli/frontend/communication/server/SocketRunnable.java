@@ -3,13 +3,16 @@ package hy.tmc.cli.frontend.communication.server;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.listeners.ResultListener;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,10 +20,12 @@ public class SocketRunnable implements Runnable {
 
     protected Socket socket;
     private TmcCore core;
-
-    public SocketRunnable(Socket clientSocket, TmcCore core) {
+    private ListeningExecutorService pool;
+    
+    public SocketRunnable(Socket clientSocket, TmcCore core, ListeningExecutorService pool) {
         this.socket = clientSocket;
         this.core = core;
+        this.pool = pool;
     }
 
     /**
@@ -39,6 +44,8 @@ public class SocketRunnable implements Runnable {
             System.err.println(ex.getMessage());
         } catch (ProtocolException ex) {
             Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TmcCoreException ex) {
+            Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -49,22 +56,15 @@ public class SocketRunnable implements Runnable {
      * @param outputStream
      */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException, ProtocolException {
-        ProtocolParser parser = new ProtocolParser();
+            throws IOException, ProtocolException, TmcCoreException {
+        ProtocolParser parser = new ProtocolParser(outputStream, this.socket, this.pool);
         // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
         String input = inputReader.readLine();
         if(input == null){
             throw new ProtocolException("Input was invalid: empty");
         }
         final ListenableFuture<?> commandFuture = parser.getCommand(input);
-        /* IMPL THIS!!!! if (commandFuture != null) {
-=======
-        final ListenableFuture<?> commandFuture = core.submitTask(command);
-        if (commandFuture != null) {
->>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
-            final DataOutputStream output = outputStream;
-            addListenerToFuture(commandFuture, output, command);
-        }*/
+   
     }
 
     /**
@@ -96,8 +96,10 @@ public class SocketRunnable implements Runnable {
      * @param commandResult Command-object that has been started.
      * @param output stream where to write result.
      */
-    private void addListenerToFuture(ListenableFuture<?> commandResult,
+    /*private void addListenerToFuture(ListenableFuture<?> commandResult,
         final DataOutputStream output, Command command) {
             commandResult.addListener(new ResultListener(commandResult, output, socket), core.getThreadPool());
         }
-    }
+    }*/
+    
+}
