@@ -33,7 +33,6 @@ public class ChooseServer extends Command<Boolean> {
         return tmcServerAddress.matcher(url).matches();
     }
 
-    @Override
     public Optional<String> parseData(Object data) {
         Boolean result = (Boolean) data;
 
@@ -46,6 +45,7 @@ public class ChooseServer extends Command<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
+        return null;
       
     }
 }

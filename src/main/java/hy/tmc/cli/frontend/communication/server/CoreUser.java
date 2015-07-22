@@ -24,11 +24,9 @@ import java.util.HashMap;
 public class CoreUser {
     
     private TmcCore core;
-    private SocketListener commandParser;
     
-    public CoreUser(SocketListener commandParser){
+    public CoreUser(){
         this.core = new TmcCore();
-        this.commandParser = commandParser;
     }
     
     public ListenableFuture<?> findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{

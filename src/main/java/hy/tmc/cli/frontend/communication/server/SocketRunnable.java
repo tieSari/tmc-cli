@@ -50,7 +50,6 @@ public class SocketRunnable implements Runnable {
      */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException, ProtocolException {
-        CoreUser user = new CoreUser();
         ProtocolParser parser = new ProtocolParser();
         // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
         String input = inputReader.readLine();

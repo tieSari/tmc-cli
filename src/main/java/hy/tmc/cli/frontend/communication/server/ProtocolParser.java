@@ -1,9 +1,14 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
+import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 
 import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.Help;
 import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.exceptions.TmcCoreException;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +28,6 @@ public class ProtocolParser {
      * @param server frontend server
      */
     public ProtocolParser() {
-        this.coreUser = new CoreUser();
     }
 
     /**
@@ -34,6 +38,13 @@ public class ProtocolParser {
     public ProtocolParser(Server server, HashMap<String, Command> availableCommands) {
         this.server = server;
     }
+    
+    public HashMap<String, Command> createCommandMap(){
+        HashMap<String, Command> map = new HashMap<String, Command>();
+        map.put("help", new Help());
+        map.put("setServer", new ChooseServer());
+        return map;
+    }
 
     /**
      * Search for command by inputline.
@@ -42,11 +53,20 @@ public class ProtocolParser {
      * @return Command that matches input
      * @throws ProtocolException if bad command name
      */
-    public ListenableFuture<?> getCommand(String inputLine) throws ProtocolException {
+    public ListenableFuture<?> getCommand(String inputLine) throws ProtocolException, TmcCoreException, IOException {
         String[] elements = getElements(inputLine);
         String commandName = elements[0];
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
-        return coreUser.findAndExecute(commandName, params);
+        HashMap<String, Command> commandMap = createCommandMap();
+        ListenableFuture<?> result;
+        CoreUser coreUser = new CoreUser();
+        if(commandMap.containsKey(commandName)){
+            Command command = commandMap.get(commandName);
+            result = MoreExecutors.sameThreadExecutor().submit(command);
+        } else {
+            result = coreUser.findAndExecute(commandName, params);
+        }
+        return result;
     }
     
     

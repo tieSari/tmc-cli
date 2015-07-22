@@ -5,7 +5,6 @@ import com.google.common.base.Optional;
 public class Help extends Command<String> {
 
 
-    @Override
     public Optional<String> parseData(Object data) {
         return Optional.of((String) data);
     }
@@ -36,6 +35,7 @@ public class Help extends Command<String> {
 
     @Override
     public String call() throws Exception {
+        return null;
        
     }
 }
