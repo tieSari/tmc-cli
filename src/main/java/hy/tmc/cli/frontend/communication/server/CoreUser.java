@@ -4,17 +4,17 @@ package hy.tmc.cli.frontend.communication.server;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.commands.Authenticate;
+import hy.tmc.cli.listeners.LoginListener;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import hy.tmc.cli.frontend.communication.commands.Help;
-import hy.tmc.cli.frontend.communication.commands.ListCourses;
-import hy.tmc.cli.frontend.communication.commands.ListExercises;
+import hy.tmc.cli.listeners.ListCoursesListener;
+import hy.tmc.cli.listeners.ListExercisesListener;
 import hy.tmc.cli.frontend.communication.commands.Logout;
 import hy.tmc.cli.frontend.communication.commands.MailChecker;
-import hy.tmc.cli.frontend.communication.commands.Paste;
-import hy.tmc.cli.frontend.communication.commands.RunTests;
-import hy.tmc.cli.frontend.communication.commands.Submit;
+import hy.tmc.cli.listeners.PasteListener;
+import hy.tmc.cli.listeners.TestsListener;
+import hy.tmc.cli.listeners.SubmissionListener;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -31,7 +31,7 @@ public class CoreUser {
         this.commandParser = commandParser;
     }
     
-    public ListenableFuture<?> findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException{
+    public ListenableFuture<?> findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
         switch(commandName){
             case "help":
                 return help(params);

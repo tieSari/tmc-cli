@@ -1,15 +1,18 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
+<<<<<<< HEAD
 import static hy.tmc.cli.frontend.communication.commands.CommandFactory.createCommandMap;
 
 import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import hy.tmc.core.ClientTmcSettings;
 
+=======
+import hy.tmc.cli.frontend.communication.commands.Command;
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ProtocolParser parses user input to executable command.
@@ -17,7 +20,7 @@ import java.util.Map;
 public class ProtocolParser {
 
     private Server server;
-    private CoreUser coreUser;
+
 
     /**
      * Constructor for Protocol Parser.

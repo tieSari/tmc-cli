@@ -27,9 +27,8 @@ public class SubmissionInterpreter {
      * @param detailed true for stack trace, always show successful.
      * @return a String containing human-readable information about tests. TimeOutMessage
     if result is null.
-     * @throws InterruptedException if thread was interrupted.
      */
-    private String summarize(SubmissionResult result, boolean detailed) {
+    public String summary(SubmissionResult result, boolean detailed) {
         if (result.isAllTestsPassed()) {
             return buildSuccessMessage(result, detailed);
         } else {

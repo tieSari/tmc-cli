@@ -5,6 +5,7 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
+import java.io.IOException;
 
 public class CliSettings implements TmcSettings {
 
@@ -89,6 +90,31 @@ public class CliSettings implements TmcSettings {
         return apiVersion;
     }
 
+    public void setCurrentCourse(Course currentCourse) {
+        this.currentCourse = currentCourse;
+    }
+
+    public void setServerAddress(String serverAddress) throws IOException {
+        this.serverAddress = serverAddress;
+        this.config.writeServerAddress(serverAddress);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
+    public void setMainDirectory(String mainDirectory) {
+        this.mainDirectory = mainDirectory;
+    }
+
     @Override
     public String getFormattedUserData() {
         if (!userDataExists()) {
@@ -128,10 +154,6 @@ public class CliSettings implements TmcSettings {
 
     public void setPid(int pid) {
         this.pid = pid;
-    }
-    
-    public void setMainDirectory(String dir){
-        this.mainDirectory = dir;
     }
     
     public void setCourseID(String courseID){

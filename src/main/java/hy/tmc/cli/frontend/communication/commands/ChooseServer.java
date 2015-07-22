@@ -7,7 +7,7 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class ChooseServer extends CommandResultParser<Boolean> {
+public class ChooseServer extends Command<Boolean> {
 
     private ConfigHandler handler;
 
@@ -42,5 +42,10 @@ public class ChooseServer extends CommandResultParser<Boolean> {
             return Optional.of("Address changed to " + address);
         }
         return Optional.of("Failed to change address. Check logs for information.");
+    }
+
+    @Override
+    public Boolean call() throws Exception {
+      
     }
 }

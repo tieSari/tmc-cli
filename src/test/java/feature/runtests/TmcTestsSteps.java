@@ -6,7 +6,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.commands.RunTests;
+import hy.tmc.cli.listeners.TestsListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 
 public class TmcTestsSteps {
 
-    private RunTests testRunner;
+    private TestsListener testRunner;
     private String output;
 
     @Before
@@ -32,7 +32,7 @@ public class TmcTestsSteps {
 
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
-        testRunner = new RunTests();
+        testRunner = new TestsListener();
         testRunner.setParameter("path", exerciseDirectory);
     }
 
@@ -72,7 +72,7 @@ public class TmcTestsSteps {
     @Given("^polling for reviews is not in progress and exercise path is \"(.*?)\"$")
     public void polling_for_reviews_is_not_in_progress_and_exercise_path_is(String path) throws Throwable {
         TmcServiceScheduler.enablePolling();
-        testRunner = new RunTests();
+        testRunner = new TestsListener();
         testRunner.setParameter("path", path);
         assertFalse(TmcServiceScheduler.isRunning());
     }

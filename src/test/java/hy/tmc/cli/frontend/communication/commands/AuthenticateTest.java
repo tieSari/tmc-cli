@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.listeners.LoginListener;
 import hy.tmc.cli.backend.communication.authorization.Authorization;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.IOException;
@@ -18,14 +19,14 @@ public class AuthenticateTest {
 
     private final String testUsername = "test";
     private final String testPassword = "1234";
-    private Authenticate auth;
+    private LoginListener auth;
 
     /**
      * Set up server mock and Authenticate command.
      */
     @Before
     public void setUp() {
-        this.auth = new Authenticate();
+        this.auth = new LoginListener();
     }
 
     @Test

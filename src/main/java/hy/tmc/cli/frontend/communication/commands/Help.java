@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 
-public class Help extends CommandResultParser<String> {
+public class Help extends Command<String> {
 
 
     @Override
@@ -32,5 +32,10 @@ public class Help extends CommandResultParser<String> {
                 .append("logout");
 
         return enterprise.toString();
+    }
+
+    @Override
+    public String call() throws Exception {
+       
     }
 }

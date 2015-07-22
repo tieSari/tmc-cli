@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.listeners.TestsListener;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import hy.tmc.cli.configuration.ClientData;
 import static org.junit.Assert.assertFalse;
@@ -17,7 +18,7 @@ import org.junit.After;
 
 public class RunTestsTest {
 
-    private RunTests runTests;
+    private TestsListener runTests;
 
     /**
      * Create FrontendStub and RunTests command.
@@ -26,7 +27,7 @@ public class RunTestsTest {
     public void setup() {
         TmcServiceScheduler.disablePolling();
         ClientData.setUserData("test", "1234");
-        runTests = new RunTests();
+        runTests = new TestsListener();
     }
 
     /**
@@ -34,7 +35,7 @@ public class RunTestsTest {
      */
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        RunTests rt = new RunTests();
+        TestsListener rt = new TestsListener();
         rt.setParameter("path", "/home/tmccli/uolevipuistossa");
         rt.checkData();
     }
@@ -44,7 +45,7 @@ public class RunTestsTest {
      */
     @Test(expected = ProtocolException.class)
     public void testCheckDataFail() throws ProtocolException {
-        RunTests rt = new RunTests();
+        TestsListener rt = new TestsListener();
         rt.checkData();
     }
 
@@ -53,7 +54,7 @@ public class RunTestsTest {
      */
     @Test(timeout = 15000)
     public void testFailedExercise() throws NoLanguagePluginFoundException, ProtocolException {
-        RunTests run = new RunTests();
+        TestsListener run = new TestsListener();
         String folders = "testResources" + File.separator + "failingExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);
@@ -72,7 +73,7 @@ public class RunTestsTest {
      */
     @Test(timeout = 15000)
     public void testSuccessfulExercise() throws ProtocolException, NoLanguagePluginFoundException {
-        RunTests run = new RunTests();
+        TestsListener run = new TestsListener();
         String folders = "testResources" + File.separator + "successExercise" + File.separator;
         String filepath = folders + "viikko1" + File.separator + "Viikko1_001.Nimi";
         File file = new File(filepath);

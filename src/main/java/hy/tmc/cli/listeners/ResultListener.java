@@ -1,8 +1,7 @@
-package hy.tmc.cli.frontend.communication.server;
+package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -10,32 +9,46 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-public class SocketListener implements Runnable {
+public abstract class ResultListener<T> implements Runnable {
 
-    private ListenableFuture<?> commandResult;
+    private ListenableFuture<T> commandResult;
     private DataOutputStream output;
     private Socket socket;
-    private CommandResultParser command;
 
-    public SocketListener(ListenableFuture<?> commandResult, DataOutputStream output, Socket socket, CommandResultParser command) {
+    public ResultListener(ListenableFuture<T> commandResult, DataOutputStream output, Socket socket) {
         this.commandResult = commandResult;
         this.output = output;
         this.socket = socket;
-        this.command = command;
     }
+    
+    /**
+     * Creates an output message for the user based on the result from tmc-core.
+     * Each action will have it's own listener that parser the result.
+     * 
+     * @param result the result of running an action e.g. submit
+     * @return output to be shown to the user.
+     */
+    protected abstract Optional<String> parseData(T result);
+    
+    /**
+     * Perform any actions needed after tmc-core is finished, other than showing
+     * output to the user.
+     * 
+     * @param result result running an action e.g. submit
+     */
+    protected abstract void extraActions(T result);
 
     @Override
     public void run() {
         try {
-            Object result = commandResult.get();
-            @SuppressWarnings("unchecked")
-            Optional<String> output = this.command.parseData(result);
-            if (output.isPresent()) {
-                writeToOutput(output.get());
+            T result = commandResult.get();
+            extraActions(result);
+            Optional<String> outputToUser = this.parseData(result);
+            if (outputToUser.isPresent()) {
+                writeToOutput(outputToUser.get());
             }
-            this.command.cleanData();
         }
-        catch (InterruptedException | ExecutionException | IOException ex) {
+        catch (InterruptedException | ExecutionException ex) {
             System.err.println(Arrays.toString(ex.getStackTrace()));
             if (ex.getCause().getClass() == UnknownHostException.class) {
                 writeToOutput("Unable to reach server: ");
