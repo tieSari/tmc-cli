@@ -30,9 +30,19 @@ public class CliSettings implements TmcSettings {
         this.apiVersion = apiVersion;
         this.config = new ConfigHandler(configFilePath);
     }
-    
-    public CliSettings(){
-        
+
+    public CliSettings() {
+
+    }
+
+    /**
+     * Constructor for tests.
+     * @param handler Dependency injected configHandler (mock for exemple)
+     */
+    public CliSettings(ConfigHandler handler, String mainDirectory, String apiVersion){
+        this.mainDirectory = mainDirectory;
+        this.apiVersion = apiVersion;
+        this.config = handler;
     }
 
     @Override
