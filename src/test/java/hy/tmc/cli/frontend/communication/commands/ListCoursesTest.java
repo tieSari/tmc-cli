@@ -1,6 +1,7 @@
 
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.listeners.ListCoursesListener;
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
@@ -27,7 +28,7 @@ import static org.junit.Assert.fail;
 @PrepareForTest(UrlCommunicator.class)
 public class ListCoursesTest {
 
-    private ListCourses list;
+    private ListCoursesListener list;
 
     /**
      * Set up FrontendStub, ListCourses command, power mockito and fake http
@@ -35,7 +36,7 @@ public class ListCoursesTest {
      */
     @Before
     public void setUp() throws IOException, ProtocolException {
-        list = new ListCourses();
+        list = new ListCoursesListener();
 
         PowerMockito.mockStatic(UrlCommunicator.class);
 
@@ -51,7 +52,7 @@ public class ListCoursesTest {
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException {
-        ListCourses ls = new ListCourses();
+        ListCoursesListener ls = new ListCoursesListener();
         ClientData.setUserData("asdf", "bsdf");
         ls.checkData();
     }

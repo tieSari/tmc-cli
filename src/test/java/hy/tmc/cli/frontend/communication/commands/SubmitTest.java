@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.listeners.SubmissionListener;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Optional;
@@ -37,7 +38,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(ClientData.class)
 public class SubmitTest {
 
-    private Submit submit;
+    private SubmissionListener submit;
     CourseSubmitter submitterMock;
     SubmissionResultFormatter formatter;
     private SubmissionInterpreter interpreter;
@@ -71,7 +72,7 @@ public class SubmitTest {
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         formatter = Mockito.mock(CommandLineSubmissionResultFormatter.class);
         interpreter = Mockito.mock(SubmissionInterpreter.class);
-        submit = new Submit(submitterMock, interpreter);
+        submit = new SubmissionListener(submitterMock, interpreter);
         ClientData.setUserData("Bossman", "Samu");
     }
 
@@ -104,7 +105,7 @@ public class SubmitTest {
      */
     @Test
     public void testCheckDataSuccess() throws ProtocolException, IOException {
-        Submit submitCommand = new Submit();
+        SubmissionListener submitCommand = new SubmissionListener();
         submitCommand.setParameter("path", "/home/tmccli/testi");
         submitCommand.checkData();
     }
@@ -114,13 +115,13 @@ public class SubmitTest {
      */
     @Test(expected = ProtocolException.class)
     public void testCheckDataFail() throws ProtocolException, IOException {
-        Submit submitCommand = new Submit();
+        SubmissionListener submitCommand = new SubmissionListener();
         submitCommand.checkData();
     }
 
     @Test(expected = ProtocolException.class)
     public void checkDataFailIfNoAuth() throws ProtocolException, IOException {
-        Submit submitCommand = new Submit();
+        SubmissionListener submitCommand = new SubmissionListener();
         ClientData.clearUserData();
         submitCommand.checkData();
     }

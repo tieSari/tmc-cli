@@ -10,7 +10,7 @@ import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 import java.util.List;
 
 
-public class CommandLineTestResultFormatter implements TestResultFormatter {
+public class DefaultTestResultFormatter implements TestResultFormatter {
 
     private String testPadding;
     private String stackTracePadding;
@@ -19,7 +19,7 @@ public class CommandLineTestResultFormatter implements TestResultFormatter {
      * CommandLineTestResultFormatter gives testresult explainings for command line user interface. 
      * ResultInterpreter class uses this class. 
      */
-    public CommandLineTestResultFormatter() {
+    public DefaultTestResultFormatter() {
         this.testPadding = "  ";
         this.stackTracePadding = testPadding + " ";
     }

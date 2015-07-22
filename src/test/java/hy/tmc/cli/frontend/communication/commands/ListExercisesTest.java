@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.listeners.ListExercisesListener;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
@@ -39,7 +40,7 @@ import static org.mockito.Mockito.when;
 @PrepareForTest(ClientData.class)
 public class ListExercisesTest {
 
-    private ListExercises list;
+    private ListExercisesListener list;
     private ExerciseLister lister;
     private List<Exercise> exampleExercises;
 
@@ -69,7 +70,7 @@ public class ListExercisesTest {
         Mockito.when(lister.listExercises(Mockito.anyString()))
                 .thenReturn(exampleExercises);
 
-        list = new ListExercises(lister);
+        list = new ListExercisesListener(lister);
     }
 
     private void mock() throws ProtocolException, IOException {
@@ -88,7 +89,7 @@ public class ListExercisesTest {
 
     @Test
     public void testCheckDataSuccess() throws ProtocolException, IOException {
-        ListExercises ls = new ListExercises();
+        ListExercisesListener ls = new ListExercisesListener();
         ls.setParameter("courseUrl", "legit");
         ls.setParameter("path", "legit");
         try {

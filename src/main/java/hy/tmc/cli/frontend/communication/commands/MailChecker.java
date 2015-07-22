@@ -3,12 +3,16 @@ package hy.tmc.cli.frontend.communication.commands;
 import static hy.tmc.cli.mail.MailFormatter.formatReviews;
 
 import com.google.common.base.Optional;
+<<<<<<< HEAD
 
 
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
+=======
+import hy.tmc.cli.CliSettings;
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.core.domain.Course;
 import java.io.IOException;
 
@@ -16,14 +20,14 @@ public class MailChecker extends CommandResultParser<String> {
 
     private Optional<Mailbox> mailbox;
     private Optional<Course> course;
+    private CliSettings settings;
 
-    public MailChecker() {
+    public MailChecker(CliSettings settings) {
         mailbox = Mailbox.getMailbox();
     }
 
-
     public void checkData() throws ProtocolException, IOException {
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new ProtocolException("Must be logged in first");
         }
         mailbox = Mailbox.getMailbox();
@@ -31,14 +35,10 @@ public class MailChecker extends CommandResultParser<String> {
             throw new ProtocolException("No mailbox found. Are you logged in?");
         }
         if (data.containsKey("courseID")) {
-            try {
-                course = ClientData.getCurrentCourse(data.get("path"));//TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
-            } catch (IOException ex) {
-                System.err.println(ex.getMessage());
-            }
+            course = settings.getCurrentCourse();
         } else if (data.containsKey("path")) {
             String path = data.get("path");
-            course = ClientData.getCurrentCourse(path);
+            course = settings.getCurrentCourse();
         } else {
             throw new ProtocolException("must specify path or courseID");
         }
