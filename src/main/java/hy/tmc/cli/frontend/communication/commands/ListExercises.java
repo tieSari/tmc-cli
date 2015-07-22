@@ -2,9 +2,6 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.communication.ExerciseLister;
-
-
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import java.io.IOException;
@@ -27,7 +24,7 @@ public class ListExercises extends Command<List<Exercise>> {
      * @param lister mocked lister object.
      */
     public ListExercises(ExerciseLister lister) {
-        mail = new MailChecker();
+        //mail = new MailChecker();
         this.lister = lister;
     }
 
@@ -60,10 +57,7 @@ public class ListExercises extends Command<List<Exercise>> {
         } else {
             return "must specify path";
         }
-        try {
-            return mail.call();
-        } catch (ProtocolException e) {
-            return e.getMessage();
-        }
+        // TODO: read mail
+        return "";
     }
 }

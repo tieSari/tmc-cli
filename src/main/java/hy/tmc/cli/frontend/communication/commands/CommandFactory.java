@@ -23,7 +23,7 @@ public class CommandFactory {
         commandsByName.put("submit", submit());
         commandsByName.put("runTests", runTests());
         commandsByName.put("paste", paste());
-        commandsByName.put("getMail", getMail());
+//        commandsByName.put("getMail", getMail());
         return commandsByName;
     }
 
@@ -87,6 +87,18 @@ public class CommandFactory {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Create a Logout Command object.
+     *
+     * @return a logout object
+     */
+    public static Command logout() {
+        return new Logout();
+    }
+
+    /**
+>>>>>>> fb9b9438df95fc78bb7768c5fdbc67a0fca749aa
      * Create a chooseServer Command object.
      *
      * @return a chooseServer object
@@ -111,10 +123,6 @@ public class CommandFactory {
      */
     public static Command paste() {
         return new Paste();
-    }
-    
-    public static Command getMail() {
-        return new MailChecker();
     }
 
     /**

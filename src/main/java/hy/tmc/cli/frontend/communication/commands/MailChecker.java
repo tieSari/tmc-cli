@@ -3,17 +3,9 @@ package hy.tmc.cli.frontend.communication.commands;
 import static hy.tmc.cli.mail.MailFormatter.formatReviews;
 
 import com.google.common.base.Optional;
-<<<<<<< HEAD
-
-
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.mail.Mailbox;
-=======
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.mail.Mailbox;
-
->>>>>>> added CliSettings, implements core.TmcSettings and replaces ClientData
 import hy.tmc.core.domain.Course;
 import java.io.IOException;
 
@@ -36,9 +28,7 @@ public class MailChecker extends Command<String> {
             throw new ProtocolException("No mailbox found. Are you logged in?");
         }
         if (data.containsKey("courseID")) {
-
-            course = settings.getCurrentCourse();//TmcJsonParser.getCourse(Integer.parseInt(data.get("courseID")));
-
+            course = settings.getCurrentCourse();
         } else if (data.containsKey("path")) {
             String path = data.get("path");
             course = settings.getCurrentCourse();

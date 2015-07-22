@@ -1,9 +1,6 @@
 package hy.tmc.cli.frontend.communication.server;
 
-import com.google.gson.JsonArray;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.RangeFeedbackHandler;
-import hy.tmc.cli.frontend.TextFeedbackHandler;
 import hy.tmc.core.TmcCore;
 import java.io.BufferedReader;
 import java.io.IOException;

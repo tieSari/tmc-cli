@@ -1,9 +1,9 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.core.domain.Course;
+
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,7 +14,7 @@ public class Paste extends Command<URI> {
     private MailChecker mail;
 
     public Paste() {
-        this.mail = new MailChecker();
+        //this.mail = new MailChecker();
     }
 
     public Paste(String path) {

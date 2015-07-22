@@ -26,7 +26,7 @@ public class Submit extends Command<SubmissionResult> {
      * Constructor for Submit command, creates the courseSubmitter.
      */
     public Submit() {
-        mail = new MailChecker();
+        //mail = new MailChecker();
     }
     
      /**

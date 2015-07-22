@@ -3,11 +3,6 @@ package hy.tmc.cli.backend.communication;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import hy.tmc.cli.mail.Mailbox;
-<<<<<<< HEAD
-=======
-
->>>>>>> added CliSettings, implements core.TmcSettings and replaces ClientData
-
 import hy.tmc.cli.synchronization.PollScheduler;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.domain.Course;
