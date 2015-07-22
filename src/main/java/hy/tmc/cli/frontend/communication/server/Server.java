@@ -19,9 +19,6 @@ public class Server implements Runnable {
     private TmcCore tmcCore;
     private ExecutorService socketThreadPool;
     private BufferedReader in;
-    private JsonArray feedbackAnswers = new JsonArray();
-    private RangeFeedbackHandler rangeFeedbackHandler;
-    private TextFeedbackHandler textFeedbackHandler;
 
     /**
      * Constructor for server. It finds a free port to be listened to.
@@ -29,37 +26,13 @@ public class Server implements Runnable {
      * @throws IOException if failed to write port to configuration file
      */
     public Server() throws IOException {
-        this(new TmcCore(), Executors.newCachedThreadPool(), new RangeFeedbackHandler(null)); //NULL NULL NULL
+        this(new TmcCore(), Executors.newCachedThreadPool());
     }
-    
-    /**
-     * Constructor for dependency injection.
-     *
-     * @throws IOException if failed to write port to configuration file
-     */
-    public Server(RangeFeedbackHandler handler) throws IOException {
-        this(new TmcCore(), Executors.newCachedThreadPool(), handler);
-    }
-
     
     public Server(TmcCore tmcCore, ExecutorService socketThreadPool) throws IOException {
-        this(tmcCore, socketThreadPool, new RangeFeedbackHandler(null));
-    }
-    
-    
-    /**
-     * Constructor for dependency injection.
-     *
-     * @param tmcCore
-     * @param socketThreadPool
-     */
-    public Server(TmcCore tmcCore, ExecutorService socketThreadPool, RangeFeedbackHandler handler) throws IOException {
         this.tmcCore = tmcCore;
         this.socketThreadPool = socketThreadPool;
         initServerSocket();
-        this.rangeFeedbackHandler = handler;
-        this.textFeedbackHandler = new TextFeedbackHandler(this);
-
     }
 
     private void initServerSocket() {
@@ -74,13 +47,6 @@ public class Server implements Runnable {
 
     public int getCurrentPort() {
         return this.serverSocket.getLocalPort();
-    }
-
-    /**
-     * Start is general function to set up server listening for the frontend.
-     */
-    public void start() {
-        this.run();
     }
 
     public boolean isRunning() {

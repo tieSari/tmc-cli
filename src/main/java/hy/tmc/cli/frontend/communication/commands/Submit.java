@@ -34,7 +34,7 @@ public class Submit extends Command<SubmissionResult> {
      * @param path path which to submit
      */
     public Submit(String path) {
-        mail = new MailChecker();
+        this();
         this.setParameter("path", path);
     }
 
