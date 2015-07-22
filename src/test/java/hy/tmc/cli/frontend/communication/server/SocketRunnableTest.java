@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend.communication.server;
 
-import hy.tmc.cli.backend.TmcCore;
+import hy.tmc.core.TmcCore;
 import hy.tmc.cli.testhelpers.CommandStub;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
