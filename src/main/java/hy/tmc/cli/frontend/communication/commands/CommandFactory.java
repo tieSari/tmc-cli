@@ -1,5 +1,11 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.listeners.ListExercisesListener;
+import hy.tmc.cli.listeners.TestsListener;
+import hy.tmc.cli.listeners.PasteListener;
+import hy.tmc.cli.listeners.SubmissionListener;
+import hy.tmc.cli.listeners.LoginListener;
+import hy.tmc.cli.listeners.ListCoursesListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +53,7 @@ public class CommandFactory {
      * @return a help object
      */
     public static Command runTests() {
-        return new RunTests();
+        return new TestsListener();
     }
 
     /**
@@ -56,7 +62,7 @@ public class CommandFactory {
      * @return an authenticate object
      */
     public static Command authenticate() {
-        return new Authenticate();
+        return new LoginListener();
     }
 
     /**
@@ -65,7 +71,7 @@ public class CommandFactory {
      * @return an authenticate object
      */
     public static Command login() {
-        return new Authenticate(); // NOTE: login == authenticate
+        return new LoginListener(); // NOTE: login == authenticate
     }
 
     /**
@@ -74,7 +80,7 @@ public class CommandFactory {
      * @return a listCourses object
      */
     public static Command listCourses() {
-        return new ListCourses();
+        return new ListCoursesListener();
     }
 
     /**
@@ -83,7 +89,7 @@ public class CommandFactory {
      * @return a listExercises object
      */
     public static Command listExercises() {
-        return new ListExercises();
+        return new ListExercisesListener();
     }
 
     /**
@@ -113,7 +119,7 @@ public class CommandFactory {
      * @return a Submit object
      */
     public static Command submit() {
-        return new Submit();
+        return new SubmissionListener();
     }
 
     /**
@@ -122,7 +128,7 @@ public class CommandFactory {
      * @return a Paste object
      */
     public static Command paste() {
-        return new Paste();
+        return new PasteListener();
     }
 
     /**

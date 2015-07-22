@@ -1,27 +1,31 @@
-package hy.tmc.cli.frontend.communication.commands;
+package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.domain.Course;
+import java.io.DataOutputStream;
+import java.net.Socket;
 import java.util.List;
 
-public class ListCourses extends Command<List<Course>> {
+public class ListCoursesListener extends ResultListener<List<Course>> {
 
-    
-    public ListCourses(){
-        
+    public ListCoursesListener(ListenableFuture<List<Course>> commandResult, DataOutputStream output, Socket socket) {
+        super(commandResult, output, socket);
     }
 
-
     @Override
-    public Optional<String> parseData(Object data) {
-        @SuppressWarnings("unchecked")
-        List<Course> courses = (List<Course>) data;
+    public Optional<String> parseData(List<Course> courses) {
         String courselist = getCourseNames(courses);
         if(courselist == null){
             return Optional.absent();
         } else {
             return Optional.of(courselist);
         }
+    }
+    
+    @Override
+    public void extraActions(List<Course> courses) {
+
     }
 
     private int getLongest(List<Course> courses) {
