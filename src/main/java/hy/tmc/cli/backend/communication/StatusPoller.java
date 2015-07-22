@@ -3,6 +3,8 @@ package hy.tmc.cli.backend.communication;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import hy.tmc.cli.mail.Mailbox;
+
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.PollScheduler;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.domain.Course;

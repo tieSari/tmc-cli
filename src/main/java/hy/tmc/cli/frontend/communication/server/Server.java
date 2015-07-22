@@ -1,7 +1,17 @@
 package hy.tmc.cli.frontend.communication.server;
 
+<<<<<<< HEAD
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+=======
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.core.TmcCore;
+<<<<<<< HEAD
+import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.domain.submission.FeedbackQuestion;
+=======
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.ServerSocket;

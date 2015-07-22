@@ -43,4 +43,9 @@ public class ChooseServer extends Command<Boolean> {
         }
         return Optional.of("Failed to change address. Check logs for information.");
     }
+
+    @Override
+    public Boolean call() throws Exception {
+      
+    }
 }

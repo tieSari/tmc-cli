@@ -40,7 +40,7 @@ public class CommandFactory {
      *
      * @return a help object
      */
-    public static Command help() {
+    public static CommandResultParser help() {
         return new Help();
     }
 
@@ -52,8 +52,13 @@ public class CommandFactory {
      *
      * @return a help object
      */
+<<<<<<< HEAD
+    public static CommandResultParser runTests() {
+        return new RunTests();
+=======
     public static Command runTests() {
         return new TestsListener();
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 
     /**
@@ -61,8 +66,13 @@ public class CommandFactory {
      *
      * @return an authenticate object
      */
+<<<<<<< HEAD
+    public static CommandResultParser authenticate() {
+        return new Authenticate();
+=======
     public static Command authenticate() {
         return new LoginListener();
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 
     /**
@@ -70,8 +80,13 @@ public class CommandFactory {
      *
      * @return an authenticate object
      */
+<<<<<<< HEAD
+    public static CommandResultParser login() {
+        return new Authenticate(); // NOTE: login == authenticate
+=======
     public static Command login() {
         return new LoginListener(); // NOTE: login == authenticate
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 
     /**
@@ -79,8 +94,13 @@ public class CommandFactory {
      *
      * @return a listCourses object
      */
+<<<<<<< HEAD
+    public static CommandResultParser listCourses() {
+        return new ListCourses();
+=======
     public static Command listCourses() {
         return new ListCoursesListener();
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 
     /**
@@ -88,8 +108,13 @@ public class CommandFactory {
      *
      * @return a listExercises object
      */
+<<<<<<< HEAD
+    public static CommandResultParser listExercises() {
+        return new ListExercises();
+=======
     public static Command listExercises() {
         return new ListExercisesListener();
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 
     /**
@@ -99,7 +124,7 @@ public class CommandFactory {
      *
      * @return a logout object
      */
-    public static Command logout() {
+    public static CommandResultParser logout() {
         return new Logout();
     }
 
@@ -109,7 +134,7 @@ public class CommandFactory {
      *
      * @return a chooseServer object
      */
-    public static Command chooseServer() {
+    public static CommandResultParser chooseServer() {
         return new ChooseServer();
     }
 
@@ -118,8 +143,13 @@ public class CommandFactory {
      *
      * @return a Submit object
      */
+<<<<<<< HEAD
+    public static CommandResultParser submit() {
+        return new Submit();
+=======
     public static Command submit() {
         return new SubmissionListener();
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 
     /**
@@ -127,8 +157,17 @@ public class CommandFactory {
      *
      * @return a Paste object
      */
+<<<<<<< HEAD
+    public static CommandResultParser paste() {
+        return new Paste();
+    }
+    
+    public static CommandResultParser getMail() {
+        return new MailChecker();
+=======
     public static Command paste() {
         return new PasteListener();
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 
     /**

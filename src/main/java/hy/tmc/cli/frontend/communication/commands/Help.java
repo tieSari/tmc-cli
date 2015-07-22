@@ -33,4 +33,9 @@ public class Help extends Command<String> {
 
         return enterprise.toString();
     }
+
+    @Override
+    public String call() throws Exception {
+       
+    }
 }

@@ -1,8 +1,10 @@
 package hy.tmc.cli;
 
+import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.core.TmcCore;
 import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 

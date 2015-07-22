@@ -1,7 +1,15 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
+<<<<<<< HEAD
+import static hy.tmc.cli.frontend.communication.commands.CommandFactory.createCommandMap;
+
+import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
+import hy.tmc.core.ClientTmcSettings;
+
+=======
 import hy.tmc.cli.frontend.communication.commands.Command;
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +27,8 @@ public class ProtocolParser {
      *
      * @param server frontend server
      */
-    public ProtocolParser(Server server) {
-        this.server = server;
-        this.coreUser = new CoreUser(new ClientTmcSettings());
-    }
-
     public ProtocolParser() {
+        this.coreUser = new CoreUser();
     }
 
     /**
@@ -32,7 +36,7 @@ public class ProtocolParser {
      *
      * @param server frontend server
      */
-    public ProtocolParser(Server server, HashMap<String, Command> availableCommands) {
+    public ProtocolParser(Server server, HashMap<String, CommandResultParser> availableCommands) {
         this.server = server;
     }
 
@@ -49,7 +53,8 @@ public class ProtocolParser {
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
         return coreUser.findAndExecute(commandName, params);
     }
-
+    
+    
     private String[] getElements(String userInput) {
         List<String> items = new ArrayList<>();
         boolean parsingLongValue = false;

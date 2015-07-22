@@ -17,6 +17,8 @@ public class CliSettings implements TmcSettings {
     private int pid;
     private ConfigHandler config;
     private String mainDirectory;
+    private String path;
+    private String courseID;
 
     public CliSettings(String mainDirectory, String apiVersion) {
         this.mainDirectory = mainDirectory;
@@ -28,6 +30,10 @@ public class CliSettings implements TmcSettings {
         this.mainDirectory = mainDirectory;
         this.apiVersion = apiVersion;
         this.config = new ConfigHandler(configFilePath);
+    }
+    
+    public CliSettings(){
+        
     }
 
     @Override
@@ -43,6 +49,14 @@ public class CliSettings implements TmcSettings {
     @Override
     public String getUsername() {
         return this.username;
+    }
+    
+    public void setPath(String path){
+        this.path = path;
+    }
+    
+    public String getPath(){
+        return this.path;
     }
 
     @Override
@@ -130,5 +144,13 @@ public class CliSettings implements TmcSettings {
 
     public void setPid(int pid) {
         this.pid = pid;
+    }
+    
+    public void setCourseID(String courseID){
+        this.courseID = courseID;
+    }
+    
+    public String getCourseID(){
+        return this.courseID;
     }
 }

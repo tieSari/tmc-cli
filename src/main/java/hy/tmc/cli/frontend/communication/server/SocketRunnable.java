@@ -3,13 +3,15 @@ package hy.tmc.cli.frontend.communication.server;
 import hy.tmc.cli.listeners.ResultListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
-import hy.tmc.cli.frontend.communication.commands.Command;
+import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
 import hy.tmc.core.TmcCore;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SocketRunnable implements Runnable {
 
@@ -35,6 +37,8 @@ public class SocketRunnable implements Runnable {
             }
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
+        } catch (ProtocolException ex) {
+            Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -45,29 +49,36 @@ public class SocketRunnable implements Runnable {
      * @param outputStream
      */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException {
-        Command command = parseCommand(inputReader, outputStream);
-        if (command == null) {
-            return;
+            throws IOException, ProtocolException {
+        CoreUser user = new CoreUser();
+        ProtocolParser parser = new ProtocolParser();
+        // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
+        String input = inputReader.readLine();
+        if(input == null){
+            throw new ProtocolException("Input was invalid: empty");
         }
+        final ListenableFuture<?> commandFuture = parser.getCommand(input);
+        /* IMPL THIS!!!! if (commandFuture != null) {
+=======
         final ListenableFuture<?> commandFuture = core.submitTask(command);
         if (commandFuture != null) {
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
             final DataOutputStream output = outputStream;
             addListenerToFuture(commandFuture, output, command);
-        }
+        }*/
     }
 
     /**
      * Reads input and starts corresponding command-object.
      */
-    private Command parseCommand(BufferedReader inputReader, DataOutputStream stream)
+    /*private Command parseCommand(BufferedReader inputReader, DataOutputStream stream)
             throws IOException {
         String input = inputReader.readLine();
         if (input == null) {
             return null;
         }
         try {
-            Command command = core.getCommand(input);
+            ListenableFuture<?>result = new Pro.getCommand(input);
             if(command==null) return null;
             command.checkData();
             return command;
@@ -77,7 +88,7 @@ public class SocketRunnable implements Runnable {
             socket.close();
             return null;
         }
-    }
+    }*/
 
     /**
      * When command-future is ready, the listener will execute run-method; it will write the output
@@ -87,7 +98,12 @@ public class SocketRunnable implements Runnable {
      * @param output stream where to write result.
      */
     private void addListenerToFuture(ListenableFuture<?> commandResult,
+<<<<<<< HEAD
+            final DataOutputStream output, CommandResultParser command) {
+        commandResult.addListener(new SocketListener(commandResult, output, socket, command), core.getThreadPool());
+=======
             final DataOutputStream output, Command command) {
         commandResult.addListener(new ResultListener(commandResult, output, socket), core.getThreadPool());
+>>>>>>> 6f0a156e8a5a06410f1f1f312e949c5877ace448
     }
 }
