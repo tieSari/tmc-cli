@@ -15,30 +15,22 @@ public class CliSettings implements TmcSettings {
     private String password;
     private String apiVersion;
     private int pid;
-    private ConfigHandler config;
     private String mainDirectory;
     private String path;
     private String courseID;
 
+    public CliSettings(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+    
     public CliSettings(String mainDirectory, String apiVersion) {
+        this(apiVersion);
         this.mainDirectory = mainDirectory;
-        this.apiVersion = apiVersion;
-        this.config = new ConfigHandler();
     }
     
-    public CliSettings(String mainDirectory, String configFilePath, String apiVersion) {
-        this.mainDirectory = mainDirectory;
-        this.apiVersion = apiVersion;
-        this.config = new ConfigHandler(configFilePath);
-    }
-    
-    public CliSettings(){
-        
-    }
-
     @Override
     public String getServerAddress() {
-        return this.config.readServerAddress();
+        return this.serverAddress;
     }
 
     @Override
@@ -86,7 +78,6 @@ public class CliSettings implements TmcSettings {
 
     public void setServerAddress(String serverAddress) throws IOException {
         this.serverAddress = serverAddress;
-        this.config.writeServerAddress(serverAddress);
     }
 
     public void setUsername(String username) {
@@ -118,10 +109,6 @@ public class CliSettings implements TmcSettings {
         return this.mainDirectory;
     }
     
-    public ConfigHandler getConfigHandler() {
-        return this.config;
-    }
-
     /**
      * Sets the data for current user.
      *
