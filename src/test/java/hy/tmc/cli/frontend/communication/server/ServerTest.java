@@ -1,10 +1,11 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import hy.tmc.cli.TmcCli;
 import hy.tmc.core.TmcCore;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -16,7 +17,7 @@ public class ServerTest {
 
     Server server;
     TmcCore tmcCore;
-    ExecutorService socketThreadPool;
+    ListeningExecutorService socketThreadPool;
     TestClient client;
     Thread serverThread;
 
@@ -24,8 +25,8 @@ public class ServerTest {
     public void setup() throws IOException {
         tmcCore = mock(TmcCore.class);
 
-        socketThreadPool = Mockito.mock(ExecutorService.class);
-        //server = new Server(tmcCore, socketThreadPool);
+        socketThreadPool = Mockito.mock(ListeningExecutorService.class);
+        server = new Server(new TmcCli(tmcCore), socketThreadPool);
 
         serverThread = new Thread(server);
         serverThread.start();
@@ -80,5 +81,5 @@ public class ServerTest {
         int result = server.getCurrentPort();
         assertEquals(new ConfigHandler().readPort(), result);
     }
-  
+
 }

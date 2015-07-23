@@ -31,11 +31,11 @@ public class Server implements Runnable {
      * @throws IOException if failed to write port to configuration file
      */
     public Server(TmcCli cli) throws IOException {
-        this(new TmcCore(), MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100)), cli);
+        this(cli, MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100)));
     }
 
-    public Server(TmcCore tmcCore, ListeningExecutorService socketThreadPool, TmcCli cli) throws IOException {
-        this.tmcCore = tmcCore;
+    public Server(TmcCli cli, ListeningExecutorService socketThreadPool) throws IOException {
+        this.tmcCore = cli.getCore();
         this.socketThreadPool = socketThreadPool;
         this.cli = cli;
         initServerSocket();

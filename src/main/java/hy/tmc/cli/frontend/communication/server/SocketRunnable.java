@@ -24,7 +24,7 @@ public class SocketRunnable implements Runnable {
     private TmcCore core;
     private ListeningExecutorService pool;
     private TmcCli cli;
-    
+
     public SocketRunnable(Socket clientSocket, TmcCore core, ListeningExecutorService pool, TmcCli cli) {
         this.socket = clientSocket;
         this.core = core;
@@ -33,8 +33,7 @@ public class SocketRunnable implements Runnable {
     }
 
     /**
-     * Reads the input from socket, starts command-object and when command is ready, prints the
-     * result back to socket.
+     * Reads the input from socket and starts executing features.
      */
     @Override
     public void run() {
@@ -59,22 +58,15 @@ public class SocketRunnable implements Runnable {
         }
     }
 
-    /**
-     * Finds command-future and attach listener to it.
-     *
-     * @param inputReader
-     * @param outputStream
-     */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException, ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
-        ProtocolParser parser = new ProtocolParser(outputStream, this.socket, this.pool, this.cli);
+        CommandExecutor executor = new CommandExecutor(outputStream, this.socket, this.pool, this.cli);
         // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
         String input = inputReader.readLine();
         System.err.println("Input: " + input);
         if(input == null){
             throw new ProtocolException("Input was invalid: empty");
         }
-        parser.getCommand(input);
-   
-    }    
+        executor.parseAndExecute(input);
+    }
 }
