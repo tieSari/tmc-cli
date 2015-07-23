@@ -18,7 +18,7 @@ public class TmcCli {
         this.core = core;
         this.config = new ConfigHandler("config.properties");
         this.session = new Session();
-        server = new Server();
+        server = new Server(this);
         serverThread = new Thread(server);
     }
 
