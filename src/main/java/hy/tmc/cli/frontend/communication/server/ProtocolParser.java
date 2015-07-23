@@ -71,7 +71,6 @@ public class ProtocolParser {
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
         HashMap<String, Command> commandMap = createCommandMap();
         executeCommand(commandMap, commandName, params);
-        socket.close();
     }
 
     private void executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException {
