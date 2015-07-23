@@ -49,7 +49,7 @@ public class ListExercisesSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
 
-        server = new Server();
+       // server = new Server();
         port = configHandler.readPort();
         serverThread = new Thread(server);
         serverThread.start();
@@ -77,14 +77,14 @@ public class ListExercisesSteps {
                         .withStatus(200)
                 )
         );
-        wireMockServer.stubFor(get(urlEqualTo(configHandler.coursesExtension))
-                .willReturn(
-                        aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(ExampleJson.allCoursesExample)
-                )
-        );
+//        wireMockServer.stubFor(get(urlEqualTo(configHandler.coursesExtension))
+//                .willReturn(
+//                        aResponse()
+//                        .withStatus(200)
+//                        .withHeader("Content-Type", "application/json")
+//                        .withBody(ExampleJson.allCoursesExample)
+//                )
+//        );
         wireMockServer.stubFor(get(urlEqualTo("/courses/3.json?api_version=7"))
                 .willReturn(
                         aResponse()

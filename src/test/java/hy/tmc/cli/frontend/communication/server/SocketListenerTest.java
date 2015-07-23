@@ -4,7 +4,6 @@ import hy.tmc.cli.listeners.ResultListener;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.frontend.communication.commands.Help;
-import hy.tmc.cli.testhelpers.CommandStub;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -28,8 +27,8 @@ public class SocketListenerTest {
         output = mock(DataOutputStream.class);
         socket = mock(Socket.class);
         helpCommand = mock(Help.class);
-        when(helpCommand.parseData(anyObject())).thenReturn(Optional.of("Return value"));
-        listener = new ResultListener(commandResult, output, socket, helpCommand);
+       // when(helpCommand.parseData(anyObject())).thenReturn(Optional.of("Return value"));
+        //listener = new ResultListener(commandResult, output, socket, helpCommand);
     }
 
     @Test
@@ -41,7 +40,7 @@ public class SocketListenerTest {
     @Test
     public void whenRunIsCalledWithValidCommandFutureValidOutputIsWritten() throws InterruptedException, ExecutionException, IOException {
         when(commandResult.get()).thenReturn("valid output");
-        listener = new ResultListener(commandResult, output, socket, new CommandStub());
+       // listener = new ResultListener(commandResult, output, socket, new CommandStub());
         listener.run();
         verify(socket).close();
     }

@@ -30,7 +30,7 @@ public class CliSettings implements TmcSettings {
     }
 
     public CliSettings() {
-
+        this.apiVersion = "7";
     }
 
     /**

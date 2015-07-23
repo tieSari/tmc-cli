@@ -25,7 +25,7 @@ public class ServerTest {
         tmcCore = mock(TmcCore.class);
 
         socketThreadPool = Mockito.mock(ExecutorService.class);
-        server = new Server(tmcCore, socketThreadPool);
+        //server = new Server(tmcCore, socketThreadPool);
 
         serverThread = new Thread(server);
         serverThread.start();

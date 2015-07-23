@@ -3,7 +3,7 @@ package hy.tmc.cli.synchronization;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import hy.tmc.cli.domain.Course;
+import hy.tmc.core.domain.Course;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;

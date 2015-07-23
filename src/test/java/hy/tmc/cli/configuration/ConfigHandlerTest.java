@@ -53,29 +53,6 @@ public class ConfigHandlerTest {
     }
 
     @Test
-    public void readCoursesAddressLooksGood() {
-        writeServerAddress(address);
-        assertEquals(address + handler.coursesExtension, handler.readCoursesAddress());
-    }
-
-    @Test
-    public void readCoursesAddressGivesNull() {
-        assertNotNull(handler);
-        assertNull(handler.readCoursesAddress());
-    }
-
-    @Test
-    public void readAuthAddressLooksGood() {
-        writeServerAddress(address);
-        assertEquals(address + handler.authExtension, handler.readAuthAddress());
-    }
-
-    @Test
-    public void readAuthAddressGivesNull() {
-        assertNull(handler.readAuthAddress());
-    }
-
-    @Test
     public void canUpdateAddressAfterItExists() {
         writeServerAddress(address);
         assertEquals(handler.readServerAddress(), address);

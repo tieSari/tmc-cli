@@ -51,7 +51,7 @@ public class ListCoursesSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
         
-        server = new Server();
+        //server = new Server();
         port = configHandler.readPort();
         serverThread = new Thread(server);
         serverThread.start();
@@ -71,15 +71,15 @@ public class ListCoursesSteps {
                         .withStatus(200)
                 )
         );
-        wireMockServer.stubFor(get(urlEqualTo(new ConfigHandler().coursesExtension))
-                .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
-                .willReturn(
-                        aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(ExampleJson.allCoursesExample)
-                )
-        );
+//        wireMockServer.stubFor(get(urlEqualTo(new ConfigHandler().coursesExtension))
+//                .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
+//                .willReturn(
+//                        aResponse()
+//                        .withStatus(200)
+//                        .withHeader("Content-Type", "application/json")
+//                        .withBody(ExampleJson.allCoursesExample)
+//                )
+//        );
         
     }
     

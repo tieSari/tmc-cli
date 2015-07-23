@@ -58,7 +58,7 @@ public class FeedbackSteps {
         configHandler.writeServerAddress(wiremockAddress);
         System.out.println(wiremockAddress);
         handler = new RangeFeedbackHandler(null); // FIXME
-        server = new Server(handler);
+        //server = new Server(handler);
 
         serverThread = new Thread(server);
         serverThread.start();
@@ -98,18 +98,18 @@ public class FeedbackSteps {
                 wiremockAddress + "/submissions.json"
         ));
 
-        wiremockPost("/submissions.json?" + configHandler.apiParam,
-                ExampleJson.submitResponse.replace(
-                "8080", serverPort + ""
-        ));
-
-        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
-                ExampleJson.feedbackExample.replace(
-                "https://tmc.mooc.fi/staging/submissions/1933/feedback_answers.json",
-                wiremockAddress + "/feedback_answers.json"
-        ));
-
-        feedbackAnswersUrl = "/feedback_answers.json?" + configHandler.apiParam;
+//        wiremockPost("/submissions.json?" + configHandler.apiParam,
+//                ExampleJson.submitResponse.replace(
+//                "8080", serverPort + ""
+//        ));
+//
+//        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
+//                ExampleJson.feedbackExample.replace(
+//                "https://tmc.mooc.fi/staging/submissions/1933/feedback_answers.json",
+//                wiremockAddress + "/feedback_answers.json"
+//        ));
+//
+//        feedbackAnswersUrl = "/feedback_answers.json?" + configHandler.apiParam;
 
         wiremockPost(feedbackAnswersUrl, "{ status: \"ok\" }");
 
@@ -143,8 +143,8 @@ public class FeedbackSteps {
 
     @Given("^an exercise where some tests fail$")
     public void anExerciseWhereSomeTestsFail() throws IOException {
-        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
-                ExampleJson.failedSubmission);
+//        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
+//                ExampleJson.failedSubmission);
     }
 
     @When("^the exercise is submitted$")
@@ -243,8 +243,8 @@ public class FeedbackSteps {
 
     @Given("^an exercise with no feedback$")
     public void anExerciseWithNoFeedback() throws IOException {
-        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
-                ExampleJson.trivialNoFeedback);
+//        wiremockGet("/submissions/1781.json?" + configHandler.apiParam,
+//                ExampleJson.trivialNoFeedback);
         sendExercise("/testResources/tmc-testcourse/trivial");
 
     }

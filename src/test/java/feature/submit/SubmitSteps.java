@@ -13,7 +13,6 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.MailExample;
-import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
 import java.io.File;
@@ -50,7 +49,7 @@ public class SubmitSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress("http://127.0.0.1:8080");
         ClientData.clearUserData();
-        server = new Server();
+       // server = new Server();
         port = configHandler.readPort();
         serverThread = new Thread(server);
         serverThread.start();

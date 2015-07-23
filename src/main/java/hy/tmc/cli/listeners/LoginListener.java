@@ -2,13 +2,23 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
+import hy.tmc.cli.CliSettings;
+import hy.tmc.cli.TmcCli;
+
 import java.io.DataOutputStream;
 import java.net.Socket;
 
 public class LoginListener extends ResultListener<Boolean> {
 
-    public LoginListener(ListenableFuture<Boolean> commandResult, DataOutputStream output, Socket socket) {
+    private TmcCli tmcCli;
+    private CliSettings settings;
+
+    public LoginListener(ListenableFuture<Boolean> commandResult,
+                         DataOutputStream output, Socket socket, TmcCli tmcCli,
+                         CliSettings settings) {
         super(commandResult, output, socket);
+        this.tmcCli = tmcCli;
+        this.settings = settings;
     }
 
     @Override
@@ -27,6 +37,6 @@ public class LoginListener extends ResultListener<Boolean> {
     }
 
     private void saveCredentials() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.tmcCli.login(settings.getUsername(), settings.getPassword());
     }
 }
