@@ -70,6 +70,7 @@ public class Server implements Runnable {
             try {
                 if (!serverSocket.isClosed()) {
                     Socket clientSocket = serverSocket.accept();
+                    System.err.println("New socketRunnable");
                     socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore, socketThreadPool, cli));
                 }
             } catch (IOException e) {

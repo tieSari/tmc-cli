@@ -9,8 +9,8 @@ public class ProtocolParser {
     public ProtocolParser() {
 
     }
-
-    public String[] getElements(String userInput) {
+    
+    private String[] getElements(String userInput) {
         List<String> items = new ArrayList<>();
         boolean parsingLongValue = false;
         String multiWordItem = "";

@@ -70,7 +70,7 @@ public class CoreUser {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
-        CliSettings settings = new CliSettings();
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setMainDirectory(params.get("path"));
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
         return result;
@@ -109,7 +109,7 @@ public class CoreUser {
      */
     public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         validateUserData(params);
-        CliSettings settings = new CliSettings();
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<List<Course>> coursesFuture = core.listCourses(settings);
         ResultListener coursesListener = new ListCoursesListener(coursesFuture, output, socket);
@@ -126,7 +126,7 @@ public class CoreUser {
             throw new ProtocolException("Path not recieved");
         }
         validateUserData(params);
-        CliSettings settings = new CliSettings();
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setPath(params.get("path"));
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<Course> course = core.getCourse(settings, params.get("path"));
@@ -143,7 +143,7 @@ public class CoreUser {
         if (params.get("path") == null || params.get("path").isEmpty() || params.get("courseID") == null || params.get("courseID").isEmpty()) {
             throw new ProtocolException("Path and courseID required");
         }
-        CliSettings settings = new CliSettings();
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setPath(params.get("path"));
         settings.setCourseID(params.get("courseID"));
         ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(params.get("path"), params.get("courseID"), settings);
@@ -179,7 +179,7 @@ public class CoreUser {
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
-        CliSettings settings = new CliSettings();
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
@@ -197,7 +197,7 @@ public class CoreUser {
             throw new ProtocolException("path not supplied");
         }
         
-        CliSettings settings = new CliSettings();
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
         ListenableFuture<URI> result = core.paste(params.get("path"), settings);
