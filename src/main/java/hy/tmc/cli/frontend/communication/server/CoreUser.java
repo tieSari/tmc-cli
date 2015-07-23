@@ -184,9 +184,9 @@ public class CoreUser {
      *
      * @return a chooseServer listenablefuture
      */
-    public ListenableFuture<?> chooseServer(HashMap<String, String> params) throws ProtocolException {
+    /*public ListenableFuture<?> chooseServer(HashMap<String, String> params) throws ProtocolException {
 
-    }
+    }*/
 
     /**
      * Execute submit
@@ -202,6 +202,7 @@ public class CoreUser {
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
+        result.addListener(new SubmissionListener(result, output, socket), threadPool);
     }
     
     /**
@@ -219,7 +220,7 @@ public class CoreUser {
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
         ListenableFuture<URI> result = core.paste(params.get("path"), settings);
-        
+        result.addListener(new PasteListener(result, output, socket), threadPool);
     }
     
     public ListenableFuture<?> getMail(HashMap<String, String> params) throws ProtocolException {
