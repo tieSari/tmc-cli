@@ -27,35 +27,36 @@ public class CoreUser {
     private ListeningExecutorService threadPool;
     private TmcCli tmcCli;
     
-    public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) throws IOException {
+    public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) {
         this.core = tmcCli.getCore();
         this.threadPool = pool;
         this.tmcCli = tmcCli;
+        this.socket = socket;
+        this.output = output;
     }
     
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
         System.out.println(commandName);
-        switch(commandName){
-            case "login":
-                authenticate(params);
-            case "listCourses":
-                listCourses(params);
-            case "listExercises":
-                listExercises(params);
-            case "downloadExercises":
-                downloadExercises(params);
-            case "logout":
-                logout(params);
-            case "submit":
-                submit(params);
-            case "runTests":
-                runTests(params);
-            case "paste":
-                paste(params);
-            case "getMail":
-                getMail(params);
-            default:
-                throw new ProtocolException("Command not found.");
+        if(commandName.equals("login")) {
+            authenticate(params);
+        }else if(commandName.equals("listCourses")) {
+            listCourses(params);
+        } else if(commandName.equals("listExercises")) {
+            listExercises(params);
+        } else if(commandName.equals("downloadExercises")) {
+            downloadExercises(params);
+        } else if(commandName.equals("logout")) {
+            logout(params);
+        } else if(commandName.equals("submit")) {
+            submit(params);
+        } else if(commandName.equals("runTests")) {
+            runTests(params);
+        } else if(commandName.equals("paste")) {
+            paste(params);
+        } else if(commandName.equals("getMail")) {
+            getMail(params);
+        } else {
+            throw new ProtocolException("Command not found.");
         }
     }
     
