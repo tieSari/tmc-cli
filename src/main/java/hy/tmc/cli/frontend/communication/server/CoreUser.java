@@ -35,8 +35,6 @@ public class CoreUser {
     
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
         switch(commandName){
-            case "help":
-                help(params);
             case "login":
                 authenticate(params);
             case "listCourses":
@@ -47,8 +45,6 @@ public class CoreUser {
                 downloadExercises(params);
             case "logout":
                 logout(params);
-            case "setServer":
-                chooseServer(params);
             case "submit":
                 submit(params);
             case "runTests":
@@ -62,14 +58,6 @@ public class CoreUser {
         }
     }
     
-     /**
-     * Execute help. 
-     *
-     * a help listenablefuture
-     */
-    public ListenableFuture<?> help(HashMap<String, String> params) {
-        
-    }
 
     /**
      * Execute RunTests
@@ -180,20 +168,11 @@ public class CoreUser {
     }
 
     /**
-     * Execute ChooseServer
-     *
-     * @return a chooseServer listenablefuture
-     */
-    /*public ListenableFuture<?> chooseServer(HashMap<String, String> params) throws ProtocolException {
-
-    }*/
-
-    /**
      * Execute submit
      *
      * @return a Submit listenablefuture
      */
-    public ListenableFuture<SubmissionResult> submit(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void submit(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
@@ -210,7 +189,7 @@ public class CoreUser {
      *
      * @return a Paste listenablefuture
      */
-    public ListenableFuture<URI> paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
@@ -223,7 +202,7 @@ public class CoreUser {
         result.addListener(new PasteListener(result, output, socket), threadPool);
     }
     
-    public ListenableFuture<?> getMail(HashMap<String, String> params) throws ProtocolException {
-        return null;
+    public void getMail(HashMap<String, String> params) throws ProtocolException {
+        
     }
 }
