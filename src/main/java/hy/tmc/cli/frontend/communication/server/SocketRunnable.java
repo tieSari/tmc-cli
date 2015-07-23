@@ -13,6 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +51,12 @@ public class SocketRunnable implements Runnable {
         } catch (TmcCoreException ex) {
             Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
         }
+        catch (InterruptedException ex) {
+            Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (ExecutionException ex) {
+            Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -59,7 +66,7 @@ public class SocketRunnable implements Runnable {
      * @param outputStream
      */
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException, ProtocolException, TmcCoreException {
+            throws IOException, ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
         ProtocolParser parser = new ProtocolParser(outputStream, this.socket, this.pool, this.cli);
         // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
         String input = inputReader.readLine();

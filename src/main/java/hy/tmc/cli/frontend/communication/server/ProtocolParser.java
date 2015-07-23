@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * ProtocolParser parses user input to executable command.
@@ -65,7 +66,7 @@ public class ProtocolParser {
      * @return Command that matches input
      * @throws ProtocolException if bad command name
      */
-    public void getCommand(String inputLine) throws ProtocolException, TmcCoreException, IOException {
+    public void getCommand(String inputLine) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
         String[] elements = getElements(inputLine);
         String commandName = elements[0];
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
@@ -73,7 +74,7 @@ public class ProtocolParser {
         executeCommand(commandMap, commandName, params);
     }
 
-    private void executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException {
+    private void executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException, InterruptedException, ExecutionException {
         ListenableFuture<?> result;
         CoreUser coreUser = new CoreUser(cli, stream, socket, pool);
         if(commandMap.containsKey(commandName)){

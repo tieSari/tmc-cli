@@ -1,4 +1,3 @@
-
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -18,15 +17,18 @@ import java.net.Socket;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CoreUser {
-    
+
     private TmcCore core;
     private DataOutputStream output;
     private Socket socket;
     private ListeningExecutorService threadPool;
     private TmcCli tmcCli;
-    
+
     public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) {
         this.core = tmcCli.getCore();
         this.threadPool = pool;
@@ -34,32 +36,31 @@ public class CoreUser {
         this.socket = socket;
         this.output = output;
     }
-    
-    public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
+
+    public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
         System.out.println(commandName);
-        if(commandName.equals("login")) {
+        if (commandName.equals("login")) {
             authenticate(params);
-        }else if(commandName.equals("listCourses")) {
+        } else if (commandName.equals("listCourses")) {
             listCourses(params);
-        } else if(commandName.equals("listExercises")) {
+        } else if (commandName.equals("listExercises")) {
             listExercises(params);
-        } else if(commandName.equals("downloadExercises")) {
+        } else if (commandName.equals("downloadExercises")) {
             downloadExercises(params);
-        } else if(commandName.equals("logout")) {
+        } else if (commandName.equals("logout")) {
             logout(params);
-        } else if(commandName.equals("submit")) {
+        } else if (commandName.equals("submit")) {
             submit(params);
-        } else if(commandName.equals("runTests")) {
+        } else if (commandName.equals("runTests")) {
             runTests(params);
-        } else if(commandName.equals("paste")) {
+        } else if (commandName.equals("paste")) {
             paste(params);
-        } else if(commandName.equals("getMail")) {
+        } else if (commandName.equals("getMail")) {
             getMail(params);
         } else {
             throw new ProtocolException("Command not found.");
         }
     }
-    
 
     /**
      * Execute RunTests
@@ -75,8 +76,8 @@ public class CoreUser {
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
         return result;
     }
-    
-    private void validateUserData(HashMap<String, String> params) throws ProtocolException{
+
+    private void validateUserData(HashMap<String, String> params) throws ProtocolException {
         String username = params.get("username");
         if (username == null || username.isEmpty()) {
             throw new ProtocolException("Username must be given!");
@@ -100,8 +101,7 @@ public class CoreUser {
         LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
         result.addListener(listener, threadPool);
     }
-    
-    
+
     /**
      * Execute ListCourses
      *
@@ -174,18 +174,38 @@ public class CoreUser {
      *
      * @return a Submit listenablefuture
      */
-    public void submit(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void submit(HashMap<String, String> params) throws ProtocolException {
         validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
         CliSettings settings = this.tmcCli.defaultSettings();
+        settings.setCourseID(params.get("courseID"));
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
+        settings.setServerAddress("https://tmc.mooc.fi/staging");
+        settings.setApiVersion("7");
+
+        ListenableFuture<Course> currentCourse;
+        try {
+            sendSubmission(settings, params);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void sendSubmission(CliSettings settings, HashMap<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
+        ListenableFuture<Course> currentCourse;
+        String courseUrl = settings.getServerAddress() + "/courses/" + settings.getCourseID() + ".json?api_version=" + settings.apiVersion();
+        currentCourse = core.getCourse(settings, courseUrl);
+        Course course = currentCourse.get();
+        settings.setCurrentCourse(currentCourse.get());
+        settings.setCourseID(params.get("courseID"));
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
         result.addListener(new SubmissionListener(result, output, socket), threadPool);
     }
-    
+
     /**
      * Execute paste
      *
@@ -196,15 +216,15 @@ public class CoreUser {
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
-        
+
         CliSettings settings = this.tmcCli.defaultSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
         ListenableFuture<URI> result = core.paste(params.get("path"), settings);
         result.addListener(new PasteListener(result, output, socket), threadPool);
     }
-    
+
     public void getMail(HashMap<String, String> params) throws ProtocolException {
-        
+
     }
 }
