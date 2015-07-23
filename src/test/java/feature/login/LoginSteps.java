@@ -1,20 +1,19 @@
 package feature.login;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 
+import hy.tmc.core.TmcCore;
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 
 import cucumber.api.java.After;
@@ -33,13 +32,12 @@ public class LoginSteps {
 
     private Thread serverThread;
     private TestClient testClient;
-    private Server server;
 
-    private ConfigHandler configHandler; // writes the test address
+    private TmcCli tmcCli;
     private WireMockServer wireMockServer;
 
     private static final String SERVER_URI = "127.0.0.1";
-    private static final int SERVER_PORT = 3333;
+    private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
 
     @Rule
@@ -51,30 +49,25 @@ public class LoginSteps {
      */
     @Before
     public void initializeServer() throws IOException {
-        configHandler = new ConfigHandler();
-        configHandler.writeServerAddress(SERVER_ADDRESS);
-        ClientData.clearUserData();
-    //    server = new Server();
+        tmcCli = new TmcCli(new TmcCore());
+        tmcCli.setServer(SERVER_ADDRESS);
+        tmcCli.startServer();
         port = new ConfigHandler().readPort();
-        serverThread = new Thread(server);
-        serverThread.start();
         testClient = new TestClient(port);
-
 
         startWireMock();
     }
 
     private void startWireMock() {
-        wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
-        WireMock.configureFor(SERVER_URI, SERVER_PORT);
+        wireMockServer = new WireMockServer();
         wireMockServer.start();
 
         wireMockServer.stubFor(get(urlEqualTo("/user"))
-                .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
-                .willReturn(
-                        aResponse()
-                        .withStatus(200)
-                )
+                        .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                        )
         );
     }
 
@@ -85,7 +78,8 @@ public class LoginSteps {
 
     @Then("^user should see result\\.$")
     public void user_should_see_result() {
-        assertTrue(testClient.reply().contains("Saved userdata in session"));
+        String result = testClient.reply();
+        assertThat(result, CoreMatchers.containsString("Saved userdata in session"));
     }
 
     /**
@@ -94,10 +88,8 @@ public class LoginSteps {
      */
     @After
     public void closeAll() throws IOException {
-        server.close();
-        serverThread.interrupt();
-        WireMock.reset();
+        tmcCli.stopServer();
         wireMockServer.stop();
-        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
+        tmcCli.setServer("https://tmc.mooc.fi/staging");
     }
 }
