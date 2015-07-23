@@ -197,13 +197,18 @@ public class CoreUser {
 
     private void sendSubmission(CliSettings settings, HashMap<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
         ListenableFuture<Course> currentCourse;
+        fetchCourseToSettings(settings);
+        settings.setCourseID(params.get("courseID"));
+        ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
+        result.addListener(new SubmissionListener(result, output, socket), threadPool);
+    }
+
+    private void fetchCourseToSettings(CliSettings settings) throws TmcCoreException, InterruptedException, ExecutionException {
+        ListenableFuture<Course> currentCourse;
         String courseUrl = settings.getServerAddress() + "/courses/" + settings.getCourseID() + ".json?api_version=" + settings.apiVersion();
         currentCourse = core.getCourse(settings, courseUrl);
         Course course = currentCourse.get();
         settings.setCurrentCourse(currentCourse.get());
-        settings.setCourseID(params.get("courseID"));
-        ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
-        result.addListener(new SubmissionListener(result, output, socket), threadPool);
     }
 
     /**
@@ -211,15 +216,20 @@ public class CoreUser {
      *
      * @return a Paste listenablefuture
      */
-    public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
         validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
 
         CliSettings settings = this.tmcCli.defaultSettings();
+        settings.setCourseID(params.get("courseID"));
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
+        settings.setServerAddress("https://tmc.mooc.fi/staging");
+        settings.setApiVersion("7");
+        settings.setUserData(params.get("username"), params.get("password"));
+        fetchCourseToSettings(settings);
         ListenableFuture<URI> result = core.paste(params.get("path"), settings);
         result.addListener(new PasteListener(result, output, socket), threadPool);
     }
