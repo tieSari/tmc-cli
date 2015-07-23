@@ -72,6 +72,12 @@ public class ProtocolParser {
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
         HashMap<String, Command> commandMap = createCommandMap();
         ListenableFuture<?> result;
+        result = executeCommand(commandMap, commandName, params);
+        return result;
+    }
+
+    private ListenableFuture<?> executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException {
+        ListenableFuture<?> result;
         CoreUser coreUser = new CoreUser(stream, socket, pool);
         if(commandMap.containsKey(commandName)){
             Command command = commandMap.get(commandName);
@@ -88,25 +94,29 @@ public class ProtocolParser {
         boolean parsingLongValue = false;
         String multiWordItem = "";
         for (String word : userInput.split(" ")) {
-            if (parsingLongValue) {
-                if (word.contains("}")) {
-                    parsingLongValue = false;
-                    items.add(multiWordItem.trim());
-                    multiWordItem = "";
-                } else {
-                    multiWordItem += " " + word;
-                }
-            } else {
-                if (word.contains("{")) {
-                    parsingLongValue = true;
-                } else {
-                    items.add(word);
-                }
-            }
+            handleSingleWord(parsingLongValue, word, items, multiWordItem);
         }
         String[] array = new String[items.size()];
         array = items.toArray(array);
         return array;
+    }
+
+    private void handleSingleWord(boolean parsingLongValue, String word, List<String> items, String multiWordItem) {
+        if (parsingLongValue) {
+            if (word.contains("}")) {
+                parsingLongValue = false;
+                items.add(multiWordItem.trim());
+                multiWordItem = "";
+            } else {
+                multiWordItem += " " + word;
+            }
+        } else {
+            if (word.contains("{")) {
+                parsingLongValue = true;
+            } else {
+                items.add(word);
+            }
+        }
     }
 
     private HashMap<String, String> giveData(String[] userInput, HashMap<String, String> params) {
