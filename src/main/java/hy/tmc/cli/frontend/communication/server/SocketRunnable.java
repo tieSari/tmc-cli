@@ -68,41 +68,5 @@ public class SocketRunnable implements Runnable {
         }
         parser.getCommand(input);
    
-    }
-
-    /**
-     * Reads input and starts corresponding command-object.
-     */
-    /*private Command parseCommand(BufferedReader inputReader, DataOutputStream stream)
-            throws IOException {
-        String input = inputReader.readLine();
-        if (input == null) {
-            return null;
-        }
-        try {
-            ListenableFuture<?>result = new Pro.getCommand(input);
-            if(command==null) return null;
-            command.checkData();
-            return command;
-        }
-        catch (ProtocolException ex) {
-            stream.write((ex.getMessage() + "\n").getBytes());
-            socket.close();
-            return null;
-        }
-    }*/
-
-    /**
-     * When command-future is ready, the listener will execute run-method; it will write the output
-     * of command back to calling socket.
-     *
-     * @param commandResult Command-object that has been started.
-     * @param output stream where to write result.
-     */
-    /*private void addListenerToFuture(ListenableFuture<?> commandResult,
-        final DataOutputStream output, Command command) {
-            commandResult.addListener(new ResultListener(commandResult, output, socket), core.getThreadPool());
-        }
-    }*/
-    
+    }    
 }
