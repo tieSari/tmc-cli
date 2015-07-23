@@ -34,6 +34,7 @@ public class CoreUser {
     }
     
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
+        System.out.println(commandName);
         switch(commandName){
             case "login":
                 authenticate(params);
@@ -92,10 +93,10 @@ public class CoreUser {
      */
     public void authenticate(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         validateUserData(params);
-        CliSettings settings = new CliSettings();
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<Boolean> result = core.verifyCredentials(settings);
-        LoginListener listener = new LoginListener(result, output, socket);
+        LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
         result.addListener(listener, threadPool);
     }
     

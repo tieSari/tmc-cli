@@ -52,7 +52,7 @@ public class TmcCli {
         }
     }
 
-    public CliSettings defaultSettings() throws IOException {
+    public CliSettings defaultSettings() {
         CliSettings settings = new CliSettings(apiVersion);
         settings.setUserData(session.getUsername(), session.getPassword());
         settings.setServerAddress(config.readServerAddress());

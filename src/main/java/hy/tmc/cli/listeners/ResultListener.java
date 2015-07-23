@@ -69,7 +69,8 @@ public abstract class ResultListener<T> implements Runnable {
 
     private void writeToOutput(final String commandOutput) {
         try {
-            output.write((commandOutput + "\n").getBytes());
+            byte[] bytes = (commandOutput + "\n").getBytes();
+            output.write(bytes);
             socket.close();
         }
         catch (IOException ex) {

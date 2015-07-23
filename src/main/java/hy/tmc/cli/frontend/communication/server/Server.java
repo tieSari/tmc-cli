@@ -37,6 +37,7 @@ public class Server implements Runnable {
     public Server(TmcCore tmcCore, ListeningExecutorService socketThreadPool, TmcCli cli) throws IOException {
         this.tmcCore = tmcCore;
         this.socketThreadPool = socketThreadPool;
+        this.cli = cli;
         initServerSocket();
     }
 
