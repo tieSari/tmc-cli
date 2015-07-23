@@ -20,7 +20,6 @@ import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
-import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class PasteSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress("http://127.0.0.1:8080");
 
-        server = new Server();
+      //  server = new Server();
         port = configHandler.readPort();
         serverThread = new Thread(server);
         serverThread.start();

@@ -9,7 +9,6 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.listeners.TestsListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -32,8 +31,8 @@ public class TmcTestsSteps {
 
     @Given("^the user is in the exercise directory \"(.*?)\"$")
     public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
-        testRunner = new TestsListener();
-        testRunner.setParameter("path", exerciseDirectory);
+       // testRunner = new TestsListener();
+       // testRunner.setParameter("path", exerciseDirectory);
     }
 
     @When("^the user runs the tests$")
@@ -72,14 +71,14 @@ public class TmcTestsSteps {
     @Given("^polling for reviews is not in progress and exercise path is \"(.*?)\"$")
     public void polling_for_reviews_is_not_in_progress_and_exercise_path_is(String path) throws Throwable {
         TmcServiceScheduler.enablePolling();
-        testRunner = new TestsListener();
-        testRunner.setParameter("path", path);
+      //  testRunner = new TestsListener();
+      //  testRunner.setParameter("path", path);
         assertFalse(TmcServiceScheduler.isRunning());
     }
 
     @Given("^the user gives the vim flag$")
     public void gives_the_vim_flag() throws Throwable {
-        testRunner.setParameter("--vim", "");
+      //  testRunner.setParameter("--vim", "");
     }
 
     @Then("^the user sees that all tests have passed formatted with vim formatter\\.$")

@@ -54,7 +54,7 @@ public class LoginSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
         ClientData.clearUserData();
-        server = new Server();
+    //    server = new Server();
         port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();

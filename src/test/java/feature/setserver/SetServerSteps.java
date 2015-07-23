@@ -27,7 +27,7 @@ public class SetServerSteps {
     @Before
     public void setup() {
         handler = new ConfigHandler("testResources/test.properties");
-        command = new SetServer(handler);
+       // command = new SetServer(handler);
     }
 
     @Given ("^the server is \"(.*)\"$")
