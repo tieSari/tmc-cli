@@ -63,6 +63,7 @@ public class SocketRunnable implements Runnable {
         ProtocolParser parser = new ProtocolParser(outputStream, this.socket, this.pool, this.cli);
         // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
         String input = inputReader.readLine();
+        System.err.println("Input: " + input);
         if(input == null){
             throw new ProtocolException("Input was invalid: empty");
         }

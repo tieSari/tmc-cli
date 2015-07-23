@@ -45,6 +45,7 @@ public abstract class ResultListener<T> implements Runnable {
             extraActions(result);
             Optional<String> outputToUser = this.parseData(result);
             if (outputToUser.isPresent()) {
+                System.err.println("Output for user is present.");
                 writeToOutput(outputToUser.get());
             }
         }

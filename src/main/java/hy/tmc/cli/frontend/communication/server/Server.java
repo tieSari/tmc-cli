@@ -37,6 +37,7 @@ public class Server implements Runnable {
     public Server(TmcCore tmcCore, ListeningExecutorService socketThreadPool, TmcCli cli) throws IOException {
         this.tmcCore = tmcCore;
         this.socketThreadPool = socketThreadPool;
+        this.cli = cli;
         initServerSocket();
     }
 
@@ -69,6 +70,7 @@ public class Server implements Runnable {
             try {
                 if (!serverSocket.isClosed()) {
                     Socket clientSocket = serverSocket.accept();
+                    System.err.println("New socketRunnable");
                     socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore, socketThreadPool, cli));
                 }
             } catch (IOException e) {

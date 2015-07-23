@@ -92,9 +92,11 @@ public class CoreUser {
      */
     public void authenticate(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         validateUserData(params);
-        CliSettings settings = new CliSettings();
+        System.err.println("Paramsien koko: " + params.size());
+        CliSettings settings = this.tmcCli.defaultSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<Boolean> result = core.verifyCredentials(settings);
+        System.err.println("Coresta päästiin pois");
         LoginListener listener = new LoginListener(result, output, socket);
         result.addListener(listener, threadPool);
     }

@@ -91,7 +91,7 @@ public class CliSettings implements TmcSettings {
         this.currentCourse = currentCourse;
     }
 
-    public void setServerAddress(String serverAddress) throws IOException {
+    public void setServerAddress(String serverAddress) {
         this.serverAddress = serverAddress;
     }
 

@@ -70,17 +70,19 @@ public class ProtocolParser {
         String commandName = elements[0];
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
         HashMap<String, Command> commandMap = createCommandMap();
-        ListenableFuture<?> result;
         executeCommand(commandMap, commandName, params);
+        socket.close();
     }
 
     private void executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException {
         ListenableFuture<?> result;
         CoreUser coreUser = new CoreUser(cli, stream, socket, pool);
         if(commandMap.containsKey(commandName)){
+            System.err.println("Ei kuulu corelle.");
             Command command = commandMap.get(commandName);
             result = MoreExecutors.sameThreadExecutor().submit(command);
         } else {
+            System.err.println("kuuluu corelle");
             coreUser.findAndExecute(commandName, params);
         }
     }
