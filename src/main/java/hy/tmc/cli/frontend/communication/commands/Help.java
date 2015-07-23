@@ -10,11 +10,6 @@ public class Help extends Command<String> {
         super(cli);
     }
 
-    /**
-     * Takes the command map and returns a set of command names.
-     *
-     * @return a set of all available command names.
-     */
     public String mainHelpMessage() {
         StringBuilder enterprise = new StringBuilder();
 

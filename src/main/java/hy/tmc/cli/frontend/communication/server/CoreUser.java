@@ -5,21 +5,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import hy.tmc.cli.CliSettings;
-import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.listeners.LoginListener;
-import hy.tmc.cli.frontend.communication.commands.SetServer;
-import hy.tmc.cli.frontend.communication.commands.CommandResultParser;
-import hy.tmc.cli.frontend.communication.commands.Help;
-import hy.tmc.cli.listeners.ListCoursesListener;
-import hy.tmc.cli.listeners.ListExercisesListener;
-import hy.tmc.cli.frontend.communication.commands.Logout;
-import hy.tmc.cli.frontend.communication.commands.MailChecker;
-import hy.tmc.cli.listeners.PasteListener;
-import hy.tmc.cli.listeners.TestsListener;
-import hy.tmc.cli.listeners.SubmissionListener;
+import hy.tmc.cli.TmcCli;
+import hy.tmc.cli.listeners.*;
 import hy.tmc.core.TmcCore;
-import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.DataOutputStream;
@@ -34,37 +24,39 @@ public class CoreUser {
     private TmcCore core;
     private DataOutputStream output;
     private Socket socket;
-    private ListeningExecutorService pool;
+    private ListeningExecutorService threadPool;
+    private TmcCli tmcCli;
     
-    public CoreUser(DataOutputStream output, Socket socket, ListeningExecutorService pool){
-        this.core = new TmcCore();
-        this.pool = pool;
+    public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) throws IOException {
+        this.core = tmcCli.getCore();
+        this.threadPool = pool;
+        this.tmcCli = tmcCli;
     }
     
-    public ListenableFuture<?> findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
+    public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException{
         switch(commandName){
             case "help":
-                return help(params);
+                help(params);
             case "login":
-                return authenticate(params);
+                authenticate(params);
             case "listCourses":
-                return listCourses(params);
+                listCourses(params);
             case "listExercises":
-                return listExercises(params);
+                listExercises(params);
             case "downloadExercises":
-                return downloadExercises(params);
+                downloadExercises(params);
             case "logout":
-                return logout(params);
+                logout(params);
             case "setServer":
-                return chooseServer(params);
+                chooseServer(params);
             case "submit":
-                return submit(params);
+                submit(params);
             case "runTests":
-                return runTests(params);
+                runTests(params);
             case "paste":
-                return paste(params);
+                paste(params);
             case "getMail":
-                return getMail(params);    
+                getMail(params);
             default:
                 throw new ProtocolException("Command not found.");
         }
@@ -94,16 +86,15 @@ public class CoreUser {
         return result;
     }
     
-    private boolean userDataNotExists(HashMap<String, String> params) throws ProtocolException{
+    private void validateUserData(HashMap<String, String> params) throws ProtocolException{
         String username = params.get("username");
         if (username == null || username.isEmpty()) {
-            return  true;
+            throw new ProtocolException("Username must be given!");
         }
         String password = params.get("password");
         if (password == null || password.isEmpty()) {
-            return true;
+            throw new ProtocolException("Password must be given!");
         }
-        return false;
     }
 
     /**
@@ -112,14 +103,12 @@ public class CoreUser {
      * @return authenticate listenable future
      */
     public void authenticate(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        if(userDataNotExists(params)){
-            throw new ProtocolException("Username and password must be given!");
-        }
+        validateUserData(params);
         CliSettings settings = new CliSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<Boolean> result = core.verifyCredentials(settings);
         LoginListener listener = new LoginListener(result, output, socket);
-        result.addListener(listener, pool);
+        result.addListener(listener, threadPool);
     }
     
     
@@ -128,13 +117,13 @@ public class CoreUser {
      *
      * @return a listCourses listenablefuture
      */
-    public ListenableFuture<List<Course>> listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        if(userDataNotExists(params)){
-            throw new ProtocolException("Username or password must be given!");
-        }
+    public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+        validateUserData(params);
         CliSettings settings = new CliSettings();
         settings.setUserData(params.get("username"), params.get("password"));
-        ListenableFuture<List<Course>> result = core.listCourses(settings);
+        ListenableFuture<List<Course>> coursesFuture = core.listCourses(settings);
+        ResultListener coursesListener = new ListCoursesListener(coursesFuture, output, socket);
+        coursesFuture.addListener(coursesListener, threadPool);
     }
 
     /**
@@ -142,16 +131,17 @@ public class CoreUser {
      *
      * @return a listexercises listenablefuture
      */
-    public ListenableFuture<?> listExercises(HashMap<String, String> params) throws ProtocolException {
+    public void listExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         if (!params.containsKey("path")) {
             throw new ProtocolException("Path not recieved");
         }
-        if(userDataNotExists(params)){
-            throw new ProtocolException("Username or password must be given!");
-        }
+        validateUserData(params);
         CliSettings settings = new CliSettings();
         settings.setPath(params.get("path"));
         settings.setUserData(params.get("username"), params.get("password"));
+        ListenableFuture<Course> course = core.getCourse(settings, params.get("path"));
+        ResultListener exercisesListener = new ListExercisesListener(course, output, socket);
+        course.addListener(exercisesListener, threadPool);
     }
 
     /**
@@ -159,14 +149,15 @@ public class CoreUser {
      *
      * @return a downloadexercises listenablefuture
      */
-    public ListenableFuture<?> downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
+    public void downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
         if (params.get("path") == null || params.get("path").isEmpty() || params.get("courseID") == null || params.get("courseID").isEmpty()) {
             throw new ProtocolException("Path and courseID required");
         }
         CliSettings settings = new CliSettings();
         settings.setPath(params.get("path"));
         settings.setCourseID(params.get("courseID"));
-        core.downloadExercises(params.get("path"), params.get("courseID"), settings);
+        ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(params.get("path"), params.get("courseID"), settings);
+        ResultListener resultListener = new DownloadExercisesListener(exercisesFuture, output, socket);
     }
 
     /**
@@ -174,8 +165,18 @@ public class CoreUser {
      *
      * @return a logout listenablefuture
      */
-    public ListenableFuture<?> logout(HashMap<String, String> params) {
-        
+    public void logout(HashMap<String, String> params) {
+        this.tmcCli.logout();
+        String message = "User data cleared!";
+        try {
+            output.write((message + "\n").getBytes());
+            socket.close();
+        }
+        catch (IOException ex) {
+            System.err.println("Failed to print error message: ");
+            System.err.println(ex.getMessage());
+        }
+
     }
 
     /**
@@ -184,10 +185,7 @@ public class CoreUser {
      * @return a chooseServer listenablefuture
      */
     public ListenableFuture<?> chooseServer(HashMap<String, String> params) throws ProtocolException {
-        if (!params.containsKey("tmc-server")) {
-            throw new ProtocolException("must specify new server");
-        }
-        
+
     }
 
     /**
@@ -196,9 +194,7 @@ public class CoreUser {
      * @return a Submit listenablefuture
      */
     public ListenableFuture<SubmissionResult> submit(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-         if(userDataNotExists(params)){
-            throw new ProtocolException("Username or password must be given!");
-        }
+        validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
@@ -214,9 +210,7 @@ public class CoreUser {
      * @return a Paste listenablefuture
      */
     public ListenableFuture<URI> paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-         if(userDataNotExists(params)){
-            throw new ProtocolException("Username or password must be given!");
-        }
+        validateUserData(params);
         if (!params.containsKey("path")) {
             throw new ProtocolException("path not supplied");
         }
@@ -228,8 +222,5 @@ public class CoreUser {
     }
     
     public ListenableFuture<?> getMail(HashMap<String, String> params) throws ProtocolException {
-        if(userDataNotExists(params)){
-            throw new ProtocolException("Username or password must be given!");
-        }
     }
 }

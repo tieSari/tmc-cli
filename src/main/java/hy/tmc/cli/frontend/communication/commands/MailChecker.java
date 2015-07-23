@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.mail.MailFormatter;
 import com.google.common.base.Optional;
 import hy.tmc.cli.CliSettings;
@@ -45,7 +46,6 @@ public class MailChecker extends Command<String> {
             throw new ProtocolException(errorMsg);
         }
     }
-
 
     @Override
     public String call() throws ProtocolException, IOException {

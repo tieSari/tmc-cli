@@ -59,4 +59,8 @@ public class TmcCli {
 
         return settings;
     }
+
+    public TmcCore getCore() {
+        return core;
+    }
 }

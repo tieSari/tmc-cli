@@ -18,6 +18,7 @@ public class CliSettings implements TmcSettings {
     private String mainDirectory;
     private String path;
     private String courseID;
+    private ConfigHandler config;
 
     public CliSettings(String apiVersion) {
         this.apiVersion = apiVersion;
@@ -27,7 +28,6 @@ public class CliSettings implements TmcSettings {
         this(apiVersion);
         this.mainDirectory = mainDirectory;
     }
-<<<<<<< HEAD
 
     public CliSettings() {
 
@@ -43,9 +43,6 @@ public class CliSettings implements TmcSettings {
         this.config = handler;
     }
 
-=======
-    
->>>>>>> b75076cce3b517b65e21af1427a2a90866de48ab
     @Override
     public String getServerAddress() {
         return this.serverAddress;
