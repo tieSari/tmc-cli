@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.Help;
@@ -55,7 +54,7 @@ public class ProtocolParser {
     public HashMap<String, Command> createCommandMap(){
         HashMap<String, Command> map = new HashMap<String, Command>();
         map.put("help", new Help(this.cli));
-        map.put("setServer", new ChooseServer());
+        //map.put("setServer", new ChooseServer());
         return map;
     }
 
@@ -66,26 +65,24 @@ public class ProtocolParser {
      * @return Command that matches input
      * @throws ProtocolException if bad command name
      */
-    public ListenableFuture<?> getCommand(String inputLine) throws ProtocolException, TmcCoreException, IOException {
+    public void getCommand(String inputLine) throws ProtocolException, TmcCoreException, IOException {
         String[] elements = getElements(inputLine);
         String commandName = elements[0];
         HashMap<String, String> params = giveData(elements, new HashMap<String, String>());
         HashMap<String, Command> commandMap = createCommandMap();
         ListenableFuture<?> result;
-        result = executeCommand(commandMap, commandName, params);
-        return result;
+        executeCommand(commandMap, commandName, params);
     }
 
-    private ListenableFuture<?> executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException {
+    private void executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException {
         ListenableFuture<?> result;
-        CoreUser coreUser = new CoreUser(stream, socket, pool);
+        CoreUser coreUser = new CoreUser(cli, stream, socket, pool);
         if(commandMap.containsKey(commandName)){
             Command command = commandMap.get(commandName);
             result = MoreExecutors.sameThreadExecutor().submit(command);
         } else {
-            result = coreUser.findAndExecute(commandName, params);
+            coreUser.findAndExecute(commandName, params);
         }
-        return result;
     }
     
     

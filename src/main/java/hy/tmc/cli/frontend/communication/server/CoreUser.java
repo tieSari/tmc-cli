@@ -219,8 +219,10 @@ public class CoreUser {
         settings.setUserData(params.get("username"), params.get("password"));
         settings.setPath(params.get("path"));
         ListenableFuture<URI> result = core.paste(params.get("path"), settings);
+        
     }
     
     public ListenableFuture<?> getMail(HashMap<String, String> params) throws ProtocolException {
+        return null;
     }
 }

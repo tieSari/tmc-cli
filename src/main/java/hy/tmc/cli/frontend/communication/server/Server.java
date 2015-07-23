@@ -1,5 +1,7 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import hy.tmc.cli.TmcCli;
@@ -19,7 +21,7 @@ public class Server implements Runnable {
     private ServerSocket serverSocket;
     private boolean isRunning;
     private TmcCore tmcCore;
-    private ExecutorService socketThreadPool;
+    private ListeningExecutorService socketThreadPool;
     private BufferedReader in;
     private TmcCli cli;
 
@@ -29,10 +31,10 @@ public class Server implements Runnable {
      * @throws IOException if failed to write port to configuration file
      */
     public Server(TmcCli cli) throws IOException {
-        this(new TmcCore(), Executors.newCachedThreadPool(), cli);
+        this(new TmcCore(), MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(100)), cli);
     }
 
-    public Server(TmcCore tmcCore, ExecutorService socketThreadPool, TmcCli cli) throws IOException {
+    public Server(TmcCore tmcCore, ListeningExecutorService socketThreadPool, TmcCli cli) throws IOException {
         this.tmcCore = tmcCore;
         this.socketThreadPool = socketThreadPool;
         initServerSocket();
@@ -67,7 +69,7 @@ public class Server implements Runnable {
             try {
                 if (!serverSocket.isClosed()) {
                     Socket clientSocket = serverSocket.accept();
-                    socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore));
+                    socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore, socketThreadPool, cli));
                 }
             } catch (IOException e) {
                 System.err.println(e.getMessage());

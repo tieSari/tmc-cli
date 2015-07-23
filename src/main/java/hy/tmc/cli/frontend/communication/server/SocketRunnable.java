@@ -66,7 +66,7 @@ public class SocketRunnable implements Runnable {
         if(input == null){
             throw new ProtocolException("Input was invalid: empty");
         }
-        final ListenableFuture<?> commandFuture = parser.getCommand(input);
+        parser.getCommand(input);
    
     }
 
