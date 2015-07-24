@@ -9,4 +9,4 @@ Feature: ListCourses command
     Scenario: List courses without credentials
         Given user has not logged in
         When user gives command listCourses.
-        Then output should contain "Please login first."
+        Then output should contain "Please authorize first."

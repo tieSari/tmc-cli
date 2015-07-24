@@ -1,10 +1,12 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
+import hy.tmc.cli.frontend.CourseFinder;
 import hy.tmc.cli.listeners.*;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
@@ -61,11 +63,6 @@ public class CoreUser {
         }
     }
 
-    /**
-     * Execute RunTests
-     *
-     * @return a runtests listenablefuture
-     */
     public ListenableFuture<RunResult> runTests(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
@@ -76,11 +73,6 @@ public class CoreUser {
         return result;
     }
 
-    /**
-     * Execute login
-     *
-     * @return login listenable future
-     */
     public void login(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         if(credentialsAreMissing(params)) {
             throw new ProtocolException("Username or/and password is missing!.");
@@ -92,11 +84,6 @@ public class CoreUser {
         result.addListener(listener, threadPool);
     }
 
-    /**
-     * Execute ListCourses
-     *
-     * @return a listCourses listenablefuture
-     */
     public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         CliSettings settings = this.tmcCli.defaultSettings();
         if(loginIsDone(settings)) {
@@ -106,29 +93,31 @@ public class CoreUser {
         }
     }
 
-    /**
-     * Execute ListExercises
-     *
-     * @return a listexercises listenablefuture
-     */
     public void listExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         CliSettings settings = this.tmcCli.defaultSettings();
         if(loginIsDone(settings)) {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("Path not recieved");
             }
-            settings.setPath(params.get("path"));
-            ListenableFuture<Course> course = core.getCourse(settings, params.get("path"));
-            ResultListener exercisesListener = new ListExercisesListener(course, output, socket);
-            course.addListener(exercisesListener, threadPool);
+            try {
+                Optional<Course> currentCourse = new CourseFinder().getCurrentCourse(
+                        params.get("path"),
+                        core.listCourses(settings).get()
+                );
+                if (currentCourse.isPresent()) {
+                    ListenableFuture<Course> course = core.getCourse(settings,
+                            currentCourse.get().getDetailsUrl());
+                    ResultListener exercisesListener = new ListExercisesListener(course, output, socket);
+                    course.addListener(exercisesListener, threadPool);
+                } else {
+                    writeToOutputSocket("Could not find current course from your path.");
+                }
+            } catch (IOException | InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    /**
-     * Execute DownloadExercises command
-     *
-     * @return a downloadexercises listenablefuture
-     */
     public void downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
         CliSettings settings = this.tmcCli.defaultSettings();
         if(loginIsDone(settings)) {
@@ -142,21 +131,11 @@ public class CoreUser {
         }
     }
 
-    /**
-     * Execute logout command
-     *
-     * @return a logout listenablefuture
-     */
     public void logout(HashMap<String, String> params) {
         this.tmcCli.logout();
         writeToOutputSocket("User data cleared!");
     }
 
-    /**
-     * Execute submit
-     *
-     * @return a Submit listenablefuture
-     */
     public void submit(HashMap<String, String> params) throws ProtocolException {
         CliSettings settings = this.tmcCli.defaultSettings();
         if(loginIsDone(settings)) {
@@ -191,11 +170,6 @@ public class CoreUser {
         result.addListener(new SubmissionListener(result, output, socket), threadPool);
     }
 
-    /**
-     * Execute paste
-     *
-     * @return a Paste listenablefuture
-     */
     public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         CliSettings settings = this.tmcCli.defaultSettings();
         if(loginIsDone(settings)) {
@@ -229,7 +203,7 @@ public class CoreUser {
      */
     private boolean loginIsDone(TmcSettings settings)  {
         if (!settings.userDataExists()) {
-            writeToOutputSocket("Please login first.");
+            writeToOutputSocket("Please authorize first.");
             return false;
         }
         return true;
