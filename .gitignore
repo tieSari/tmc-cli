@@ -27,3 +27,5 @@ build/*
 *.swp
 *nfs*
 /testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/nbproject/private/
+tmc-langs.log
+config.properties

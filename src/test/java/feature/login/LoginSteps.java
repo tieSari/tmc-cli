@@ -13,6 +13,7 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.communication.authorization.Authorization;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 
@@ -61,25 +62,29 @@ public class LoginSteps {
     private void startWireMock() {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
+    }
 
+    private void wiremockGetWithUsernamePasswordAndStatus(String username, String password, int status) {
+        String auth = Authorization.encode(username+":"+password);
         wireMockServer.stubFor(get(urlEqualTo("/user"))
-                        .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
+                        .withHeader("Authorization", containing("Basic " + auth))
                         .willReturn(
                                 aResponse()
-                                        .withStatus(200)
+                                        .withStatus(status)
                         )
         );
     }
 
-    @When("^user gives username \"(.*?)\" and password \"(.*?)\"$")
-    public void user_gives_uname_and_password(String username, String password) throws Throwable {
+    @When("^user gives username \"(.*?)\" and password \"(.*?)\" and status (\\d+)$")
+    public void user_gives_username_and_password_and_status(String username, String password, int status) throws Throwable {
+        wiremockGetWithUsernamePasswordAndStatus(username, password, status);
         testClient.sendMessage("login username " + username + " password " + password);
     }
 
-    @Then("^user should see result\\.$")
-    public void user_should_see_result() {
+    @Then("^user should see result \"(.*?)\"$")
+    public void user_should_see_result(String expectedResult) throws Throwable {
         String result = testClient.reply();
-        assertThat(result, CoreMatchers.containsString("Saved userdata in session"));
+        assertThat(result, CoreMatchers.containsString(expectedResult));
     }
 
     /**
