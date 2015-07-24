@@ -7,6 +7,7 @@ import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.listeners.*;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.submission.SubmissionResult;
@@ -18,8 +19,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CoreUser {
 
@@ -40,7 +39,7 @@ public class CoreUser {
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
         System.out.println(commandName);
         if (commandName.equals("login")) {
-            authenticate(params);
+            login(params);
         } else if (commandName.equals("listCourses")) {
             listCourses(params);
         } else if (commandName.equals("listExercises")) {
@@ -77,24 +76,15 @@ public class CoreUser {
         return result;
     }
 
-    private void validateUserData(HashMap<String, String> params) throws ProtocolException {
-        String username = params.get("username");
-        if (username == null || username.isEmpty()) {
-            throw new ProtocolException("Username must be given!");
-        }
-        String password = params.get("password");
-        if (password == null || password.isEmpty()) {
-            throw new ProtocolException("Password must be given!");
-        }
-    }
-
     /**
-     * Execute authenticate
+     * Execute login
      *
-     * @return authenticate listenable future
+     * @return login listenable future
      */
-    public void authenticate(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        validateUserData(params);
+    public void login(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+        if(credentialsAreMissing(params)) {
+            throw new ProtocolException("Username or/and password is missing!.");
+        }
         CliSettings settings = this.tmcCli.defaultSettings();
         settings.setUserData(params.get("username"), params.get("password"));
         ListenableFuture<Boolean> result = core.verifyCredentials(settings);
@@ -108,12 +98,12 @@ public class CoreUser {
      * @return a listCourses listenablefuture
      */
     public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        validateUserData(params);
         CliSettings settings = this.tmcCli.defaultSettings();
-        settings.setUserData(params.get("username"), params.get("password"));
-        ListenableFuture<List<Course>> coursesFuture = core.listCourses(settings);
-        ResultListener coursesListener = new ListCoursesListener(coursesFuture, output, socket);
-        coursesFuture.addListener(coursesListener, threadPool);
+        if(loginIsDone(settings)) {
+            ListenableFuture<List<Course>> coursesFuture = core.listCourses(settings);
+            ResultListener coursesListener = new ListCoursesListener(coursesFuture, output, socket);
+            coursesFuture.addListener(coursesListener, threadPool);
+        }
     }
 
     /**
@@ -122,16 +112,16 @@ public class CoreUser {
      * @return a listexercises listenablefuture
      */
     public void listExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        if (!params.containsKey("path")) {
-            throw new ProtocolException("Path not recieved");
-        }
-        validateUserData(params);
         CliSettings settings = this.tmcCli.defaultSettings();
-        settings.setPath(params.get("path"));
-        settings.setUserData(params.get("username"), params.get("password"));
-        ListenableFuture<Course> course = core.getCourse(settings, params.get("path"));
-        ResultListener exercisesListener = new ListExercisesListener(course, output, socket);
-        course.addListener(exercisesListener, threadPool);
+        if(loginIsDone(settings)) {
+            if (!params.containsKey("path")) {
+                throw new ProtocolException("Path not recieved");
+            }
+            settings.setPath(params.get("path"));
+            ListenableFuture<Course> course = core.getCourse(settings, params.get("path"));
+            ResultListener exercisesListener = new ListExercisesListener(course, output, socket);
+            course.addListener(exercisesListener, threadPool);
+        }
     }
 
     /**
@@ -140,14 +130,16 @@ public class CoreUser {
      * @return a downloadexercises listenablefuture
      */
     public void downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
-        if (params.get("path") == null || params.get("path").isEmpty() || params.get("courseID") == null || params.get("courseID").isEmpty()) {
-            throw new ProtocolException("Path and courseID required");
-        }
         CliSettings settings = this.tmcCli.defaultSettings();
-        settings.setPath(params.get("path"));
-        settings.setCourseID(params.get("courseID"));
-        ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(params.get("path"), params.get("courseID"), settings);
-        ResultListener resultListener = new DownloadExercisesListener(exercisesFuture, output, socket);
+        if(loginIsDone(settings)) {
+            if (params.get("path") == null || params.get("path").isEmpty() || params.get("courseID") == null || params.get("courseID").isEmpty()) {
+                throw new ProtocolException("Path and courseID required");
+            }
+            settings.setPath(params.get("path"));
+            settings.setCourseID(params.get("courseID"));
+            ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(params.get("path"), params.get("courseID"), settings);
+            ResultListener resultListener = new DownloadExercisesListener(exercisesFuture, output, socket);
+        }
     }
 
     /**
@@ -157,16 +149,7 @@ public class CoreUser {
      */
     public void logout(HashMap<String, String> params) {
         this.tmcCli.logout();
-        String message = "User data cleared!";
-        try {
-            output.write((message + "\n").getBytes());
-            socket.close();
-        }
-        catch (IOException ex) {
-            System.err.println("Failed to print error message: ");
-            System.err.println(ex.getMessage());
-        }
-
+        writeToOutputSocket("User data cleared!");
     }
 
     /**
@@ -175,23 +158,25 @@ public class CoreUser {
      * @return a Submit listenablefuture
      */
     public void submit(HashMap<String, String> params) throws ProtocolException {
-        validateUserData(params);
-        if (!params.containsKey("path")) {
-            throw new ProtocolException("path not supplied");
-        }
         CliSettings settings = this.tmcCli.defaultSettings();
-        settings.setCourseID(params.get("courseID"));
-        settings.setUserData(params.get("username"), params.get("password"));
-        settings.setPath(params.get("path"));
-        settings.setServerAddress("https://tmc.mooc.fi/staging");
-        settings.setApiVersion("7");
+        if(loginIsDone(settings)) {
+            if (!params.containsKey("path")) {
+                throw new ProtocolException("path not supplied");
+            }
+            //CLEAR THIS MESS!!
+            settings.setCourseID(params.get("courseID"));
+            settings.setUserData(params.get("username"), params.get("password"));
+            settings.setPath(params.get("path"));
+            settings.setServerAddress("https://tmc.mooc.fi/staging");
+            settings.setApiVersion("7");
 
-        ListenableFuture<Course> currentCourse;
-        try {
-            sendSubmission(settings, params);
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
+            ListenableFuture<Course> currentCourse;
+            try {
+                sendSubmission(settings, params);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -212,19 +197,47 @@ public class CoreUser {
      * @return a Paste listenablefuture
      */
     public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        validateUserData(params);
-        if (!params.containsKey("path")) {
-            throw new ProtocolException("path not supplied");
-        }
-
         CliSettings settings = this.tmcCli.defaultSettings();
-        settings.setUserData(params.get("username"), params.get("password"));
-        settings.setPath(params.get("path"));
-        ListenableFuture<URI> result = core.paste(params.get("path"), settings);
-        result.addListener(new PasteListener(result, output, socket), threadPool);
+        if(loginIsDone(settings)) {
+            if (!params.containsKey("path")) {
+                throw new ProtocolException("path not supplied");
+            }
+            settings.setUserData(params.get("username"), params.get("password"));
+            settings.setPath(params.get("path"));
+            ListenableFuture<URI> result = core.paste(params.get("path"), settings);
+            result.addListener(new PasteListener(result, output, socket), threadPool);
+        }
     }
 
     public void getMail(HashMap<String, String> params) throws ProtocolException {
 
+    }
+
+    private void writeToOutputSocket(String message) {
+        try {
+            output.write((message + "\n").getBytes());
+            socket.close();
+        }
+        catch (IOException ex) {
+            System.err.println("Failed to print error message: ");
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    /**
+     * If no login is done yet, user will be asked to login.
+     */
+    private boolean loginIsDone(TmcSettings settings)  {
+        if (!settings.userDataExists()) {
+            writeToOutputSocket("Please login first.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean credentialsAreMissing(HashMap<String, String> params) {
+        String username = params.get("username");
+        String password = params.get("password");
+        return username == null || username.isEmpty() || password == null || password.isEmpty();
     }
 }

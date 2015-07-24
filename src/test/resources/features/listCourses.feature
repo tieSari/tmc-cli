@@ -4,9 +4,9 @@ Feature: ListCourses command
     Scenario: List courses with credentials
         Given user has logged in with username "test" and password "1234".
         When user gives command listCourses.
-        Then output should contain more than one line
+        Then output should contain "id"
 
     Scenario: List courses without credentials
         Given user has not logged in
-        When user writes listCourses.
-        Then exception should be thrown
+        When user gives command listCourses.
+        Then output should contain "Please login first."

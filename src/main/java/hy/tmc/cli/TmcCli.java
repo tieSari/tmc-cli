@@ -13,6 +13,9 @@ public class TmcCli {
     private Session session;
     private final ConfigHandler config;
     private final String apiVersion = "7";
+    public final String apiParam = "api_version=" + apiVersion;
+    public final String coursesExtension = "/courses.json?" + apiParam;
+    public final String authExtension = "/user";
 
     public TmcCli(TmcCore core) throws IOException {
         this.core = core;
