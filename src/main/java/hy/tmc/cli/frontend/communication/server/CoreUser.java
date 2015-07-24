@@ -161,21 +161,27 @@ public class CoreUser {
 
     private void sendSubmission(CliSettings settings, HashMap<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
         ListenableFuture<Course> currentCourse;
-        String courseUrl = settings.getServerAddress() + "/courses/" + settings.getCourseID() + ".json?api_version=" + settings.apiVersion();
-        currentCourse = core.getCourse(settings, courseUrl);
-        Course course = currentCourse.get();
-        settings.setCurrentCourse(currentCourse.get());
+        fetchCourseToSettings(settings);
         settings.setCourseID(params.get("courseID"));
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
         result.addListener(new SubmissionListener(result, output, socket), threadPool);
     }
 
+    private void fetchCourseToSettings(CliSettings settings) throws TmcCoreException, InterruptedException, ExecutionException {
+        ListenableFuture<Course> currentCourse;
+        String courseUrl = settings.getServerAddress() + "/courses/" + settings.getCourseID() + ".json?api_version=" + settings.apiVersion();
+        currentCourse = core.getCourse(settings, courseUrl);
+        Course course = currentCourse.get();
+        settings.setCurrentCourse(currentCourse.get());
+    }
+
     public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         CliSettings settings = this.tmcCli.defaultSettings();
-        if(loginIsDone(settings)) {
+        if (loginIsDone(settings)) {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
             }
+            settings.setCourseID(params.get("courseID"));
             settings.setUserData(params.get("username"), params.get("password"));
             settings.setPath(params.get("path"));
             ListenableFuture<URI> result = core.paste(params.get("path"), settings);
