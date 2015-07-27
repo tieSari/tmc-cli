@@ -45,8 +45,13 @@ public class ConfigHandler {
 
     private Properties getProperties() {
         Properties prop = new Properties();
+        File propertyFile = new File(configFilePath);
         try {
-            InputStream inputStream = new FileInputStream(new File(configFilePath));
+            if (!propertyFile.exists()) {
+                propertyFile.createNewFile();
+                return prop;
+            }
+            InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -64,6 +69,7 @@ public class ConfigHandler {
 
     /**
      * Writes server address to config file, ex. "https://tmc.mooc.fi/hy".
+     *
      * @param address for tmc server
      * @throws IOException if unable to write address
      */
@@ -73,6 +79,7 @@ public class ConfigHandler {
 
     /**
      * Reads and returns the server address of the TMC-server.
+     *
      * @return address of tmc server
      */
     public String readServerAddress() {

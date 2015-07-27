@@ -132,7 +132,7 @@ function command_set () {
 
 # Backend login
 function login () {
-    # login username <kayttajatunnus> password <pw>
+    # login username <username> password <pw>
 
     loginstring="login username "
     loginstring+=$1
@@ -150,9 +150,20 @@ function send_command () {
     DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
     CONFIGPATH="$DIR/config.properties"
-    CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-    echo $@ - | nc localhost $CONFIGPORT
-
+    if [ -f "$CONFIGPATH" ];
+    then
+      CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
+      echo $@ - | nc localhost $CONFIGPORT
+    else
+      sleep 0.4
+      if [ -f "$CONFIGPATH" ];
+      then
+        CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
+        echo $@ - | nc localhost $CONFIGPORT
+      else
+          echo Could not find config.properties, aborting $1. Maybe tmc-client has not started succesfully?
+      fi
+    fi
     return 0;
 
 }
@@ -171,7 +182,7 @@ function send_command_wait_output () {
 control_c()
 # run if user hits control-c
 {
-  echo "Cancelling"
+  echo -e "\rCancelling"
   exit $?
 }
 
@@ -183,9 +194,14 @@ jarpath="$( dirname "${BASH_SOURCE[0]}" )/tmc-client.jar"
 
 if [ ! -f "$jarpath" ];
 then
-    echo 'FATAL: tmc client jarfile not found'
+    echo FATAL: tmc client jarfile not found
     exit
 fi
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+CONFIGPATH="$DIR/config.properties"
+
+
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR

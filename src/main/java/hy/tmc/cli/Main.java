@@ -14,7 +14,7 @@ public class Main {
      * Starts the main program.
      */
     public static void main(String[] args) throws IOException, InterruptedException, ProtocolException {
-        File cacheFile = Paths.get("bin", "cache").toFile();
+        File cacheFile = Paths.get("cache").toFile();
         if (!cacheFile.exists()) {
             cacheFile.createNewFile();
         }
