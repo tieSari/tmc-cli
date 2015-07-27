@@ -7,6 +7,8 @@ import hy.tmc.cli.TmcCli;
 
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.Help;
+import hy.tmc.cli.frontend.communication.commands.SetServer;
+import hy.tmc.cli.listeners.DefaultListener;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,14 +45,14 @@ public class CommandExecutor {
         String[] elements = parser.getElements(inputLine);
         String commandName = elements[0];
         HashMap<String, String> params = parser.giveData(elements, new HashMap<String, String>());
-        HashMap<String, Command> commandMap = createCommandMap();
+        HashMap<String, Command> commandMap = createCommandMap(params);
         executeCommand(commandMap, commandName, params);
     }
 
-    public HashMap<String, Command> createCommandMap(){
+    public HashMap<String, Command> createCommandMap(HashMap<String, String> params){
         HashMap<String, Command> map = new HashMap<String, Command>();
         map.put("help", new Help(this.cli));
-        //map.put("setServer", new ChooseServer());
+        map.put("setServer", new SetServer(this.cli, params.get("tmc-server")));
         return map;
     }
 
@@ -58,8 +60,9 @@ public class CommandExecutor {
         CoreUser coreUser = new CoreUser(cli, stream, socket, pool);
         if(commandMap.containsKey(commandName)){
             Command command = commandMap.get(commandName);
-            ListenableFuture<?> result = MoreExecutors.sameThreadExecutor().submit(command);
-
+            ListenableFuture<String> result = MoreExecutors.sameThreadExecutor().submit(command);
+            DefaultListener listener = new DefaultListener(result, stream, socket);
+            result.addListener(listener, pool);
         } else {
             coreUser.findAndExecute(commandName, params);
         }

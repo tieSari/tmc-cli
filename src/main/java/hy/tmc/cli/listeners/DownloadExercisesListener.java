@@ -8,9 +8,6 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-/**
- * Created by samutamm on 22/07/15.
- */
 public class DownloadExercisesListener extends ResultListener<List<Exercise>> {
     public DownloadExercisesListener(ListenableFuture<List<Exercise>> exercisesFuture, DataOutputStream output, Socket socket) {
         super(exercisesFuture, output, socket);
