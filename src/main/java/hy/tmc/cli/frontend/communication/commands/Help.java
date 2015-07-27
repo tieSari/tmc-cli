@@ -9,6 +9,13 @@ public class Help extends Command<String> {
     public Help(TmcCli cli) {
         super(cli);
     }
+    
+    public Help(TmcCli cli, String command) {
+        super(cli);
+        if (command != null) {
+            setParameter(dataKey, command);
+        }
+    }
 
     public String mainHelpMessage() {
         StringBuilder enterprise = new StringBuilder();
