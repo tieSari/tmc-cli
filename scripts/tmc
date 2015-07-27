@@ -111,6 +111,15 @@ function command_listCourses () {
     send_command "listCourses"
 }
 
+function command_help () {
+    if [ $# -eq 0 ];
+    then
+        send_command "help"
+    else
+        send_command "help command $@"
+    fi
+}
+
 function command_list () {
     case "$1" in
         "exercises") command_listExercises;;
@@ -153,13 +162,13 @@ function send_command () {
     if [ -f "$CONFIGPATH" ];
     then
       CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-      echo $@ - | nc localhost $CONFIGPORT
+      echo $@ | nc localhost $CONFIGPORT
     else
       sleep 0.4
       if [ -f "$CONFIGPATH" ];
       then
         CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-        echo $@ - | nc localhost $CONFIGPORT
+        echo $@ | nc localhost $CONFIGPORT
       else
           echo Could not find config.properties, aborting $1. Maybe tmc-client has not started succesfully?
       fi
@@ -215,6 +224,7 @@ then
 fi
 
 case "$1" in
+    "help") command_help $2;;
     "login") command_login;;
     "submit") command_submit $2;;
     "download") command_download $2;;

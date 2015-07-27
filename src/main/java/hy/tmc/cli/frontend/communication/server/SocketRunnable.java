@@ -1,11 +1,7 @@
 package hy.tmc.cli.frontend.communication.server;
 
-import hy.tmc.cli.frontend.communication.commands.Command;
-import hy.tmc.cli.listeners.ResultListener;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.BufferedReader;
@@ -14,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,15 +40,7 @@ public class SocketRunnable implements Runnable {
             }
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
-        } catch (ProtocolException ex) {
-            Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TmcCoreException ex) {
-            Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (InterruptedException ex) {
-            Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (ExecutionException ex) {
+        } catch (ProtocolException | TmcCoreException | InterruptedException | ExecutionException ex) {
             Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
