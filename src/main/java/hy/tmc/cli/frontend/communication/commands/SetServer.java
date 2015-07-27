@@ -4,9 +4,9 @@ import com.google.common.base.Strings;
 import hy.tmc.cli.TmcCli;
 import java.util.regex.Pattern;
 
-public class SetServer extends Command<Boolean> {
+public class SetServer extends Command<String> {
 
-    private final String dataKey = "tmc-server";
+    private String newAddress;
 
     public SetServer(TmcCli cli) {
         super(cli);
@@ -14,7 +14,7 @@ public class SetServer extends Command<Boolean> {
 
     public SetServer(TmcCli cli, String serverAddress) {
         this(cli);
-        this.setParameter(dataKey, serverAddress);
+        this.newAddress = serverAddress;
     }
 
     private boolean isValidTmcUrl(String url) {
@@ -27,8 +27,13 @@ public class SetServer extends Command<Boolean> {
     }
 
     @Override
-    public Boolean call() throws Exception {
-        String address = data.get(dataKey);
-        return tmcCli.setServer(address);
+    public String call() throws Exception {
+        if (!isValidTmcUrl(newAddress)) {
+            return "Address is not valid tmc-url.";
+        }
+        if (tmcCli.setServer(newAddress)) {
+            return "Server address changes to " + newAddress;
+        }
+        return "Could not change address. Is the file config.properties present?";
     }
 }
