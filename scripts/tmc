@@ -4,7 +4,7 @@
 function command_submit () {
   #submit [<exercise name>]
   echo "Submitting exercise..."
-  if [ $# -eq 0 ]
+  if [ $# = 0 ]
     then
     send_command_wait_output "submit path `pwd`"
   else
@@ -90,7 +90,7 @@ function command_paste () {
 }
 
 function command_test () {
-  if [ $# -eq 0 ]
+  if [ $# = 0 ]
     then
       send_command "runTests path `pwd`"
     else
@@ -112,11 +112,11 @@ function command_listCourses () {
 }
 
 function command_help () {
-    if [ $# -eq 0 ];
+    if [ $# = 0 ];
     then
         send_command "help"
     else
-        send_command "help command $@"
+        send_command "help command $1"
     fi
 }
 
@@ -221,6 +221,7 @@ if [ $# = 0 ];
 then
     echo -e "\n    This is tmc-cli, commandline client for Test My Code\n"
     send_command "help"
+    exit 0
 fi
 
 case "$1" in
