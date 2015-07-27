@@ -10,6 +10,8 @@ import hy.tmc.cli.testhelpers.TestClient;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import hy.tmc.cli.TmcCli;
+import hy.tmc.core.TmcCore;
 
 import java.io.IOException;
 
@@ -20,6 +22,12 @@ public class FrontendSteps {
     private Thread serverThread;
     private Server server;
     private TestClient testClient;
+    
+    private TmcCli tmcCli;
+
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 8080;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
 
     /**
      * Set up server and testclient.
@@ -28,10 +36,14 @@ public class FrontendSteps {
     @Before
     public void setUpServer() throws IOException {
        // server = new Server();
-        port = new ConfigHandler().readPort();
         serverThread = new Thread(server);
         serverThread.start();
-        testClient = new TestClient(port);
+        port = new ConfigHandler().readPort();
+        
+        tmcCli = new TmcCli(new TmcCore());
+        tmcCli.setServer(SERVER_ADDRESS);
+        tmcCli.startServer();
+        testClient = new TestClient(new ConfigHandler().readPort());
     }
 
     @Given("^help command\\.$")
@@ -51,7 +63,7 @@ public class FrontendSteps {
 
     @After
     public void closeServer() throws IOException {
-        server.close();
         serverThread.interrupt();
+        tmcCli.stopServer();
     }
 }
