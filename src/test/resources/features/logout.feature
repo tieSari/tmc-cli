@@ -3,9 +3,5 @@ Feature: Logout
 
     Scenario: Logout when logged in.
         Given logout command.
-        When user sees message.
+        When user sees message "cleared"
         Then user data should be cleared.
-    Scenario: Logout when no user data is present.
-        Given logout command without being logged in.
-        When nothing should happen.
-        Then user sees error message.

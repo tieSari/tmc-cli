@@ -28,7 +28,6 @@ public class LoginSteps {
 
     private int port;
 
-    private Thread serverThread;
     private TestClient testClient;
 
     private TmcCli tmcCli;

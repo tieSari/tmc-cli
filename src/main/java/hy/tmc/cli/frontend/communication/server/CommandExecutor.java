@@ -59,6 +59,7 @@ public class CommandExecutor {
         if(commandMap.containsKey(commandName)){
             Command command = commandMap.get(commandName);
             ListenableFuture<?> result = MoreExecutors.sameThreadExecutor().submit(command);
+
         } else {
             coreUser.findAndExecute(commandName, params);
         }
