@@ -5,12 +5,26 @@
 #Needs tmc-client.jar in classpath or same directory
 #SERVER NEEDS TO BE NOT RUNNING
 
+function start_server () {
+    CLIENTPATH=$DIR
+    cd $CLIENTPATH
+    nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null &
+    PID=$!
+    echo $PID > $CONFIGPATH
+}
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 CONFIGPATH=$DIR
 CONFIGPATH+="/config"
 LOGPATH=$DIR
 LOGPATH+="/log.txt"
+
+if [ ! -f "$CONFIGPATH" ];
+then
+  start_server
+  exit 0
+fi
 
 PID=`cat $CONFIGPATH`
 
@@ -21,12 +35,7 @@ then
     exit 0
   fi
 fi
-          
 
-CLIENTPATH=$DIR
 if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
-  cd $CLIENTPATH
-  nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null &
-  PID=$!
-  echo $PID > $CONFIGPATH
+  start_server
 fi
