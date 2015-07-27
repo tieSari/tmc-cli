@@ -2,10 +2,8 @@ package hy.tmc.cli;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
-import java.io.IOException;
 
 public class CliSettings implements TmcSettings {
 
