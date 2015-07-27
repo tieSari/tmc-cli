@@ -82,6 +82,8 @@ public class ExerciseBuilder {
     }
     
     public Exercise build() {
-        return exercise;
+        Exercise built = exercise;
+        exercise = new Exercise();
+        return built;
     }
 }
