@@ -1,4 +1,4 @@
-package hy.tmc.cli.testhelpers.testresults;
+package hy.tmc.cli.testhelpers.builders;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
