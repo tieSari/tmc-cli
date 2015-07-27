@@ -146,7 +146,7 @@ public class CoreUser {
             settings.setCourseID(params.get("courseID"));
             settings.setUserData(params.get("username"), params.get("password"));
             settings.setPath(params.get("path"));
-            settings.setServerAddress("https://tmc.mooc.fi/staging");
+            settings.setServerAddress(settings.getServerAddress());
             settings.setApiVersion("7");
 
             ListenableFuture<Course> currentCourse;
