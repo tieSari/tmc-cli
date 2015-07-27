@@ -64,6 +64,7 @@ public class CommandExecutor {
             DefaultListener listener = new DefaultListener(result, stream, socket);
             result.addListener(listener, pool);
         } else {
+            System.err.println("Kuuluu corelle");
             coreUser.findAndExecute(commandName, params);
         }
     }

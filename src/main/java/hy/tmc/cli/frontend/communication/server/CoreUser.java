@@ -63,14 +63,15 @@ public class CoreUser {
         }
     }
 
-    public ListenableFuture<RunResult> runTests(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void runTests(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
         CliSettings settings = this.tmcCli.defaultSettings();
         settings.setMainDirectory(params.get("path"));
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
-        return result;
+        TestsListener listener = new TestsListener(result, output, socket);
+        result.addListener(listener, threadPool);
     }
 
     public void login(HashMap<String, String> params) throws ProtocolException, TmcCoreException {

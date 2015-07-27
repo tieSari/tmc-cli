@@ -65,7 +65,7 @@ public class SocketRunnable implements Runnable {
         String input = inputReader.readLine();
         System.err.println("Input: " + input);
         if(input == null){
-            throw new ProtocolException("Input was invalid: empty");
+            throw new ProtocolException("Input was invalid: null");
         }
         executor.parseAndExecute(input);
     }
