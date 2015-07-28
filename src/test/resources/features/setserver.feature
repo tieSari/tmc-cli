@@ -9,4 +9,4 @@ Feature: ChooseServer command
     Scenario: the command does not accept every string
         Given the server is "http://tmc.mooc.fi/staging"
         When the user changes the server to "asdfasfasdf"
-        Then the server is unchanged
+        Then the server is "http://tmc.mooc.fi/staging"

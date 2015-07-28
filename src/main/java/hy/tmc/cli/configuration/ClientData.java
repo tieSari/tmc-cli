@@ -1,27 +1,19 @@
 package hy.tmc.cli.configuration;
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
-
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.core.TmcCore;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.zipping.ProjectRootFinder;
 import hy.tmc.core.zipping.RootFinder;
-
 import java.io.IOException;
 
-/**
- * This class will be initialized when Auth is successful. Use this to get data of user.
- */
+@Deprecated
 public final class ClientData {
 
     private static int PID;
     private static String USERNAME = "";
     private static String PASSWORD = "";
     private static RootFinder rootFinder;
-    private static Course currentCourse;
-    
+
     private ClientData() {
     }
 
@@ -42,12 +34,7 @@ public final class ClientData {
         PASSWORD = password;
     }
 
-    private synchronized static RootFinder getProjectRootFinder() {
-        if (rootFinder == null) {
-            rootFinder = new ProjectRootFinder(null);
-        }
-        return rootFinder;
-    }
+
 
     /**
      * Overrides the rootfinder which is used by getCurrentCourse-method.
@@ -64,7 +51,10 @@ public final class ClientData {
      * @return optional which includes the course if found.
      */
     public synchronized static Optional<Course> getCurrentCourse(String currentPath) throws ProtocolException, IOException {
-        return Optional.of(currentCourse);
+        if (!userDataExists()) {
+            throw new ProtocolException("Not logged in.");
+        }
+        return null;
     }
 
     public synchronized static boolean userDataExists() {
