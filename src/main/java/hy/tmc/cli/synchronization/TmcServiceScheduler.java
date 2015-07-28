@@ -2,7 +2,8 @@ package hy.tmc.cli.synchronization;
 
 import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
-import hy.tmc.cli.backend.communication.StatusPoller;
+import hy.tmc.cli.TmcCli;
+import hy.tmc.cli.backend.communication.ReviewAndUpdatePoller;
 import hy.tmc.core.domain.Course;
 
 
@@ -32,8 +33,8 @@ public class TmcServiceScheduler {
         return instance;
     }
 
-    public static synchronized void startIfNotRunning(Course course) {
-        startIfNotRunning(course, 5, TimeUnit.SECONDS);
+    public static synchronized void startIfNotRunning(TmcCli cli, Course course) {
+        startIfNotRunning(cli, course, 5, TimeUnit.SECONDS);
     }
 
     /**
@@ -42,10 +43,10 @@ public class TmcServiceScheduler {
      * @param interval when tasks are executed
      * @param timeunit in milliseconds, seconds, minutes, hours etc.
      */
-    public static synchronized void startIfNotRunning(Course course, long interval, TimeUnit timeunit) {
+    public static synchronized void startIfNotRunning(TmcCli cli, Course course, long interval, TimeUnit timeunit) {
         if (!isRunning()) {
             getScheduler().addService(
-                    new StatusPoller(course, new PollScheduler(interval, timeunit))
+                    new ReviewAndUpdatePoller(cli, course, new PollScheduler(interval, timeunit))
             ).start();
             isRunningTasks = true;
         }

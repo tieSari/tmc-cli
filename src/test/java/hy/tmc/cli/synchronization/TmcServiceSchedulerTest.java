@@ -1,5 +1,7 @@
 package hy.tmc.cli.synchronization;
 
+import hy.tmc.cli.TmcCli;
+import hy.tmc.core.TmcCore;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -32,7 +34,7 @@ public class TmcServiceSchedulerTest {
     @Test
     public void whenDisabledNoNewTasksAreAddedWhenStarting() throws Exception {
         TmcServiceScheduler.disablePolling();
-        TmcServiceScheduler.startIfNotRunning(new Course());
+        TmcServiceScheduler.startIfNotRunning(new TmcCli(new TmcCore()), new Course());
         assertTrue(TmcServiceScheduler.getInitialisedTasks().isEmpty());
     }
 

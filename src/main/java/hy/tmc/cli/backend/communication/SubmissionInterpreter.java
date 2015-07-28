@@ -24,6 +24,7 @@ public class SubmissionInterpreter {
     /**
      * Organizes SubmissionResult into human-readable form.
      *
+     * @param result the SubmissionResult object given by tmc-core
      * @param detailed true for stack trace, always show successful.
      * @return a String containing human-readable information about tests. TimeOutMessage
     if result is null.
@@ -59,10 +60,6 @@ public class SubmissionInterpreter {
     private void parseValidationErrors(StringBuilder builder,
                                        Entry<String, List<ValidationError>> entry) {
         builder.append(formatter.parseValidationErrors(entry));
-    }
-
-    private Optional<String> valgridErrors(SubmissionResult result) {
-        return Optional.of(result.getValgrind());
     }
 
     private String buildSuccessMessage(SubmissionResult result, boolean detailed) {
