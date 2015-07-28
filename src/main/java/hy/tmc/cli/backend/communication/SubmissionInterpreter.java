@@ -2,12 +2,10 @@ package hy.tmc.cli.backend.communication;
 
 import com.google.common.base.Optional;
 
-
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.domain.submission.TestCase;
 import hy.tmc.core.domain.submission.ValidationError;
-
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,7 @@ import java.util.Map.Entry;
 public class SubmissionInterpreter {
 
     private final SubmissionResultFormatter formatter;
-    
+
     public SubmissionInterpreter(SubmissionResultFormatter formatter) {
         this.formatter = formatter;
     }
@@ -24,9 +22,10 @@ public class SubmissionInterpreter {
     /**
      * Organizes SubmissionResult into human-readable form.
      *
+     * @param result the SubmissionResult object given by tmc-core
      * @param detailed true for stack trace, always show successful.
-     * @return a String containing human-readable information about tests. TimeOutMessage
-    if result is null.
+     * @return a String containing human-readable information about tests. TimeOutMessage if result
+     * is null.
      */
     public String summary(SubmissionResult result, boolean detailed) {
         if (result.isAllTestsPassed()) {
@@ -34,9 +33,12 @@ public class SubmissionInterpreter {
         } else {
             return formatter.someTestsFailed()
                     + testCaseResults(result.getTestCases(), detailed)
-                    + valgridErrors(result).or("")
                     + checkStyleErrors(result);
         }
+    }
+
+    public String summary(SubmissionResult result) {
+        return this.summary(result, false);
     }
 
     private String checkStyleErrors(SubmissionResult result) {
@@ -51,18 +53,9 @@ public class SubmissionInterpreter {
         }
 
         for (Entry<String, List<ValidationError>> entry : errors.entrySet()) {
-            parseValidationErrors(builder, entry);
+            builder.append(formatter.parseValidationErrors(entry));
         }
         return builder.toString();
-    }
-
-    private void parseValidationErrors(StringBuilder builder,
-                                       Entry<String, List<ValidationError>> entry) {
-        builder.append(formatter.parseValidationErrors(entry));
-    }
-
-    private Optional<String> valgridErrors(SubmissionResult result) {
-        return Optional.of(result.getValgrind());
     }
 
     private String buildSuccessMessage(SubmissionResult result, boolean detailed) {

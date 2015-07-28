@@ -1,14 +1,11 @@
 package hy.tmc.cli.backend.communication;
 
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.builders.ExerciseBuilder;
-import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;

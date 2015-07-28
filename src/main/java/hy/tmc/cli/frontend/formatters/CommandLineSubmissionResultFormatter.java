@@ -10,8 +10,6 @@ import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.domain.submission.TestCase;
 import hy.tmc.core.domain.submission.ValidationError;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
