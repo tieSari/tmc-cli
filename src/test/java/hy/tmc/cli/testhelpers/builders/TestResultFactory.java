@@ -1,4 +1,4 @@
-package hy.tmc.cli.testhelpers.testresults;
+package hy.tmc.cli.testhelpers.builders;
 
 import static org.junit.Assert.fail;
 

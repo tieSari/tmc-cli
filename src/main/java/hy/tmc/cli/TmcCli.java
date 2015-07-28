@@ -11,11 +11,8 @@ public class TmcCli {
     private final Server server;
     private final Thread serverThread;
     private Session session;
-    private final ConfigHandler config;
+    private ConfigHandler config;
     private final String apiVersion = "7";
-    public final String apiParam = "api_version=" + apiVersion;
-    public final String coursesExtension = "/courses.json?" + apiParam;
-    public final String authExtension = "/user";
 
     public TmcCli(TmcCore core) throws IOException {
         this.core = core;
@@ -23,6 +20,11 @@ public class TmcCli {
         this.session = new Session();
         server = new Server(this);
         serverThread = new Thread(server);
+    }
+
+    public TmcCli(TmcCore core, ConfigHandler config) throws IOException {
+        this(core);
+        this.config = config;
     }
 
     public void startServer() {

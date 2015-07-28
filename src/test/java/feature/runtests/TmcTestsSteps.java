@@ -5,52 +5,66 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.mail.Mailbox;
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.listeners.TestsListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import org.junit.After;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import cucumber.api.java.After;
 
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
-import java.io.UnsupportedEncodingException;
+import hy.tmc.cli.CliSettings;
+import hy.tmc.cli.TmcCli;
+import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.testhelpers.TestClient;
+import hy.tmc.core.TmcCore;
+import java.io.IOException;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TmcTestsSteps {
 
     private TestsListener testRunner;
     private String output;
+    
+    private TmcCli tmcCli;
+    private TestClient client;
+
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 8080;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    
+    private CliSettings settings;
 
     @Before
-    public void setUp() {
-        ClientData.clearUserData();
+    public void setUp() throws IOException {
+        
+        tmcCli = new TmcCli(new TmcCore());
+        tmcCli.setServer(SERVER_ADDRESS);
+        tmcCli.startServer();
+        client  = new TestClient(new ConfigHandler().readPort());
+        
+        settings = new CliSettings();
         Mailbox.create();
-        ClientData.setUserData("test", "1234");
+        settings.setUserData("test", "1234");
         TmcServiceScheduler.disablePolling();
     }
 
     @Given("^the user is in the exercise directory \"(.*?)\"$")
-    public void theUserIsInTheExerciseDirectory(String exerciseDirectory) {
-       // testRunner = new TestsListener();
-       // testRunner.setParameter("path", exerciseDirectory);
+    public void theUserIsInTheExerciseDirectory(String exerciseDirectory) throws IOException {
+        client.sendMessage("runTests path " + exerciseDirectory + " username jani password banaani");
     }
 
     @When("^the user runs the tests$")
-    public void theUserRunsTheTests() throws ProtocolException, NoLanguagePluginFoundException, fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException {
-//        output = testRunner.parseData(testRunner.call()).get();
+    public void theUserRunsTheTests() throws ProtocolException, NoLanguagePluginFoundException, fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException, IOException {
+        output = client.reply();
     }
 
-    /**
-     * Test case that all tmc tests pass.
-     */
+ 
     @Then("^the user sees that all tests have passed\\.$")
     public void theUserSeesAllTestsPassing() {
         assertTrue(output.contains("\u001B[32mAll tests passed.\u001B[0m You can now submit"));
     }
 
-    /**
-     * Test case when some tests fail and user gets information.
-     */
+  
     @Then("^the user sees which tests have failed$")
     public void theUserSeesWhichTestsHaveFailed() {
         assertTrue(output.contains("Some tests failed:"));
@@ -58,9 +72,7 @@ public class TmcTestsSteps {
         assertTrue(output.contains("FAILED \u001B[0mNimiTest test: Et tulostanut mitään!"));
     }
 
-    /**
-     * User should get both information about passed tests and failed tests.
-     */
+
     @Then("^the user sees both passed and failed tests$")
     public void theUserSeesBothPassedAndFailedTests() {
         assertTrue(output.contains("1 tests passed"));
@@ -87,9 +99,11 @@ public class TmcTestsSteps {
     }
 
     @After
-    public void clean() throws InterruptedException {
+    public void clean() throws InterruptedException, IOException {
         Mailbox.destroy();
         TmcServiceScheduler.getScheduler().stop();
-        ClientData.clearUserData();
+        settings = new CliSettings();
+        tmcCli.stopServer();
+        tmcCli.setServer("https://tmc.mooc.fi/staging");
     }
 }

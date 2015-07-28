@@ -1,80 +1,47 @@
 package hy.tmc.cli.backend.communication;
 
-import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.cli.testhelpers.builders.ExerciseBuilder;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
 public class ExerciseListerTest {
 
-    String fakeName = "2014-mooc-no-deadline";
-    String otherFakeName = "2013-tira";
-    Course fakeCourse;
     ExerciseLister lister;
-    Exercise fakeExercise;
-    Exercise fakeExercise2;
+    ExerciseBuilder builder;
+    
+    public ExerciseListerTest() {
+        builder = new ExerciseBuilder();
+    }
 
     @Before
     public void setUp() throws IOException, ProtocolException {
-        ClientData.setUserData("chang", "paras");
-        setupFakeCourses();
-
         lister = new ExerciseLister();
-
-        PowerMockito.mockStatic(TmcJsonParser.class);
-
-        mockExercisesWith(setupFakeExercises());
-
-    }
-
-    private List<Exercise> setupFakeExercises() {
-        List<Exercise> exercises = new ArrayList<>();
-
-        fakeExercise = new Exercise();
-        fakeExercise.setName("Nimi");
-
-        fakeExercise2 = new Exercise();
-        fakeExercise2.setName("Kuusi");
-        fakeExercise2.setCompleted(true);
-
-        exercises.add(fakeExercise);
-        exercises.add(fakeExercise2);
-        return exercises;
-    }
-
-    private void setupFakeCourses() {
-        fakeCourse = new Course();
-        fakeCourse.setName(fakeName);
-        fakeCourse.setId(99);
-    }
-
-    @After
-    public void tearDown() {
-        ClientData.clearUserData();
     }
 
     @Test
-    public void withCorrectCourseAndExercisesOutputContainsNames() throws ProtocolException, IOException {
-        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Nimi"));
-        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Kuusi"));
+    public void exercisesOutputContainsNames() throws ProtocolException, IOException {
+        String output = lister.buildExercisesInfo(exampleExercises());
+        assertTrue(output.contains("Nimi"));
+        assertTrue(output.contains("Kuusi"));
+        assertTrue(output.contains("Hiekkalaatikko"));
+        assertTrue(output.contains("Ankka"));
     }
 
     @Test
     public void withOneDoneExerciseOutputContainsX() throws ProtocolException, IOException {
-        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("x"));
+        ArrayList<Exercise> ex = new ArrayList<>();
+        ex.add(builder.asCompleted().build());
+        assertTrue(lister.buildExercisesInfo(ex).contains("x"));
     }
 
     @Test
@@ -83,9 +50,9 @@ public class ExerciseListerTest {
 
         exercises.add(new Exercise());
         exercises.add(new Exercise());
-        mockExercisesWith(exercises);
 
-        assertFalse(lister.buildExercisesInfo(exampleExercises()).contains("x"));
+        String output = lister.buildExercisesInfo(exercises);
+        assertFalse(output.contains("x"));
     }
 
     @Test
@@ -97,13 +64,12 @@ public class ExerciseListerTest {
         ex.setAttempted(true);
         exercises.add(ex);
 
-        mockExercisesWith(exercises);
-        assertFalse(lister.buildExercisesInfo(exampleExercises()).contains("x"));
+        assertFalse(lister.buildExercisesInfo(exercises).contains("x"));
 
     }
     
     @Test
-    public void outputContainsPercentage() throws ProtocolException, IOException {
+    public void outputSummaryIsCorrect() throws ProtocolException, IOException {
         List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
@@ -111,17 +77,18 @@ public class ExerciseListerTest {
         ex.setAttempted(true);
         exercises.add(ex);
 
-        mockExercisesWith(exercises);
-        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("%"));
-        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Attempted"));
-        assertTrue(lister.buildExercisesInfo(exampleExercises()).contains("Total"));
-    }
-
-    private void mockExercisesWith(List<Exercise> setupFakeExercises) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String info = lister.buildExercisesInfo(exampleExercises());
+        assertTrue(info.contains("25.0%"));
+        assertTrue(info.contains("Attempted: 2 (50.0%)"));
+        assertTrue(info.contains("Total: 4"));
     }
 
     private List<Exercise> exampleExercises() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Exercise> ex = new ArrayList<>();
+        ex.add(builder.withName("Kuusi").asAttempted().build());
+        ex.add(builder.withName("Hiekkalaatikko").asCompleted().build());
+        ex.add(builder.withName("Ankka").asAttempted().build());
+        ex.add(builder.withName("Nimi").build());
+        return ex;
     }
 }

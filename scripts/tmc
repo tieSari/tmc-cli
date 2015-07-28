@@ -4,7 +4,7 @@
 function command_submit () {
   #submit [<exercise name>]
   echo "Submitting exercise..."
-  if [ $# -eq 0 ]
+  if [ $# = 0 ]
     then
     send_command_wait_output "submit path `pwd`"
   else
@@ -90,7 +90,7 @@ function command_paste () {
 }
 
 function command_test () {
-  if [ $# -eq 0 ]
+  if [ $# = 0 ]
     then
       send_command "runTests path `pwd`"
     else
@@ -109,6 +109,15 @@ function command_listExercises () {
 
 function command_listCourses () {
     send_command "listCourses"
+}
+
+function command_help () {
+    if [ $# = 0 ];
+    then
+        send_command "help"
+    else
+        send_command "help command $1"
+    fi
 }
 
 function command_list () {
@@ -153,13 +162,13 @@ function send_command () {
     if [ -f "$CONFIGPATH" ];
     then
       CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-      echo $@ - | nc localhost $CONFIGPORT
+      echo $@ | nc localhost $CONFIGPORT
     else
       sleep 0.4
       if [ -f "$CONFIGPATH" ];
       then
         CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-        echo $@ - | nc localhost $CONFIGPORT
+        echo $@ | nc localhost $CONFIGPORT
       else
           echo Could not find config.properties, aborting $1. Maybe tmc-client has not started succesfully?
       fi
@@ -212,9 +221,11 @@ if [ $# = 0 ];
 then
     echo -e "\n    This is tmc-cli, commandline client for Test My Code\n"
     send_command "help"
+    exit 0
 fi
 
 case "$1" in
+    "help") command_help $2;;
     "login") command_login;;
     "submit") command_submit $2;;
     "download") command_download $2;;

@@ -12,9 +12,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.mail.Mailbox;
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
@@ -40,6 +38,7 @@ public class ListExercisesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    private final String coursesExtension = "/courses.json?api_version=7";
 
     /**
      * Setups client's config and starts WireMock.
@@ -72,7 +71,7 @@ public class ListExercisesSteps {
                         .withStatus(200)
                 )
         );
-        wireMockServer.stubFor(get(urlEqualTo(tmcCli.coursesExtension))
+        wireMockServer.stubFor(get(urlEqualTo(coursesExtension))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)

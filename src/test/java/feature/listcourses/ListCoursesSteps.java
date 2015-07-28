@@ -5,18 +5,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 
@@ -25,7 +19,6 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
 
@@ -41,6 +34,7 @@ public class ListCoursesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    private final String coursesExtension = "/courses.json?api_version=7";
 
     /**
      * Setups client's config and starts WireMock.
@@ -51,10 +45,10 @@ public class ListCoursesSteps {
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
-        
+
         startWireMock();
     }
-    
+
     private void startWireMock() {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
@@ -65,7 +59,7 @@ public class ListCoursesSteps {
                         .withStatus(200)
                 )
         );
-        wireMockServer.stubFor(get(urlEqualTo(tmcCli.coursesExtension))
+        wireMockServer.stubFor(get(urlEqualTo(coursesExtension))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
                         aResponse()
@@ -75,15 +69,15 @@ public class ListCoursesSteps {
                 )
         );
     }
-    
+
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
     public void user_has_logged_in_with_username_and_password(String username,
-                                                              String password) throws Throwable {
+            String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
         testClient.getAllFromSocket();
         testClient.init();
     }
-    
+
     @When("^user gives command listCourses\\.$")
     public void user_gives_command_listCourses() throws Throwable {
         testClient.sendMessage("listCourses");
@@ -94,7 +88,7 @@ public class ListCoursesSteps {
         String content = testClient.reply();
         assertThat(content, CoreMatchers.containsString(expectedOutput));
     }
-    
+
     @Given("^user has not logged in$")
     public void user_has_not_logged_in() throws Throwable {
         testClient.init();
