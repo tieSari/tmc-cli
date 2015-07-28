@@ -34,7 +34,6 @@ import java.io.IOException;
 public class ListCoursesSteps {
 
     private TestClient testClient;
-    private boolean testThrown;
 
     private WireMockServer wireMockServer;
     private TmcCli tmcCli;

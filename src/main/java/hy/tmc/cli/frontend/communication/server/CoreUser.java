@@ -9,11 +9,13 @@ import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.CourseFinder;
 import hy.tmc.cli.listeners.*;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -121,13 +123,18 @@ public class CoreUser {
     public void downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
         CliSettings settings = this.tmcCli.defaultSettings();
         if(loginIsDone(settings)) {
-            if (params.get("path") == null || params.get("path").isEmpty() || params.get("courseID") == null || params.get("courseID").isEmpty()) {
+            if (params.get("path") == null || params.get("path").isEmpty() ||
+                params.get("courseID") == null || params.get("courseID").isEmpty()) {
                 throw new ProtocolException("Path and courseID required");
             }
-            settings.setPath(params.get("path"));
-            settings.setCourseID(params.get("courseID"));
+            String coursePath = new UrlHelper(settings).getCourseUrl(
+                    Integer.parseInt(params.get("courseID"))
+            );
+            ListenableFuture<Course> courseFuture = core.getCourse(settings, coursePath);
+
             ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(params.get("path"), params.get("courseID"), settings);
             ResultListener resultListener = new DownloadExercisesListener(exercisesFuture, output, socket);
+            exercisesFuture.addListener(resultListener, threadPool);
         }
     }
 
