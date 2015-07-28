@@ -25,6 +25,20 @@ public class Wiremocker {
         wiremockGET(wireMockServer, "/courses.json?api_version=7", ExampleJson.allCoursesExample);
         return wireMockServer;
     }
+    
+    public WireMockServer mockAnyUserAndSubmitPaths(){
+        WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.start();
+
+        wireMockServer.stubFor(get(urlEqualTo("/user"))
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                )
+        );
+        wiremockGET(wireMockServer, "/courses.json?api_version=7", ExampleJson.allCoursesExample);
+        return wireMockServer;
+    }
 
     public void wiremockFailingSubmit(WireMockServer server) {
         wiremockGET(server, "/courses/313.json?api_version=7", ExampleJson.failingCourse);
@@ -40,6 +54,8 @@ public class Wiremocker {
 
     public void wireMockExpiredSubmit(WireMockServer server) {
         wiremockGET(server, "/courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
+        wiremockPOST(server, "/exercises/1393/submissions.json?api_version=7", ExampleJson.pasteResponse);
+        wiremockGET(server, "/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
     }
 
     /*

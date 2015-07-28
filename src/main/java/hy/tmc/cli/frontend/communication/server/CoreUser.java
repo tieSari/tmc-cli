@@ -145,10 +145,7 @@ public class CoreUser {
             }
             //CLEAR THIS MESS!!
             settings.setCourseID(params.get("courseID"));
-            settings.setUserData(params.get("username"), params.get("password"));
             settings.setPath(params.get("path"));
-            settings.setServerAddress(settings.getServerAddress());
-            settings.setApiVersion("7");
 
             ListenableFuture<Course> currentCourse;
             try {
@@ -161,7 +158,6 @@ public class CoreUser {
     }
 
     private void sendSubmission(CliSettings settings, HashMap<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
-        ListenableFuture<Course> currentCourse;
         fetchCourseToSettings(settings);
         settings.setCourseID(params.get("courseID"));
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
