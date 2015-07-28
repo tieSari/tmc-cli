@@ -6,6 +6,7 @@ import hy.tmc.cli.testhelpers.builders.SubmissionResultBuilder;
 import hy.tmc.cli.testhelpers.builders.TestCaseBuilder;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.domain.submission.TestCase;
+import hy.tmc.core.domain.submission.ValidationError;
 import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,7 +18,7 @@ public class SubmissionInterpreterTest {
     SubmissionInterpreter submissionInterpreter;
     SubmissionResultBuilder builder = new SubmissionResultBuilder();
     TestCaseBuilder testBuilder = new TestCaseBuilder();
-    String successfull = "week1-010.CircleCircumference";
+    String successful = "week1-010.CircleCircumference";
     String failed = "week1-018.GradesAndPoints";
     String checkstyleFail = "week1-013.NhlStatisticsPart1";
     String checkstyleSuccess = "week1-014.PositiveValue";
@@ -28,6 +29,15 @@ public class SubmissionInterpreterTest {
     @Before
     public void setup() {
         submissionInterpreter = new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
+    }
+
+    private ValidationError validationError(int line, int column, String message, String sourceName) {
+        ValidationError error = new ValidationError();
+        error.setLine(line);
+        error.setColumn(column);
+        error.setMessage(message);
+        error.setSourceName(sourceName);
+        return error;
     }
 
     private SubmissionResult createFailedSubmission() {
@@ -48,7 +58,7 @@ public class SubmissionInterpreterTest {
 
     private SubmissionResult createSuccessfullSubmission() {
         SubmissionResult result = builder
-                .withExerciseName(this.successfull)
+                .withExerciseName(this.successful)
                 .withPoints("1.1", "1.2", "2.0")
                 .withAllTestsPassed()
                 .withTestCase(testBuilder.asSuccessfull().withName("e-z-test").build())
@@ -62,16 +72,7 @@ public class SubmissionInterpreterTest {
         SubmissionResult result = builder
                 .withExerciseName(this.checkstyleSuccess)
                 .withAllTestsPassed()
-                .withValidationResult(null)
                 .withValidations(null)
-                .build();
-        return result;
-    }
-
-    private SubmissionResult createSuccesfulSubmissionWithValgrind() {
-        SubmissionResult result = builder
-                .withExerciseName(this.valgrindSuccess)
-                .withAllTestsPassed()
                 .build();
         return result;
     }
@@ -79,17 +80,10 @@ public class SubmissionInterpreterTest {
     private SubmissionResult createCheckstyleFailingSubmission() {
         SubmissionResult result = builder
                 .withExerciseName(this.checkstyleFail)
-                .withAllTestsPassed()
-                .withValidationResult(null)
-                .withValidations(null)
-                .build();
-        return result;
-    }
-
-    private SubmissionResult createValgrindFailingSubmission() {
-        SubmissionResult result = builder
-                .withExerciseName(this.valgrindFail)
-                .withAllTestsPassed()
+                .withValidationError("A.java",
+                        validationError(202, 18, "Class length is 478 lines (max allowed is 300)", ""))
+                .withValidationError("B.java",
+                        validationError(421, 24, "',' is not followed by whitespace.", ""))
                 .build();
         return result;
     }
@@ -141,7 +135,6 @@ public class SubmissionInterpreterTest {
         SubmissionResult result = createSuccessfullSubmission();
 
         String output = submissionInterpreter.summary(result, true);
-        System.out.println(output);
         assertTrue(output.contains("PASSED"));
         assertTrue(output.contains("e-z-test"));
         assertTrue(output.contains("asdfTest"));
@@ -154,26 +147,35 @@ public class SubmissionInterpreterTest {
         assertFalse(output.contains("PASSED"));
         assertFalse(output.contains("e-z-test"));
         assertFalse(output.contains("asdfTest"));
-
     }
 
     @Test
     public void resultWithCheckstyleContainsCheckstyleErrors() {
         SubmissionResult result = createCheckstyleFailingSubmission();
-
         String output = submissionInterpreter.summary(result, true);
+
         assertTrue(output.contains("checkstyle"));
         assertTrue(output.contains("Class length is 478 lines (max allowed is 300)"));
         assertTrue(output.contains("',' is not followed by whitespace."));
     }
 
     @Test
-    public void resultWithCheckstyleContainsLineNumberMarkings() throws InterruptedException, IOException, ProtocolException {
+    public void resultWithCheckstyleContainsLineNumberMarkings() {
+        SubmissionResult result = createCheckstyleFailingSubmission();
+        String output = submissionInterpreter.summary(result, true);
+
+        assertTrue(output.contains("On line: 421 Column: 24"));
+        assertTrue(output.contains("On line: 202 Column: 18"));
+    }
+
+    @Test
+    public void resultWithCheckstyleContainsFileNames() {
         SubmissionResult result = createCheckstyleFailingSubmission();
 
         String output = submissionInterpreter.summary(result, true);
-        assertTrue(output.contains("On line: 421 Column: 24"));
-        assertTrue(output.contains("On line: 202 Column: 18"));
+
+        assertTrue(output.contains("File: A.java"));
+        assertTrue(output.contains("File: B.java"));
     }
 
     @Test

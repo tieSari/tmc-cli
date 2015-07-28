@@ -1,14 +1,16 @@
 package hy.tmc.cli.testhelpers.builders;
 
-import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 import hy.tmc.core.domain.submission.FeedbackQuestion;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.domain.submission.SubmissionResult.Status;
 import hy.tmc.core.domain.submission.TestCase;
+import hy.tmc.core.domain.submission.ValidationError;
 import hy.tmc.core.domain.submission.Validations;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SubmissionResultBuilder {
 
@@ -16,6 +18,13 @@ public class SubmissionResultBuilder {
 
     public SubmissionResultBuilder() {
         result = new SubmissionResult();
+        setValidations();
+    }
+
+    private void setValidations() {
+        Validations v = new Validations();
+        v.setValidationErrors(new HashMap<String, List<ValidationError>>());
+        result.setValidations(v);
     }
 
     public SubmissionResultBuilder withAllTestsPassed() {
@@ -85,19 +94,29 @@ public class SubmissionResultBuilder {
         return this;
     }
 
-    public SubmissionResultBuilder withValidationResult(ValidationResult vr) {
-        result.setValidationResult(vr);
+    public SubmissionResultBuilder withValidations(Validations v) {
+        result.setValidations(v);
         return this;
     }
 
-    public SubmissionResultBuilder withValidations(Validations v) {
-        result.setValidations(v);
+    public SubmissionResultBuilder withValidationError(String filename, ValidationError error) {
+        Validations v = result.getValidations();
+        Map<String, List<ValidationError>> map = v.getValidationErrors();
+        List<ValidationError> errors;
+        if (map.containsKey(filename)) {
+            errors = map.get(filename);
+        } else {
+            errors = new ArrayList<>();
+        }
+        errors.add(error);
+        map.put(filename, errors);
         return this;
     }
 
     public SubmissionResult build() {
         SubmissionResult built = result;
         result = new SubmissionResult();
+        setValidations();
         return built;
     }
 
