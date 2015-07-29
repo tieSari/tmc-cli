@@ -14,6 +14,9 @@ public class DefaultListener extends ResultListener<String> {
 
     @Override
     protected Optional<String> parseData(String result) {
+        if (result == null || result.isEmpty()) {
+            return Optional.absent();
+        }
         return Optional.of(result);
     }
 
