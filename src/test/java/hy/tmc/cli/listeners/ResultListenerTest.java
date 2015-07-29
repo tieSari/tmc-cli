@@ -26,7 +26,7 @@ public class ResultListenerTest {
     }
 
     @Test
-    public void exceptionInThreadWritesCauseToOutput() throws Exception{
+    public void exceptionInThreadWritesCauseToOutput() throws Exception {
         String cause = "Kesken meni!";
         InterruptedException fakeException = new InterruptedException();
         fakeException.initCause(new TmcCoreException(cause));
@@ -62,8 +62,8 @@ class ResultListenerImpl extends ResultListener {
     private String data;
 
     public ResultListenerImpl(ListenableFuture commandResult,
-                               DataOutputStream output, Socket socket,
-                               String data) {
+            DataOutputStream output, Socket socket,
+            String data) {
         super(commandResult, output, socket);
         this.data = data;
     }
