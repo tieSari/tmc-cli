@@ -11,6 +11,7 @@ function start_server () {
     nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null &
     PID=$!
     echo $PID > $CONFIGPATH
+    sleep 0.5
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

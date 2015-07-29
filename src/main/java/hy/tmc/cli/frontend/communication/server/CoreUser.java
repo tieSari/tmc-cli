@@ -6,6 +6,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
+import hy.tmc.cli.frontend.ColorFormatter;
+import hy.tmc.cli.frontend.CommandLineColor;
+import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.cli.frontend.CourseFinder;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.DefaultTestResultFormatter;
@@ -37,6 +40,7 @@ public class CoreUser {
     private Socket socket;
     private ListeningExecutorService threadPool;
     private TmcCli tmcCli;
+    private CommandLineProgressObserver observer;
 
     public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) {
         this.core = tmcCli.getCore();
@@ -44,10 +48,12 @@ public class CoreUser {
         this.tmcCli = tmcCli;
         this.socket = socket;
         this.output = output;
+        this.observer = new CommandLineProgressObserver(output);
     }
 
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
-        System.out.println(commandName);
+        String startMessage = ColorFormatter.coloredString("Starting command " + commandName + "\n", CommandLineColor.LIGHT_BLUE);
+        this.observer.progress(startMessage);
         if (commandName.equals("login")) {
             login(params);
         } else if (commandName.equals("listCourses")) {
@@ -149,9 +155,10 @@ public class CoreUser {
             String coursePath = new UrlHelper(settings).getCourseUrl(
                     Integer.parseInt(params.get("courseID"))
             );
-            ListenableFuture<Course> courseFuture = core.getCourse(settings, coursePath);
 
-            ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(params.get("path"), params.get("courseID"), settings);
+            ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(
+                    params.get("path"), params.get("courseID"), settings, observer
+            );
             ResultListener resultListener = new DownloadExercisesListener(exercisesFuture, output, socket);
             exercisesFuture.addListener(resultListener, threadPool);
         }
