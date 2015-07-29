@@ -14,23 +14,23 @@ public class TestsListener extends ResultListener<RunResult> {
     private TestResultFormatter formatter;
     private boolean showStackStrace;
 
-    public TestsListener(ListenableFuture<RunResult> commandResult, 
+    public TestsListener(ListenableFuture<RunResult> commandResult,
             DataOutputStream output, Socket socket) {
         this(commandResult, output, socket, new DefaultTestResultFormatter(), false);
     }
-    
-    public TestsListener(ListenableFuture<RunResult> commandResult, 
+
+    public TestsListener(ListenableFuture<RunResult> commandResult,
             DataOutputStream output, Socket socket, boolean verbose) {
         this(commandResult, output, socket, new DefaultTestResultFormatter(), verbose);
     }
-    
-    public TestsListener(ListenableFuture<RunResult> commandResult, 
+
+    public TestsListener(ListenableFuture<RunResult> commandResult,
             DataOutputStream output, Socket socket, TestResultFormatter formatter) {
         this(commandResult, output, socket, formatter, false);
     }
 
     public TestsListener(ListenableFuture<RunResult> commandResult,
-            DataOutputStream output, Socket socket, 
+            DataOutputStream output, Socket socket,
             TestResultFormatter formatter, boolean verbose) {
         super(commandResult, output, socket);
         this.formatter = formatter;

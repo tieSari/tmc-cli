@@ -152,10 +152,7 @@ public class CoreUser {
             }
             //CLEAR THIS MESS!!
             settings.setCourseID(params.get("courseID"));
-            settings.setUserData(params.get("username"), params.get("password"));
             settings.setPath(params.get("path"));
-            settings.setServerAddress(settings.getServerAddress());
-            settings.setApiVersion("7");
 
             ListenableFuture<Course> currentCourse;
             try {
@@ -168,9 +165,8 @@ public class CoreUser {
     }
 
     private void sendSubmission(CliSettings settings, HashMap<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
-        ListenableFuture<Course> currentCourse;
-        fetchCourseToSettings(settings);
         settings.setCourseID(params.get("courseID"));
+        fetchCourseToSettings(settings);
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
         result.addListener(new SubmissionListener(result, output, socket), threadPool);
     }
@@ -183,15 +179,17 @@ public class CoreUser {
         settings.setCurrentCourse(currentCourse.get());
     }
 
-    public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
         CliSettings settings = this.tmcCli.defaultSettings();
         if (loginIsDone(settings)) {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
             }
             settings.setCourseID(params.get("courseID"));
-            settings.setUserData(params.get("username"), params.get("password"));
+            fetchCourseToSettings(settings);
+            settings.setUserData(settings.getUsername(), settings.getPassword());
             settings.setPath(params.get("path"));
+            System.err.println(settings.toString());
             ListenableFuture<URI> result = core.paste(params.get("path"), settings);
             result.addListener(new PasteListener(result, output, socket), threadPool);
         }

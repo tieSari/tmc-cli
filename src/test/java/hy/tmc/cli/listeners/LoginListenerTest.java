@@ -30,7 +30,7 @@ public class LoginListenerTest {
         socket = Mockito.mock(Socket.class);
         cli = Mockito.mock(TmcCli.class);
         settings = new CliSettings();
-        this.listener = new LoginListener(future, output, socket,cli,settings);
+        this.listener = new LoginListener(future, output, socket, cli, settings);
     }
 
     @Test

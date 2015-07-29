@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.synchronization.PollScheduler;
+import hy.tmc.cli.testhelpers.TestFuture;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
@@ -38,41 +39,11 @@ public class StatusPollerTest {
 
     @Test
     public void afterOneIterationThereShouldBeMessagesPolled() throws Exception {
-        when(coreMock.getNewReviews(any(Course.class), any(TmcSettings.class))).thenReturn(new ListenableFuture<List<Review>>() {
-
-            @Override
-            public void addListener(Runnable r, Executor exctr) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public boolean cancel(boolean bln) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public boolean isCancelled() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public boolean isDone() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public List<Review> get() throws InterruptedException, ExecutionException {
-                List<Review> reviews = new ArrayList<>();
-                reviews.add(new Review());
-                reviews.add(new Review());
-                return reviews;
-            }
-
-            @Override
-            public List<Review> get(long l, TimeUnit tu) throws InterruptedException, ExecutionException, TimeoutException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
+        List<Review> reviews = new ArrayList<>();
+        reviews.add(new Review());
+        reviews.add(new Review());
+        when(coreMock.getNewReviews(any(Course.class), any(TmcSettings.class)))
+                .thenReturn(new TestFuture<>(reviews));
 
         statusPoller.runOneIteration();
         assertTrue(Mailbox.getMailbox().get().reviewsWaiting());
@@ -85,4 +56,4 @@ public class StatusPollerTest {
         statusPoller.runOneIteration();
     }
 
-} 
+}
