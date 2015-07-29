@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.RangeFeedbackHandler;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
@@ -256,6 +255,5 @@ public class FeedbackSteps {
         WireMock.reset();
         wireMockServer.stop();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
-        ClientData.clearUserData();
     }
 }

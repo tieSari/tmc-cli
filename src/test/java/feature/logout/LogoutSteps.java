@@ -1,17 +1,12 @@
 package feature.logout;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 
 import cucumber.api.java.en.Given;
@@ -19,7 +14,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
-import org.junit.Rule;
 
 import java.io.IOException;
 
@@ -45,6 +39,7 @@ public class LogoutSteps {
     @When("^user sees message \"(.*?)\"$")
     public void user_sees_message(String expectedOutput) throws Throwable {
         String output = testClient.reply();
+        output = testClient.reply();
         assertThat(output, CoreMatchers.containsString(expectedOutput));
     }
 
