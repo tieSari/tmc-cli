@@ -1,6 +1,6 @@
 package hy.tmc.cli.listeners;
 
-import hy.tmc.core.commands.Paste;
+import hy.tmc.core.commands.PasteWithComment;
 import java.net.URI;
 import java.net.URISyntaxException;
 import static org.junit.Assert.assertEquals;

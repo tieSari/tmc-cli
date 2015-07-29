@@ -7,20 +7,6 @@ Feature: Paste command
         And user executes the command
         Then user will see the paste url
 
-    Scenario: paste will show mail in the mailbox
-        Given user has logged in with username "test" and password "1234"
-        When user gives command paste with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
-        And the user has mail in the mailbox
-        And user executes the command
-        Then user will see the new mail
-
-    Scenario: paste will start the polling
-        Given user has logged in with username "test" and password "1234"
-        When user gives command paste with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
-        And polling for reviews is not in progress
-        And user executes the command
-        Then the polling will be started
-
      Scenario: paste works with vim too
         Given user has logged in with username "test" and password "1234"
         When user gives command paste with valid path "/testResources/2013_ohpeJaOhja/viikko1" and exercise "Viikko1_002.HeiMaailma"
