@@ -77,7 +77,13 @@ public class ReviewAndUpdatePoller extends AbstractScheduledService {
 
     private Optional<List<Review>> getReviews() throws TmcCoreException {
         TmcCore core = cli.getCore();
-        TmcSettings settings = cli.defaultSettings();
+        TmcSettings settings;
+        try {
+            settings = cli.defaultSettings();
+        } catch (IllegalStateException ex) {
+            System.err.println(ex.getMessage());
+            return Optional.absent(); // can't fetch reviews if no server is specified
+        }
         ListenableFuture<List<Review>> future = core.getNewReviews(currentCourse, settings);
         try {
             List<Review> reviews = future.get();

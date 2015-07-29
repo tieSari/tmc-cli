@@ -1,6 +1,7 @@
 package hy.tmc.cli.configuration;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,7 +85,11 @@ public class ConfigHandler {
      */
     public String readServerAddress() {
         Properties prop = getProperties();
-        return prop.getProperty(serverAddressFieldName);
+        String address = prop.getProperty(serverAddressFieldName);
+        if (address==null) {
+            throw new IllegalStateException("tmc-server address not set");
+        }
+        return address;
     }
 
     /**

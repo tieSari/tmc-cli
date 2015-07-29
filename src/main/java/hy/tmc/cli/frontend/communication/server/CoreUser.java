@@ -20,6 +20,7 @@ import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
@@ -75,7 +76,8 @@ public class CoreUser {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
-        CliSettings settings = this.tmcCli.defaultSettings();
+        // run tests need none of the defaults
+        CliSettings settings = new CliSettings();
         settings.setMainDirectory(params.get("path"));
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
         TestsListener listener = new TestsListener(result, output, socket);
@@ -83,19 +85,31 @@ public class CoreUser {
     }
 
     public void login(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        if(credentialsAreMissing(params)) {
+        if (credentialsAreMissing(params)) {
             throw new ProtocolException("Username or/and password is missing!.");
         }
-        CliSettings settings = this.tmcCli.defaultSettings();
-        settings.setUserData(params.get("username"), params.get("password"));
-        ListenableFuture<Boolean> result = core.verifyCredentials(settings);
-        LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
-        result.addListener(listener, threadPool);
+        try {
+            CliSettings settings = this.tmcCli.defaultSettings();
+            settings.setUserData(params.get("username"), params.get("password"));
+            ListenableFuture<Boolean> result = core.verifyCredentials(settings);
+            LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
+            result.addListener(listener, threadPool);
+        } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+        }
+
     }
 
     public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        CliSettings settings = this.tmcCli.defaultSettings();
-        if(loginIsDone(settings)) {
+
+        CliSettings settings;
+        try {
+            settings = this.tmcCli.defaultSettings();
+        } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+            return;
+        }
+        if (loginIsDone(settings)) {
             ListenableFuture<List<Course>> coursesFuture = core.listCourses(settings);
             ResultListener coursesListener = new ListCoursesListener(coursesFuture, output, socket);
             coursesFuture.addListener(coursesListener, threadPool);
@@ -103,8 +117,14 @@ public class CoreUser {
     }
 
     public void listExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-        CliSettings settings = this.tmcCli.defaultSettings();
-        if(loginIsDone(settings)) {
+        CliSettings settings;
+        try {
+            settings = this.tmcCli.defaultSettings();
+        } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+            return;
+        }
+        if (loginIsDone(settings)) {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("Path not recieved");
             }
@@ -128,10 +148,16 @@ public class CoreUser {
     }
 
     public void downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
-        CliSettings settings = this.tmcCli.defaultSettings();
-        if(loginIsDone(settings)) {
-            if (params.get("path") == null || params.get("path").isEmpty() ||
-                params.get("courseID") == null || params.get("courseID").isEmpty()) {
+        CliSettings settings;
+        try {
+            settings = this.tmcCli.defaultSettings();
+        } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+            return;
+        }
+        if (loginIsDone(settings)) {
+            if (params.get("path") == null || params.get("path").isEmpty()
+                    || params.get("courseID") == null || params.get("courseID").isEmpty()) {
                 throw new ProtocolException("Path and courseID required");
             }
             String coursePath = new UrlHelper(settings).getCourseUrl(
@@ -152,8 +178,14 @@ public class CoreUser {
     }
 
     public void submit(HashMap<String, String> params) throws ProtocolException {
-        CliSettings settings = this.tmcCli.defaultSettings();
-        if(loginIsDone(settings)) {
+        CliSettings settings;
+        try {
+            settings = this.tmcCli.defaultSettings();
+        } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+            return;
+        }
+        if (loginIsDone(settings)) {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
             }
@@ -164,8 +196,7 @@ public class CoreUser {
             ListenableFuture<Course> currentCourse;
             try {
                 sendSubmission(settings, params);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
@@ -178,16 +209,27 @@ public class CoreUser {
         result.addListener(new SubmissionListener(result, output, socket), threadPool);
     }
 
-    private void fetchCourseToSettings(CliSettings settings) throws TmcCoreException, InterruptedException, ExecutionException {
-        ListenableFuture<Course> currentCourse;
-        String courseUrl = settings.getServerAddress() + "/courses/" + settings.getCourseID() + ".json?api_version=" + settings.apiVersion();
-        currentCourse = core.getCourse(settings, courseUrl);
-        Course course = currentCourse.get();
-        settings.setCurrentCourse(currentCourse.get());
+    private void fetchCourseToSettings(CliSettings settings)
+            throws TmcCoreException, InterruptedException, ExecutionException {
+        List<Course> courses = core.listCourses(settings).get(); // wait for completion
+        String[] folders = settings.getPath().split("\\" + File.separatorChar);
+        for (Course course : courses) {
+            for (String folder : folders) {
+                if (course.getName().equals(folder)) {
+                    settings.setCurrentCourse(course);
+                }
+            }
+        }
     }
 
     public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
-        CliSettings settings = this.tmcCli.defaultSettings();
+        CliSettings settings;
+        try {
+            settings = this.tmcCli.defaultSettings();
+        } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+            return;
+        }
         if (loginIsDone(settings)) {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
@@ -210,8 +252,7 @@ public class CoreUser {
         try {
             output.write((message + "\n").getBytes());
             socket.close();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println("Failed to print error message: ");
             System.err.println(ex.getMessage());
         }
@@ -220,7 +261,7 @@ public class CoreUser {
     /**
      * If no login is done yet, user will be asked to login.
      */
-    private boolean loginIsDone(TmcSettings settings)  {
+    private boolean loginIsDone(TmcSettings settings) {
         if (!settings.userDataExists()) {
             writeToOutputSocket("Please authorize first.");
             return false;

@@ -57,7 +57,15 @@ public class TmcCli {
         }
     }
 
-    public CliSettings defaultSettings() {
+    /**
+     * The default settings include credentials from current session, and a
+     * server address from the config file.
+     *
+     * @return CliSettings with credentials and server address
+     * @throws IllegalStateException if server address is not found in the
+     * config file
+     */
+    public CliSettings defaultSettings() throws IllegalStateException {
         CliSettings settings = new CliSettings(apiVersion);
         settings.setUserData(session.getUsername(), session.getPassword());
         settings.setServerAddress(config.readServerAddress());
