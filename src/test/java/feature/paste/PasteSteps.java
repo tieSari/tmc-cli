@@ -54,9 +54,9 @@ public class PasteSteps {
         configHandler.writeServerAddress("http://127.0.0.1:8080");
 
       //  server = new Server();
-        port = configHandler.readPort();
         serverThread = new Thread(server);
         serverThread.start();
+        port = configHandler.readPort();
         testClient = new TestClient(port);
         ClientData.setUserData("Chuck", "Norris");
         // replace with tmc-core mock

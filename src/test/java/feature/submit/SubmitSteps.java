@@ -1,20 +1,26 @@
 package feature.submit;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
+import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
+import hy.tmc.core.TmcCore;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -29,12 +35,17 @@ public class SubmitSteps {
 
     private int port;
 
-    private Thread serverThread;
     private TestClient testClient;
-    private Server server;
+    private TmcCli tmcCli;
 
     private ConfigHandler configHandler;
     private WireMockServer wireMockServer;
+    
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 8080;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    
+    private final String coursesExtension = "/courses.json?api_version=7";
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
@@ -47,37 +58,37 @@ public class SubmitSteps {
     @Before
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
-        configHandler.writeServerAddress("http://127.0.0.1:8080");
-        ClientData.clearUserData();
-       // server = new Server();
-        port = configHandler.readPort();
-        serverThread = new Thread(server);
-        serverThread.start();
-        testClient = new TestClient(port);
-
+        configHandler.writeServerAddress(SERVER_ADDRESS);
+        
+        tmcCli = new TmcCli(new TmcCore());
+        tmcCli.setServer(SERVER_ADDRESS);
+        tmcCli.startServer();
+        testClient = new TestClient(new ConfigHandler().readPort());
+ 
         TmcServiceScheduler.disablePolling();
         Mailbox.create();
 
         Wiremocker mocker = new Wiremocker();
-        wireMockServer = mocker.wiremockSubmitPaths();
+        wireMockServer = mocker.mockAnyUserAndSubmitPaths();
         mocker.wireMockSuccesfulSubmit(wireMockServer);
         mocker.wireMockExpiredSubmit(wireMockServer);
         mocker.wiremockFailingSubmit(wireMockServer);
+       
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
     public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
-        testClient.getAllFromSocket();
+        String r = testClient.getAllFromSocket();
+        testClient.init();
     }
 
     @When("^user gives command submit with valid path \"(.*?)\" and exercise \"(.*?)\"$")
     public void user_gives_command_submit_with_valid_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
-        testClient = new TestClient(port);
 
         pathFromProjectRoot = Paths.get(pathFromProjectRoot).toString();
         exercise = Paths.get(exercise).toString();
-        submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
+        submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise + " courseID 3 username test password 1234";
     }
 
     @When("^flag \"(.*?)\"$")
@@ -95,7 +106,7 @@ public class SubmitSteps {
 
     @Then("^user will see all test passing$")
     public void user_will_see_all_test_passing() throws Throwable {
-        final String result = testClient.getAllFromSocket();
+        final String result = testClient.reply();
         assertThat(result, CoreMatchers.containsString("All tests passed"));
     }
 
@@ -136,20 +147,14 @@ public class SubmitSteps {
 
     @When("^user gives command submit with path \"([^\"]*)\" and exercise \"([^\"]*)\"$")
     public void user_gives_command_submit_with_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
-        submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise;
+        submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise + " courseID 21";
     }
 
-    /**
-     * Returns everything to it's original state.
-     */
     @After
     public void closeAll() throws IOException {
-        server.close();
-        serverThread.interrupt();
         wireMockServer.stop();
+        tmcCli.stopServer();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
-        ClientData.clearUserData();
         Mailbox.destroy();
-        ClientData.setProjectRootFinder(null);
     }
 }
