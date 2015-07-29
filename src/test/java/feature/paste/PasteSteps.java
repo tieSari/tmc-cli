@@ -1,6 +1,5 @@
 package feature.paste;
 
-
 import com.github.tomakehurst.wiremock.WireMockServer;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
@@ -13,14 +12,14 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.mail.Mailbox;
-import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
+import hy.tmc.core.TmcCore;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -34,44 +33,39 @@ import org.junit.Rule;
 public class PasteSteps {
 
     private int port;
-
-    private Thread serverThread;
+    
     private TestClient testClient;
-    private Server server;
 
     private ConfigHandler configHandler; // writes the test address
     private WireMockServer wireMockServer;
     private String pasteCommand;
+    
+    private TmcCli tmcCli;
+
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 8080;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    private final String coursesExtension = "/courses.json?api_version=7";
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
     @Before
     public void initializeServer() throws IOException {
-        TmcServiceScheduler.disablePolling();
+        
+        tmcCli = new TmcCli(new TmcCore());
+        tmcCli.setServer(SERVER_ADDRESS);
+        tmcCli.startServer();
+        testClient = new TestClient(new ConfigHandler().readPort());
 
-        configHandler = new ConfigHandler();
-        configHandler.writeServerAddress("http://127.0.0.1:8080");
-
-      //  server = new Server();
-        serverThread = new Thread(server);
-        serverThread.start();
-        port = configHandler.readPort();
-        testClient = new TestClient(port);
-        ClientData.setUserData("Chuck", "Norris");
-        // replace with tmc-core mock
-        //ClientData.setProjectRootFinder(new ProjectRootFinderStub()); 
         startWireMock();
     }
 
     @After
     public void closeAll() throws IOException, InterruptedException {
         Mailbox.destroy();
-        server.close();
-        serverThread.interrupt();
+        tmcCli.stopServer();
         wireMockServer.stop();
-        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
-        ClientData.clearUserData();
     }
 
     private void startWireMock() {
@@ -84,6 +78,7 @@ public class PasteSteps {
         wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         wiremockGET("/courses/3.json?api_version=7", ExampleJson.courseExample);
         wiremockPOST("/exercises/286/submissions.json?api_version=7&paste=1", ExampleJson.pasteResponse);
+        wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.pasteResponse);
         wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
 
     }
@@ -115,7 +110,7 @@ public class PasteSteps {
     @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
     public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
         this.pasteCommand = "paste path ";
-        String pastePath = System.getProperty("user.dir") + path + File.separator + exercise;
+        String pastePath = System.getProperty("user.dir") + path + File.separator + exercise + " courseID 3";
         pastePath = Paths.get(pastePath).toString();
         this.pasteCommand = pasteCommand + pastePath;
     }
