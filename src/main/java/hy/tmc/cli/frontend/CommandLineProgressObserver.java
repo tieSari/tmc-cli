@@ -1,5 +1,7 @@
 package hy.tmc.cli.frontend;
 
+import hy.tmc.core.domain.ProgressObserver;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -14,15 +16,19 @@ public class CommandLineProgressObserver implements ProgressObserver {
     }
 
     @Override
-    public void progress(double completionPercentage, String message) {
+    public void progress(String message) {
         try {
-            NumberFormat formatter = new DecimalFormat("#0.0");
-            String percentage = formatter.format(completionPercentage);
-            output.write((message + " (" + percentage + "% done)\n").getBytes());
-        }
-        catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            output.write(message.getBytes());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
         }
     }
 
+    @Override
+    public void progress(Double completionPercentage, String progressMessage) {
+            NumberFormat formatter = new DecimalFormat("#0.0");
+            String percentage = formatter.format(completionPercentage);
+            String message = progressMessage + " (" + percentage + "% done)\n";
+            this.progress(message);
+    }
 }

@@ -48,7 +48,6 @@ public class SocketRunnable implements Runnable {
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
             throws IOException, ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
         CommandExecutor executor = new CommandExecutor(outputStream, this.socket, this.pool, this.cli);
-        // IMPL THIS!!!!! command.setObserver(new CommandLineProgressObserver(outputStream));
         String input = inputReader.readLine();
         System.err.println("Input: " + input);
         if(input == null){
