@@ -190,7 +190,7 @@ public class CoreUser {
             settings.setUserData(settings.getUsername(), settings.getPassword());
             settings.setPath(params.get("path"));
             System.err.println(settings.toString());
-            ListenableFuture<URI> result = core.paste(params.get("path"), settings);
+            ListenableFuture<URI> result = core.pasteWithComment(params.get("path"), settings, "");
             result.addListener(new PasteListener(result, output, socket), threadPool);
         }
     }
