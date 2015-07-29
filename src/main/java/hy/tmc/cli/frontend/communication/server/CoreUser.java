@@ -10,6 +10,12 @@ import hy.tmc.cli.frontend.ColorFormatter;
 import hy.tmc.cli.frontend.CommandLineColor;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.cli.frontend.CourseFinder;
+import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.DefaultTestResultFormatter;
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.TestResultFormatter;
+import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.VimTestResultFormatter;
 import hy.tmc.cli.listeners.*;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.communication.UrlHelper;
@@ -80,8 +86,20 @@ public class CoreUser {
         CliSettings settings = new CliSettings();
         settings.setMainDirectory(params.get("path"));
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
-        TestsListener listener = new TestsListener(result, output, socket);
+        TestResultFormatter formatter;
+        formatter = getTestResultFormatter(params);
+        TestsListener listener = new TestsListener(result, output, socket, formatter);
         result.addListener(listener, threadPool);
+    }
+
+    private TestResultFormatter getTestResultFormatter(HashMap<String, String> params) {
+        TestResultFormatter formatter;
+        if(params.containsKey("--vim")){
+            formatter = new VimTestResultFormatter();
+        } else {
+            formatter = new DefaultTestResultFormatter();
+        }
+        return formatter;
     }
 
     public void login(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
@@ -189,7 +207,6 @@ public class CoreUser {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
             }
-            //CLEAR THIS MESS!!
             settings.setCourseID(params.get("courseID"));
             settings.setPath(params.get("path"));
 
@@ -206,7 +223,19 @@ public class CoreUser {
         settings.setCourseID(params.get("courseID"));
         fetchCourseToSettings(settings);
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
-        result.addListener(new SubmissionListener(result, output, socket), threadPool);
+        SubmissionResultFormatter formatter;
+        formatter = getSubmissionFormatter(params);
+        result.addListener(new SubmissionListener(result, output, socket, formatter), threadPool);
+    }
+
+    private SubmissionResultFormatter getSubmissionFormatter(HashMap<String, String> params) {
+        SubmissionResultFormatter formatter;
+        if(params.containsKey("--vim")){
+            formatter = new VimSubmissionResultFormatter();
+        } else {
+            formatter = new CommandLineSubmissionResultFormatter();
+        }
+        return formatter;
     }
 
     private void fetchCourseToSettings(CliSettings settings)
@@ -238,7 +267,6 @@ public class CoreUser {
             fetchCourseToSettings(settings);
             settings.setUserData(settings.getUsername(), settings.getPassword());
             settings.setPath(params.get("path"));
-            System.err.println(settings.toString());
             ListenableFuture<URI> result = core.pasteWithComment(params.get("path"), settings, "");
             result.addListener(new PasteListener(result, output, socket), threadPool);
         }

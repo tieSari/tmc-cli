@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import hy.tmc.core.domain.submission.SubmissionResult;
 
 import java.io.DataOutputStream;
@@ -19,14 +20,14 @@ public class SubmissionListener extends ResultListener<SubmissionResult> {
     private boolean detailed;
 
     public SubmissionListener(ListenableFuture<SubmissionResult> commandResult, 
-            DataOutputStream output, Socket socket) {
+            DataOutputStream output, Socket socket, SubmissionResultFormatter formatter) {
         this(commandResult, output, socket, 
-                new SubmissionInterpreter(new CommandLineSubmissionResultFormatter()));
+                new SubmissionInterpreter(formatter));
     }
     
     public SubmissionListener(ListenableFuture<SubmissionResult> commandResult, 
-            DataOutputStream output, Socket socket, boolean detailed) {
-        this(commandResult, output, socket);
+            DataOutputStream output, Socket socket, boolean detailed, SubmissionResultFormatter formatter) {
+        this(commandResult, output, socket, formatter);
         this.detailed = detailed;
     }
     
