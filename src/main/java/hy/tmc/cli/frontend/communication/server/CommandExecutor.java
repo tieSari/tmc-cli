@@ -8,15 +8,14 @@ import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.Help;
 import hy.tmc.cli.frontend.communication.commands.SetServer;
+import hy.tmc.cli.frontend.communication.commands.ShowSettings;
 import hy.tmc.cli.listeners.DefaultListener;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CommandExecutor {
@@ -52,6 +51,7 @@ public class CommandExecutor {
         HashMap<String, Command> map = new HashMap<>();
         map.put("help", new Help(this.cli, params.get("command")));
         map.put("setServer", new SetServer(this.cli, params.get("tmc-server")));
+        map.put("show settings", new ShowSettings(this.cli));
         return map;
     }
 
