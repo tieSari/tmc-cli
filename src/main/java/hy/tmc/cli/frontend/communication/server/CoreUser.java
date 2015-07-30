@@ -81,14 +81,18 @@ public class CoreUser {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
+        boolean verbose = params.containsKey("verbose");
         // run tests need none of the defaults
         CliSettings settings = new CliSettings();
         settings.setMainDirectory(params.get("path"));
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
+        ListenableFuture<ValidationResult> checkstyle = core.runCheckstyle(params.get("path"), settings);
         TestResultFormatter formatter;
         formatter = getTestResultFormatter(params);
-        TestsListener listener = new TestsListener(result, output, socket, formatter);
+        TestsListener listener = new TestsListener(result, output, socket, formatter, verbose, true);
+        CheckstyleListener styleListener = new CheckstyleListener(checkstyle, output, socket);
         result.addListener(listener, threadPool);
+        checkstyle.addListener(styleListener, threadPool);
     }
 
     private TestResultFormatter getTestResultFormatter(HashMap<String, String> params) {
@@ -228,7 +232,7 @@ public class CoreUser {
         if(params.containsKey("--vim")){
             formatter = new VimSubmissionResultFormatter();
         } else {
-            formatter = new CommandLineSubmissionResultFormatter();
+            formatter = new DefaultSubmissionResultFormatter();
         }
         return formatter;
     }

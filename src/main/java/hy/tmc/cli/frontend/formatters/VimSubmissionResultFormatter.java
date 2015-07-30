@@ -1,16 +1,21 @@
 package hy.tmc.cli.frontend.formatters;
 
 
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationError;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.domain.submission.TestCase;
-import hy.tmc.core.domain.submission.ValidationError;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
 
 public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
 
+    CheckstyleFormatter checkstyleFormatter;
+    
+    public VimSubmissionResultFormatter() {
+        this.checkstyleFormatter = new VimCheckstyleFormatter();
+    }
+    
     @Override
     public String someTestsFailed() {
         return "Some tests failed on server. Summary: \n";
@@ -59,14 +64,7 @@ public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
 
     @Override
     public String parseValidationErrors(Entry<String, List<ValidationError>> entry) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\nFile: ").append(entry.getKey());
-        for (ValidationError error : entry.getValue()) {
-            String errorLine = "\n  On line: " + error.getLine() + " Column: " + error.getColumn();
-            builder.append(errorLine);
-            builder.append("\n    ").append(error.getMessage());
-        }
-        return builder.toString();
+        return this.checkstyleFormatter.checkstyleErrors(entry.getKey(), entry.getValue());
     }
 
 }

@@ -1,7 +1,7 @@
 package hy.tmc.cli.backend.communication;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.DefaultSubmissionResultFormatter;
 import hy.tmc.cli.testhelpers.builders.SubmissionResultBuilder;
 import hy.tmc.cli.testhelpers.builders.TestCaseBuilder;
 import hy.tmc.core.domain.submission.SubmissionResult;
@@ -28,7 +28,7 @@ public class SubmissionInterpreterTest {
 
     @Before
     public void setup() {
-        submissionInterpreter = new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
+        submissionInterpreter = new SubmissionInterpreter(new DefaultSubmissionResultFormatter());
     }
 
     private ValidationError validationError(int line, int column, String message, String sourceName) {

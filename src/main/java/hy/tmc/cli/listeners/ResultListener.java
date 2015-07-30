@@ -14,26 +14,31 @@ public abstract class ResultListener<T> implements Runnable {
     private ListenableFuture<T> commandResult;
     private DataOutputStream output;
     private Socket socket;
+    private boolean leaveSocketOpen;
 
-    public ResultListener(ListenableFuture<T> commandResult, DataOutputStream output, Socket socket) {
+    public ResultListener(ListenableFuture<T> commandResult, DataOutputStream output, Socket socket, boolean leaveSocketOpen) {
         this.commandResult = commandResult;
         this.output = output;
         this.socket = socket;
+        this.leaveSocketOpen = leaveSocketOpen;
     }
-    
+
+    public ResultListener(ListenableFuture<T> commandResult, DataOutputStream output, Socket socket) {
+        this(commandResult, output, socket, false);
+    }
+
     /**
-     * Creates an output message for the user based on the result from tmc-core.
-     * Each action will have it's own listener that parser the result.
-     * 
+     * Creates an output message for the user based on the result from tmc-core. Each action will
+     * have it's own listener that parser the result.
+     *
      * @param result the result of running an action e.g. submit
      * @return output to be shown to the user.
      */
     protected abstract Optional<String> parseData(T result);
-    
+
     /**
-     * Perform any actions needed after tmc-core is finished, other than showing
-     * output to the user.
-     * 
+     * Perform any actions needed after tmc-core is finished, other than showing output to the user.
+     *
      * @param result result running an action e.g. submit
      */
     protected abstract void extraActions(T result);
@@ -72,7 +77,9 @@ public abstract class ResultListener<T> implements Runnable {
         try {
             byte[] bytes = (commandOutput + "\n").getBytes();
             output.write(bytes);
-            socket.close();
+            if (!leaveSocketOpen) {
+                socket.close();
+            }
         }
         catch (IOException ex) {
             System.err.println("Failed to print error message: ");

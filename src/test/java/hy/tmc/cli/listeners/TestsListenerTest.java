@@ -38,7 +38,7 @@ public class TestsListenerTest {
 
     @Test
     public void parseDataPassesShowStacktraceParam() {
-        tl = new TestsListener(null, null, null, formatter, true);
+        tl = new TestsListener(null, null, null, formatter, true, false);
         verify(formatter, times(0)).getStackTrace(any(TestResult.class));
         tl.parseData(createResult(TESTS_FAILED));
         verify(formatter, times(1)).getStackTrace(any(TestResult.class));
