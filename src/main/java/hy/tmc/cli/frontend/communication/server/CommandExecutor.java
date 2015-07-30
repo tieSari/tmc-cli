@@ -48,8 +48,8 @@ public class CommandExecutor {
         HashMap<String, Command> map = new HashMap<>();
         map.put("help", new Help(this.cli, params.get("command")));
         map.put("setServer", new SetServer(this.cli, params.get("tmc-server")));
-        map.put("show settings", new ShowSettings(this.cli));
         map.put("setCourse", new SetCourse(this.cli, params.get("course")));
+        map.put("showSettings", new ShowSettings(this.cli));
         return map;
     }
 

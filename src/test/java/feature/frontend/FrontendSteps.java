@@ -22,7 +22,7 @@ public class FrontendSteps {
     private Thread serverThread;
     private Server server;
     private TestClient testClient;
-    
+
     private TmcCli tmcCli;
 
     private static final String SERVER_URI = "127.0.0.1";
@@ -31,15 +31,16 @@ public class FrontendSteps {
 
     /**
      * Set up server and testclient.
+     *
      * @throws IOException if server initializing fails
      */
     @Before
     public void setUpServer() throws IOException {
-       // server = new Server();
+        // server = new Server();
         serverThread = new Thread(server);
         serverThread.start();
         port = new ConfigHandler().readPort();
-        
+
         tmcCli = new TmcCli(new TmcCore());
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
@@ -53,12 +54,24 @@ public class FrontendSteps {
 
     /**
      * Tests that output contains available commands.
+     *
      * @throws Throwable if something fails
      */
     @Then("^output should contains commands\\.$")
     public void output_should_contains_commands() throws Throwable {
         String contents = testClient.reply();
         assertTrue(contents.contains("Available commands:"));
+    }
+
+    @Given("^show settings command\\.$")
+    public void show_settings_command() throws Throwable {
+          testClient.sendMessage("showSettings");
+    }
+
+    @Then("^output should contains settings information\\.$")
+    public void output_should_contains_settings_information() throws Throwable {
+        String contents = testClient.reply();
+        assertTrue(contents.contains("Server address"));
     }
 
     @After
