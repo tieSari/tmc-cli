@@ -118,7 +118,6 @@ public class CoreUser {
     }
 
     public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
-
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -242,6 +241,7 @@ public class CoreUser {
             for (String folder : folders) {
                 if (course.getName().equals(folder)) {
                     settings.setCurrentCourse(course);
+                    return;
                 }
             }
         }
@@ -259,9 +259,9 @@ public class CoreUser {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
             }
+            settings.setPath(params.get("path"));
             fetchCourseToSettings(settings);
             settings.setUserData(settings.getUsername(), settings.getPassword());
-            settings.setPath(params.get("path"));
             ListenableFuture<URI> result = core.pasteWithComment(params.get("path"), settings, "");
             result.addListener(new PasteListener(result, output, socket), threadPool);
         }
