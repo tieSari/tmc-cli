@@ -79,6 +79,7 @@ public class LoginSteps {
 
     @Then("^user should see result \"(.*?)\"$")
     public void user_should_see_result(String expectedResult) throws Throwable {
+        testClient.reply(); // "started command login", skip this
         String result = testClient.reply();
         assertThat(result, CoreMatchers.containsString(expectedResult));
     }

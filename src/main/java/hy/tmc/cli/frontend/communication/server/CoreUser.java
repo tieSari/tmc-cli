@@ -53,8 +53,7 @@ public class CoreUser {
     }
 
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
-        String startMessage = ColorFormatter.coloredString("Starting command " + commandName + "\n", CommandLineColor.LIGHT_BLUE);
-        this.observer.progress(startMessage);
+        this.observer.progress("Starting command " + commandName + "\n");
         if (commandName.equals("login")) {
             login(params);
         } else if (commandName.equals("listCourses")) {
@@ -207,10 +206,8 @@ public class CoreUser {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
             }
-            settings.setCourseID(params.get("courseID"));
             settings.setPath(params.get("path"));
 
-            ListenableFuture<Course> currentCourse;
             try {
                 sendSubmission(settings, params);
             } catch (Exception ex) {
@@ -220,7 +217,6 @@ public class CoreUser {
     }
 
     private void sendSubmission(CliSettings settings, HashMap<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
-        settings.setCourseID(params.get("courseID"));
         fetchCourseToSettings(settings);
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
         SubmissionResultFormatter formatter;
@@ -263,7 +259,6 @@ public class CoreUser {
             if (!params.containsKey("path")) {
                 throw new ProtocolException("path not supplied");
             }
-            settings.setCourseID(params.get("courseID"));
             fetchCourseToSettings(settings);
             settings.setUserData(settings.getUsername(), settings.getPassword());
             settings.setPath(params.get("path"));
