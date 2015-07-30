@@ -19,9 +19,6 @@ public class ProtocolParser {
         }
         String[] array = new String[items.size()];
         array = items.toArray(array);
-        if(array.length % 2 == 0) { // Sanoja pitää olla 1 + parillinen määrä
-            throw new ProtocolException("Input should contain even number of words (key and value pairs).");
-        }
         return array;
     }
 

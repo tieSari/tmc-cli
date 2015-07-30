@@ -110,7 +110,7 @@ public class PasteSteps {
     @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
     public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
         this.pasteCommand = "paste path ";
-        String pastePath = System.getProperty("user.dir") + path + File.separator + exercise + " courseID 3";
+        String pastePath = System.getProperty("user.dir") + path + File.separator + exercise;
         pastePath = Paths.get(pastePath).toString();
         this.pasteCommand = pasteCommand + pastePath;
     }
