@@ -10,6 +10,8 @@ import hy.tmc.cli.frontend.ColorFormatter;
 import hy.tmc.cli.frontend.CommandLineColor;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.cli.frontend.CourseFinder;
+import hy.tmc.cli.frontend.communication.commands.SetCourse;
+import hy.tmc.cli.frontend.communication.commands.SetServer;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.DefaultTestResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
@@ -76,6 +78,7 @@ public class CoreUser {
             throw new ProtocolException("Command not found.");
         }
     }
+
 
     public void runTests(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
@@ -179,7 +182,6 @@ public class CoreUser {
             String coursePath = new UrlHelper(settings).getCourseUrl(
                     Integer.parseInt(params.get("courseID"))
             );
-
             ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(
                     params.get("path"), params.get("courseID"), settings, observer
             );
@@ -206,7 +208,6 @@ public class CoreUser {
                 throw new ProtocolException("path not supplied");
             }
             settings.setPath(params.get("path"));
-
             try {
                 sendSubmission(settings, params);
             } catch (Exception ex) {
@@ -284,7 +285,7 @@ public class CoreUser {
     /**
      * If no login is done yet, user will be asked to login.
      */
-    private boolean loginIsDone(TmcSettings settings) {
+    public boolean loginIsDone(TmcSettings settings) {
         if (!settings.userDataExists()) {
             writeToOutputSocket("Please authorize first.");
             return false;

@@ -31,12 +31,8 @@ import org.junit.Rule;
 
 
 public class PasteSteps {
-
-    private int port;
     
     private TestClient testClient;
-
-    private ConfigHandler configHandler; // writes the test address
     private WireMockServer wireMockServer;
     private String pasteCommand;
     
@@ -65,6 +61,7 @@ public class PasteSteps {
     public void closeAll() throws IOException, InterruptedException {
         Mailbox.destroy();
         tmcCli.stopServer();
+        tmcCli.setServer("https://tmc.mooc.fi/staging");
         wireMockServer.stop();
     }
 
@@ -80,7 +77,6 @@ public class PasteSteps {
         wiremockPOST("/exercises/286/submissions.json?api_version=7&paste=1", ExampleJson.pasteResponse);
         wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.pasteResponse);
         wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
-
     }
 
     private void wiremockGET(final String urlToMock, final String returnBody) {

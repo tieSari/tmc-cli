@@ -1,14 +1,18 @@
 package hy.tmc.cli;
 
 
+import hy.tmc.core.domain.Course;
+
 public class Session {
 
     private String username;
     private String password;
+    private Course currentCourse;
     
     public Session() {
         this.username = "";
         this.password = "";
+        this.currentCourse = null;
     }
     
     public Session(String username, String password) {
@@ -32,5 +36,14 @@ public class Session {
     public void clear() {
         username = "";
         password = "";
+        currentCourse = null;
+    }
+
+    public Course getCurrentCourse() {
+        return currentCourse;
+    }
+
+    public void setCurrentCourse(Course currentCourse) {
+        this.currentCourse = currentCourse;
     }
 }

@@ -1,8 +1,11 @@
 package hy.tmc.cli;
 
+import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.domain.Course;
+
 import java.io.IOException;
 
 public class TmcCli {
@@ -55,6 +58,14 @@ public class TmcCli {
             System.err.println(ex.getMessage());
             return false;
         }
+    }
+
+    public void setCurrentCourse(Course course) {
+        this.session.setCurrentCourse(course);
+    }
+
+    public Optional<Course> getCurrentCourse() {
+        return Optional.fromNullable(this.session.getCurrentCourse());
     }
 
     /**
