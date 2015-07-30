@@ -40,19 +40,28 @@ public class SocketRunnable implements Runnable {
             }
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
-        } catch (ProtocolException | TmcCoreException | InterruptedException | ExecutionException ex) {
+        } catch (TmcCoreException | InterruptedException | ExecutionException ex) {
             Logger.getLogger(SocketRunnable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException, ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
+            throws IOException, TmcCoreException, InterruptedException, ExecutionException {
         CommandExecutor executor = new CommandExecutor(outputStream, this.socket, this.pool, this.cli);
         String input = inputReader.readLine();
         System.err.println("Input: " + input);
-        if(input == null){
-            throw new ProtocolException("Input was invalid: null");
+        if (input == null) {
+            writeToOutput(outputStream, "Input was invalid: null");
         }
-        executor.parseAndExecute(input);
+        try {
+            executor.parseAndExecute(input);
+        } catch (ProtocolException ex) {
+            writeToOutput(outputStream, ex.getMessage());
+        }
+    }
+
+    private void writeToOutput(DataOutputStream outputStream, String message) throws IOException {
+        outputStream.write((message + "\n").getBytes());
+        socket.close();
     }
 }
