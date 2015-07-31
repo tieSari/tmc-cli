@@ -23,7 +23,7 @@ public class CourseFinder {
      * @param path Path to look up course from.
      * @return Course-object containing information of the course found.
      */
-    public Optional<Course> getCurrentCourse(String path, List<Course> courses) throws IOException {
+    public Optional<Course> getCurrentCourse(String path, List<Course> courses) {
         String[] foldersOfPwd = path.split("\\" + File.separator);
         try {
             checkPwd(foldersOfPwd);
