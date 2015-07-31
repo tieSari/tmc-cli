@@ -17,7 +17,7 @@ public class TestFuture<T> implements ListenableFuture<T> {
     
     @Override
     public void addListener(Runnable r, Executor exctr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        r.run();
     }
 
     @Override

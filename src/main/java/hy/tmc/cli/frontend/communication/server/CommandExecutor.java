@@ -40,6 +40,10 @@ public class CommandExecutor {
         this.cli = cli;
         this.parser = new ProtocolParser();
     }
+    
+    public CommandExecutor(TmcCli cli){
+        this.cli = cli;
+    }
 
     /**
      * Search for command by inputline.
