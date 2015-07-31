@@ -25,7 +25,7 @@ public class LogoutSteps {
 
     @Before
     public void initializeServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.startServer();
         testClient = new TestClient( new ConfigHandler().readPort());
     }

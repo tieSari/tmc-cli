@@ -46,7 +46,7 @@ public class LoginSteps {
      */
     @Before
     public void initializeServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         port = new ConfigHandler().readPort();
@@ -79,8 +79,7 @@ public class LoginSteps {
 
     @Then("^user should see result \"(.*?)\"$")
     public void user_should_see_result(String expectedResult) throws Throwable {
-        testClient.reply(); // "started command login", skip this
-        String result = testClient.reply();
+        String result = testClient.getAllFromSocket();
         assertThat(result, CoreMatchers.containsString(expectedResult));
     }
 

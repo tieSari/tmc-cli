@@ -54,7 +54,7 @@ public class SubmitSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
         
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());

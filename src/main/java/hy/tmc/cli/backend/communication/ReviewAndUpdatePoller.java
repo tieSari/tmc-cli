@@ -13,6 +13,7 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
+import java.text.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ReviewAndUpdatePoller extends AbstractScheduledService {
         TmcSettings settings;
         try {
             settings = cli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             System.err.println(ex.getMessage());
             return Optional.absent(); // can't fetch reviews if no server is specified
         }

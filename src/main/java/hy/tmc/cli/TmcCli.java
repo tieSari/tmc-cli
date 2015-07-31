@@ -4,6 +4,7 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.core.TmcCore;
 import java.io.IOException;
+import java.text.ParseException;
 
 public class TmcCli {
 
@@ -13,6 +14,7 @@ public class TmcCli {
     private Session session;
     private ConfigHandler config;
     private final String apiVersion = "7";
+    private boolean makeUpdate = true;
 
     public TmcCli(TmcCore core) throws IOException {
         this.core = core;
@@ -21,10 +23,19 @@ public class TmcCli {
         server = new Server(this);
         serverThread = new Thread(server);
     }
+    
+    public TmcCli(TmcCore core, boolean makeUpdate) throws IOException {
+        this(core);
+        this.makeUpdate = makeUpdate;
+    }
 
     public TmcCli(TmcCore core, ConfigHandler config) throws IOException {
         this(core);
         this.config = config;
+    }
+    
+    public boolean makeUpdate(){
+        return this.makeUpdate;
     }
 
     public void startServer() {
@@ -65,11 +76,12 @@ public class TmcCli {
      * @throws IllegalStateException if server address is not found in the
      * config file
      */
-    public CliSettings defaultSettings() throws IllegalStateException {
+    public CliSettings defaultSettings() throws IllegalStateException, ParseException {
         CliSettings settings = new CliSettings(apiVersion);
         settings.setUserData(session.getUsername(), session.getPassword());
         settings.setServerAddress(config.readServerAddress());
-
+        settings.setLastUpdate(config.readLastUpdate());
+ 
         return settings;
     }
 

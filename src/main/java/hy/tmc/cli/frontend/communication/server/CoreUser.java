@@ -30,9 +30,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CoreUser {
 
@@ -54,6 +57,7 @@ public class CoreUser {
 
     public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
         this.observer.progress("Starting command " + commandName + "\n");
+        
         if (commandName.equals("login")) {
             login(params);
         } else if (commandName.equals("listCourses")) {
@@ -111,7 +115,11 @@ public class CoreUser {
             ListenableFuture<Boolean> result = core.verifyCredentials(settings);
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
+            
         } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+        }
+        catch (ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
 
@@ -121,7 +129,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -136,7 +144,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -167,7 +175,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -197,7 +205,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -251,7 +259,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }

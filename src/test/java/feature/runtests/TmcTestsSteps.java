@@ -37,7 +37,7 @@ public class TmcTestsSteps {
     @Before
     public void setUp() throws IOException {
         
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         client  = new TestClient(new ConfigHandler().readPort());

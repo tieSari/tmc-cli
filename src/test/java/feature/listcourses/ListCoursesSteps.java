@@ -41,7 +41,7 @@ public class ListCoursesSteps {
      */
     @Before
     public void setUpServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());

@@ -28,7 +28,7 @@ public class SetServerSteps {
 
     @Before
     public void setUp() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.startServer();
         testClient = new TestClient( new ConfigHandler().readPort());
     }

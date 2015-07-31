@@ -46,7 +46,7 @@ public class ListExercisesSteps {
     @Before
     public void setUpServer() throws IOException {
         TmcServiceScheduler.disablePolling();
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
 
