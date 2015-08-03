@@ -47,6 +47,8 @@ public abstract class ResultListener<T> implements Runnable {
             if (outputToUser.isPresent()) {
                 System.err.println("Output for user is present.");
                 writeToOutput(outputToUser.get());
+            } else {
+                System.err.println("Output for user is not present");
             }
         }
         catch (InterruptedException | ExecutionException ex) {

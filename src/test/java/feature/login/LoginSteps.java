@@ -19,9 +19,19 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.testhelpers.TestFuture;
+import hy.tmc.core.configuration.TmcSettings;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import static org.mockito.Matchers.any;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 
 
 public class LoginSteps {
@@ -45,8 +55,13 @@ public class LoginSteps {
      * @throws IOException if server creating fails
      */
     @Before
-    public void initializeServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore(), false);
+    public void initializeServer() throws IOException, TmcCoreException {
+        //TmcCore core = Mockito.mock(TmcCore.class);
+        TmcCore core = new TmcCore();
+        List<Exercise> exerciseList = new ArrayList<Exercise>();
+        TestFuture f = new TestFuture(exerciseList);
+        
+        tmcCli = new TmcCli(core, false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         port = new ConfigHandler().readPort();

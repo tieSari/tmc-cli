@@ -59,6 +59,7 @@ public class CoreUser {
         this.observer.progress("Starting command " + commandName + "\n");
         
         if (commandName.equals("login")) {
+            System.err.println("Loginissa");
             login(params);
         } else if (commandName.equals("listCourses")) {
             listCourses(params);
@@ -113,6 +114,7 @@ public class CoreUser {
             CliSettings settings = this.tmcCli.defaultSettings();
             settings.setUserData(params.get("username"), params.get("password"));
             ListenableFuture<Boolean> result = core.verifyCredentials(settings);
+            System.err.println("Result saatu. ");
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
             
