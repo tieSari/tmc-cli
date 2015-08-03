@@ -1,13 +1,13 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.base.Optional;
+import com.google.common.util.concurrent.AsyncFunction;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.frontend.ColorFormatter;
-import hy.tmc.cli.frontend.CommandLineColor;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.cli.frontend.CourseFinder;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
@@ -31,8 +31,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +45,7 @@ public class CoreUser {
     private ListeningExecutorService threadPool;
     private TmcCli tmcCli;
     private CommandLineProgressObserver observer;
+    private CourseFinder courseFinder;
 
     public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) {
         this.core = tmcCli.getCore();
@@ -53,36 +54,49 @@ public class CoreUser {
         this.socket = socket;
         this.output = output;
         this.observer = new CommandLineProgressObserver(output);
+        this.courseFinder = new CourseFinder();
     }
 
-    public void findAndExecute(String commandName, HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
+    public void findAndExecute(String commandName, Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
         this.observer.progress("Starting command " + commandName + "\n");
-        
-        if (commandName.equals("login")) {
-            System.err.println("Loginissa");
-            login(params);
-        } else if (commandName.equals("listCourses")) {
-            listCourses(params);
-        } else if (commandName.equals("listExercises")) {
-            listExercises(params);
-        } else if (commandName.equals("downloadExercises")) {
-            downloadExercises(params);
-        } else if (commandName.equals("logout")) {
-            logout(params);
-        } else if (commandName.equals("submit")) {
-            submit(params);
-        } else if (commandName.equals("runTests")) {
-            runTests(params);
-        } else if (commandName.equals("paste")) {
-            paste(params);
-        } else if (commandName.equals("getMail")) {
-            getMail(params);
-        } else {
-            throw new ProtocolException("Command not found.");
+
+        switch (commandName) {
+            case "login":
+                login(params);
+                break;
+            case "listCourses":
+                listCourses(params);
+                break;
+            case "listExercises":
+                listExercises(params);
+                break;
+            case "downloadExercises":
+                downloadExercises(params);
+                break;
+            case "logout":
+                logout(params);
+                break;
+            case "submit":
+                submit(params);
+                break;
+            case "runTests":
+                runTests(params);
+                break;
+            case "paste":
+                paste(params);
+                break;
+            case "getMail":
+                getMail(params);
+                break;
+            case "update":
+                update(params);
+                break;
+            default:
+                throw new ProtocolException("Command not found.");
         }
     }
 
-    public void runTests(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void runTests(Map<String, String> params) throws ProtocolException, TmcCoreException {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
@@ -96,9 +110,9 @@ public class CoreUser {
         result.addListener(listener, threadPool);
     }
 
-    private TestResultFormatter getTestResultFormatter(HashMap<String, String> params) {
+    private TestResultFormatter getTestResultFormatter(Map<String, String> params) {
         TestResultFormatter formatter;
-        if(params.containsKey("--vim")){
+        if (params.containsKey("--vim")) {
             formatter = new VimTestResultFormatter();
         } else {
             formatter = new DefaultTestResultFormatter();
@@ -106,7 +120,7 @@ public class CoreUser {
         return formatter;
     }
 
-    public void login(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void login(Map<String, String> params) throws ProtocolException, TmcCoreException {
         if (credentialsAreMissing(params)) {
             throw new ProtocolException("Username or/and password is missing!.");
         }
@@ -117,8 +131,8 @@ public class CoreUser {
             System.err.println("Result saatu. ");
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
-            
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
         catch (ParseException ex) {
@@ -127,7 +141,7 @@ public class CoreUser {
 
     }
 
-    public void listCourses(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void listCourses(Map<String, String> params) throws ProtocolException, TmcCoreException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -142,7 +156,7 @@ public class CoreUser {
         }
     }
 
-    public void listExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException {
+    public void listExercises(Map<String, String> params) throws ProtocolException, TmcCoreException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -155,7 +169,7 @@ public class CoreUser {
                 throw new ProtocolException("Path not recieved");
             }
             try {
-                Optional<Course> currentCourse = new CourseFinder().getCurrentCourse(
+                Optional<Course> currentCourse = this.courseFinder.getCurrentCourse(
                         params.get("path"),
                         core.listCourses(settings).get()
                 );
@@ -167,13 +181,14 @@ public class CoreUser {
                 } else {
                     writeToOutputSocket("Could not find current course from your path.");
                 }
-            } catch (IOException | InterruptedException | ExecutionException e) {
+            }
+            catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void downloadExercises(HashMap<String, String> params) throws ProtocolException, TmcCoreException, IOException {
+    public void downloadExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IOException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -189,7 +204,6 @@ public class CoreUser {
             String coursePath = new UrlHelper(settings).getCourseUrl(
                     Integer.parseInt(params.get("courseID"))
             );
-
             ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(
                     params.get("path"), params.get("courseID"), settings, observer
             );
@@ -198,12 +212,12 @@ public class CoreUser {
         }
     }
 
-    public void logout(HashMap<String, String> params) {
+    public void logout(Map<String, String> params) {
         this.tmcCli.logout();
         writeToOutputSocket("User data cleared!");
     }
 
-    public void submit(HashMap<String, String> params) throws ProtocolException {
+    public void submit(Map<String, String> params) throws ProtocolException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -216,16 +230,16 @@ public class CoreUser {
                 throw new ProtocolException("path not supplied");
             }
             settings.setPath(params.get("path"));
-
             try {
                 sendSubmission(settings, params);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
     }
 
-    private void sendSubmission(CliSettings settings, HashMap<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
+    private void sendSubmission(CliSettings settings, Map<String, String> params) throws TmcCoreException, ExecutionException, InterruptedException {
         fetchCourseToSettings(settings);
         ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
         SubmissionResultFormatter formatter;
@@ -233,9 +247,9 @@ public class CoreUser {
         result.addListener(new SubmissionListener(result, output, socket, formatter), threadPool);
     }
 
-    private SubmissionResultFormatter getSubmissionFormatter(HashMap<String, String> params) {
+    private SubmissionResultFormatter getSubmissionFormatter(Map<String, String> params) {
         SubmissionResultFormatter formatter;
-        if(params.containsKey("--vim")){
+        if (params.containsKey("--vim")) {
             formatter = new VimSubmissionResultFormatter();
         } else {
             formatter = new CommandLineSubmissionResultFormatter();
@@ -246,18 +260,15 @@ public class CoreUser {
     private void fetchCourseToSettings(CliSettings settings)
             throws TmcCoreException, InterruptedException, ExecutionException {
         List<Course> courses = core.listCourses(settings).get(); // wait for completion
-        String[] folders = settings.getPath().split("\\" + File.separatorChar);
-        for (Course course : courses) {
-            for (String folder : folders) {
-                if (course.getName().equals(folder)) {
-                    settings.setCurrentCourse(course);
-                    return;
-                }
-            }
+        Optional<Course> course = this.courseFinder.getCurrentCourse(settings.getPath(), courses);
+        if (course.isPresent()) {
+            settings.setCurrentCourse(course.get());
+        } else {
+            throw new TmcCoreException("Could not find course from current path");
         }
     }
 
-    public void paste(HashMap<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
+    public void paste(Map<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -277,8 +288,45 @@ public class CoreUser {
         }
     }
 
-    public void getMail(HashMap<String, String> params) throws ProtocolException {
+    private void update(Map<String, String> params) throws TmcCoreException, IOException, InterruptedException, ExecutionException, ProtocolException, ParseException {
+        Optional<CliSettings> optSettings = this.getDefaultSettings();
+        if (!optSettings.isPresent()) {
+            return;
+        }
+        CliSettings settings = optSettings.get();
+        if (!loginIsDone(settings)) {
+            return;
+        }
+        settings.setPath(params.get("path"));
+        fetchCourseToSettings(settings);
+        if (!params.containsKey("path")) {
+            throw new ProtocolException("path not supplied");
+        }
+        String currentPath = params.get("path");
+        String courseName = settings.getCurrentCourse().or(new Course()).getName();
+        if (courseName.isEmpty()) {
+            throw new TmcCoreException("Could not determine the course. Make sure you are under a directory with the name of the course");
+        }
+        String path = currentPath.substring(0, currentPath.indexOf(courseName));
+        settings.setMainDirectory(path);
+        ListenableFuture<List<Exercise>> downloadFuture;
+        ListenableFuture<List<Exercise>> updateFuture = core.getNewAndUpdatedExercises(settings.getCurrentCourse().get(), settings);
+        downloadFuture = Futures.transform(updateFuture, new DownloadUpdates(settings));
+        downloadFuture.addListener(new UpdateDownloadingListener(downloadFuture, output, socket), threadPool);
+    }
 
+    public void getMail(Map<String, String> params) throws ProtocolException {
+
+    }
+
+    private Optional<CliSettings> getDefaultSettings() throws ParseException {
+        try {
+            CliSettings settings = this.tmcCli.defaultSettings();
+            return Optional.of(settings);
+        } catch (IllegalStateException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+            return Optional.absent();
+        }
     }
 
     private void writeToOutputSocket(String message) {
@@ -294,7 +342,7 @@ public class CoreUser {
     /**
      * If no login is done yet, user will be asked to login.
      */
-    private boolean loginIsDone(TmcSettings settings) {
+    public boolean loginIsDone(TmcSettings settings) {
         if (!settings.userDataExists()) {
             writeToOutputSocket("Please authorize first.");
             return false;
@@ -302,9 +350,23 @@ public class CoreUser {
         return true;
     }
 
-    private boolean credentialsAreMissing(HashMap<String, String> params) {
+    private boolean credentialsAreMissing(Map<String, String> params) {
         String username = params.get("username");
         String password = params.get("password");
         return username == null || username.isEmpty() || password == null || password.isEmpty();
+    }
+
+    private class DownloadUpdates implements AsyncFunction<List<Exercise>, List<Exercise>> {
+
+        CliSettings settings;
+
+        public DownloadUpdates(CliSettings settings) {
+            this.settings = settings;
+        }
+
+        @Override
+        public ListenableFuture<List<Exercise>> apply(List<Exercise> updatedAndNewExercises) throws Exception {
+            return core.downloadExercises(updatedAndNewExercises, settings, observer);
+        }
     }
 }

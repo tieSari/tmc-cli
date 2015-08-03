@@ -1,6 +1,7 @@
 package hy.tmc.cli.testhelpers;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import hy.tmc.cli.listeners.ResultListener;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
