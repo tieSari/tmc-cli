@@ -5,7 +5,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.frontend.communication.commands.CheckUpdates;
 
 import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.Help;
@@ -87,7 +86,6 @@ public class CommandExecutor {
         map.put("help", new Help(this.cli, params.get("command")));
         map.put("setServer", new SetServer(this.cli, params.get("tmc-server")));
         map.put("showSettings", new ShowSettings(this.cli));
-        map.put("checkUpdates", new CheckUpdates(this.cli));
         return map;
     }
 
