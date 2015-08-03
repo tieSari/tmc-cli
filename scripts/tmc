@@ -81,6 +81,10 @@ function command_download () {
   send_command "downloadExercises path `pwd` courseID $1"
 }
 
+function command_update() {
+  send_command "update path $(pwd)"
+}
+
 function command_showsettings () {
   send_command "showSettings"
 }
@@ -233,6 +237,7 @@ case "$1" in
     "login") command_login;;
     "submit") command_submit $2;;
     "download") command_download $2;;
+    "update") command_update;;
     "showSettings") command_showsettings;;
     "test") command_test $2;;
     "paste") command_paste $2;;
