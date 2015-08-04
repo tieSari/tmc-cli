@@ -1,10 +1,10 @@
 package hy.tmc.cli.backend.communication;
 
+import com.google.common.util.concurrent.Futures;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.synchronization.PollScheduler;
-import hy.tmc.cli.testhelpers.TestFuture;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
@@ -42,7 +42,7 @@ public class ReviewAndUpdatePollerTest {
         reviews.add(new Review());
         reviews.add(new Review());
         when(coreMock.getNewReviews(any(Course.class), any(TmcSettings.class)))
-                .thenReturn(new TestFuture<>(reviews));
+                .thenReturn(Futures.immediateFuture(reviews));
 
         statusPoller.runOneIteration();
         assertTrue(Mailbox.getMailbox().get().reviewsWaiting());
