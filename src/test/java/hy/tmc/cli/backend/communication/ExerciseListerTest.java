@@ -75,8 +75,9 @@ public class ExerciseListerTest {
         exercises.add(ex);
 
         String info = lister.buildExercisesInfo(exampleExercises());
-        assertTrue(info.contains("25.0%"));
-        assertTrue(info.contains("Attempted: 2 (50.0%)"));
+        System.out.println("Info: " + info);
+        assertTrue(info.contains("25,0%"));
+        assertTrue(info.contains("Attempted: 2 (50,0%)"));
         assertTrue(info.contains("Total: 4"));
     }
 
