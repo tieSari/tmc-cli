@@ -63,7 +63,7 @@ public class CommandExecutor {
         } else {
             try {
                 coreUser.findAndExecute(commandName, params);
-            } catch (ProtocolException ex) {
+            } catch (ProtocolException | TmcCoreException ex) {
                 stream.write((ex.getMessage()+"\n").getBytes());
                 stream.close();
                 socket.close();
