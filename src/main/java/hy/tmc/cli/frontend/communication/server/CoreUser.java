@@ -26,7 +26,6 @@ import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
@@ -36,13 +35,13 @@ import java.util.concurrent.ExecutionException;
 
 public class CoreUser {
 
-    private TmcCore core;
-    private DataOutputStream output;
-    private Socket socket;
-    private ListeningExecutorService threadPool;
-    private TmcCli tmcCli;
-    private CommandLineProgressObserver observer;
-    private CourseFinder courseFinder;
+    private final TmcCore core;
+    private final DataOutputStream output;
+    private final Socket socket;
+    private final ListeningExecutorService threadPool;
+    private final TmcCli tmcCli;
+    private final CommandLineProgressObserver observer;
+    private final CourseFinder courseFinder;
 
     public CoreUser(TmcCli tmcCli, DataOutputStream output, Socket socket, ListeningExecutorService pool) {
         this.core = tmcCli.getCore();
@@ -126,8 +125,7 @@ public class CoreUser {
             ListenableFuture<Boolean> result = core.verifyCredentials(settings);
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
-        }
-        catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
 
@@ -137,8 +135,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -153,8 +150,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -175,8 +171,7 @@ public class CoreUser {
                 } else {
                     writeToOutputSocket("Could not find current course from your path.");
                 }
-            }
-            catch (InterruptedException | ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
@@ -186,8 +181,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -216,8 +210,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -228,8 +221,7 @@ public class CoreUser {
             settings.setPath(params.get("path"));
             try {
                 sendSubmission(settings, params);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
@@ -268,8 +260,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -302,7 +293,9 @@ public class CoreUser {
         String currentPath = params.get("path");
         String courseName = settings.getCurrentCourse().or(new Course()).getName();
         if (courseName.isEmpty()) {
-            throw new TmcCoreException("Could not determine the course. Make sure you are under a directory with the name of the course");
+            String error = "Could not determine the course. Make sure you are under a directory with the name of the course";
+            writeToOutputSocket(error);
+            return;
         }
         String path = currentPath.substring(0, currentPath.indexOf(courseName));
         settings.setMainDirectory(path);
@@ -363,6 +356,10 @@ public class CoreUser {
 
         @Override
         public ListenableFuture<List<Exercise>> apply(List<Exercise> updatedAndNewExercises) throws Exception {
+            if (updatedAndNewExercises.isEmpty()) {
+                return Futures.immediateFuture(updatedAndNewExercises); // skip the download
+            }
+            CoreUser.this.observer.progress("update information received, starting download\n");
             return core.downloadExercises(updatedAndNewExercises, settings, observer);
         }
     }

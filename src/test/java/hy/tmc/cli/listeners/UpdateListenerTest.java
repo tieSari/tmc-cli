@@ -25,7 +25,7 @@ public class UpdateListenerTest {
         exs.add(new Exercise());
         exs.add(new Exercise());
         exs.add(new Exercise());
-        String expected = "Downloaded 3 exercises.";
+        String expected = "3 updates downloaded";
         assertEquals(expected, ul.parseData(exs).get());
     }
 
