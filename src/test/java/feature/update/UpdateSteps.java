@@ -53,7 +53,7 @@ public class UpdateSteps {
     @Before
     public void setUpServer() throws IOException, TmcCoreException {
         coreMock = mock(TmcCore.class);
-        tmcCli = new TmcCli(coreMock);
+        tmcCli = new TmcCli(coreMock, false);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
         List<Course> fake = new ArrayList<>();
