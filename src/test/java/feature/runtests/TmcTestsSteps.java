@@ -57,12 +57,14 @@ public class TmcTestsSteps {
 
     @When("^the user runs the tests$")
     public void theUserRunsTheTests() throws ProtocolException, NoLanguagePluginFoundException, fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException, IOException {
+        String startingText = client.reply();
         output = client.reply();
     }
 
  
     @Then("^the user sees that all tests have passed\\.$")
     public void theUserSeesAllTestsPassing() {
+        System.out.println("Output: " + output);
         assertTrue(output.contains("\u001B[32mAll tests passed.\u001B[0m You can now submit"));
     }
 
