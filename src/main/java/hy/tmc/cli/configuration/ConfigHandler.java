@@ -166,6 +166,6 @@ public class ConfigHandler {
      */
     public void writeLastUpdate(Date lastUpdate) throws IOException {
         String date = sdf.format(lastUpdate);
-        writeData(portFieldName, date);
+        writeData("lastUpdate", date);
     }
 }

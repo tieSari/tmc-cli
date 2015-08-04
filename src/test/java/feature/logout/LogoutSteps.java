@@ -16,6 +16,7 @@ import hy.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class LogoutSteps {
 
@@ -28,6 +29,8 @@ public class LogoutSteps {
         tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.startServer();
         testClient = new TestClient( new ConfigHandler().readPort());
+        
+        new ConfigHandler().writeLastUpdate(new Date());
     }
 
     @Given("^logout command\\.$")

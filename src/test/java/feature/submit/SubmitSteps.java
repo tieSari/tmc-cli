@@ -18,6 +18,7 @@ import hy.tmc.core.TmcCore;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import org.hamcrest.CoreMatchers;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -67,6 +68,7 @@ public class SubmitSteps {
         mocker.wireMockSuccesfulSubmit(wireMockServer);
         mocker.wireMockExpiredSubmit(wireMockServer);
         mocker.wiremockFailingSubmit(wireMockServer);
+        new ConfigHandler().writeLastUpdate(new Date());
        
     }
 

@@ -22,6 +22,7 @@ import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -51,6 +52,8 @@ public class ListExercisesSteps {
         tmcCli.startServer();
 
         testClient = new TestClient(new ConfigHandler().readPort());
+        
+        new ConfigHandler().writeLastUpdate(new Date());
         startWireMock();
     }
 

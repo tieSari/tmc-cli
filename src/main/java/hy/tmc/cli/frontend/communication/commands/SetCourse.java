@@ -10,6 +10,7 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 public class SetCourse extends Command<String>{
 
@@ -32,7 +33,7 @@ public class SetCourse extends Command<String>{
         return currentCourse.getName() + " is set as current course.";
     }
 
-    private TmcSettings checkLoginAndGetSettings() throws ProtocolException {
+    private TmcSettings checkLoginAndGetSettings() throws ProtocolException, IllegalStateException, ParseException {
         TmcSettings settings = tmcCli.defaultSettings();
         if (!settings.userDataExists()) {
             throw new ProtocolException("Please login first.");

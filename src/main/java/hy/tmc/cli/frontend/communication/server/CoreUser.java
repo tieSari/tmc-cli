@@ -57,7 +57,7 @@ public class CoreUser {
         this.courseFinder = new CourseFinder();
     }
 
-    public void findAndExecute(String commandName, Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
+    public void findAndExecute(String commandName, Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException, ParseException {
         this.observer.progress("Starting command " + commandName + "\n");
 
         switch (commandName) {

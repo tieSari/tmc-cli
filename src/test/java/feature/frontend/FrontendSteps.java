@@ -15,6 +15,7 @@ import hy.tmc.core.TmcCore;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class FrontendSteps {
 
@@ -48,6 +49,7 @@ public class FrontendSteps {
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
+        new ConfigHandler().writeLastUpdate(new Date());
     }
 
     @Given("^help command\\.$")

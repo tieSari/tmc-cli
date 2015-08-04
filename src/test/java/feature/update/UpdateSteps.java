@@ -19,6 +19,7 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -49,6 +50,7 @@ public class UpdateSteps {
         fake.add(new Course("course"));
         when(coreMock.listCourses(any(TmcSettings.class))).thenReturn(new TestFuture<>(fake));
         tmcCli.login("bossman", "samu");
+        new ConfigHandler().writeLastUpdate(new Date());
         
         setupExercises();
     }

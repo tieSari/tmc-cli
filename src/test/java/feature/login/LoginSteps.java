@@ -28,6 +28,7 @@ import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import static org.mockito.Matchers.any;
 import org.mockito.Mockito;
@@ -66,6 +67,8 @@ public class LoginSteps {
         tmcCli.startServer();
         port = new ConfigHandler().readPort();
         testClient = new TestClient(port);
+        
+        new ConfigHandler().writeLastUpdate(new Date());
 
         startWireMock();
     }

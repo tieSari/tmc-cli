@@ -23,6 +23,7 @@ import hy.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class ListCoursesSteps {
 
@@ -45,6 +46,8 @@ public class ListCoursesSteps {
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
+        
+        new ConfigHandler().writeLastUpdate(new Date());
 
         startWireMock();
     }

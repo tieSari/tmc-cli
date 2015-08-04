@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CommandExecutor {
 
@@ -36,8 +38,8 @@ public class CommandExecutor {
         this.cli = cli;
         this.parser = new ProtocolParser();
     }
-    
-    public CommandExecutor(TmcCli cli){
+
+    public CommandExecutor(TmcCli cli) {
         this.cli = cli;
     }
 
@@ -47,7 +49,7 @@ public class CommandExecutor {
      * @param inputLine input String
      */
     public void parseAndExecute(String inputLine) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException, IllegalStateException, ParseException {
-        if(this.cli.makeUpdate()){
+        if (this.cli.makeUpdate()) {
             this.stream.write((checkUpdates() + "\n").getBytes());
         }
         String[] elements = parser.getElements(inputLine);
@@ -56,19 +58,19 @@ public class CommandExecutor {
         HashMap<String, Command> commandMap = createCommandMap(params);
         executeCommand(commandMap, commandName, params);
     }
-    
-    public String checkUpdates() throws TmcCoreException, IllegalStateException, IOException, InterruptedException, ParseException, ExecutionException{
+
+    public String checkUpdates() throws TmcCoreException, IllegalStateException, IOException, InterruptedException, ParseException, ExecutionException {
         int pollInterval = 30;
         CliSettings settings = this.cli.defaultSettings();
         Date current = new Date();
         Date lastUpdate = settings.getLastUpdate();
         double mins = (current.getTime() - lastUpdate.getTime()) / (60 * 1000);
         String value = "";
-        if(mins > pollInterval){
+        if (mins > pollInterval) {
             ListenableFuture<List<Exercise>> updates = this.cli.getCore().getNewAndUpdatedExercises(settings.getCurrentCourse().or(new Course()), settings);
             List<Exercise> exercises = updates.get();
             System.err.println("Update exercises: " + exercises.size());
-            if(exercises.isEmpty()){
+            if (exercises.isEmpty()) {
                 return "No updates available.";
             } else {
                 return "Updates available. Type tmc update to download exercises.";
@@ -97,8 +99,8 @@ public class CommandExecutor {
         } else {
             try {
                 coreUser.findAndExecute(commandName, params);
-            } catch (ProtocolException ex) {
-                stream.write((ex.getMessage()+"\n").getBytes());
+            } catch (ProtocolException | ParseException ex) {
+                stream.write((ex.getMessage() + "\n").getBytes());
                 stream.close();
                 socket.close();
             }

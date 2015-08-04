@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import java.util.Date;
 import static org.junit.Assert.*;
 
 public class DownloadExercisesSteps {
@@ -43,11 +44,14 @@ public class DownloadExercisesSteps {
     public void setUpServer() throws IOException {
         tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
+        Date date = new Date();
         tmcCli.startServer();
+        new ConfigHandler().writeLastUpdate(date);
         testClient = new TestClient(new ConfigHandler().readPort());
 
         tempDir = Files.createTempDirectory(null);
 
+        new ConfigHandler().writeLastUpdate(new Date());
         wiremock();
     }
 
