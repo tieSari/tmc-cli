@@ -19,7 +19,6 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.testhelpers.TestFuture;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
@@ -60,7 +59,6 @@ public class LoginSteps {
         //TmcCore core = Mockito.mock(TmcCore.class);
         TmcCore core = new TmcCore();
         List<Exercise> exerciseList = new ArrayList<Exercise>();
-        TestFuture f = new TestFuture(exerciseList);
         
         tmcCli = new TmcCli(core, false);
         tmcCli.setServer(SERVER_ADDRESS);

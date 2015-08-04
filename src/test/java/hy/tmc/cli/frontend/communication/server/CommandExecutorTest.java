@@ -1,8 +1,9 @@
 package hy.tmc.cli.frontend.communication.server;
 
+import com.google.common.util.concurrent.Futures;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.testhelpers.TestFuture;
+//import hy.tmc.cli.testhelpers.TestFuture;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
@@ -40,9 +41,9 @@ public class CommandExecutorTest {
         executor = new CommandExecutor(cli);
         List<Exercise> exerciseList = new ArrayList<Exercise>();
         exerciseList.add(new Exercise());
-        TestFuture f = new TestFuture(exerciseList);
+        //TestFuture f = new TestFuture(exerciseList);
         when(core.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
-                .thenReturn(f);
+                .thenReturn(Futures.immediateFuture(exerciseList));
     }
     
     @Test
@@ -54,9 +55,8 @@ public class CommandExecutorTest {
     @Test
     public void noUpdatesAvailable() throws TmcCoreException, IOException, IllegalStateException, InterruptedException, ParseException, ExecutionException{
         List<Exercise> exerciseList = new ArrayList<Exercise>();
-        TestFuture f = new TestFuture(exerciseList);
         when(core.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
-                .thenReturn(f);
+                .thenReturn(Futures.immediateFuture(exerciseList));
          String result = executor.checkUpdates();
         assertTrue(result.contains("No updates available"));
     }

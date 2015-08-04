@@ -99,7 +99,7 @@ public class CommandExecutor {
         } else {
             try {
                 coreUser.findAndExecute(commandName, params);
-            } catch (ProtocolException | ParseException ex) {
+            } catch (ProtocolException | ParseException | TmcCoreException ex) {
                 stream.write((ex.getMessage() + "\n").getBytes());
                 stream.close();
                 socket.close();
