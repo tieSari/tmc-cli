@@ -189,4 +189,14 @@ public class CliSettings implements TmcSettings {
         }
         return value;
     }
+
+    @Override
+    public String clientName() {
+       return "tmc_cli";
+    }
+
+    @Override
+    public String clientVersion() {
+        return "0.6";
+    }
 }
