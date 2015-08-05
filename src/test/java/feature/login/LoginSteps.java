@@ -24,7 +24,6 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +31,6 @@ import java.util.List;
 import static org.mockito.Matchers.any;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
-
 
 public class LoginSteps {
 
@@ -52,6 +50,7 @@ public class LoginSteps {
 
     /**
      * Initialize server, set address and start thread.
+     *
      * @throws IOException if server creating fails
      */
     @Before
@@ -77,13 +76,13 @@ public class LoginSteps {
     }
 
     private void wiremockGetWithUsernamePasswordAndStatus(String username, String password, int status) {
-        String auth = Authorization.encode(username+":"+password);
+        String auth = Authorization.encode(username + ":" + password);
         wireMockServer.stubFor(get(urlEqualTo("/user"))
-                        .withHeader("Authorization", containing("Basic " + auth))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(status)
-                        )
+                .withHeader("Authorization", containing("Basic " + auth))
+                .willReturn(
+                        aResponse()
+                        .withStatus(status)
+                )
         );
     }
 
@@ -101,6 +100,7 @@ public class LoginSteps {
 
     /**
      * Close server and wiremock after test.
+     *
      * @throws IOException if server closing fails
      */
     @After

@@ -71,7 +71,7 @@ public class FrontendSteps {
 
     @Given("^show settings command\\.$")
     public void show_settings_command() throws Throwable {
-          testClient.sendMessage("showSettings");
+        testClient.sendMessage("showSettings");
     }
 
     @Then("^output should contains settings information\\.$")

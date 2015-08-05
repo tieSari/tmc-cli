@@ -15,7 +15,11 @@ import hy.tmc.core.communication.authorization.Authorization;
 import org.hamcrest.CoreMatchers;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 import java.util.Date;
+import hy.tmc.cli.CliSettings;
+import hy.tmc.core.communication.UrlHelper;
+
 import static org.junit.Assert.assertThat;
 
 public class SetCourseSteps {
@@ -71,15 +75,18 @@ public class SetCourseSteps {
         wireMockServer.stubFor(get(urlEqualTo("/user"))
                 .withHeader("Authorization", containing("Basic " + Authorization.encode(username + ":" + password)))
                 .willReturn(aResponse().withStatus(200)));
-        wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
-        wiremockGET("/courses/21.json?api_version=7", ExampleJson.courseExample);
+        wiremockGET("/courses.json", ExampleJson.allCoursesExample);
+        wiremockGET("/courses/21.json", ExampleJson.courseExample);
     }
 
-    private void wiremockGET(final String urlToMock, final String returnBody) {
+    private void wiremockGET(String urlToMock, final String returnBody) {
+        CliSettings settings = new CliSettings();
+        settings.setServerAddress(SERVER_ADDRESS);
+        urlToMock = new UrlHelper(settings).withParams(urlToMock);
         wireMockServer.stubFor(get(urlEqualTo(urlToMock))
-                        .willReturn(aResponse()
-                                        .withBody(returnBody)
-                        )
+                .willReturn(aResponse()
+                        .withBody(returnBody)
+                )
         );
     }
 }

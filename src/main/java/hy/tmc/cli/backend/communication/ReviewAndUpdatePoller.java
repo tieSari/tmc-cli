@@ -4,9 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.mail.Mailbox;
 
-import hy.tmc.cli.synchronization.PollScheduler;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;

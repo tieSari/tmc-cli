@@ -8,7 +8,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.core.TmcCore;
@@ -21,6 +20,8 @@ import java.nio.file.Path;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import java.util.Date;
+import hy.tmc.cli.CliSettings;
+import hy.tmc.core.communication.UrlHelper;
 import static org.junit.Assert.*;
 
 public class DownloadExercisesSteps {
@@ -36,6 +37,12 @@ public class DownloadExercisesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    private UrlHelper urlHelper;
+
+    public DownloadExercisesSteps() {
+        CliSettings settings = new CliSettings();
+        urlHelper = new UrlHelper(settings);
+    }
 
     /**
      * Setups client's config and starts WireMock.
@@ -63,14 +70,16 @@ public class DownloadExercisesSteps {
                 .willReturn(aResponse()
                         .withStatus(200)));
 
-        wireMockServer.stubFor(get(urlEqualTo("/courses.json?api_version=7"))
+        String urlMock = urlHelper.withParams("/courses.json");
+        wireMockServer.stubFor(get(urlEqualTo(urlMock))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
                         .withBody(ExampleJson.allCoursesExample
                                 .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
 
-        wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
+        urlMock = urlHelper.withParams("/courses/21.json");
+        wireMockServer.stubFor(get(urlEqualTo(urlMock))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
@@ -106,7 +115,7 @@ public class DownloadExercisesSteps {
 
     @When("^user gives a download exercises command and course id with locked exercises\\.$")
     public void user_gives_a_download_exercises_command_and_course_id_with_locked_exercises() throws Throwable {
-                wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
+        wireMockServer.stubFor(get(urlEqualTo(urlHelper.withParams("/courses/21.json")))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -162,7 +171,6 @@ public class DownloadExercisesSteps {
      */
     @After
     public void closeServer() throws IOException, InterruptedException {
-        Mailbox.destroy();
         tempDir.toFile().delete();
         wireMockServer.stop();
         tmcCli.stopServer();

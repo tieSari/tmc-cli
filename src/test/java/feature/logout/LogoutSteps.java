@@ -23,7 +23,6 @@ public class LogoutSteps {
     private TestClient testClient;
     private TmcCli tmcCli;
 
-
     @Before
     public void initializeServer() throws IOException {
         tmcCli = new TmcCli(new TmcCore(), false);
@@ -53,6 +52,7 @@ public class LogoutSteps {
 
     /**
      * Clear ClientData and close server.
+     *
      * @throws IOException if server closing fails
      */
     @After
