@@ -60,7 +60,11 @@ public class ConfigHandler {
     private Properties getProperties() {
         Properties prop = new Properties();
         try {
-            InputStream inputStream = new FileInputStream(new File(configFilePath));
+            if (!propertyFile.exists()) {
+-                propertyFile.createNewFile();
+-                return prop;
+-           }
+-           InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
         } catch (IOException e) {
             System.err.println(e.getMessage());
