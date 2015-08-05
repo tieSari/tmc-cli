@@ -1,8 +1,11 @@
 #!/bin/bash
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-CONFIGPATH=$DIR
-CONFIGPATH+="/config"
+PIDFILE="$DIR/pidfile.pid"
+PID="$(cat "$PIDFILE")"
 
-kill -9 `cat $CONFIGPATH`
-echo "" > $CONFIGPATH
+kill "$PID"
+sleep 2
+kill -9 "$PID" &> /dev/null
+
+rm "$PIDFILE"
