@@ -10,18 +10,16 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
-import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.core.TmcCore;
-import org.hamcrest.CoreMatchers;
+import hy.tmc.core.communication.UrlHelper;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ListExercisesSteps {
@@ -36,7 +34,15 @@ public class ListExercisesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    private final String coursesExtension = "/courses.json?api_version=7";
+    private final String coursesExtension;
+    private UrlHelper urlHelper;
+
+    public ListExercisesSteps() {
+        CliSettings settings = new CliSettings();
+        settings.setServerAddress(SERVER_ADDRESS);
+        this.urlHelper = new UrlHelper(settings);
+        coursesExtension = urlHelper.withParams("/courses.json");
+    }
 
     /**
      * Setups client's config and starts WireMock.
@@ -58,6 +64,10 @@ public class ListExercisesSteps {
         tmcCli.setServer("https://tmc.mooc.fi/staging");
     }
 
+    @Given("^user has not logged in$")
+    public void user_has_not_logged_in() throws Throwable {
+    }
+
     private void startWireMock() {
         wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         wireMockServer.start();
@@ -68,14 +78,15 @@ public class ListExercisesSteps {
                 )
         );
         wireMockServer.stubFor(get(urlEqualTo(coursesExtension))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
-                                        .withBody(ExampleJson.allCoursesExample)
-                        )
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(ExampleJson.allCoursesExample)
+                )
         );
-        wireMockServer.stubFor(get(urlEqualTo("/courses/3.json?api_version=7"))
+        String mockUrl = urlHelper.withParams("/courses/3.json");
+        wireMockServer.stubFor(get(urlEqualTo(mockUrl))
                 .willReturn(
                         aResponse()
                         .withStatus(200)

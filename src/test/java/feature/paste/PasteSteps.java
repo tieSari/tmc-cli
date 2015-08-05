@@ -12,41 +12,48 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
-import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.communication.UrlHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import org.hamcrest.CoreMatchers;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 
-
 public class PasteSteps {
-    
+
     private TestClient testClient;
     private WireMockServer wireMockServer;
     private String pasteCommand;
-    
+
     private TmcCli tmcCli;
 
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    private final String coursesExtension = "/courses.json?api_version=7";
+    private final String coursesExtension;
+    private UrlHelper urlHelper;
+
+    public PasteSteps() {
+        CliSettings settings = new CliSettings();
+        settings.setServerAddress(SERVER_ADDRESS);
+        this.urlHelper = new UrlHelper(settings);
+        coursesExtension = urlHelper.withParams("/courses.json");
+    }
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
 
     @Before
     public void initializeServer() throws IOException {
-        
+
         tmcCli = new TmcCli(new TmcCore());
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
@@ -69,14 +76,15 @@ public class PasteSteps {
         wireMockServer.stubFor(get(urlEqualTo("/user"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(aResponse().withStatus(200)));
-        wiremockGET("/courses.json?api_version=7", ExampleJson.allCoursesExample);
-        wiremockGET("/courses/3.json?api_version=7", ExampleJson.courseExample);
-        wiremockPOST("/exercises/286/submissions.json?api_version=7&paste=1", ExampleJson.pasteResponse);
-        wiremockPOST("/exercises/286/submissions.json?api_version=7", ExampleJson.pasteResponse);
-        wiremockGET("/submissions/1781.json?api_version=7", ExampleJson.successfulSubmission);
+        wiremockGET("/courses.json", ExampleJson.allCoursesExample);
+        wiremockGET("/courses/3.json", ExampleJson.courseExample);
+        wiremockPOSTwithPaste("/exercises/286/submissions.json", ExampleJson.pasteResponse);
+        wiremockPOST("/exercises/286/submissions.json", ExampleJson.pasteResponse);
+        wiremockGET("/submissions/1781.json", ExampleJson.successfulSubmission);
     }
 
-    private void wiremockGET(final String urlToMock, final String returnBody) {
+    private void wiremockGET(String urlToMock, final String returnBody) {
+        urlToMock = urlHelper.withParams(urlToMock);
         wireMockServer.stubFor(get(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
                         .withBody(returnBody)
@@ -84,7 +92,17 @@ public class PasteSteps {
         );
     }
 
-    private void wiremockPOST(final String urlToMock, final String returnBody) {
+    private void wiremockPOST(String urlToMock, final String returnBody) {
+        urlToMock = urlHelper.withParams(urlToMock);
+        wireMockServer.stubFor(post(urlEqualTo(urlToMock))
+                .willReturn(aResponse()
+                        .withBody(returnBody)
+                )
+        );
+    }
+
+    private void wiremockPOSTwithPaste(String urlToMock, String returnBody) {
+        urlToMock = urlHelper.withParams(urlToMock) + "&paste=1";
         wireMockServer.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(aResponse()
                         .withBody(returnBody)

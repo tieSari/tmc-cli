@@ -20,9 +20,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-
 import java.io.IOException;
-
 
 public class LoginSteps {
 
@@ -42,6 +40,7 @@ public class LoginSteps {
 
     /**
      * Initialize server, set address and start thread.
+     *
      * @throws IOException if server creating fails
      */
     @Before
@@ -61,13 +60,13 @@ public class LoginSteps {
     }
 
     private void wiremockGetWithUsernamePasswordAndStatus(String username, String password, int status) {
-        String auth = Authorization.encode(username+":"+password);
+        String auth = Authorization.encode(username + ":" + password);
         wireMockServer.stubFor(get(urlEqualTo("/user"))
-                        .withHeader("Authorization", containing("Basic " + auth))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(status)
-                        )
+                .withHeader("Authorization", containing("Basic " + auth))
+                .willReturn(
+                        aResponse()
+                        .withStatus(status)
+                )
         );
     }
 
@@ -86,6 +85,7 @@ public class LoginSteps {
 
     /**
      * Close server and wiremock after test.
+     *
      * @throws IOException if server closing fails
      */
     @After

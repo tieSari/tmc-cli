@@ -22,12 +22,11 @@ public class LogoutSteps {
     private TestClient testClient;
     private TmcCli tmcCli;
 
-
     @Before
     public void initializeServer() throws IOException {
         tmcCli = new TmcCli(new TmcCore());
         tmcCli.startServer();
-        testClient = new TestClient( new ConfigHandler().readPort());
+        testClient = new TestClient(new ConfigHandler().readPort());
     }
 
     @Given("^logout command\\.$")
@@ -50,6 +49,7 @@ public class LogoutSteps {
 
     /**
      * Clear ClientData and close server.
+     *
      * @throws IOException if server closing fails
      */
     @After

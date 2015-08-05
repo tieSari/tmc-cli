@@ -7,17 +7,17 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.communication.UrlHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import org.hamcrest.CoreMatchers;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -32,12 +32,20 @@ public class SubmitSteps {
 
     private ConfigHandler configHandler;
     private WireMockServer wireMockServer;
-    
+
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    
-    private final String coursesExtension = "/courses.json?api_version=7";
+
+    private final String coursesExtension;
+    private UrlHelper urlHelper;
+
+    public SubmitSteps() {
+        CliSettings settings = new CliSettings();
+        settings.setServerAddress(SERVER_ADDRESS);
+        this.urlHelper = new UrlHelper(settings);
+        coursesExtension = urlHelper.withParams("/courses.json");
+    }
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
@@ -51,18 +59,18 @@ public class SubmitSteps {
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
-        
+
         tmcCli = new TmcCli(new TmcCore());
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
- 
+
         Wiremocker mocker = new Wiremocker();
         wireMockServer = mocker.mockAnyUserAndSubmitPaths();
         mocker.wireMockSuccesfulSubmit(wireMockServer);
         mocker.wireMockExpiredSubmit(wireMockServer);
         mocker.wiremockFailingSubmit(wireMockServer);
-       
+
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
