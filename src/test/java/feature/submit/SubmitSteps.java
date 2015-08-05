@@ -8,9 +8,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
@@ -59,9 +57,6 @@ public class SubmitSteps {
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
  
-        TmcServiceScheduler.disablePolling();
-        Mailbox.create();
-
         Wiremocker mocker = new Wiremocker();
         wireMockServer = mocker.mockAnyUserAndSubmitPaths();
         mocker.wireMockSuccesfulSubmit(wireMockServer);
@@ -116,29 +111,6 @@ public class SubmitSteps {
         assertTrue(result.contains("expired"));
     }
 
-    @Given("^the user has mail in the mailbox$")
-    public void the_user_has_mail_in_the_mailbox() throws Throwable {
-        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
-    }
-
-    @Then("^user will see the new mail$")
-    public void user_will_see_the_new_mail() throws Throwable {
-        String result = testClient.getAllFromSocket();
-        assertTrue(result.contains("unread code reviews"));
-    }
-
-    @Given("^polling for reviews is not in progress$")
-    public void polling_for_reviews_is_not_in_progress() throws Throwable {
-        TmcServiceScheduler.enablePolling();
-        assertFalse(TmcServiceScheduler.isRunning());
-    }
-
-    @Then("^the polling will be started$")
-    public void the_polling_will_be_started() throws Throwable {
-        assertTrue(TmcServiceScheduler.isRunning());
-        TmcServiceScheduler.getScheduler().stop();
-    }
-
     @When("^user gives command submit with path \"([^\"]*)\" and exercise \"([^\"]*)\"$")
     public void user_gives_command_submit_with_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
         submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise + " courseID 21";
@@ -149,6 +121,5 @@ public class SubmitSteps {
         wireMockServer.stop();
         tmcCli.stopServer();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
-        Mailbox.destroy();
     }
 }

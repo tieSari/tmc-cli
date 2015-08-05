@@ -8,7 +8,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.core.TmcCore;
@@ -158,7 +157,6 @@ public class DownloadExercisesSteps {
      */
     @After
     public void closeServer() throws IOException, InterruptedException {
-        Mailbox.destroy();
         tempDir.toFile().delete();
         wireMockServer.stop();
         tmcCli.stopServer();

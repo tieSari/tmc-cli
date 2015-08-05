@@ -13,9 +13,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
@@ -59,7 +57,6 @@ public class PasteSteps {
 
     @After
     public void closeAll() throws IOException, InterruptedException {
-        Mailbox.destroy();
         tmcCli.stopServer();
         tmcCli.setServer("https://tmc.mooc.fi/staging");
         wireMockServer.stop();
@@ -125,33 +122,6 @@ public class PasteSteps {
     public void user_will_see_the_paste_url() throws Throwable {
         String result = testClient.getAllFromSocket();
         assertThat(result, CoreMatchers.containsString("Paste submitted"));
-    }
-
-    @When("^the user has mail in the mailbox$")
-    public void the_user_has_mail_in_the_mailbox() throws Throwable {
-        Mailbox.create();
-        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
-    }
-
-    @Then("^user will see the new mail$")
-    public void user_will_see_the_new_mail() throws Throwable {
-        String fullReply = testClient.getAllFromSocket();
-        assertContains(fullReply, "There are 3 unread code reviews");
-        assertContains(fullReply, "rainfall reviewed by Bossman Samu");
-        assertContains(fullReply, "Keep up the good work.");
-        assertContains(fullReply, "good code");
-    }
-
-    @When("^polling for reviews is not in progress$")
-    public void polling_for_reviews_is_not_in_progress() throws Throwable {
-        TmcServiceScheduler.enablePolling();
-        assertFalse(TmcServiceScheduler.isRunning());
-    }
-
-    @Then("^the polling will be started$")
-    public void the_polling_will_be_started() throws Throwable {
-        testClient.getAllFromSocket();
-        assertTrue(TmcServiceScheduler.isRunning());
     }
 
     private void assertContains(String testedString, String expectedContent) {

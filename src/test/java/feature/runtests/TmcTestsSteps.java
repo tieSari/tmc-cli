@@ -4,10 +4,8 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.listeners.TestsListener;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import cucumber.api.java.After;
 
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
@@ -43,9 +41,7 @@ public class TmcTestsSteps {
         client  = new TestClient(new ConfigHandler().readPort());
         
         settings = new CliSettings();
-        Mailbox.create();
         settings.setUserData("test", "1234");
-        TmcServiceScheduler.disablePolling();
     }
 
     @Given("^the user is in the exercise directory \"(.*?)\"$")
@@ -82,14 +78,6 @@ public class TmcTestsSteps {
     }
 
 
-    @Given("^polling for reviews is not in progress and exercise path is \"(.*?)\"$")
-    public void polling_for_reviews_is_not_in_progress_and_exercise_path_is(String path) throws Throwable {
-        TmcServiceScheduler.enablePolling();
-      //  testRunner = new TestsListener();
-      //  testRunner.setParameter("path", path);
-        assertFalse(TmcServiceScheduler.isRunning());
-    }
-
     @Given("^the user gives the vim flag$")
     public void gives_the_vim_flag() throws Throwable {
       //  testRunner.setParameter("--vim", "");
@@ -102,8 +90,6 @@ public class TmcTestsSteps {
 
     @After
     public void clean() throws InterruptedException, IOException {
-        Mailbox.destroy();
-        TmcServiceScheduler.getScheduler().stop();
         settings = new CliSettings();
         tmcCli.stopServer();
         tmcCli.setServer("https://tmc.mooc.fi/staging");

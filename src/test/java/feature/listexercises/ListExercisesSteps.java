@@ -11,9 +11,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
@@ -45,7 +43,6 @@ public class ListExercisesSteps {
      */
     @Before
     public void setUpServer() throws IOException {
-        TmcServiceScheduler.disablePolling();
         tmcCli = new TmcCli(new TmcCore());
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
@@ -56,7 +53,6 @@ public class ListExercisesSteps {
 
     @After
     public void closeServer() throws IOException {
-        TmcServiceScheduler.enablePolling();
         tmcCli.stopServer();
         wireMockServer.stop();
         tmcCli.setServer("https://tmc.mooc.fi/staging");
@@ -108,35 +104,5 @@ public class ListExercisesSteps {
     public void output_should_contain(String expectedOutput) throws Throwable {
         String result = testClient.getAllFromSocket();
         assertTrue(result.contains(expectedOutput));
-    }
-
-    @Given("^user has not logged in$")
-    public void user_has_not_logged_in() throws Throwable {
-    }
-
-    @Given("^the user has mail in the mailbox$")
-    public void the_user_has_mail_in_the_mailbox() throws Throwable {
-        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
-    }
-
-    @Then("^user will see the new mail$")
-    public void user_will_see_the_new_mail() throws Throwable {
-        String fullReply = testClient.getAllFromSocket();
-        assertThat(fullReply, CoreMatchers.containsString("There are 3 unread code reviews"));
-        assertThat(fullReply, CoreMatchers.containsString("rainfall reviewed by Bossman Samu"));
-        assertThat(fullReply, CoreMatchers.containsString("Keep up the good work."));
-        assertThat(fullReply, CoreMatchers.containsString("good code"));
-    }
-
-    @Given("^polling for reviews is not in progress$")
-    public void polling_for_reviews_is_not_in_progress() throws Throwable {
-        TmcServiceScheduler.enablePolling();
-        assertFalse(TmcServiceScheduler.isRunning());
-    }
-
-    @Then("^the polling will be started$")
-    public void the_polling_will_be_started() throws Throwable {
-        testClient.getAllFromSocket();
-        assertTrue(TmcServiceScheduler.isRunning());
     }
 }
