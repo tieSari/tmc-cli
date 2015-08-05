@@ -91,7 +91,11 @@ public class ConfigHandler {
      */
     public String readServerAddress() {
         Properties prop = getProperties();
-        return prop.getProperty(serverAddressFieldName);
+        String address = prop.getProperty(serverAddressFieldName);
+-       if (address==null) {
+-            throw new IllegalStateException("tmc-server address not set");
+	} 
+        return address;
     }
     /**
      * Reads address from which to list courses.
