@@ -1,18 +1,13 @@
 package hy.tmc.cli.backend.communication;
 
-import com.google.common.base.Optional;
 
 import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import hy.tmc.cli.frontend.CommandLineColor;
 import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
 import static hy.tmc.cli.frontend.CommandLineColor.RED;
 import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
