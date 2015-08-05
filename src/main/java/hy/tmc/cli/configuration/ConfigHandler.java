@@ -60,7 +60,11 @@ public class ConfigHandler {
     private Properties getProperties() {
         Properties prop = new Properties();
         try {
-            InputStream inputStream = new FileInputStream(new File(configFilePath));
+            if (!propertyFile.exists()) {
+-                propertyFile.createNewFile();
+-                return prop;
+-           }
+-           InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -91,7 +95,11 @@ public class ConfigHandler {
      */
     public String readServerAddress() {
         Properties prop = getProperties();
-        return prop.getProperty(serverAddressFieldName);
+        String address = prop.getProperty(serverAddressFieldName);
+-       if (address==null) {
+-            throw new IllegalStateException("tmc-server address not set");
+	} 
+        return address;
     }
     /**
      * Reads address from which to list courses.
