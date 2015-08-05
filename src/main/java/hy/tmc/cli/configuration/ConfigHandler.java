@@ -25,9 +25,9 @@ public class ConfigHandler {
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
     private String lastUpdate = "lastUpdate";
-    
+
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-    
+
     public final String apiParam = "api_version=" + apiVersion;
     public final String coursesExtension = "/courses.json?" + apiParam;
     public final String authExtension = "/user";
@@ -64,7 +64,7 @@ public class ConfigHandler {
             if (!propertyFile.exists()) {
                 propertyFile.createNewFile();
                 return prop;
-           }
+            }
             InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
         } catch (IOException e) {
@@ -83,6 +83,7 @@ public class ConfigHandler {
 
     /**
      * Writes server address to config file, ex. "https://tmc.mooc.fi/hy".
+     *
      * @param address for tmc server
      * @throws IOException if unable to write address
      */
@@ -92,16 +93,18 @@ public class ConfigHandler {
 
     /**
      * Reads and returns the server address of the TMC-server.
+     *
      * @return address of tmc server
      */
     public String readServerAddress() {
         Properties prop = getProperties();
         String address = prop.getProperty(serverAddressFieldName);
--       if (address==null) {
--            throw new IllegalStateException("tmc-server address not set");
-	} 
+        if (address == null) {
+            throw new IllegalStateException("tmc-server address not set");
+        }
         return address;
     }
+
     /**
      * Reads address from which to list courses.
      *
@@ -129,8 +132,8 @@ public class ConfigHandler {
     }
 
     /**
-     * Returns an complete URL to course's json feed in
-     * defined server.
+     * Returns an complete URL to course's json feed in defined server.
+     *
      * @param id course id
      * @return complete url to course json
      */
@@ -156,14 +159,14 @@ public class ConfigHandler {
     public void writePort(int port) throws IOException {
         writeData(portFieldName, Integer.toString(port));
     }
-    
-     /**
+
+    /**
      * Reads latest update time from config file.
      */
     public Date readLastUpdate() throws ParseException {
         Properties prop = getProperties();
-	String dateInString = prop.getProperty(lastUpdate);
-	Date date;
+        String dateInString = prop.getProperty(lastUpdate);
+        Date date;
         date = sdf.parse(dateInString);
         return date;
     }
