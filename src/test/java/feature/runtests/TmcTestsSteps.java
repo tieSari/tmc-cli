@@ -64,14 +64,12 @@ public class TmcTestsSteps {
  
     @Then("^the user sees that all tests have passed\\.$")
     public void theUserSeesAllTestsPassing() {
-        System.out.println("Output: " + output + " OUTPUT LOPPU");
         assertTrue(output.contains("\u001B[32mAll tests passed.\u001B[0m You can now submit"));
     }
 
   
     @Then("^the user sees which tests have failed$")
     public void theUserSeesWhichTestsHaveFailed() {
-        System.out.println("Output: " + output + " OUTPUT LOPPU");
         assertTrue(output.contains("Some tests failed:"));
         assertTrue(output.contains("\u001B[31m1 tests failed:\n"));
         assertTrue(output.contains("FAILED \u001B[0mNimiTest test: Et tulostanut mitään!"));
@@ -80,7 +78,6 @@ public class TmcTestsSteps {
 
     @Then("^the user sees both passed and failed tests$")
     public void theUserSeesBothPassedAndFailedTests() {
-        System.out.println("Output: " + output + " OUTPUT LOPPU");
         assertTrue(output.contains("1 tests passed"));
         assertTrue(output.contains("2 tests failed"));
     }
@@ -101,7 +98,6 @@ public class TmcTestsSteps {
 
     @Then("^the user sees that all tests have passed formatted with vim formatter\\.$")
     public void the_user_sees_that_all_tests_have_passed_formatted_with_vim_formatter() throws Throwable {
-        System.out.println("Output: " + output + " OUTPUT LOPPU");
         assertTrue(output.contains("All tests passed. You can now submit"));
     }
 
