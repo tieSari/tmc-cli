@@ -133,9 +133,9 @@ public class CoreUser {
         } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
-        catch (ParseException ex) {
+        catch (ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
-        }
+        } 
 
     }
 
@@ -143,7 +143,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException ex) {
+        } catch (IllegalStateException | IOException |ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -158,7 +158,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -218,7 +218,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -268,7 +268,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -321,7 +321,7 @@ public class CoreUser {
         try {
             CliSettings settings = this.tmcCli.defaultSettings();
             return Optional.of(settings);
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return Optional.absent();
         }
