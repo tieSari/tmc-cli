@@ -1,7 +1,6 @@
 package hy.tmc.cli.configuration;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -11,8 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Writes data to config file and reads from it.
@@ -33,8 +30,7 @@ public class ConfigHandler {
     public final String authExtension = "/user";
 
     /**
-     * Creates new config handler with default filename and path in current
-     * directory.
+     * Creates new config handler with default filename and path in current directory.
      */
     public ConfigHandler() {
         this.configFilePath = "config.properties";
@@ -67,7 +63,8 @@ public class ConfigHandler {
             }
             InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println(e.getMessage());
         }
         return prop;
