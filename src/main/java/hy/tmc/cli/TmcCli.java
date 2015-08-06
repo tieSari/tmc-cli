@@ -87,7 +87,7 @@ public class TmcCli {
      * @throws IllegalStateException if server address is not found in the
      * config file
      */
-    public CliSettings defaultSettings() throws IllegalStateException, ParseException {
+    public CliSettings defaultSettings() throws IllegalStateException, ParseException, IOException {
         CliSettings settings = new CliSettings(apiVersion);
         settings.setUserData(session.getUsername(), session.getPassword());
         settings.setServerAddress(config.readServerAddress());
