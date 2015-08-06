@@ -163,6 +163,9 @@ public class ConfigHandler {
     public Date readLastUpdate() throws ParseException {
         Properties prop = getProperties();
         String dateInString = prop.getProperty(lastUpdate);
+        if(isNullOrEmpty(dateInString)){
+            return null;
+        }
         Date date;
         date = sdf.parse(dateInString);
         return date;
