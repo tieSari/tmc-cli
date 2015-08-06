@@ -29,9 +29,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CoreUser {
 
@@ -53,8 +56,9 @@ public class CoreUser {
         this.courseFinder = new CourseFinder();
     }
 
-    public void findAndExecute(String commandName, Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException {
+    public void findAndExecute(String commandName, Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException, ParseException {
         this.observer.progress("Starting command " + commandName + "\n");
+
         switch (commandName) {
             case "login":
                 login(params);
@@ -115,7 +119,7 @@ public class CoreUser {
         return formatter;
     }
 
-    public void login(Map<String, String> params) throws ProtocolException, TmcCoreException {
+    public void login(Map<String, String> params) throws ProtocolException, TmcCoreException, IllegalStateException {
         if (credentialsAreMissing(params)) {
             throw new ProtocolException("Username or/and password is missing!.");
         }
@@ -128,14 +132,17 @@ public class CoreUser {
         } catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
+        catch (ParseException | IOException ex) {
+            this.writeToOutputSocket(ex.getMessage());
+        } 
 
     }
 
-    public void listCourses(Map<String, String> params) throws ProtocolException, TmcCoreException {
+    public void listCourses(Map<String, String> params) throws ProtocolException, TmcCoreException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | IOException |ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -146,11 +153,11 @@ public class CoreUser {
         }
     }
 
-    public void listExercises(Map<String, String> params) throws ProtocolException, TmcCoreException {
+    public void listExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -177,11 +184,11 @@ public class CoreUser {
         }
     }
 
-    public void downloadExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IOException {
+    public void downloadExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -206,11 +213,11 @@ public class CoreUser {
         writeToOutputSocket("User data cleared!");
     }
 
-    public void submit(Map<String, String> params) throws ProtocolException {
+    public void submit(Map<String, String> params) throws ProtocolException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -256,11 +263,11 @@ public class CoreUser {
         }
     }
 
-    public void paste(Map<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
+    public void paste(Map<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -276,7 +283,7 @@ public class CoreUser {
         }
     }
 
-    private void update(Map<String, String> params) throws TmcCoreException, IOException, InterruptedException, ExecutionException, ProtocolException {
+    private void update(Map<String, String> params) throws TmcCoreException, IOException, InterruptedException, ExecutionException, ProtocolException, ParseException, IllegalStateException {
         Optional<CliSettings> optSettings = this.getDefaultSettings();
         if (!optSettings.isPresent()) {
             return;
@@ -309,11 +316,11 @@ public class CoreUser {
 
     }
 
-    private Optional<CliSettings> getDefaultSettings() {
+    private Optional<CliSettings> getDefaultSettings() throws ParseException, IllegalStateException {
         try {
             CliSettings settings = this.tmcCli.defaultSettings();
             return Optional.of(settings);
-        } catch (IllegalStateException ex) {
+        } catch (IllegalStateException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return Optional.absent();
         }

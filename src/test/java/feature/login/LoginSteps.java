@@ -19,8 +19,18 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.core.configuration.TmcSettings;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import static org.mockito.Matchers.any;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 
 public class LoginSteps {
 
@@ -44,12 +54,18 @@ public class LoginSteps {
      * @throws IOException if server creating fails
      */
     @Before
-    public void initializeServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+    public void initializeServer() throws IOException, TmcCoreException {
+        //TmcCore core = Mockito.mock(TmcCore.class);
+        TmcCore core = new TmcCore();
+        List<Exercise> exerciseList = new ArrayList<Exercise>();
+        
+        tmcCli = new TmcCli(core, false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         port = new ConfigHandler().readPort();
         testClient = new TestClient(port);
+        
+        new ConfigHandler().writeLastUpdate(new Date());
 
         startWireMock();
     }
@@ -78,8 +94,7 @@ public class LoginSteps {
 
     @Then("^user should see result \"(.*?)\"$")
     public void user_should_see_result(String expectedResult) throws Throwable {
-        testClient.reply(); // "started command login", skip this
-        String result = testClient.reply();
+        String result = testClient.getAllFromSocket();
         assertThat(result, CoreMatchers.containsString(expectedResult));
     }
 

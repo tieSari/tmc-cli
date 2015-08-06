@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
+import java.util.Date;
 
 public class CliSettings implements TmcSettings {
 
@@ -17,6 +18,7 @@ public class CliSettings implements TmcSettings {
     private String path;
     private String courseID;
     private ConfigHandler config;
+    private Date lastUpdate;
 
     public CliSettings(String apiVersion) {
         this.apiVersion = apiVersion;
@@ -58,6 +60,14 @@ public class CliSettings implements TmcSettings {
     
     public void setPath(String path){
         this.path = path;
+    }
+    
+    public Date getLastUpdate(){
+        return lastUpdate;
+    }
+    
+    public void setLastUpdate(Date time){
+        this.lastUpdate = time;
     }
     
     public String getPath(){

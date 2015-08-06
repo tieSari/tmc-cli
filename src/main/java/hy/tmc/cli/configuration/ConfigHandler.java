@@ -1,10 +1,14 @@
 package hy.tmc.cli.configuration;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -15,10 +19,12 @@ public class ConfigHandler {
     private String configFilePath;
     private String portFieldName = "serverPort";
     private String serverAddressFieldName = "serverAddress";
+    private String lastUpdate = "lastUpdate";
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     /**
-     * Creates new config handler with default filename and path in current
-     * directory.
+     * Creates new config handler with default filename and path in current directory.
      */
     public ConfigHandler() {
         this.configFilePath = "config.properties";
@@ -51,7 +57,8 @@ public class ConfigHandler {
             }
             InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println(e.getMessage());
         }
         return prop;
@@ -80,10 +87,10 @@ public class ConfigHandler {
      *
      * @return address of tmc server
      */
-    public String readServerAddress() {
+    public String readServerAddress() throws IllegalStateException {
         Properties prop = getProperties();
         String address = prop.getProperty(serverAddressFieldName);
-        if (address==null) {
+        if (isNullOrEmpty(address)) {
             throw new IllegalStateException("tmc-server address not set");
         }
         return address;
@@ -104,5 +111,31 @@ public class ConfigHandler {
      */
     public void writePort(int port) throws IOException {
         writeData(portFieldName, Integer.toString(port));
+    }
+
+    /**
+     * Reads latest update time from config file.
+     */
+    public Date readLastUpdate() throws ParseException, IOException {
+        Properties prop = getProperties();
+        String dateInString = prop.getProperty(lastUpdate);
+        if(isNullOrEmpty(dateInString)){
+            Date d = new Date();
+            this.writeLastUpdate(d);
+            return d;
+        }
+        Date date;
+        date = sdf.parse(dateInString);
+        return date;
+    }
+
+    /**
+     * Writes latest update time to config file.
+     *
+     * @param lastUpdate to write in config
+     */
+    public void writeLastUpdate(Date lastUpdate) throws IOException {
+        String date = sdf.format(lastUpdate);
+        writeData("lastUpdate", date);
     }
 }

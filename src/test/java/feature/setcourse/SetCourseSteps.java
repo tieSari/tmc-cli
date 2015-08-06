@@ -15,8 +15,11 @@ import hy.tmc.core.communication.authorization.Authorization;
 import org.hamcrest.CoreMatchers;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
+import java.util.Date;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.core.communication.UrlHelper;
+
 import static org.junit.Assert.assertThat;
 
 public class SetCourseSteps {
@@ -32,10 +35,11 @@ public class SetCourseSteps {
 
     @Before
     public void setUp() throws Exception {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
+        new ConfigHandler().writeLastUpdate(new Date());
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
