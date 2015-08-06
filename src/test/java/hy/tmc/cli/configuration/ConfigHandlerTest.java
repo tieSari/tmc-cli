@@ -60,10 +60,9 @@ public class ConfigHandlerTest {
         assertEquals(handler.readServerAddress(), "http://einiinboss.fi");
     }
 
-    @Test
+    @Test (expected = IllegalStateException.class)
     public void exceptionIsThrownIfNoAddressFound() {
-        String address = handler.readServerAddress();
-        assertNull(address);
+        handler.readServerAddress();
     }
 
     @Test
