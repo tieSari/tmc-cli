@@ -55,8 +55,6 @@ public class CoreUser {
     }
 
     public void findAndExecute(String commandName, Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException, ParseException {
-        this.observer.progress("Starting command " + commandName + "\n");
-
         switch (commandName) {
             case "login":
                 login(params);

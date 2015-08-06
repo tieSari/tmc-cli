@@ -6,14 +6,14 @@ function command_submit () {
   echo "Submitting exercise..."
   if [ $# = 0 ]
     then
-    send_command_wait_output "submit path `pwd`"
+    send_command_wait_output "submit path $(pwd)"
   else
-    send_command_wait_output "submit path `pwd` $1"
+    send_command_wait_output "submit path $(pwd) $1"
   fi
 
   echo "$OUTPUT"
 
-  if [[ $OUTPUT =~ All\ tests\ passed.*Please\ give\ feedback\:.* ]]
+  if [[ $OUTPUT =~ All\ tests\ passed.*Please\ give\ feedback:.* ]]
   then
     OUTPUT=""
     feedback
@@ -42,24 +42,24 @@ function int_feedback () {
 }
 
 function text_feedback () {
-  TIMESTAMP=`date +%s`
+  TIMESTAMP=$(date +%s)
   FEEDBACK="/tmp/feedback-$TIMESTAMP"
-  echo "" >> $FEEDBACK
-  echo "" >> $FEEDBACK
-  echo "#############" >> $FEEDBACK
-  echo "" >> $FEEDBACK
-  echo "Please enter feedback above the bar." >> $FEEDBACK
-  echo "" >> $FEEDBACK
-  echo "$OUTPUT" >> $FEEDBACK
+  echo "" >> "$FEEDBACK"
+  echo "" >> "$FEEDBACK"
+  echo "#############" >> "$FEEDBACK"
+  echo "" >> "$FEEDBACK"
+  echo "Please enter feedback above the bar." >> "$FEEDBACK"
+  echo "" >> "$FEEDBACK"
+  echo "$OUTPUT" >> "$FEEDBACK"
 
   if [[ -z "$EDITOR" ]]
   then
-    $EDITOR $FEEDBACK
+    $EDITOR "$FEEDBACK"
   else
-    nano $FEEDBACK
+    nano "$FEEDBACK"
   fi
 
-  PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
+  PARSEDOUTPUT=$(sed -n '/#############/q;p' "$FEEDBACK")
   send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/\<newline\>} }"
   if [[ $OUTPUT =~ end ]]
     then
@@ -73,12 +73,12 @@ function command_login () {
     read -p "Username: " username
     read -s  -p "Password: " password
     echo ""
-    login $username $password
+    login "$username" "$password"
     return 0;
 }
 
 function command_download () {
-  send_command "downloadExercises path `pwd` courseID $1"
+  send_command "downloadExercises path $(pwd) courseID $1"
 }
 
 function command_update() {
@@ -90,29 +90,29 @@ function command_showsettings () {
 }
 
 function command_mail() {
- send_command "getMail path `pwd`"
+ send_command "getMail path $(pwd)"
 }
 
 function command_paste () {
-  send_command "paste path `pwd`"
+  send_command "paste path $(pwd)"
 }
 
 function command_test () {
   if [ $# = 0 ]
     then
-      send_command "runTests path `pwd`"
+      send_command "runTests path $(pwd)"
     else
-      send_command "runTests path `pwd` $1"
+      send_command "runTests path $(pwd) $1"
   fi
 }
 
 function command_default () {
-    send_command $@
+    send_command "$@"
     return 0;
 }
 
 function command_listExercises () {
-    send_command "listExercises path `pwd`"
+    send_command "listExercises path $(pwd)"
 }
 
 function command_listCourses () {
@@ -146,8 +146,8 @@ function command_setCourse () {
 
 function command_set () {
     case "$1" in
-        "server") command_setServer $2;;
-        "course") command_setCourse $2;;
+        "server") command_setServer "$2";;
+        "course") command_setCourse "$2";;
         *) echo "don't know how to set $1";; 
     esac
 }
@@ -161,7 +161,7 @@ function login () {
     loginstring+=" password "
     loginstring+=$2
 
-    send_command $loginstring
+    send_command "$loginstring"
 
     return 0;
 
@@ -174,16 +174,16 @@ function send_command () {
     CONFIGPATH="$DIR/config.properties"
     if [ -f "$CONFIGPATH" ];
     then
-      CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-      echo $@ | nc localhost $CONFIGPORT
+      CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
+      echo "$@" | nc localhost "$CONFIGPORT"
     else
       sleep 0.4
       if [ -f "$CONFIGPATH" ];
       then
-        CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-        echo $@ | nc localhost $CONFIGPORT
+        CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
+        echo "$@" | nc localhost "$CONFIGPORT"
       else
-          echo Could not find config.properties, aborting $1. Maybe tmc-client has not started succesfully?
+          echo Could not find config.properties, aborting "$1". Maybe tmc-client has not started succesfully?
       fi
     fi
     return 0;
@@ -194,8 +194,8 @@ function send_command_wait_output () {
     DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
     CONFIGPATH="$DIR/config.properties"
-    CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-    OUTPUT=`echo $@ | nc localhost $CONFIGPORT`
+    CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
+    OUTPUT=$(echo "$@" | nc localhost "$CONFIGPORT")
 
     return 0;
 
@@ -232,22 +232,23 @@ bash $STARTUP
 
 if [ $# = 0 ];
 then
-    echo -e "\n    This is tmc-cli, commandline client for Test My Code\n"
+    echo "Usage: tmc <command> [...]"
+    echo -e "Command-line client for Test My Code.\n"
     send_command "help"
     exit 0
 fi
 
 case "$1" in
-    "help") command_help $2;;
+    "help") command_help "$2";;
     "login") command_login;;
-    "submit") command_submit $2;;
-    "download") command_download $2;;
+    "submit") command_submit "$2";;
+    "download") command_download "$2";;
     "update") command_update;;
     "showSettings") command_showsettings;;
-    "test") command_test $2;;
-    "paste") command_paste $2;;
+    "test") command_test "$2";;
+    "paste") command_paste "$2";;
     "mail") command_mail;;
-    "list") command_list ${@:2};;
-    "set") command_set ${@:2};;
-    *) command_default $@;;
+    "list") command_list "${@:2}";;
+    "set") command_set "${@:2}";;
+    *) command_default "$@";;
 esac

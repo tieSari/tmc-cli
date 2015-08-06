@@ -97,8 +97,7 @@ public class ListCoursesSteps {
 
     @Then("^output should contain \"(.*?)\"$")
     public void output_should_contain(String expectedOutput) throws Throwable {
-        testClient.reply(); // "started list courses", skip this print
-        String content = testClient.reply();
+        String content = testClient.getAllFromSocket();
         assertThat(content, CoreMatchers.containsString(expectedOutput));
     }
 

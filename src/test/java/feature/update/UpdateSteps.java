@@ -92,12 +92,10 @@ public class UpdateSteps {
     @Then("^the user should see how many updates were downloaded$")
     public void the_user_should_see_how_many_updates_were_downloaded() throws Throwable {
         String[] messages = testClient.getAllFromSocket().split("\n");
-        String line1 = "Starting command update";
         String line2 = "update information received, starting download";
         String line3 = "2 updates downloaded";
-        assertEquals(line1, messages[0]);
-        assertEquals(line2, messages[1]);
-        assertEquals(line3, messages[2]);
+        assertEquals(line2, messages[0]);
+        assertEquals(line3, messages[1]);
     }
 
     @Given("^there are no updates$")
@@ -109,10 +107,8 @@ public class UpdateSteps {
     @Then("^the output should say no updates were downloaded$")
     public void the_output_should_say_no_updates_were_downloaded() throws Throwable {
         String[] messages = testClient.getAllFromSocket().split("\n");
-        String line1 = "Starting command update";
         String line2 = "0 updates downloaded";
-        assertEquals(line1, messages[0]);
-        assertEquals(line2, messages[1]);
+        assertEquals(line2, messages[0]);
     }
 
     @Then("^no downloads should have happened$")
@@ -131,7 +127,6 @@ public class UpdateSteps {
 
     @Then("^the user will see the error message \"(.*?)\"$")
     public void the_user_will_see_the_error_message(String expectedErrorMessage) throws Throwable {
-        testClient.reply();
         String error = testClient.reply();
         assertEquals(expectedErrorMessage, error);
     }
