@@ -56,7 +56,7 @@ public class SocketRunnable implements Runnable {
         }
         try {
             executor.parseAndExecute(input);
-        } catch (ProtocolException | ParseException ex) {
+        } catch (Exception ex) {
             writeToOutput(outputStream, ex.getMessage());
         }
     }

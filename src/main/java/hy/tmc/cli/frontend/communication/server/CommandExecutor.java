@@ -88,7 +88,7 @@ public class CommandExecutor {
         return map;
     }
 
-    private void executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException, InterruptedException, ExecutionException {
+    private void executeCommand(HashMap<String, Command> commandMap, String commandName, HashMap<String, String> params) throws ProtocolException, IOException, TmcCoreException, InterruptedException, ExecutionException, IllegalStateException {
         CoreUser coreUser = new CoreUser(cli, stream, socket, pool);
         if (commandMap.containsKey(commandName)) {
             Command command = commandMap.get(commandName);

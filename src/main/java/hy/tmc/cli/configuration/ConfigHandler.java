@@ -87,10 +87,10 @@ public class ConfigHandler {
      *
      * @return address of tmc server
      */
-    public String readServerAddress() {
+    public String readServerAddress() throws IllegalStateException {
         Properties prop = getProperties();
         String address = prop.getProperty(serverAddressFieldName);
-        if (address == null) {
+        if (isNullOrEmpty(address)) {
             throw new IllegalStateException("tmc-server address not set");
         }
         return address;

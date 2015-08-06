@@ -119,7 +119,7 @@ public class CoreUser {
         return formatter;
     }
 
-    public void login(Map<String, String> params) throws ProtocolException, TmcCoreException {
+    public void login(Map<String, String> params) throws ProtocolException, TmcCoreException, IllegalStateException {
         if (credentialsAreMissing(params)) {
             throw new ProtocolException("Username or/and password is missing!.");
         }
@@ -127,7 +127,6 @@ public class CoreUser {
             CliSettings settings = this.tmcCli.defaultSettings();
             settings.setUserData(params.get("username"), params.get("password"));
             ListenableFuture<Boolean> result = core.verifyCredentials(settings);
-            System.err.println("Result saatu. ");
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
         } catch (IllegalStateException ex) {
@@ -139,7 +138,7 @@ public class CoreUser {
 
     }
 
-    public void listCourses(Map<String, String> params) throws ProtocolException, TmcCoreException {
+    public void listCourses(Map<String, String> params) throws ProtocolException, TmcCoreException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -154,7 +153,7 @@ public class CoreUser {
         }
     }
 
-    public void listExercises(Map<String, String> params) throws ProtocolException, TmcCoreException {
+    public void listExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -185,7 +184,7 @@ public class CoreUser {
         }
     }
 
-    public void downloadExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IOException {
+    public void downloadExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -214,7 +213,7 @@ public class CoreUser {
         writeToOutputSocket("User data cleared!");
     }
 
-    public void submit(Map<String, String> params) throws ProtocolException {
+    public void submit(Map<String, String> params) throws ProtocolException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -264,7 +263,7 @@ public class CoreUser {
         }
     }
 
-    public void paste(Map<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException {
+    public void paste(Map<String, String> params) throws ProtocolException, TmcCoreException, InterruptedException, ExecutionException, IllegalStateException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
@@ -284,7 +283,7 @@ public class CoreUser {
         }
     }
 
-    private void update(Map<String, String> params) throws TmcCoreException, IOException, InterruptedException, ExecutionException, ProtocolException, ParseException {
+    private void update(Map<String, String> params) throws TmcCoreException, IOException, InterruptedException, ExecutionException, ProtocolException, ParseException, IllegalStateException {
         Optional<CliSettings> optSettings = this.getDefaultSettings();
         if (!optSettings.isPresent()) {
             return;
@@ -317,7 +316,7 @@ public class CoreUser {
 
     }
 
-    private Optional<CliSettings> getDefaultSettings() throws ParseException {
+    private Optional<CliSettings> getDefaultSettings() throws ParseException, IllegalStateException {
         try {
             CliSettings settings = this.tmcCli.defaultSettings();
             return Optional.of(settings);
