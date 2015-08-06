@@ -34,6 +34,7 @@ public class CommandExecutorTest {
     public void setup() throws IOException, TmcCoreException, IllegalStateException, ParseException {
         core = Mockito.mock(TmcCore.class);
         TmcCli cli = new TmcCli(core);
+        cli.setServer("tmc.mooc.fi");
         cli.defaultSettings();
         
         new ConfigHandler().writeLastUpdate(sdf.parse("04-4-1950 10:00:00"));
@@ -41,7 +42,6 @@ public class CommandExecutorTest {
         executor = new CommandExecutor(cli);
         List<Exercise> exerciseList = new ArrayList<Exercise>();
         exerciseList.add(new Exercise());
-        //TestFuture f = new TestFuture(exerciseList);
         when(core.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
                 .thenReturn(Futures.immediateFuture(exerciseList));
     }
