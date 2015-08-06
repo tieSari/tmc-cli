@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.Futures;
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 //import hy.tmc.cli.testhelpers.TestFuture;
@@ -48,7 +49,10 @@ public class CommandExecutorTest {
     
     @Test
     public void updatesAvailable() throws TmcCoreException, IllegalStateException, IOException, InterruptedException, ParseException, ExecutionException{
-        String result = executor.checkUpdates();
+        CliSettings settings  = new CliSettings();
+        settings.setCurrentCourse(new Course());
+        settings.setLastUpdate(sdf.parse("04-4-1950 10:00:00"));
+        String result = executor.checkUpdates(settings);
         assertTrue(result.contains("Updates available"));
     }
     
@@ -57,7 +61,10 @@ public class CommandExecutorTest {
         List<Exercise> exerciseList = new ArrayList<Exercise>();
         when(core.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
                 .thenReturn(Futures.immediateFuture(exerciseList));
-         String result = executor.checkUpdates();
+        CliSettings settings  = new CliSettings();
+        settings.setCurrentCourse(new Course());
+        settings.setLastUpdate(sdf.parse("04-4-1950 10:00:00"));
+        String result = executor.checkUpdates(settings);
         assertTrue(result.contains("No updates available"));
     }
     

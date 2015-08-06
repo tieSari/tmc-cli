@@ -50,7 +50,19 @@ public class CommandExecutor {
      */
     public void parseAndExecute(String inputLine) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException, IllegalStateException, ParseException {
         if (this.cli.makeUpdate()) {
-            this.stream.write((checkUpdates() + "\n").getBytes());
+            String msg;
+            try {
+                CliSettings settings = this.cli.defaultSettings();
+                if (settings.getCurrentCourse().isPresent()) {
+                    msg = checkUpdates(settings) + "\n";
+                } else {
+                    msg = "";
+                }
+            }
+            catch (IllegalStateException ex) {
+                msg = "Could not check for updates, server address not set";
+            }
+            this.stream.write(msg.getBytes());
         }
         String[] elements = parser.getElements(inputLine);
         String commandName = elements[0];
@@ -59,14 +71,8 @@ public class CommandExecutor {
         executeCommand(commandMap, commandName, params);
     }
 
-    public String checkUpdates() throws TmcCoreException, IOException, InterruptedException, ParseException, ExecutionException {
+    public String checkUpdates(CliSettings settings) throws TmcCoreException, IOException, InterruptedException, ParseException, ExecutionException {
         int pollInterval = 30;
-        CliSettings settings;
-        try {
-            settings = this.cli.defaultSettings();
-        } catch (IllegalStateException ex) {
-            return "Could not check for updates, server address not set";
-        }
         Date current = new Date();
         Date lastUpdate = settings.getLastUpdate();
         double mins = (current.getTime() - lastUpdate.getTime()) / (60 * 1000);
@@ -103,7 +109,8 @@ public class CommandExecutor {
         } else {
             try {
                 coreUser.findAndExecute(commandName, params);
-            } catch (ProtocolException | ParseException | TmcCoreException ex) {
+            }
+            catch (ProtocolException | ParseException | TmcCoreException ex) {
                 stream.write((ex.getMessage() + "\n").getBytes());
                 stream.close();
                 socket.close();
