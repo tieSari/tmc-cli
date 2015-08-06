@@ -33,7 +33,7 @@ public class SetCourse extends Command<String>{
         return currentCourse.getName() + " is set as current course.";
     }
 
-    private TmcSettings checkLoginAndGetSettings() throws ProtocolException, IllegalStateException, ParseException {
+    private TmcSettings checkLoginAndGetSettings() throws ProtocolException, IllegalStateException, ParseException, IOException {
         TmcSettings settings = tmcCli.defaultSettings();
         if (!settings.userDataExists()) {
             throw new ProtocolException("Please login first.");

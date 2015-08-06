@@ -35,7 +35,7 @@ public class TmcCliTest {
     }
     
     @Test
-    public void testLogin() throws IllegalStateException, ParseException {
+    public void testLogin() throws IllegalStateException, ParseException, IOException {
         client.login("pekka", "ankka");
         CliSettings settings = client.defaultSettings();
         assertEquals("pekka", settings.getUsername());
@@ -43,7 +43,7 @@ public class TmcCliTest {
     }
     
     @Test
-    public void testLogout() throws IllegalStateException, ParseException {
+    public void testLogout() throws IllegalStateException, ParseException, IOException {
         client.login("ankka", "pekka");
         client.logout();
         CliSettings settings = client.defaultSettings();
@@ -52,7 +52,7 @@ public class TmcCliTest {
     }
     
     @Test
-    public void testDefaultSettings() throws IllegalStateException, ParseException {
+    public void testDefaultSettings() throws IllegalStateException, ParseException, IOException {
         String address = "https://test.mooc.ankka.fi";
         when(config.readServerAddress()).thenReturn(address);
         CliSettings settings = client.defaultSettings();
