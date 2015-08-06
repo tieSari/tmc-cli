@@ -57,11 +57,11 @@ Current core functionality includes:
 
 ## Credits and maintainers
 Tmc-cli was started by Ohjelmistotuotantoprojekti kesä 2015 (Software engineering project)
-*Ilari Sinkkonen
-*Kristian Wahlroos
-*Samu Tamminen
-*Pihla Toivanen
-*Chang Rajani
-*Jani Luukko
+* Ilari Sinkkonen
+* Kristian Wahlroos
+* Samu Tamminen
+* Pihla Toivanen
+* Chang Rajani
+* Jani Luukko
 
 It was then improved by [RAGE -research group](https://www.cs.helsinki.fi/en/rage/) and it's current maintainer also.
