@@ -43,7 +43,6 @@ public class LogoutSteps {
     @When("^user sees message \"(.*?)\"$")
     public void user_sees_message(String expectedOutput) throws Throwable {
         String output = testClient.reply();
-        output = testClient.reply();
         assertThat(output, CoreMatchers.containsString(expectedOutput));
     }
 

@@ -7,7 +7,7 @@ scripts/cache
 .idea/*
 .idea/**
 tmc-cli.iml
-scripts/config*
+scripts/pidfile.pid
 scripts/*.jar
 **/config.properties
 */build_log.txt

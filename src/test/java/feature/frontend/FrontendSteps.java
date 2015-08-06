@@ -64,9 +64,8 @@ public class FrontendSteps {
      */
     @Then("^output should contains commands\\.$")
     public void output_should_contains_commands() throws Throwable {
-        String contents = testClient.getAllFromSocket();
-        System.out.println("Contents: " + contents);
-        assertTrue(contents.contains("Available commands:"));
+        String contents = testClient.reply();
+        assertTrue(contents.contains("Commands:"));
     }
 
     @Given("^show settings command\\.$")
