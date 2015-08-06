@@ -140,9 +140,14 @@ function command_setServer () {
     send_command "setServer tmc-server $1"
 }
 
+function command_setCourse () {
+    send_command "setCourse course $1"
+}
+
 function command_set () {
     case "$1" in
         "server") command_setServer $2;;
+        "course") command_setCourse $2;;
         *) echo "don't know how to set $1";; 
     esac
 }

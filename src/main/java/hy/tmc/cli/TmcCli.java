@@ -90,6 +90,7 @@ public class TmcCli {
     public CliSettings defaultSettings() throws IllegalStateException, ParseException, IOException {
         CliSettings settings = new CliSettings(apiVersion);
         settings.setUserData(session.getUsername(), session.getPassword());
+        settings.setCurrentCourse(session.getCurrentCourse());
         settings.setServerAddress(config.readServerAddress());
         settings.setLastUpdate(config.readLastUpdate());
  
