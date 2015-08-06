@@ -1,7 +1,6 @@
 package hy.tmc.cli.configuration;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -11,15 +10,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Writes data to config file and reads from it.
  */
 public class ConfigHandler {
-
-    public static final String apiVersion = "7";
 
     private String configFilePath;
     private String portFieldName = "serverPort";
@@ -28,13 +23,8 @@ public class ConfigHandler {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-    public final String apiParam = "api_version=" + apiVersion;
-    public final String coursesExtension = "/courses.json?" + apiParam;
-    public final String authExtension = "/user";
-
     /**
-     * Creates new config handler with default filename and path in current
-     * directory.
+     * Creates new config handler with default filename and path in current directory.
      */
     public ConfigHandler() {
         this.configFilePath = "config.properties";
@@ -67,7 +57,8 @@ public class ConfigHandler {
             }
             InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println(e.getMessage());
         }
         return prop;
@@ -103,44 +94,6 @@ public class ConfigHandler {
             throw new IllegalStateException("tmc-server address not set");
         }
         return address;
-    }
-
-    /**
-     * Reads address from which to list courses.
-     *
-     * @return String with tmc server address + courses path
-     */
-    public String readCoursesAddress() {
-        String serverAddress = readServerAddress();
-        if (isNullOrEmpty(serverAddress)) {
-            return null;
-        }
-        return serverAddress + coursesExtension;
-    }
-
-    /**
-     * Reads address to which auth GET can be sent.
-     *
-     * @return String with tmc server address + user path
-     */
-    public String readAuthAddress() {
-        String serverAddress = readServerAddress();
-        if (isNullOrEmpty(serverAddress)) {
-            return null;
-        }
-        return serverAddress + authExtension;
-    }
-
-    /**
-     * Returns an complete URL to course's json feed in defined server.
-     *
-     * @param id course id
-     * @return complete url to course json
-     */
-    public String getCourseUrl(int id) {
-        return this.readServerAddress() + "/courses/"
-                + id + ".json"
-                + "?api_version=" + apiVersion;
     }
 
     /**
