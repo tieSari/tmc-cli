@@ -163,11 +163,13 @@ public class ConfigHandler {
     /**
      * Reads latest update time from config file.
      */
-    public Date readLastUpdate() throws ParseException {
+    public Date readLastUpdate() throws ParseException, IOException {
         Properties prop = getProperties();
         String dateInString = prop.getProperty(lastUpdate);
         if(isNullOrEmpty(dateInString)){
-            return null;
+            Date d = new Date();
+            this.writeLastUpdate(d);
+            return d;
         }
         Date date;
         date = sdf.parse(dateInString);
