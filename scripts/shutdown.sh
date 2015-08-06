@@ -5,7 +5,14 @@ PIDFILE="$DIR/pidfile.pid"
 PID="$(cat "$PIDFILE")"
 
 kill "$PID"
-sleep 2
+for _ in {1..30}
+do
+  sleep 1
+  if [[ ! -n $(ps -p "$PID" -o pid=) ]]
+  then
+    break
+  fi
+done
 kill -9 "$PID" &> /dev/null
 
 rm "$PIDFILE"
