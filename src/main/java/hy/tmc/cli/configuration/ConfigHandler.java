@@ -1,8 +1,5 @@
 package hy.tmc.cli.configuration;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
