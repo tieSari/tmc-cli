@@ -17,6 +17,7 @@ import hy.tmc.core.communication.UrlHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import org.hamcrest.CoreMatchers;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -60,7 +61,8 @@ public class SubmitSteps {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
 
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
+
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
@@ -70,7 +72,8 @@ public class SubmitSteps {
         mocker.wireMockSuccesfulSubmit(wireMockServer);
         mocker.wireMockExpiredSubmit(wireMockServer);
         mocker.wiremockFailingSubmit(wireMockServer);
-
+        new ConfigHandler().writeLastUpdate(new Date());
+       
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")

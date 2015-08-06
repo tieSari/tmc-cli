@@ -12,8 +12,10 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.core.TmcCore;
+import java.io.File;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class FrontendSteps {
 
@@ -28,6 +30,7 @@ public class FrontendSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    File cache;
 
     /**
      * Set up server and testclient.
@@ -36,15 +39,17 @@ public class FrontendSteps {
      */
     @Before
     public void setUpServer() throws IOException {
-        // server = new Server();
         serverThread = new Thread(server);
         serverThread.start();
         port = new ConfigHandler().readPort();
+        cache = new File("cache");
+        cache.createNewFile();
 
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(cache), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
+        new ConfigHandler().writeLastUpdate(new Date());
     }
 
     @Given("^help command\\.$")
@@ -59,7 +64,8 @@ public class FrontendSteps {
      */
     @Then("^output should contains commands\\.$")
     public void output_should_contains_commands() throws Throwable {
-        String contents = testClient.reply();
+        String contents = testClient.getAllFromSocket();
+        System.out.println("Contents: " + contents);
         assertTrue(contents.contains("Available commands:"));
     }
 
@@ -70,7 +76,8 @@ public class FrontendSteps {
 
     @Then("^output should contains settings information\\.$")
     public void output_should_contains_settings_information() throws Throwable {
-        String contents = testClient.reply();
+        String contents = testClient.getAllFromSocket();
+        System.out.println("Contents: " + contents);
         assertTrue(contents.contains("Server address"));
     }
 
@@ -78,5 +85,6 @@ public class FrontendSteps {
     public void closeServer() throws IOException {
         serverThread.interrupt();
         tmcCli.stopServer();
+        cache.delete();
     }
 }

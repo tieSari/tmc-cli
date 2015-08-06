@@ -25,6 +25,7 @@ import hy.tmc.core.communication.UrlHelper;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class ListCoursesSteps {
 
@@ -50,10 +51,12 @@ public class ListCoursesSteps {
      */
     @Before
     public void setUpServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
+        
+        new ConfigHandler().writeLastUpdate(new Date());
 
         startWireMock();
     }

@@ -20,6 +20,9 @@ import hy.tmc.core.communication.UrlHelper;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ListExercisesSteps {
@@ -49,11 +52,15 @@ public class ListExercisesSteps {
      */
     @Before
     public void setUpServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+
+        
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
 
         testClient = new TestClient(new ConfigHandler().readPort());
+        
+        new ConfigHandler().writeLastUpdate(new Date());
         startWireMock();
     }
 

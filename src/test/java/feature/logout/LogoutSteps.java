@@ -16,6 +16,7 @@ import hy.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
+import java.util.Date;
 import static org.mockito.Mockito.mock;
 
 public class LogoutSteps {
@@ -25,9 +26,11 @@ public class LogoutSteps {
 
     @Before
     public void initializeServer() throws IOException {
-        tmcCli = new TmcCli(mock(TmcCore.class));
+        tmcCli = new TmcCli(mock(TmcCore.class), false);
         tmcCli.startServer();
-        testClient = new TestClient(new ConfigHandler().readPort());
+        testClient = new TestClient( new ConfigHandler().readPort());
+        
+        new ConfigHandler().writeLastUpdate(new Date());
     }
 
     @Given("^logout command\\.$")

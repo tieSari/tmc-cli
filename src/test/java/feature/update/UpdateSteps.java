@@ -20,6 +20,7 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -49,14 +50,15 @@ public class UpdateSteps {
     @Before
     public void setUpServer() throws IOException, TmcCoreException {
         coreMock = mock(TmcCore.class);
-        tmcCli = new TmcCli(coreMock);
+        tmcCli = new TmcCli(coreMock, false);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
         List<Course> fake = new ArrayList<>();
         fake.add(new Course("course"));
         when(coreMock.listCourses(any(TmcSettings.class))).thenReturn(Futures.immediateFuture(fake));
         tmcCli.login("bossman", "samu");
-
+        new ConfigHandler().writeLastUpdate(new Date());
+        
         setupExercises();
 
         mockDownload();

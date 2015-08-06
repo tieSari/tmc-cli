@@ -3,6 +3,7 @@ package hy.tmc.cli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.core.TmcCore;
 import java.io.IOException;
+import java.text.ParseException;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +35,7 @@ public class TmcCliTest {
     }
     
     @Test
-    public void testLogin() {
+    public void testLogin() throws IllegalStateException, ParseException, IOException {
         client.login("pekka", "ankka");
         CliSettings settings = client.defaultSettings();
         assertEquals("pekka", settings.getUsername());
@@ -42,7 +43,7 @@ public class TmcCliTest {
     }
     
     @Test
-    public void testLogout() {
+    public void testLogout() throws IllegalStateException, ParseException, IOException {
         client.login("ankka", "pekka");
         client.logout();
         CliSettings settings = client.defaultSettings();
@@ -51,7 +52,7 @@ public class TmcCliTest {
     }
     
     @Test
-    public void testDefaultSettings() {
+    public void testDefaultSettings() throws IllegalStateException, ParseException, IOException {
         String address = "https://test.mooc.ankka.fi";
         when(config.readServerAddress()).thenReturn(address);
         CliSettings settings = client.defaultSettings();
@@ -60,7 +61,7 @@ public class TmcCliTest {
     }
     
     @Test
-    public void testSetServer() throws IOException {
+    public void testSetServer() throws IOException, ParseException {
         String address = "https://test.mooc.ankka.fi";
         when(config.readServerAddress()).thenReturn(address);
         client.setServer(address);

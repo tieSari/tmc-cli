@@ -11,6 +11,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 
 public class ConfigHandlerTest {
 
@@ -60,7 +62,7 @@ public class ConfigHandlerTest {
         assertEquals(handler.readServerAddress(), "http://einiinboss.fi");
     }
 
-    @Test (expected=IllegalStateException.class)
+    @Test (expected = IllegalStateException.class)
     public void exceptionIsThrownIfNoAddressFound() {
         handler.readServerAddress();
     }
@@ -92,6 +94,12 @@ public class ConfigHandlerTest {
         } catch (IOException ex) {
             fail("failed to write port");
         }
+    }
+    
+    @Test
+    public void dontCrashWhenLastUpdateDoesntExist() throws ParseException, IOException {
+        Date lastUpdate = handler.readLastUpdate();
+        assertNotNull(lastUpdate);
     }
     
     @Test
