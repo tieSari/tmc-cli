@@ -307,7 +307,7 @@ public class CoreUser {
         ListenableFuture<List<Exercise>> downloadFuture;
         ListenableFuture<List<Exercise>> updateFuture = core.getNewAndUpdatedExercises(settings.getCurrentCourse().get(), settings);
         downloadFuture = Futures.transform(updateFuture, new DownloadUpdates(settings));
-        downloadFuture.addListener(new UpdateDownloadingListener(downloadFuture, output, socket), threadPool);
+        downloadFuture.addListener(new UpdateDownloadingListener(tmcCli, downloadFuture, output, socket), threadPool);
     }
 
     public void getMail(Map<String, String> params) throws ProtocolException {

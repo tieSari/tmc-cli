@@ -7,6 +7,11 @@ Feature: Update command
         Then the user should see how many updates were downloaded
         And the updates should be downloaded
 
+    Scenario: Last update time is updated
+        Given changed and new exercises
+        When the user gives the update command
+        Then the last update time should be the current time
+
     Scenario: Does not download anything if there are no new updates
         Given there are no updates
         When the user gives the update command

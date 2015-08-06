@@ -59,9 +59,14 @@ public class CommandExecutor {
         executeCommand(commandMap, commandName, params);
     }
 
-    public String checkUpdates() throws TmcCoreException, IllegalStateException, IOException, InterruptedException, ParseException, ExecutionException {
+    public String checkUpdates() throws TmcCoreException, IOException, InterruptedException, ParseException, ExecutionException {
         int pollInterval = 30;
-        CliSettings settings = this.cli.defaultSettings();
+        CliSettings settings;
+        try {
+            settings = this.cli.defaultSettings();
+        } catch (IllegalStateException ex) {
+            return "Could not check for updates, server address not set";
+        }
         Date current = new Date();
         Date lastUpdate = settings.getLastUpdate();
         double mins = (current.getTime() - lastUpdate.getTime()) / (60 * 1000);

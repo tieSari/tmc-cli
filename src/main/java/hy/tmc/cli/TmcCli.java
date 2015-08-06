@@ -8,6 +8,7 @@ import hy.tmc.core.domain.Course;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 
 public class TmcCli {
 
@@ -99,5 +100,9 @@ public class TmcCli {
 
     public TmcCore getCore() {
         return core;
+    }
+
+    public void refreshLastUpdate() throws IOException {
+        this.config.writeLastUpdate(new Date());
     }
 }

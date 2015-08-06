@@ -21,7 +21,7 @@ public class ConfigHandler {
     private String serverAddressFieldName = "serverAddress";
     private String lastUpdate = "lastUpdate";
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
 
     /**
      * Creates new config handler with default filename and path in current directory.
