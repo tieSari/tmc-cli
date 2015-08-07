@@ -32,7 +32,7 @@ if [[ -n "$PID" ]]
 then
   if ps -p "$PID" > /dev/null
   then
-    exit 0
+    start_server
   fi
 fi
 
