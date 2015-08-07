@@ -56,11 +56,11 @@ public class CommandExecutor {
                 if (settings.getCurrentCourse().isPresent()) {
                     msg = checkUpdates(settings) + "\n";
                 } else {
-                    msg = "Set your current course to get updates, type tmc set course <course id>";
+                    msg = "Set your current course to get updates, type tmc set course <course id>\n";
                 }
             }
             catch (IllegalStateException ex) {
-                msg = "Could not check for updates, server address not set";
+                msg = "Could not check for updates, server address not set\n";
             }
             this.stream.write(msg.getBytes());
         }
