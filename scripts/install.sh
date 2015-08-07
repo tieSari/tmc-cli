@@ -1,7 +1,7 @@
 #bin/bash
 
 
-Deps=('nohup' 'pgrep' 'netcat' 'ps' 'sed' 'trap' 'kill' 'echo' 'curl');
+Deps=('nohup' 'pgrep' 'netcat' 'ps' 'sed' 'trap' 'kill' 'echo' 'curl' 'unzip');
 
 command_not_exists(){
 	!(hash "$1" 2>/dev/null);
@@ -17,6 +17,7 @@ done
 
 curl -O http://ptoivanen.users.paivola.fi/tmc-cli-release.zip
 unzip tmc-cli-release.zip
+rm -rf tmc-cli-release.zip
 cd tmc-cli-release
 
 #cd $( dirname "${BASH_SOURCE[0]}" )
