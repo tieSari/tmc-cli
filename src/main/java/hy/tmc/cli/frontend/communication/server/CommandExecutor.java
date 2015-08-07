@@ -56,7 +56,7 @@ public class CommandExecutor {
                 if (settings.getCurrentCourse().isPresent()) {
                     msg = checkUpdates(settings) + "\n";
                 } else {
-                    msg = "";
+                    msg = "Set your current course to get updates, type tmc set course <course id>";
                 }
             }
             catch (IllegalStateException ex) {
