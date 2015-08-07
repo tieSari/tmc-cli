@@ -126,7 +126,7 @@ function command_listCourses () {
 }
 
 function command_help () {
-    if [ $# = 0 ];
+    if [ $# = 0 ] || [ -z $1 ];
     then
         send_command "help"
     else
@@ -151,11 +151,16 @@ function command_setCourse () {
 }
 
 function command_set () {
-    case "$1" in
-        "server") command_setServer "$2";;
-        "course") command_setCourse "$2";;
-        *) echo "don't know how to set $1";; 
-    esac
+    if [ -z $2 ];
+    then
+        echo "Not setting $1 to an empty value"
+    else
+        case "$1" in
+            "server") command_setServer "$2";;
+            "course") command_setCourse "$2";;
+            *) echo "don't know how to set $1";; 
+        esac
+    fi
 }
 
 # Backend login
@@ -248,18 +253,26 @@ then
     exit 0
 fi
 
+if [ $# = 1 ];
+then
+    case "$1" in
+        "showSettings") command_showsettings;;
+        "shutdown") shutdown;;
+        "update") command_update;;
+        "login") command_login;;
+        "help") command_help;;
+        *) command_default "$@";;
+    esac
+    exit 0
+fi
+
 case "$1" in
     "help") command_help "$2";;
-    "login") command_login;;
     "submit") command_submit "$2";;
     "download") command_download "$2";;
-    "update") command_update;;
-    "showSettings") command_showsettings;;
     "test") command_test "$2";;
     "paste") command_paste "$2";;
-    "mail") command_mail;;
     "list") command_list "${@:2}";;
     "set") command_set "${@:2}";;
-    "shutdown") shutdown;;
     *) command_default "$@";;
 esac
