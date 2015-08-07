@@ -18,10 +18,15 @@ import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
+import javax.swing.text.DateFormatter;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -42,6 +47,7 @@ public class UpdateSteps {
     private Exercise example2;
 
     private String output;
+    private long timeAtStart;
 
     /**
      * Setups client's config and starts WireMock.
@@ -49,13 +55,14 @@ public class UpdateSteps {
     @Before
     public void setUpServer() throws IOException, TmcCoreException {
         coreMock = mock(TmcCore.class);
-        tmcCli = new TmcCli(coreMock);
+        tmcCli = new TmcCli(coreMock, true);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
         List<Course> fake = new ArrayList<>();
         fake.add(new Course("course"));
         when(coreMock.listCourses(any(TmcSettings.class))).thenReturn(Futures.immediateFuture(fake));
         tmcCli.login("bossman", "samu");
+        new ConfigHandler().writeLastUpdate(new Date());
 
         setupExercises();
 
@@ -75,6 +82,7 @@ public class UpdateSteps {
     public void changed_and_new_exercises() throws Throwable {
         when(coreMock.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
                 .thenReturn(fakeExercises(example1, example2));
+        timeAtStart = System.currentTimeMillis();
     }
 
     @When("^the user gives the update command$")
@@ -87,15 +95,20 @@ public class UpdateSteps {
         verify(coreMock).downloadExercises(any(List.class), any(TmcSettings.class), any(ProgressObserver.class));
     }
 
+    @Then("^the last update time should be the current time$")
+    public void the_last_update_time_should_be_the_current_time() throws Throwable {
+        DateFormatter f = new DateFormatter(new SimpleDateFormat("dd-mm-yyyy hh:mm:ss"));
+        Date d = new ConfigHandler().readLastUpdate();
+        assertNotEquals(timeAtStart, d.getTime());
+    }
+
     @Then("^the user should see how many updates were downloaded$")
     public void the_user_should_see_how_many_updates_were_downloaded() throws Throwable {
-        String[] messages = testClient.getAllFromSocket().split("\n");
-        String line1 = "Starting command update";
-        String line2 = "update information received, starting download";
-        String line3 = "2 updates downloaded";
-        assertEquals(line1, messages[0]);
-        assertEquals(line2, messages[1]);
-        assertEquals(line3, messages[2]);
+        String messages = testClient.getAllFromSocket();
+        String line1 = "update information received, starting download";
+        String line2 = "2 updates downloaded";
+        assertThat(messages, containsString(line1));
+        assertThat(messages, containsString(line2));
     }
 
     @Given("^there are no updates$")
@@ -106,11 +119,9 @@ public class UpdateSteps {
 
     @Then("^the output should say no updates were downloaded$")
     public void the_output_should_say_no_updates_were_downloaded() throws Throwable {
-        String[] messages = testClient.getAllFromSocket().split("\n");
-        String line1 = "Starting command update";
-        String line2 = "0 updates downloaded";
-        assertEquals(line1, messages[0]);
-        assertEquals(line2, messages[1]);
+        String messages = testClient.getAllFromSocket();
+        String line = "0 updates downloaded";
+        assertThat(messages, containsString(line));
     }
 
     @Then("^no downloads should have happened$")
@@ -129,9 +140,8 @@ public class UpdateSteps {
 
     @Then("^the user will see the error message \"(.*?)\"$")
     public void the_user_will_see_the_error_message(String expectedErrorMessage) throws Throwable {
-        testClient.reply();
-        String error = testClient.reply();
-        assertEquals(expectedErrorMessage, error);
+        String error = testClient.getAllFromSocket();
+        assertThat(error, containsString(expectedErrorMessage));
     }
 
     @Given("^the user has not logged in$")

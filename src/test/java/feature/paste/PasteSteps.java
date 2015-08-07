@@ -22,6 +22,7 @@ import hy.tmc.core.communication.UrlHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import org.hamcrest.CoreMatchers;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -53,12 +54,14 @@ public class PasteSteps {
 
     @Before
     public void initializeServer() throws IOException {
+        
+        tmcCli = new TmcCli(new TmcCore(), false);
 
-        tmcCli = new TmcCli(new TmcCore());
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
 
+        new ConfigHandler().writeLastUpdate(new Date());
         startWireMock();
     }
 

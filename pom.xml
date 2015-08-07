@@ -113,7 +113,16 @@
                     <compilerArguments>
                         <Werror/>
                     </compilerArguments>
+                    <compilerId>javac-with-errorprone</compilerId>
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-compiler-javac-errorprone</artifactId>
+                        <version>2.5</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <plugin>
@@ -259,6 +268,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope> test </scope>
         </dependency>
         <dependency>
             <groupId>info.cukes</groupId>
