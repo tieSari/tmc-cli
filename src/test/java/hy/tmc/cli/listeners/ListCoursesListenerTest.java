@@ -36,7 +36,7 @@ public class ListCoursesListenerTest {
         courses.add(new Course("Networking 1"));
         String result = listener.parseData(courses).get();
         assertThat(result, containsString("Networking 1"));
-        assertThat(result, containsString("id"));
+        assertThat(result, containsString("ID"));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ListCoursesListenerTest {
     }
 
     private String expectedLine(String name, int id, int length) {
-        return name + "," + spaces(name.length(), length) + "id:" + id + "\n";
+        return name + spaces(name.length()-1, length) + id + "\n";
     }
 
     private String spaces(int a, int b) {

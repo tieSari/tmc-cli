@@ -154,7 +154,7 @@ function command_set () {
     case "$1" in
         "server") command_setServer "$2";;
         "course") command_setCourse "$2";;
-        *) echo "don't know how to set $1";; 
+        *) echo "don't know how to set $1";;
     esac
 }
 
@@ -258,7 +258,7 @@ case "$1" in
     "test") command_test "$2";;
     "paste") command_paste "$2";;
     "mail") command_mail;;
-    "list") command_list "${@:2}";;
+    "list") command_list "${@:2}" | less -XFMe;;
     "set") command_set "${@:2}";;
     "shutdown") shutdown;;
     *) command_default "$@";;
