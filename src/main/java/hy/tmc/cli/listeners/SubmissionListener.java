@@ -51,12 +51,5 @@ public class SubmissionListener extends ResultListener<SubmissionResult> {
 
     @Override
     public void extraActions(SubmissionResult result) {
-        if (result.isAllTestsPassed()) {
-            askFeedback(result);
-        }
-    }
-
-    private void askFeedback(SubmissionResult result) {
-       System.err.println("This is askFeedback method. It's not implemented yet.");
     }
 }
