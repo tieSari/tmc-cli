@@ -1,6 +1,6 @@
 # tmc-cli
 
-[![Build Status](https://travis-ci.org/tmc-cli/tmc-cli.svg?branch=master)](https://travis-ci.org/tmc-cli/tmc-cli)
+[![Build Status](https://travis-ci.org/rage/tmc-cli.svg?branch=master)](https://travis-ci.org/rage/tmc-cli)
 [![Coverage Status](https://coveralls.io/repos/tmc-cli/tmc-cli/badge.svg)](https://coveralls.io/r/tmc-cli/tmc-cli)
 
 * Command-line client for [TestMyCode](https://github.com/testmycode/tmc-server)
