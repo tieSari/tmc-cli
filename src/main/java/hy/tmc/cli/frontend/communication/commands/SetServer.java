@@ -18,7 +18,7 @@ public class SetServer extends Command<String> {
     }
 
     private boolean isValidTmcUrl(String url) {
-        String urlPattern = "(https?://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
+        String urlPattern = "(https?://)([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
         Pattern tmcServerAddress = Pattern.compile(urlPattern);
         if (Strings.isNullOrEmpty(url)) {
             return false;
@@ -29,7 +29,7 @@ public class SetServer extends Command<String> {
     @Override
     public String call() throws Exception {
         if (!isValidTmcUrl(newAddress)) {
-            return "Address is not valid tmc-url.";
+            return "Address is not valid tmc-url. It must start with http:// or https:// ";
         }
         if (tmcCli.setServer(newAddress)) {
             return "Server address changes to " + newAddress;
