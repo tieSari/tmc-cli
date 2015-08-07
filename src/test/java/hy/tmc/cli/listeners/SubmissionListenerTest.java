@@ -35,10 +35,5 @@ public class SubmissionListenerTest {
 
         sl = new SubmissionListener(null, null, null, itptr, false);
         assertEquals("not detailed", sl.parseData(new SubmissionResult()).get());
-    }
-
-    @Test
-    public void extraActionsTest() {
-        // TODO: implement when feedback is ready
-    }
+    }  
 }

@@ -147,49 +147,8 @@ public class CliSettings implements TmcSettings {
         username = "";
         password = "";
     }
-
-    public int getPid() {
-        return pid;
-    }
-
-    public void setPid(int pid) {
-        this.pid = pid;
-    }
     
-    public void setCourseID(String courseID){
-        this.courseID = courseID;
-    }
     
-    public String getCourseID(){
-        return this.courseID;
-    }
-    
-    @Override
-    public String toString(){
-        String value = "";
-        if(serverAddress != null){
-            value += "Serveraddress: " + this.getServerAddress() + " ";
-        }
-        if(username != null){
-            value += "Username: " + this.getUsername() + " ";
-        }
-        if(password != null){
-            value += "Password: " + this.getPassword() + " ";
-        }
-        if(courseID != null){
-            value += "CourseID: " + this.getCourseID() + " ";
-        }
-        if(path != null){
-            value += "Path: " + this.getPath() + " ";
-        }
-        if(currentCourse != null){
-            value += "CurrentCourse is not null ";
-        } else {
-            value += "CurrentCourse is null ";
-        }
-        return value;
-    }
-
     @Override
     public String clientName() {
        return "tmc_cli";
