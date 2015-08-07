@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import cucumber.api.PendingException;
 import java.util.Date;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.core.communication.UrlHelper;
@@ -78,6 +79,14 @@ public class DownloadExercisesSteps {
                         .withBody(ExampleJson.allCoursesExample
                                 .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
 
+        urlMock = urlHelper.withParams("/courses/3.json");
+        wireMockServer.stubFor(get(urlEqualTo(urlMock))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(ExampleJson.courseExample
+                                .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
+
         urlMock = urlHelper.withParams("/courses/21.json");
         wireMockServer.stubFor(get(urlEqualTo(urlMock))
                 .willReturn(aResponse()
@@ -125,6 +134,18 @@ public class DownloadExercisesSteps {
                                 .replaceFirst("\"locked\": false", "\"locked\": true"))));
 
         testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
+        output = testClient.getAllFromSocket();
+    }
+
+    @When("^user gives a download exercises command and course name\\.$")
+    public void user_gives_a_download_exercises_command_and_course_name() throws Throwable {
+        testClient.sendMessage("downloadExercises courseName 2013_ohpeJaOhja path " + tempDir.toAbsolutePath());
+        output = testClient.getAllFromSocket();
+    }
+
+    @When("^user gives a download exercises command with a course name not on the server$")
+    public void user_gives_a_download_exercises_command_with_a_course_name_not_on_the_server() throws Throwable {
+        testClient.sendMessage("downloadExercises courseName notacourse path " + tempDir.toAbsolutePath());
         output = testClient.getAllFromSocket();
     }
 

@@ -33,6 +33,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import org.apache.commons.lang.StringUtils;
 
 public class CoreUser {
 
@@ -125,12 +126,13 @@ public class CoreUser {
             ListenableFuture<Boolean> result = core.verifyCredentials(settings);
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
-        } catch (IllegalStateException ex) {
+        }
+        catch (IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
         catch (ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
-        } 
+        }
 
     }
 
@@ -138,7 +140,8 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | IOException |ParseException ex) {
+        }
+        catch (IllegalStateException | IOException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -153,7 +156,8 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException | IOException ex) {
+        }
+        catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -174,34 +178,54 @@ public class CoreUser {
                 } else {
                     writeToOutputSocket("Could not find current course from your path.");
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            }
+            catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void downloadExercises(Map<String, String> params) throws ProtocolException, TmcCoreException, IOException, IllegalStateException {
+    public void downloadExercises(Map<String, String> params) throws ProtocolException, TmcCoreException,
+            IOException, IllegalStateException, NumberFormatException {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException ex) {
+            if (params.get("path") == null || params.get("path").isEmpty()) {
+                throw new ProtocolException("Path required");
+            }
+            settings.setMainDirectory(params.get("path"));
+        }
+        catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
+
         if (loginIsDone(settings)) {
-            if (params.get("path") == null || params.get("path").isEmpty()
-                    || params.get("courseID") == null || params.get("courseID").isEmpty()) {
-                throw new ProtocolException("Path and courseID required");
+            ListenableFuture<List<Exercise>> exercisesFuture;
+            if (StringUtils.isNotBlank(params.get("courseID"))) {
+                int id = Integer.parseInt(params.get("courseID"));
+                exercisesFuture = downloadById(id, settings);
+            } else if (StringUtils.isNotBlank(params.get("courseName"))) {
+                exercisesFuture = downloadByName(params.get("courseName"), settings);
+            } else {
+                throw new ProtocolException("Either a course ID or a course name must be given");
             }
-            String coursePath = new UrlHelper(settings).getCourseUrl(
-                    Integer.parseInt(params.get("courseID"))
-            );
-            ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(
-                    params.get("path"), params.get("courseID"), settings, observer
-            );
             ResultListener resultListener = new DownloadExercisesListener(exercisesFuture, output, socket);
             exercisesFuture.addListener(resultListener, threadPool);
         }
+    }
+
+    private ListenableFuture<List<Exercise>> downloadById(int id, CliSettings settings) throws ProtocolException, TmcCoreException {
+        ListenableFuture<List<Exercise>> exercisesFuture = core.downloadExercises(
+                settings.getTmcMainDirectory(), "" + id, settings, observer
+        );
+        return exercisesFuture;
+    }
+
+    private ListenableFuture<List<Exercise>> downloadByName(String name, CliSettings settings) throws TmcCoreException, IOException {
+        ListenableFuture courseFuture = core.getCourseByName(settings, name);
+        DownloadCourse dl = new DownloadCourse(settings);
+        return Futures.transform(courseFuture, dl);
     }
 
     public void logout(Map<String, String> params) {
@@ -213,7 +237,8 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException | IOException ex) {
+        }
+        catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -224,7 +249,8 @@ public class CoreUser {
             settings.setPath(params.get("path"));
             try {
                 sendSubmission(settings, params);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
@@ -263,7 +289,8 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        } catch (IllegalStateException | ParseException | IOException ex) {
+        }
+        catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -316,7 +343,8 @@ public class CoreUser {
         try {
             CliSettings settings = this.tmcCli.defaultSettings();
             return Optional.of(settings);
-        } catch (IllegalStateException | IOException ex) {
+        }
+        catch (IllegalStateException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return Optional.absent();
         }
@@ -326,7 +354,8 @@ public class CoreUser {
         try {
             output.write((message + "\n").getBytes());
             socket.close();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.err.println("Failed to print error message: ");
             System.err.println(ex.getMessage());
         }
@@ -347,6 +376,22 @@ public class CoreUser {
         String username = params.get("username");
         String password = params.get("password");
         return username == null || username.isEmpty() || password == null || password.isEmpty();
+    }
+
+    private class DownloadCourse implements AsyncFunction<Course, List<Exercise>> {
+
+        CliSettings settings;
+
+        public DownloadCourse(CliSettings settings) {
+            this.settings = settings;
+        }
+
+        @Override
+        public ListenableFuture<List<Exercise>> apply(Course course) throws Exception {
+            String id = "" + course.getId();
+            return core.downloadExercises(settings.getTmcMainDirectory(), id, settings, observer);
+        }
+
     }
 
     private class DownloadUpdates implements AsyncFunction<List<Exercise>, List<Exercise>> {
