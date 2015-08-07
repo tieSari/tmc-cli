@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CommandExecutor {
 
@@ -54,7 +52,7 @@ public class CommandExecutor {
             try {
                 CliSettings settings = this.cli.defaultSettings();
                 if (settings.getCurrentCourse().isPresent()) {
-                    msg = checkUpdates(settings) + "\n";
+                    msg = checkUpdates(settings);
                 } else {
                     msg = "Set your current course to get updates, type tmc set course <course id>\n";
                 }
@@ -81,9 +79,9 @@ public class CommandExecutor {
             ListenableFuture<List<Exercise>> updates = this.cli.getCore().getNewAndUpdatedExercises(settings.getCurrentCourse().or(new Course()), settings);
             List<Exercise> exercises = updates.get();
             if (exercises.isEmpty()) {
-                return "No updates available.";
+                return "No updates available.\n";
             } else {
-                return "Updates available. Type tmc update to download exercises.";
+                return "Updates available. Type tmc update to download exercises.\n";
             }
         } else {
             return "";
