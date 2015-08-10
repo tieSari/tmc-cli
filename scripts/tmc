@@ -256,6 +256,7 @@ then
         "login") command_login;;
         "help") command_help;;
         "test") command_test;;
+        "paste") command_paste;;
         "submit") command_submit;;
         *) command_default "$@";;
     esac
@@ -267,7 +268,6 @@ case "$1" in
     "submit") command_submit "$2";;
     "download") command_download "$2";;
     "test") command_test "$2";;
-    "paste") command_paste "$2";;
     "list") command_list "${@:2}" | less -XFMer;;
     "set") command_set "${@:2}";;
     *) command_default "$@";;
