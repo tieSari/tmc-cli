@@ -32,6 +32,7 @@ public class ConfigHandler {
      * Creates new config handler with default filename and path in current directory.
      */
     public ConfigHandler() throws IOException {
+        environment = new EnvironmentWrapper();
         this.configFilePath = this.getConfigDirectory().resolve("config.properties");
         createConfigFileIfMissing();
     }
@@ -43,6 +44,16 @@ public class ConfigHandler {
      */
     public ConfigHandler(Path path) {
         this.configFilePath = path;
+    }
+
+    /**
+     * For testing.
+     *
+     * @param mock enables testing of multiple platforms.
+     */
+    public ConfigHandler(EnvironmentWrapper mock) {
+        this.environment = mock;
+        this.configFilePath = this.getConfigDirectory().resolve("config.properties");
     }
 
     public String getConfigFilePath() {
@@ -157,7 +168,9 @@ public class ConfigHandler {
     }
 
     private void createConfigFileIfMissing() throws IOException {
-        Files.createDirectories(configFilePath.toAbsolutePath());
+        if (!Files.exists(configFilePath.toAbsolutePath().getParent())) {
+            Files.createDirectories(configFilePath.toAbsolutePath());
+        }
         if (!Files.exists(configFilePath, LinkOption.NOFOLLOW_LINKS)) {
             Files.createFile(configFilePath);
         }

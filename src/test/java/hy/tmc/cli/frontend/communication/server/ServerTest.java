@@ -77,7 +77,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testGetCurrentPort() {
+    public void testGetCurrentPort() throws IOException {
         int result = server.getCurrentPort();
         assertEquals(new ConfigHandler().readPort(), result);
     }
