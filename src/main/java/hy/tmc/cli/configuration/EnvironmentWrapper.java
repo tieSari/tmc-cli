@@ -10,4 +10,8 @@ public class EnvironmentWrapper {
     public String getOsName() {
         return System.getProperty("os.name");
     }
+
+    public String getHomeDirectory() {
+        return System.getProperty("user.home");
+    }
 }

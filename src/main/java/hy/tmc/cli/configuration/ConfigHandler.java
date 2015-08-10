@@ -1,5 +1,6 @@
 package hy.tmc.cli.configuration;
 
+import com.google.common.base.Strings;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import java.io.File;
 import java.io.FileInputStream;
@@ -157,14 +158,20 @@ public class ConfigHandler {
     }
 
     private Path getConfigDirectory() {
-        if (environment.getOsName().equals("Linux")) {
-            return Paths.get(environment.getenv("XDG_CONFIG_HOME"), "tmc");
-        } else if (environment.getOsName().toLowerCase().contains("mac os x")) {
-            return Paths.get("");
+        if (isUnixLikePlatform()) {
+            return Paths.get(xdgConfigFolder(), "tmc");
         } else if (environment.getOsName().toLowerCase().contains("windows")) {
             return Paths.get(environment.getenv("APPDATA"), "tmc");
         }
         return Paths.get("");
+    }
+
+    private String xdgConfigFolder() {
+        String xdgConf = environment.getenv("XDG_CONFIG_HOME");
+        if (Strings.isNullOrEmpty(xdgConf)) {
+            return environment.getHomeDirectory() + File.separatorChar + ".config";
+        }
+        return xdgConf;
     }
 
     private void createConfigFileIfMissing() throws IOException {
@@ -174,5 +181,10 @@ public class ConfigHandler {
         if (!Files.exists(configFilePath, LinkOption.NOFOLLOW_LINKS)) {
             Files.createFile(configFilePath);
         }
+    }
+
+    private boolean isUnixLikePlatform() {
+        String osname = environment.getOsName().toLowerCase();
+        return osname.equals("linux") || osname.contains("mac os x") || osname.contains("freebsd");
     }
 }

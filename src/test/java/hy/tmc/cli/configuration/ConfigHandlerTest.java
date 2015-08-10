@@ -34,6 +34,17 @@ public class ConfigHandlerTest {
         assertEquals("test.properties", handler.getConfigFilePath());
         new File("test.properties").delete();
     }
+    
+    @Test
+    public void testXdgDefaultsCorrectly() {
+        String xdgConf = "home/duck/.config";
+        when(env.getOsName()).thenReturn("Mac OS X");
+        when(env.getenv(eq("XDG_CONFIG_HOME"))).thenReturn("");
+        when(env.getHomeDirectory()).thenReturn("home/duck");
+        String path = new ConfigHandler(env).getConfigFilePath();
+        String expected = xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        assertEquals(expected, path);
+    }
 
     @Test
     public void testConfigPathIsCorrectForLinux() {
@@ -47,9 +58,22 @@ public class ConfigHandlerTest {
 
     @Test
     public void testConfigPathIsCorrectForMac() {
+        String xdgConf = "home/duck/.config";
         when(env.getOsName()).thenReturn("Mac OS X");
+        when(env.getenv(eq("XDG_CONFIG_HOME"))).thenReturn(xdgConf);
         String path = new ConfigHandler(env).getConfigFilePath();
-        assertEquals("config.properties", path);
+        String expected = xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        assertEquals(expected, path);
+    }
+    
+    @Test
+    public void testConfigPathIsCorrectForFreeBsd() {
+        String xdgConf = "home/duck/.config";
+        when(env.getOsName()).thenReturn("FreeBsd");
+        when(env.getenv(eq("XDG_CONFIG_HOME"))).thenReturn(xdgConf);
+        String path = new ConfigHandler(env).getConfigFilePath();
+        String expected = xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        assertEquals(expected, path);
     }
 
     @Test
