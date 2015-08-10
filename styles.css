@@ -25,3 +25,8 @@ ul
     list-style-type: none;
 }
 
+code{
+	color:white;
+	background:black;
+}
+
