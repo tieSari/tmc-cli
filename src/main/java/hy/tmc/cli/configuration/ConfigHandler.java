@@ -176,7 +176,7 @@ public class ConfigHandler {
 
     private void createConfigFileIfMissing() throws IOException {
         if (!Files.exists(configFilePath.toAbsolutePath().getParent())) {
-            Files.createDirectories(configFilePath.toAbsolutePath());
+            Files.createDirectories(configFilePath.toAbsolutePath().getParent());
         }
         if (!Files.exists(configFilePath, LinkOption.NOFOLLOW_LINKS)) {
             Files.createFile(configFilePath);
