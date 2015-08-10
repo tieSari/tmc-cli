@@ -54,9 +54,12 @@ public class ConfigHandlerTest {
 
     @Test
     public void testConfigPathIsCorrectForWindows() {
+        String appdata = "C:\\asdf\\bsdfg";
         when(env.getOsName()).thenReturn("Windows 10");
+        when(env.getenv(eq("APPDATA"))).thenReturn(appdata);
         String path = new ConfigHandler(env).getConfigFilePath();
-        assertEquals("config.properties", path);
+        String expected = appdata + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        assertEquals(expected, path);
     }
 
     @Test

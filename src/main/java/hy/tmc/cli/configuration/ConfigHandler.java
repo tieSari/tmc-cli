@@ -162,7 +162,7 @@ public class ConfigHandler {
         } else if (environment.getOsName().toLowerCase().contains("mac os x")) {
             return Paths.get("");
         } else if (environment.getOsName().toLowerCase().contains("windows")) {
-            return Paths.get("");
+            return Paths.get(environment.getenv("APPDATA"), "tmc");
         }
         return Paths.get("");
     }
