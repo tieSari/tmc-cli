@@ -6,6 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,18 +20,20 @@ import java.util.Properties;
  */
 public class ConfigHandler {
 
-    private String configFilePath;
-    private String portFieldName = "serverPort";
-    private String serverAddressFieldName = "serverAddress";
-    private String lastUpdate = "lastUpdate";
+    private Path configFilePath;
+    private final String portFieldName = "serverPort";
+    private final String serverAddressFieldName = "serverAddress";
+    private final String lastUpdate = "lastUpdate";
+    private EnvironmentWrapper environment;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
 
     /**
      * Creates new config handler with default filename and path in current directory.
      */
-    public ConfigHandler() {
-        this.configFilePath = "config.properties";
+    public ConfigHandler() throws IOException {
+        this.configFilePath = this.getConfigDirectory().resolve("config.properties");
+        createConfigFileIfMissing();
     }
 
     /**
@@ -35,21 +41,21 @@ public class ConfigHandler {
      *
      * @param path for config file
      */
-    public ConfigHandler(String path) {
+    public ConfigHandler(Path path) {
         this.configFilePath = path;
     }
 
     public String getConfigFilePath() {
-        return configFilePath;
+        return configFilePath.toString();
     }
 
     public void setConfigFilePath(String configFileName) {
-        this.configFilePath = configFileName;
+        this.configFilePath = Paths.get(configFileName);
     }
 
     private Properties getProperties() {
         Properties prop = new Properties();
-        File propertyFile = new File(configFilePath);
+        File propertyFile = configFilePath.toFile();
         try {
             if (!propertyFile.exists()) {
                 propertyFile.createNewFile();
@@ -67,7 +73,7 @@ public class ConfigHandler {
     private void writeData(String property, String data) throws IOException {
         Properties prop = getProperties();
         prop.setProperty(property, data);
-        FileWriter writer = new FileWriter(new File(configFilePath));
+        FileWriter writer = new FileWriter(configFilePath.toFile());
         prop.store(writer, "Updated properties");
         writer.close();
     }
@@ -119,7 +125,7 @@ public class ConfigHandler {
     public Date readLastUpdate() throws ParseException, IOException {
         Properties prop = getProperties();
         String dateInString = prop.getProperty(lastUpdate);
-        if(isNullOrEmpty(dateInString)){
+        if (isNullOrEmpty(dateInString)) {
             Date d = new Date();
             this.writeLastUpdate(d);
             return d;
@@ -137,5 +143,23 @@ public class ConfigHandler {
     public void writeLastUpdate(Date lastUpdate) throws IOException {
         String date = sdf.format(lastUpdate);
         writeData("lastUpdate", date);
+    }
+
+    private Path getConfigDirectory() {
+        if (environment.getOsName().equals("Linux")) {
+            return Paths.get(environment.getenv("XDG_CONFIG_HOME"), "tmc");
+        } else if (environment.getOsName().toLowerCase().contains("mac os x")) {
+            return Paths.get("");
+        } else if (environment.getOsName().toLowerCase().contains("windows")) {
+            return Paths.get("");
+        }
+        return Paths.get("");
+    }
+
+    private void createConfigFileIfMissing() throws IOException {
+        Files.createDirectories(configFilePath.toAbsolutePath());
+        if (!Files.exists(configFilePath, LinkOption.NOFOLLOW_LINKS)) {
+            Files.createFile(configFilePath);
+        }
     }
 }

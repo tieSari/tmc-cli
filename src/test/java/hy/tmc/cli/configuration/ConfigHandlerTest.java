@@ -2,7 +2,6 @@ package hy.tmc.cli.configuration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.After;
@@ -11,6 +10,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -21,13 +21,32 @@ public class ConfigHandlerTest {
 
     @Before
     public void setup() {
-        handler = new ConfigHandler("test.properties");
+        handler = new ConfigHandler(Paths.get("test.properties"));
     }
 
     @Test
     public void configPathIsSetCorrectly() {
         assertEquals("test.properties", handler.getConfigFilePath());
         new File("test.properties").delete();
+    }
+    
+    @Test
+    public void testConfigPathIsCorrectForLinux() {
+
+    }
+    
+    @Test
+    public void testConfigPathIsCorrectForMac() {
+    }
+    
+    @Test
+    public void testConfigPathIsCorrectForWindows() {
+
+    }
+    
+    @Test
+    public void testConfigPathIsCorrectForOther() {
+
     }
     
     /**
