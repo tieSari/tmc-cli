@@ -261,6 +261,7 @@ then
         "update") command_update;;
         "login") command_login;;
         "help") command_help;;
+        "submit") command_submit;;
         *) command_default "$@";;
     esac
     exit 0
