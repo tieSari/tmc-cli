@@ -180,9 +180,7 @@ function login () {
 
 # Backend cmd send
 function send_command () {
-    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-    CONFIGPATH="$DIR/config.properties"
+    CONFIGPATH="$XDG_CONFIG_HOME/tmc/config.properties"
     if [ -f "$CONFIGPATH" ];
     then
       CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
@@ -202,9 +200,7 @@ function send_command () {
 }
 
 function send_command_wait_output () {
-    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-    CONFIGPATH="$DIR/config.properties"
+    CONFIGPATH="$XDG_CONFIG_HOME/tmc/config.properties"
     CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
     OUTPUT=$(echo "$@" | nc localhost "$CONFIGPORT")
 
@@ -235,9 +231,7 @@ then
     exit
 fi
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-CONFIGPATH="$DIR/config.properties"
-
+CONFIGPATH="$XDG_CONFIG_HOME/tmc/config.properties"
 
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
