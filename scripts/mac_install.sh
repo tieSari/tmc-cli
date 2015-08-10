@@ -23,9 +23,9 @@ cd tmc-cli-release
 #cd $( dirname "${BASH_SOURCE[0]}" )
 TMCDIR=$(pwd)
 
-echo -e '\n### Added by TestMyCode Commandline client' >> $HOME/.bashrc
+echo -e '\n### Added by TestMyCode Commandline client' >> $HOME/.bash_profile
 echo "export PATH=\"$TMCDIR:\$PATH\"" >> $HOME/.bash_profile
-source $HOME/.bashrc
+source $HOME/.bash_profile
 
 echo Install finished. Type "tmc" to get started. Usage instructions and support information available in http://rage.github.io/tmc-cli/
 
