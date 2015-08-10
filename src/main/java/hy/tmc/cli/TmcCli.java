@@ -22,7 +22,7 @@ public class TmcCli {
 
     public TmcCli(TmcCore core) throws IOException {
         this.core = core;
-        this.config = new ConfigHandler("config.properties");
+        this.config = new ConfigHandler();
         this.session = new Session();
         server = new Server(this);
         serverThread = new Thread(server);
