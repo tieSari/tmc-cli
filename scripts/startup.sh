@@ -7,17 +7,16 @@
 
 function start_server () {
     CLIENTPATH=$DIR
-    cd $CLIENTPATH
-    nohup java -jar tmc-client.jar 2> $LOGPATH > /dev/null &
+    cd "$CLIENTPATH"
+    nohup java -jar tmc-client.jar 2> "$LOGPATH" > /dev/null &
     PID=$!
-    echo $PID > $CONFIGPATH
+    echo -n $PID > "$CONFIGPATH"
     sleep 0.5
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-CONFIGPATH=$DIR
-CONFIGPATH+="/config"
+CONFIGPATH="$DIR/pidfile.pid"
 LOGPATH=$DIR
 LOGPATH+="/log.txt"
 
@@ -27,16 +26,20 @@ then
   exit 0
 fi
 
-PID=`cat $CONFIGPATH`
+PID=$(cat $CONFIGPATH)
 
 if [[ -n "$PID" ]]
 then
-  if ps -p $PID > /dev/null
+  if ps -p "$PID" > /dev/null
   then
-    exit 0
+    exit 0;
+  else 
+    start_server
   fi
 fi
 
-if [ pgrep `cat $CONFIGPATH` &> /dev/null ]; then
+PID=$(pgrep "$(cat "$CONFIGPATH")")
+
+if [ -z "$PID" ]; then
   start_server
 fi

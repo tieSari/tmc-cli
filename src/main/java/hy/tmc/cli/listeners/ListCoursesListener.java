@@ -2,7 +2,7 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Course;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.List;
@@ -37,13 +37,18 @@ public class ListCoursesListener extends ResultListener<List<Course>> {
     }
 
     private String getCourseNames(List<Course> courses) {
+        if (courses.isEmpty()) {
+            return "";
+        }
         StringBuilder result = new StringBuilder();
 
+        result.append("NAME");
+        result = addSpaces(result, "NAME", getLongest(courses))
+                .append("ID\n");
         for (Course course : courses) {
             String name = course.getName();
-            result.append(name).append(", ");
+            result.append(name);
             result = addSpaces(result, name, getLongest(courses))
-                    .append("id:")
                     .append(course.getId());
             result.append("\n");
         }
@@ -52,7 +57,7 @@ public class ListCoursesListener extends ResultListener<List<Course>> {
     }
 
     private StringBuilder addSpaces(StringBuilder result, String name, int longest) {
-        int spaces = longest - name.length();
+        int spaces = longest - name.length() + 2;
         for (int i = 0; i < spaces; i++) {
             result.append(" ");
         }

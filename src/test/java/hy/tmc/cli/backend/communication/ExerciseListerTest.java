@@ -2,8 +2,10 @@ package hy.tmc.cli.backend.communication;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.builders.ExerciseBuilder;
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertFalse;
@@ -75,8 +77,10 @@ public class ExerciseListerTest {
         exercises.add(ex);
 
         String info = lister.buildExercisesInfo(exampleExercises());
-        assertTrue(info.contains("25.0%"));
-        assertTrue(info.contains("Attempted: 2 (50.0%)"));
+        System.out.println("Info: " + info);
+        NumberFormat formatter = new DecimalFormat("#0.0");
+        assertTrue(info.contains(formatter.format(25.0) + "%"));
+        assertTrue(info.contains("Attempted: 2 ("+formatter.format(50.0)+"%)"));
         assertTrue(info.contains("Total: 4"));
     }
 

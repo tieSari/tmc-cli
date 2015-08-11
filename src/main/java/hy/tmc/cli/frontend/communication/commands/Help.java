@@ -9,7 +9,7 @@ public class Help extends Command<String> {
     public Help(TmcCli cli) {
         super(cli);
     }
-    
+
     public Help(TmcCli cli, String command) {
         super(cli);
         if (command != null) {
@@ -20,17 +20,20 @@ public class Help extends Command<String> {
     public String mainHelpMessage() {
         StringBuilder enterprise = new StringBuilder();
 
-        enterprise.append("Available commands:\n")
-                .append("help [command name]\n")
-                .append("test\n")
-                .append("submit\n")
-                .append("paste\n")
-                .append("list exercises\n")
-                .append("list courses\n")
-                .append("download <course ID>\n")
-                .append("set server <tmc-server address>\n")
-                .append("login\n")
-                .append("logout");
+        enterprise.append("Commands:\n")
+                .append("    help [command name] \tShow help for a command\n")
+                .append("    test \t\t\tRun local tests\n")
+                .append("    submit \t\t\tSubmit an exercise\n")
+                .append("    paste \t\t\tCreate a tmc-paste\n")
+                .append("    list exercises \t\tList all exercises\n")
+                .append("    list courses \t\tList all courses\n")
+                .append("    download <course ID> \tDownload a course\n")
+                .append("    set server <address> \tChange your tmc-server\n")
+                .append("    login \t\t\tLog in to tmc\n")
+                .append("    logout \t\t\tLog out of tmc\n")
+                .append("    update \t\t\tGet updates to your current course\n")
+                .append("    showSettings \t\tShow settings\n")
+                .append("    set course <coursename> \tSet current course");
 
         return enterprise.toString();
     }
@@ -48,7 +51,7 @@ public class Help extends Command<String> {
         switch (command) {
             case "help":
                 return "'help' will list all commands, help <command-name> will "
-                        + "display a helpmessage for that command";
+                        + "display a help message for that command";
             case "test":
                 return "Runs the local tests for an exercise. You need to be in "
                         + "that exercise directory, or any subdirectory";

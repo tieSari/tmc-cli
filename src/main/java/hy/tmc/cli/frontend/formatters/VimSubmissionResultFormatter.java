@@ -1,29 +1,29 @@
 package hy.tmc.cli.frontend.formatters;
 
-
-import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.domain.submission.TestCase;
-import hy.tmc.core.domain.submission.ValidationError;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
 import java.util.List;
 import java.util.Map.Entry;
-
 
 public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
 
     CheckstyleFormatter checkstyleFormatter;
-    
+
     public VimSubmissionResultFormatter() {
         this.checkstyleFormatter = new VimCheckstyleFormatter();
     }
-    
+
     @Override
     public String someTestsFailed() {
         return "Some tests failed on server. Summary: \n";
     }
 
     /**
-     * Tells if TestCase object is passed or failed, if failed, also information about failures.
-     * @param testCase 
+     * Tells if TestCase object is passed or failed, if failed, also information
+     * about failures.
+     *
+     * @param testCase
      * @return toString of StrinBuilder content
      */
     @Override
@@ -50,7 +50,7 @@ public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
     }
 
     /**
-     * Gives information about result points. 
+     * Gives information about result points.
      */
     @Override
     public String getPointsInformation(SubmissionResult result) {

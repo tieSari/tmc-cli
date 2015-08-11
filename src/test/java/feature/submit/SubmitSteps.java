@@ -7,19 +7,18 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.synchronization.TmcServiceScheduler;
-import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.Wiremocker;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import org.hamcrest.CoreMatchers;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -34,12 +33,20 @@ public class SubmitSteps {
 
     private ConfigHandler configHandler;
     private WireMockServer wireMockServer;
-    
+
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    
-    private final String coursesExtension = "/courses.json?api_version=7";
+
+    private final String coursesExtension;
+    private UrlHelper urlHelper;
+
+    public SubmitSteps() {
+        CliSettings settings = new CliSettings();
+        settings.setServerAddress(SERVER_ADDRESS);
+        this.urlHelper = new UrlHelper(settings);
+        coursesExtension = urlHelper.withParams("/courses.json");
+    }
 
     @Rule
     WireMockRule wireMockRule = new WireMockRule();
@@ -53,20 +60,19 @@ public class SubmitSteps {
     public void initializeServer() throws IOException {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
-        
-        tmcCli = new TmcCli(new TmcCore());
+
+        tmcCli = new TmcCli(new TmcCore(), false);
+
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
- 
-        TmcServiceScheduler.disablePolling();
-        Mailbox.create();
 
         Wiremocker mocker = new Wiremocker();
         wireMockServer = mocker.mockAnyUserAndSubmitPaths();
         mocker.wireMockSuccesfulSubmit(wireMockServer);
         mocker.wireMockExpiredSubmit(wireMockServer);
         mocker.wiremockFailingSubmit(wireMockServer);
+        new ConfigHandler().writeLastUpdate(new Date());
        
     }
 
@@ -116,29 +122,6 @@ public class SubmitSteps {
         assertTrue(result.contains("expired"));
     }
 
-    @Given("^the user has mail in the mailbox$")
-    public void the_user_has_mail_in_the_mailbox() throws Throwable {
-        Mailbox.getMailbox().get().fill(MailExample.reviewExample());
-    }
-
-    @Then("^user will see the new mail$")
-    public void user_will_see_the_new_mail() throws Throwable {
-        String result = testClient.getAllFromSocket();
-        assertTrue(result.contains("unread code reviews"));
-    }
-
-    @Given("^polling for reviews is not in progress$")
-    public void polling_for_reviews_is_not_in_progress() throws Throwable {
-        TmcServiceScheduler.enablePolling();
-        assertFalse(TmcServiceScheduler.isRunning());
-    }
-
-    @Then("^the polling will be started$")
-    public void the_polling_will_be_started() throws Throwable {
-        assertTrue(TmcServiceScheduler.isRunning());
-        TmcServiceScheduler.getScheduler().stop();
-    }
-
     @When("^user gives command submit with path \"([^\"]*)\" and exercise \"([^\"]*)\"$")
     public void user_gives_command_submit_with_path_and_exercise(String pathFromProjectRoot, String exercise) throws Throwable {
         submitCommand = "submit path " + System.getProperty("user.dir") + pathFromProjectRoot + File.separator + exercise + " courseID 21";
@@ -149,6 +132,5 @@ public class SubmitSteps {
         wireMockServer.stop();
         tmcCli.stopServer();
         configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
-        Mailbox.destroy();
     }
 }

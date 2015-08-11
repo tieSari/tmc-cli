@@ -1,14 +1,10 @@
 # tmc-cli
 
-[![Build Status](https://travis-ci.org/tmc-cli/tmc-cli.svg?branch=master)](https://travis-ci.org/tmc-cli/tmc-cli)
+[![Build Status](https://travis-ci.org/rage/tmc-cli.svg?branch=master)](https://travis-ci.org/rage/tmc-cli)
 [![Coverage Status](https://coveralls.io/repos/tmc-cli/tmc-cli/badge.svg)](https://coveralls.io/r/tmc-cli/tmc-cli)
 
-* Command Line client for Test My Code
-* Ohjelmistotuotantoprojekti 2015 Kesä
+* Command-line client for [TestMyCode](https://github.com/testmycode/tmc-server)
 
-The goal for this project is to build a command-line client for [TestMyCode](https://github.com/testmycode/tmc-server)
-
-## As of 26.6.2015
 Current core functionality includes:
 * Downloading exercises from TMC-server
 * Submitting exerises
@@ -16,6 +12,7 @@ Current core functionality includes:
 * Submittin pastes
 * Getting notified by code reviews
 * Listing available courses
+* Setting server
 
 [Installation instructions](Installation.md)
 
@@ -57,3 +54,14 @@ Current core functionality includes:
 - listExercises
   - When a user is in a course directory, lists the exercises of that course
   - If the user has completed a certain exercise, it is shown that way
+
+## Credits and maintainers
+Tmc-cli was started by Ohjelmistotuotantoprojekti kesä 2015 (Software engineering project)
+* Ilari Sinkkonen
+* Kristian Wahlroos
+* Samu Tamminen
+* Pihla Toivanen
+* Chang Rajani
+* Jani Luukko
+
+It was then improved by [RAGE -research group](https://www.cs.helsinki.fi/en/rage/) and it's current maintainer also.

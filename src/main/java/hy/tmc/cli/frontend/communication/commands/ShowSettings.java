@@ -2,7 +2,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 
 public class ShowSettings extends Command<String> {
 
@@ -15,16 +15,16 @@ public class ShowSettings extends Command<String> {
         TmcSettings settings = this.tmcCli.defaultSettings();
         StringBuilder result = new StringBuilder();
         if(settings.userDataExists()){
-            result.append("Username: " + settings.getUsername() + "\n");
+            result.append("Username: ").append(settings.getUsername()).append("\n");
         }
         if(settings.getServerAddress() != null){
-            result.append("Server address: " + settings.getServerAddress() + "\n");
+            result.append("Server address: ").append(settings.getServerAddress()).append("\n");
         }
         if(settings.getCurrentCourse().isPresent()){
-            result.append("Current course: " + settings.getCurrentCourse().get().getName() + "\n");
+            result.append("Current course: ").append(settings.getCurrentCourse().get().getName()).append("\n");
         }
         if(settings.getTmcMainDirectory() != null){
-            result.append("Tmc Main Directory: " + settings.getTmcMainDirectory() + "\n");
+            result.append("Tmc Main Directory: ").append(settings.getTmcMainDirectory()).append("\n");
         }
         return result.toString();
     }

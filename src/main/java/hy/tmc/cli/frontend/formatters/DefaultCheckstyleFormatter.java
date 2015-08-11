@@ -1,11 +1,10 @@
 package hy.tmc.cli.frontend.formatters;
 
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
 import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
-import hy.tmc.core.domain.submission.ValidationError;
 
 import java.util.List;
-
 
 public class DefaultCheckstyleFormatter implements CheckstyleFormatter {
 

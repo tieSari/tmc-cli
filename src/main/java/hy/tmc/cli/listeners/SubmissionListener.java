@@ -6,7 +6,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.frontend.formatters.DefaultSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
-import hy.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -51,12 +51,5 @@ public class SubmissionListener extends ResultListener<SubmissionResult> {
 
     @Override
     public void extraActions(SubmissionResult result) {
-        if (result.isAllTestsPassed()) {
-            askFeedback(result);
-        }
-    }
-
-    private void askFeedback(SubmissionResult result) {
-       System.err.println("This is askFeedback method. It's not implemented yet.");
     }
 }

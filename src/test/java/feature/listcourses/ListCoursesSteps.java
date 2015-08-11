@@ -19,10 +19,13 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.core.TmcCore;
+import hy.tmc.cli.CliSettings;
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class ListCoursesSteps {
 
@@ -34,17 +37,26 @@ public class ListCoursesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    private final String coursesExtension = "/courses.json?api_version=7";
+
+    private final String coursesExtension;
+
+    public ListCoursesSteps() {
+        CliSettings settings = new CliSettings();
+        settings.setServerAddress(SERVER_ADDRESS);
+        coursesExtension = new UrlHelper(settings).withParams("/courses.json");
+    }
 
     /**
      * Setups client's config and starts WireMock.
      */
     @Before
     public void setUpServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
+        
+        new ConfigHandler().writeLastUpdate(new Date());
 
         startWireMock();
     }
@@ -85,8 +97,7 @@ public class ListCoursesSteps {
 
     @Then("^output should contain \"(.*?)\"$")
     public void output_should_contain(String expectedOutput) throws Throwable {
-        testClient.reply(); // "started list courses", skip this print
-        String content = testClient.reply();
+        String content = testClient.getAllFromSocket();
         assertThat(content, CoreMatchers.containsString(expectedOutput));
     }
 

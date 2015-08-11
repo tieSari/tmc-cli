@@ -2,13 +2,14 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.TmcCore;
-import hy.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,7 +56,7 @@ public class SocketRunnable implements Runnable {
         }
         try {
             executor.parseAndExecute(input);
-        } catch (ProtocolException ex) {
+        } catch (Exception ex) {
             writeToOutput(outputStream, ex.getMessage());
         }
     }

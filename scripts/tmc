@@ -6,14 +6,14 @@ function command_submit () {
   echo "Submitting exercise..."
   if [ $# = 0 ]
     then
-    send_command_wait_output "submit path `pwd`"
+    send_command_wait_output "submit path $(pwd)"
   else
-    send_command_wait_output "submit path `pwd` $1"
+    send_command_wait_output "submit path $(pwd) $1"
   fi
 
   echo "$OUTPUT"
 
-  if [[ $OUTPUT =~ All\ tests\ passed.*Please\ give\ feedback\:.* ]]
+  if [[ $OUTPUT =~ All\ tests\ passed.*Please\ give\ feedback:.* ]]
   then
     OUTPUT=""
     feedback
@@ -42,24 +42,24 @@ function int_feedback () {
 }
 
 function text_feedback () {
-  TIMESTAMP=`date +%s`
+  TIMESTAMP=$(date +%s)
   FEEDBACK="/tmp/feedback-$TIMESTAMP"
-  echo "" >> $FEEDBACK
-  echo "" >> $FEEDBACK
-  echo "#############" >> $FEEDBACK
-  echo "" >> $FEEDBACK
-  echo "Please enter feedback above the bar." >> $FEEDBACK
-  echo "" >> $FEEDBACK
-  echo "$OUTPUT" >> $FEEDBACK
+  echo "" >> "$FEEDBACK"
+  echo "" >> "$FEEDBACK"
+  echo "#############" >> "$FEEDBACK"
+  echo "" >> "$FEEDBACK"
+  echo "Please enter feedback above the bar." >> "$FEEDBACK"
+  echo "" >> "$FEEDBACK"
+  echo "$OUTPUT" >> "$FEEDBACK"
 
   if [[ -z "$EDITOR" ]]
   then
-    $EDITOR $FEEDBACK
+    $EDITOR "$FEEDBACK"
   else
-    nano $FEEDBACK
+    nano "$FEEDBACK"
   fi
 
-  PARSEDOUTPUT=`sed -n '/#############/q;p' $FEEDBACK`
+  PARSEDOUTPUT=$(sed -n '/#############/q;p' "$FEEDBACK")
   send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/\<newline\>} }"
   if [[ $OUTPUT =~ end ]]
     then
@@ -73,12 +73,22 @@ function command_login () {
     read -p "Username: " username
     read -s  -p "Password: " password
     echo ""
-    login $username $password
+    login "$username" "$password"
     return 0;
 }
 
 function command_download () {
-  send_command "downloadExercises path `pwd` courseID $1"
+  re='^[0-9]+$'
+  if [[ "$1" =~ $re ]];
+  then
+    send_command "downloadExercises path $(pwd) courseID $1"
+  else
+    send_command "downloadExercises path $(pwd) courseName $1"
+  fi
+}
+
+function command_update() {
+  send_command "update path $(pwd)"
 }
 
 function command_showsettings () {
@@ -86,29 +96,29 @@ function command_showsettings () {
 }
 
 function command_mail() {
- send_command "getMail path `pwd`"
+ send_command "getMail path $(pwd)"
 }
 
 function command_paste () {
-  send_command "paste path `pwd`"
+  send_command "paste path $(pwd)"
 }
 
 function command_test () {
   if [ $# = 0 ]
     then
-      send_command "runTests path `pwd`"
+      send_command "runTests path $(pwd)"
     else
-      send_command "runTests path `pwd` $1"
+      send_command "runTests path $(pwd) $1"
   fi
 }
 
 function command_default () {
-    send_command $@
+    send_command "$@"
     return 0;
 }
 
 function command_listExercises () {
-    send_command "listExercises path `pwd`"
+    send_command "listExercises path $(pwd)"
 }
 
 function command_listCourses () {
@@ -116,7 +126,7 @@ function command_listCourses () {
 }
 
 function command_help () {
-    if [ $# = 0 ];
+    if [ $# = 0 ] || [ -z $1 ];
     then
         send_command "help"
     else
@@ -136,11 +146,21 @@ function command_setServer () {
     send_command "setServer tmc-server $1"
 }
 
+function command_setCourse () {
+    send_command "setCourse course $1"
+}
+
 function command_set () {
-    case "$1" in
-        "server") command_setServer $2;;
-        *) echo "don't know how to set $1";; 
-    esac
+    if [ -z $2 ];
+    then
+        echo "Not setting $1 to an empty value"
+    else
+        case "$1" in
+            "server") command_setServer "$2";;
+            "course") command_setCourse "$2";;
+            *) echo "don't know how to set $1";; 
+        esac
+    fi
 }
 
 # Backend login
@@ -152,7 +172,7 @@ function login () {
     loginstring+=" password "
     loginstring+=$2
 
-    send_command $loginstring
+    send_command "$loginstring"
 
     return 0;
 
@@ -160,21 +180,19 @@ function login () {
 
 # Backend cmd send
 function send_command () {
-    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-    CONFIGPATH="$DIR/config.properties"
+    CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
     if [ -f "$CONFIGPATH" ];
     then
-      CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-      echo $@ | nc localhost $CONFIGPORT
+      CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
+      echo "$@" | nc localhost "$CONFIGPORT"
     else
       sleep 0.4
       if [ -f "$CONFIGPATH" ];
       then
-        CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-        echo $@ | nc localhost $CONFIGPORT
+        CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
+        echo "$@" | nc localhost "$CONFIGPORT"
       else
-          echo Could not find config.properties, aborting $1. Maybe tmc-client has not started succesfully?
+          echo Could not find config.properties, aborting "$1". Maybe tmc-client has not started succesfully?
       fi
     fi
     return 0;
@@ -182,11 +200,9 @@ function send_command () {
 }
 
 function send_command_wait_output () {
-    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-    CONFIGPATH="$DIR/config.properties"
-    CONFIGPORT=`cat $CONFIGPATH | grep "serverPort" | sed s/serverPort=//g`
-    OUTPUT=`echo $@ | nc localhost $CONFIGPORT`
+    CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
+    CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
+    OUTPUT=$(echo "$@" | nc localhost "$CONFIGPORT")
 
     return 0;
 
@@ -199,6 +215,10 @@ control_c()
   exit $?
 }
 
+function shutdown() {
+    bash shutdown.sh
+    echo "tmc has shutdown succesfully."
+}
 
 # catch crtl_c and run function control_c if user hits ctrl-c
 trap control_c SIGINT
@@ -211,9 +231,7 @@ then
     exit
 fi
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-CONFIGPATH="$DIR/config.properties"
-
+CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
 
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
@@ -221,23 +239,43 @@ STARTUP=$DIR
 STARTUP+="/startup.sh"
 bash $STARTUP
 
+if [ -z $XDG_CONFIG_HOME ];
+then 
+  CONFIG_HOME="$HOME/.config"
+else
+  CONFIG_HOME="$XDG_CONFIG_HOME"
+fi
+
 if [ $# = 0 ];
 then
-    echo -e "\n    This is tmc-cli, commandline client for Test My Code\n"
+    echo "Usage: tmc <command> [...]"
+    echo -e "Command-line client for Test My Code.\n"
     send_command "help"
     exit 0
 fi
 
+if [ $# = 1 ];
+then
+    case "$1" in
+        "showSettings") command_showsettings;;
+        "shutdown") shutdown;;
+        "update") command_update;;
+        "login") command_login;;
+        "help") command_help;;
+        "test") command_test;;
+        "paste") command_paste;;
+        "submit") command_submit;;
+        *) command_default "$@";;
+    esac
+    exit 0
+fi
+
 case "$1" in
-    "help") command_help $2;;
-    "login") command_login;;
-    "submit") command_submit $2;;
-    "download") command_download $2;;
-    "showSettings") command_showsettings;;
-    "test") command_test $2;;
-    "paste") command_paste $2;;
-    "mail") command_mail;;
-    "list") command_list ${@:2};;
-    "set") command_set ${@:2};;
-    *) command_default $@;;
+    "help") command_help "$2";;
+    "submit") command_submit "$2";;
+    "download") command_download "$2";;
+    "test") command_test "$2";;
+    "list") command_list "${@:2}" | less -XFMer;;
+    "set") command_set "${@:2}";;
+    *) command_default "$@";;
 esac

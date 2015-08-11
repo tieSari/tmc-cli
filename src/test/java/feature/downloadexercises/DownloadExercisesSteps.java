@@ -8,10 +8,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.mail.Mailbox;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
 
 import java.io.File;
@@ -20,6 +19,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import cucumber.api.PendingException;
+import java.util.Date;
+import hy.tmc.cli.CliSettings;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import static org.junit.Assert.*;
 
 public class DownloadExercisesSteps {
@@ -35,19 +38,28 @@ public class DownloadExercisesSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    private UrlHelper urlHelper;
+
+    public DownloadExercisesSteps() {
+        CliSettings settings = new CliSettings();
+        urlHelper = new UrlHelper(settings);
+    }
 
     /**
      * Setups client's config and starts WireMock.
      */
     @Before
     public void setUpServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore());
+        tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.setServer(SERVER_ADDRESS);
+        Date date = new Date();
         tmcCli.startServer();
+        new ConfigHandler().writeLastUpdate(date);
         testClient = new TestClient(new ConfigHandler().readPort());
 
         tempDir = Files.createTempDirectory(null);
 
+        new ConfigHandler().writeLastUpdate(new Date());
         wiremock();
     }
 
@@ -59,14 +71,24 @@ public class DownloadExercisesSteps {
                 .willReturn(aResponse()
                         .withStatus(200)));
 
-        wireMockServer.stubFor(get(urlEqualTo("/courses.json?api_version=7"))
+        String urlMock = urlHelper.withParams("/courses.json");
+        wireMockServer.stubFor(get(urlEqualTo(urlMock))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
                         .withBody(ExampleJson.allCoursesExample
                                 .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
 
-        wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
+        urlMock = urlHelper.withParams("/courses/3.json");
+        wireMockServer.stubFor(get(urlEqualTo(urlMock))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(ExampleJson.courseExample
+                                .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
+
+        urlMock = urlHelper.withParams("/courses/21.json");
+        wireMockServer.stubFor(get(urlEqualTo(urlMock))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
@@ -102,7 +124,7 @@ public class DownloadExercisesSteps {
 
     @When("^user gives a download exercises command and course id with locked exercises\\.$")
     public void user_gives_a_download_exercises_command_and_course_id_with_locked_exercises() throws Throwable {
-                wireMockServer.stubFor(get(urlEqualTo("/courses/21.json?api_version=7"))
+        wireMockServer.stubFor(get(urlEqualTo(urlHelper.withParams("/courses/21.json")))
                 .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -112,6 +134,18 @@ public class DownloadExercisesSteps {
                                 .replaceFirst("\"locked\": false", "\"locked\": true"))));
 
         testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
+        output = testClient.getAllFromSocket();
+    }
+
+    @When("^user gives a download exercises command and course name\\.$")
+    public void user_gives_a_download_exercises_command_and_course_name() throws Throwable {
+        testClient.sendMessage("downloadExercises courseName 2013_ohpeJaOhja path " + tempDir.toAbsolutePath());
+        output = testClient.getAllFromSocket();
+    }
+
+    @When("^user gives a download exercises command with a course name not on the server$")
+    public void user_gives_a_download_exercises_command_with_a_course_name_not_on_the_server() throws Throwable {
+        testClient.sendMessage("downloadExercises courseName notacourse path " + tempDir.toAbsolutePath());
         output = testClient.getAllFromSocket();
     }
 
@@ -158,7 +192,6 @@ public class DownloadExercisesSteps {
      */
     @After
     public void closeServer() throws IOException, InterruptedException {
-        Mailbox.destroy();
         tempDir.toFile().delete();
         wireMockServer.stop();
         tmcCli.stopServer();

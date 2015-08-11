@@ -1,6 +1,6 @@
 package hy.tmc.cli.testhelpers.builders;
 
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 
 public class ExerciseBuilder {

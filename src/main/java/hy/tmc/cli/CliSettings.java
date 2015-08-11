@@ -2,8 +2,10 @@ package hy.tmc.cli;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.Course;
+
+import java.util.Date;
 
 public class CliSettings implements TmcSettings {
 
@@ -17,6 +19,7 @@ public class CliSettings implements TmcSettings {
     private String path;
     private String courseID;
     private ConfigHandler config;
+    private Date lastUpdate;
 
     public CliSettings(String apiVersion) {
         this.apiVersion = apiVersion;
@@ -58,6 +61,14 @@ public class CliSettings implements TmcSettings {
     
     public void setPath(String path){
         this.path = path;
+    }
+    
+    public Date getLastUpdate(){
+        return lastUpdate;
+    }
+    
+    public void setLastUpdate(Date time){
+        this.lastUpdate = time;
     }
     
     public String getPath(){
@@ -137,46 +148,15 @@ public class CliSettings implements TmcSettings {
         username = "";
         password = "";
     }
-
-    public int getPid() {
-        return pid;
-    }
-
-    public void setPid(int pid) {
-        this.pid = pid;
-    }
     
-    public void setCourseID(String courseID){
-        this.courseID = courseID;
-    }
-    
-    public String getCourseID(){
-        return this.courseID;
-    }
     
     @Override
-    public String toString(){
-        String value = "";
-        if(serverAddress != null){
-            value += "Serveraddress: " + this.getServerAddress() + " ";
-        }
-        if(username != null){
-            value += "Username: " + this.getUsername() + " ";
-        }
-        if(password != null){
-            value += "Password: " + this.getPassword() + " ";
-        }
-        if(courseID != null){
-            value += "CourseID: " + this.getCourseID() + " ";
-        }
-        if(path != null){
-            value += "Path: " + this.getPath() + " ";
-        }
-        if(currentCourse != null){
-            value += "CurrentCourse is not null ";
-        } else {
-            value += "CurrentCourse is null ";
-        }
-        return value;
+    public String clientName() {
+       return "tmc_cli";
+    }
+
+    @Override
+    public String clientVersion() {
+        return "0.6";
     }
 }

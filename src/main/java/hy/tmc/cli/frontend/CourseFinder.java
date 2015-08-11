@@ -1,11 +1,9 @@
 package hy.tmc.cli.frontend;
 
 import com.google.common.base.Optional;
+import fi.helsinki.cs.tmc.core.domain.Course;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.core.domain.Course;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class CourseFinder {
@@ -19,7 +17,7 @@ public class CourseFinder {
      * @param path Path to look up course from.
      * @return Course-object containing information of the course found.
      */
-    public Optional<Course> getCurrentCourse(String path, List<Course> courses) throws IOException {
+    public Optional<Course> getCurrentCourse(String path, List<Course> courses) {
         String[] foldersOfPwd = path.split("\\" + File.separator);
         try {
             checkPwd(foldersOfPwd);
@@ -30,8 +28,8 @@ public class CourseFinder {
     }
 
     /**
-     * Downloads all courses and iterates over them. Returns Course whose name matches with one
-     * folder in given path.
+     * Downloads all courses and iterates over them. Returns Course whose name
+     * matches with one folder in given path.
      *
      * @param foldersPath contains the names of the folders in path
      * @return Course

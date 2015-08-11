@@ -7,7 +7,7 @@ scripts/cache
 .idea/*
 .idea/**
 tmc-cli.iml
-scripts/config*
+scripts/pidfile.pid
 scripts/*.jar
 **/config.properties
 */build_log.txt
@@ -31,3 +31,5 @@ testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat/nbproject/private/
 tmc-langs.log
 config.properties
 cache
+/pihlantesti/viikko1/Viikko1_004.Muuttujat/nbproject/private/
+/tmc-testcourse/most_errors/nbproject/private/
