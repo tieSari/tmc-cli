@@ -27,10 +27,12 @@ public class Help extends Command<String> {
                 .append("    paste \t\t\tCreate a tmc-paste\n")
                 .append("    list exercises \t\tList all exercises\n")
                 .append("    list courses \t\tList all courses\n")
-                .append("    download <course ID> \tDowload a course\n")
+                .append("    download <course ID> \tDownload a course\n")
                 .append("    set server <address> \tChange your tmc-server\n")
                 .append("    login \t\t\tLog in to tmc\n")
-                .append("    logout \t\t\tLog out of tmc");
+                .append("    logout \t\t\tLog out of tmc\n")
+                .append("    update \t\t\tGet updates to your current course\n")
+                .append("    set course <coursename> \tSet current course");
 
         return enterprise.toString();
     }
