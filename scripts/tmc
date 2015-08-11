@@ -180,7 +180,7 @@ function login () {
 
 # Backend cmd send
 function send_command () {
-    CONFIGPATH="$XDG_CONFIG_HOME/tmc/config.properties"
+    CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
     if [ -f "$CONFIGPATH" ];
     then
       CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
@@ -200,7 +200,7 @@ function send_command () {
 }
 
 function send_command_wait_output () {
-    CONFIGPATH="$XDG_CONFIG_HOME/tmc/config.properties"
+    CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
     CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
     OUTPUT=$(echo "$@" | nc localhost "$CONFIGPORT")
 
@@ -231,13 +231,20 @@ then
     exit
 fi
 
-CONFIGPATH="$XDG_CONFIG_HOME/tmc/config.properties"
+CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
 
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"
 bash $STARTUP
+
+if [ -z $XDG_CONFIG_HOME ];
+then 
+  CONFIG_HOME="$HOME/.config"
+else
+  CONFIG_HOME="$XDG_CONFIG_HOME"
+fi
 
 if [ $# = 0 ];
 then
