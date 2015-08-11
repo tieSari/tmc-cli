@@ -13,7 +13,7 @@ import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
 import java.io.IOException;
 
 import java.util.Date;

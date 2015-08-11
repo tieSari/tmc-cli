@@ -10,8 +10,8 @@ import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 
-import hy.tmc.core.TmcCore;
-import hy.tmc.core.communication.authorization.Authorization;
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.communication.authorization.Authorization;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 
@@ -19,10 +19,10 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.domain.Course;
-import hy.tmc.core.domain.Exercise;
-import hy.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
 import java.util.ArrayList;

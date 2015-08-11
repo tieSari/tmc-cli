@@ -2,8 +2,8 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.TmcCore;
-import hy.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

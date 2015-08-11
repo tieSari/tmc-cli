@@ -3,9 +3,9 @@ package hy.tmc.cli.backend.communication;
 import com.google.common.base.Optional;
 
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
-import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.domain.submission.TestCase;
-import hy.tmc.core.domain.submission.ValidationError;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
 
 import java.util.List;
 import java.util.Map;

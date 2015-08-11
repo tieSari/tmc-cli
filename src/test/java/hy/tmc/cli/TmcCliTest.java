@@ -1,7 +1,7 @@
 package hy.tmc.cli;
 
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
 import java.io.IOException;
 import java.text.ParseException;
 import org.junit.After;

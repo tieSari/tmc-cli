@@ -2,8 +2,9 @@ package hy.tmc.cli;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.Course;
+
 import java.util.Date;
 
 public class CliSettings implements TmcSettings {

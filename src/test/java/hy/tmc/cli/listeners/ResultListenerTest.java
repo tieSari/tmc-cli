@@ -2,7 +2,7 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

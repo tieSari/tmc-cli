@@ -1,6 +1,6 @@
 package hy.tmc.cli.frontend;
 
-import hy.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

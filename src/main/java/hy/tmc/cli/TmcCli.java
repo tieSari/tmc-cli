@@ -3,8 +3,8 @@ package hy.tmc.cli;
 import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
-import hy.tmc.core.TmcCore;
-import hy.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.domain.Course;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -22,7 +22,7 @@ public class TmcCli {
 
     public TmcCli(TmcCore core) throws IOException {
         this.core = core;
-        this.config = new ConfigHandler("config.properties");
+        this.config = new ConfigHandler();
         this.session = new Session();
         server = new Server(this);
         serverThread = new Thread(server);

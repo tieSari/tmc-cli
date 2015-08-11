@@ -1,7 +1,7 @@
 package hy.tmc.cli.listeners;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Course;
 import org.junit.Before;
 import org.junit.Test;
 

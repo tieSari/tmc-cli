@@ -3,10 +3,10 @@ package hy.tmc.cli.frontend.communication.commands;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.core.communication.UrlHelper;
-import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;

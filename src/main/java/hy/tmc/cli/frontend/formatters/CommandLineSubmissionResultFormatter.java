@@ -6,9 +6,9 @@ import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
 import static hy.tmc.cli.frontend.CommandLineColor.BLUE;
 import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
 import static hy.tmc.cli.frontend.CommandLineColor.RED;
-import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.domain.submission.TestCase;
-import hy.tmc.core.domain.submission.ValidationError;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
 
 import java.util.List;
 import java.util.Map.Entry;

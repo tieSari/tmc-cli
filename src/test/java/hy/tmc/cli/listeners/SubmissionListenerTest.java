@@ -1,7 +1,7 @@
 package hy.tmc.cli.listeners;
 
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
-import hy.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;

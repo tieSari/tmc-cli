@@ -3,7 +3,7 @@ package hy.tmc.cli.listeners;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;

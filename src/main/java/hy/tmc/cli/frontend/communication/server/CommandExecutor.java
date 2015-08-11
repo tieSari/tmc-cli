@@ -8,9 +8,9 @@ import hy.tmc.cli.TmcCli;
 
 import hy.tmc.cli.frontend.communication.commands.*;
 import hy.tmc.cli.listeners.DefaultListener;
-import hy.tmc.core.domain.Course;
-import hy.tmc.core.domain.Exercise;
-import hy.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;

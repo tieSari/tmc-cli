@@ -1,7 +1,7 @@
 package hy.tmc.cli.listeners;
 
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

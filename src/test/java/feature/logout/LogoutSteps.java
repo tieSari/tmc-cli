@@ -12,7 +12,7 @@ import hy.tmc.cli.testhelpers.TestClient;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;

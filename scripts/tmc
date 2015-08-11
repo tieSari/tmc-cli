@@ -180,9 +180,7 @@ function login () {
 
 # Backend cmd send
 function send_command () {
-    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-    CONFIGPATH="$DIR/config.properties"
+    CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
     if [ -f "$CONFIGPATH" ];
     then
       CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
@@ -202,9 +200,7 @@ function send_command () {
 }
 
 function send_command_wait_output () {
-    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-    CONFIGPATH="$DIR/config.properties"
+    CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
     CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
     OUTPUT=$(echo "$@" | nc localhost "$CONFIGPORT")
 
@@ -235,15 +231,20 @@ then
     exit
 fi
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-CONFIGPATH="$DIR/config.properties"
-
+CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
 
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 STARTUP=$DIR
 STARTUP+="/startup.sh"
 bash $STARTUP
+
+if [ -z $XDG_CONFIG_HOME ];
+then 
+  CONFIG_HOME="$HOME/.config"
+else
+  CONFIG_HOME="$XDG_CONFIG_HOME"
+fi
 
 if [ $# = 0 ];
 then
@@ -262,6 +263,7 @@ then
         "login") command_login;;
         "help") command_help;;
         "test") command_test;;
+        "paste") command_paste;;
         "submit") command_submit;;
         *) command_default "$@";;
     esac
@@ -273,7 +275,6 @@ case "$1" in
     "submit") command_submit "$2";;
     "download") command_download "$2";;
     "test") command_test "$2";;
-    "paste") command_paste "$2";;
     "list") command_list "${@:2}" | less -XFMer;;
     "set") command_set "${@:2}";;
     *) command_default "$@";;

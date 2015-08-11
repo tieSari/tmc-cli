@@ -2,7 +2,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 
 public class ShowSettings extends Command<String> {
 
