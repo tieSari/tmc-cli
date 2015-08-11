@@ -47,6 +47,11 @@ public class CommandExecutor {
      * @param inputLine input String
      */
     public void parseAndExecute(String inputLine) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException, IllegalStateException, ParseException {
+        String[] elements = parser.getElements(inputLine);
+        String commandName = elements[0];
+        HashMap<String, String> params = parser.giveData(elements, new HashMap<String, String>());
+        HashMap<String, Command> commandMap = createCommandMap(params);
+        executeCommand(commandMap, commandName, params);
         if (this.cli.makeUpdate()) {
             String msg;
             try {
@@ -62,11 +67,6 @@ public class CommandExecutor {
             }
             this.stream.write(msg.getBytes());
         }
-        String[] elements = parser.getElements(inputLine);
-        String commandName = elements[0];
-        HashMap<String, String> params = parser.giveData(elements, new HashMap<String, String>());
-        HashMap<String, Command> commandMap = createCommandMap(params);
-        executeCommand(commandMap, commandName, params);
     }
 
     public String checkUpdates(CliSettings settings) throws TmcCoreException, IOException, InterruptedException, ParseException, ExecutionException {
