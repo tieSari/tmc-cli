@@ -6,7 +6,7 @@ import hy.tmc.cli.frontend.CommandLineColor;
 import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
 import static hy.tmc.cli.frontend.CommandLineColor.RED;
 import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

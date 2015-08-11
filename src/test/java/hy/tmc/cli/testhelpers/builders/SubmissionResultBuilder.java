@@ -1,11 +1,11 @@
 package hy.tmc.cli.testhelpers.builders;
 
-import hy.tmc.core.domain.submission.FeedbackQuestion;
-import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.domain.submission.SubmissionResult.Status;
-import hy.tmc.core.domain.submission.TestCase;
-import hy.tmc.core.domain.submission.ValidationError;
-import hy.tmc.core.domain.submission.Validations;
+import fi.helsinki.cs.tmc.core.domain.submission.FeedbackQuestion;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult.Status;
+import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
+import fi.helsinki.cs.tmc.core.domain.submission.Validations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

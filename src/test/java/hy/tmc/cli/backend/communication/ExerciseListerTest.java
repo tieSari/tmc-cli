@@ -2,7 +2,7 @@ package hy.tmc.cli.backend.communication;
 
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.builders.ExerciseBuilder;
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

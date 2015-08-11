@@ -11,7 +11,7 @@ import hy.tmc.cli.testhelpers.TestClient;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
 import java.io.File;
 
 import java.io.IOException;

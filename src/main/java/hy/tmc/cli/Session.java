@@ -1,7 +1,7 @@
 package hy.tmc.cli;
 
 
-import hy.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Course;
 
 public class Session {
 

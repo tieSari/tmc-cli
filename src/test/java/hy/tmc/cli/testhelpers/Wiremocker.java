@@ -7,7 +7,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import hy.tmc.cli.CliSettings;
-import hy.tmc.core.communication.UrlHelper;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 
 public class Wiremocker {
 

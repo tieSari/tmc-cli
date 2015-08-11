@@ -91,7 +91,7 @@ public class ConfigHandler {
     }
 
     /**
-     * Writes server address to config file, ex. "https://tmc.mooc.fi/hy".
+     * Writes server address to config file, ex. "https://tmc.mooc.fi/fi.helsinki.cs".
      *
      * @param address for tmc server
      * @throws IOException if unable to write address

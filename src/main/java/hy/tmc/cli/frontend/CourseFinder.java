@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.File;
 import java.io.IOException;

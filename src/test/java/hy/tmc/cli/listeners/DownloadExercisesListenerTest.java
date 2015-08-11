@@ -1,6 +1,6 @@
 package hy.tmc.cli.listeners;
 
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;

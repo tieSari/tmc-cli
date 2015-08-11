@@ -1,8 +1,8 @@
 package hy.tmc.cli.listeners;
 
 import hy.tmc.cli.backend.communication.ExerciseLister;
-import hy.tmc.core.domain.Course;
-import hy.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;

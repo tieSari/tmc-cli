@@ -15,8 +15,8 @@ import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
-import hy.tmc.core.TmcCore;
-import hy.tmc.core.communication.UrlHelper;
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 
 import java.io.IOException;
 import java.nio.file.Paths;

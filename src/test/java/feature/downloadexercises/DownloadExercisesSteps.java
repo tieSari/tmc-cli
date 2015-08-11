@@ -10,7 +10,7 @@ import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
 import org.hamcrest.CoreMatchers;
 
 import java.io.File;
@@ -22,7 +22,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import cucumber.api.PendingException;
 import java.util.Date;
 import hy.tmc.cli.CliSettings;
-import hy.tmc.core.communication.UrlHelper;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import static org.junit.Assert.*;
 
 public class DownloadExercisesSteps {

@@ -1,6 +1,6 @@
 package hy.tmc.cli.testhelpers.builders;
 
-import hy.tmc.core.domain.submission.TestCase;
+import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
 
 public class TestCaseBuilder {
 

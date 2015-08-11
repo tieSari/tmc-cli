@@ -6,7 +6,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
-import hy.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 
 import java.io.DataOutputStream;
 import java.net.Socket;

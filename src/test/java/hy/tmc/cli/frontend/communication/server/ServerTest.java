@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.cli.TmcCli;
-import hy.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.TmcCore;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 import java.io.IOException;
