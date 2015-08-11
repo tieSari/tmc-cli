@@ -32,6 +32,7 @@ public class Help extends Command<String> {
                 .append("    login \t\t\tLog in to tmc\n")
                 .append("    logout \t\t\tLog out of tmc\n")
                 .append("    update \t\t\tGet updates to your current course\n")
+                .append("    showSettings \t\tShow settings\n")
                 .append("    set course <coursename> \tSet current course");
 
         return enterprise.toString();
