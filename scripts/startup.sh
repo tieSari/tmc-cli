@@ -26,8 +26,15 @@ fi
 mkdir -p "$CONFIG_DIR"
 
 PIDFILE="$CONFIG_DIR/tmc-cli.pid"
-LOGPATH=$DIR
-LOGPATH+="/log.txt"
+
+if [ -n "${XDG_DATA_HOME+x}" ]; then
+  DATA_DIR=$XDG_DATA_HOME/tmc
+else
+  DATA_DIR=$HOME/.local/share/tmc
+fi
+mkdir -p "$DATA_DIR"
+
+LOGPATH="$DATA_DIR/tmc-cli.log"
 
 if [ ! -f "$PID" ]; then
   start_server
