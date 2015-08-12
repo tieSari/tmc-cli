@@ -23,6 +23,7 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import java.io.File;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,6 +69,11 @@ public class LoginSteps {
         new ConfigHandler().writeLastUpdate(new Date());
 
         startWireMock();
+    }
+    
+    @After
+    public void clean() throws IOException{
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     private void startWireMock() {

@@ -17,6 +17,7 @@ import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+import java.io.File;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -68,7 +69,7 @@ public class ListExercisesSteps {
     public void closeServer() throws IOException {
         tmcCli.stopServer();
         wireMockServer.stop();
-        tmcCli.setServer("https://tmc.mooc.fi/staging");
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     @Given("^user has not logged in$")

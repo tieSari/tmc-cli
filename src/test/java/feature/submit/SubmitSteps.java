@@ -131,6 +131,7 @@ public class SubmitSteps {
     public void closeAll() throws IOException {
         wireMockServer.stop();
         tmcCli.stopServer();
-        configHandler.writeServerAddress("http://tmc.mooc.fi/staging");
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
+ 
 }

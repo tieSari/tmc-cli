@@ -22,6 +22,7 @@ import cucumber.api.java.en.When;
 import hy.tmc.cli.CliSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+import java.io.File;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
@@ -113,6 +114,6 @@ public class ListCoursesSteps {
     public void closeServer() throws IOException {
         tmcCli.stopServer();
         wireMockServer.stop();
-        tmcCli.setServer("https://tmc.mooc.fi/staging");
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 }

@@ -3,6 +3,7 @@ package feature.update;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -17,6 +18,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +50,10 @@ public class UpdateSteps {
 
     private String output;
     private long timeAtStart;
+    
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 8080;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
 
     /**
      * Setups client's config and starts WireMock.
@@ -63,10 +69,16 @@ public class UpdateSteps {
         when(coreMock.listCourses(any(TmcSettings.class))).thenReturn(Futures.immediateFuture(fake));
         tmcCli.login("bossman", "samu");
         new ConfigHandler().writeLastUpdate(new Date());
+        new ConfigHandler().writeServerAddress(SERVER_ADDRESS);
 
         setupExercises();
 
         mockDownload();
+    }
+    
+    @After
+    public void clean() throws IOException{
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     private void setupExercises() {

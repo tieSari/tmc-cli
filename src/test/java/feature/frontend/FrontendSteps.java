@@ -41,6 +41,7 @@ public class FrontendSteps {
     public void setUpServer() throws IOException {
         serverThread = new Thread(server);
         serverThread.start();
+        new ConfigHandler().writePort(SERVER_PORT);
         port = new ConfigHandler().readPort();
         cache = new File("cache");
         cache.createNewFile();
@@ -85,5 +86,6 @@ public class FrontendSteps {
         serverThread.interrupt();
         tmcCli.stopServer();
         cache.delete();
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 }

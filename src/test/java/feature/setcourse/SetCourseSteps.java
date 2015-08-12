@@ -19,6 +19,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import java.util.Date;
 import hy.tmc.cli.CliSettings;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.assertThat;
 
@@ -40,6 +42,11 @@ public class SetCourseSteps {
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
         new ConfigHandler().writeLastUpdate(new Date());
+    }
+    
+    @After
+    public void clean() throws IOException{
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")

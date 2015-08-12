@@ -1,5 +1,6 @@
 package feature.setserver;
 
+import cucumber.api.java.After;
 import static org.junit.Assert.assertThat;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -10,6 +11,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import hy.tmc.cli.testhelpers.TestClient;
 import fi.helsinki.cs.tmc.core.TmcCore;
+import java.io.File;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
@@ -43,6 +45,11 @@ public class SetServerSteps {
     public void the_server_will_be(String expectedOutput) throws Throwable {
         String reply = testClient.reply();
         assertThat(reply, CoreMatchers.containsString(expectedOutput));
+    }
+    
+    @After
+    public void clean() throws IOException{
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
 }

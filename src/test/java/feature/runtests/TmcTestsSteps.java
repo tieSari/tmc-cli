@@ -14,6 +14,7 @@ import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 import fi.helsinki.cs.tmc.core.TmcCore;
+import java.io.File;
 import java.io.IOException;
 
 import java.util.Date;
@@ -93,6 +94,6 @@ public class TmcTestsSteps {
     public void clean() throws InterruptedException, IOException {
         settings = new CliSettings();
         tmcCli.stopServer();
-        tmcCli.setServer("https://tmc.mooc.fi/staging");
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 }

@@ -195,5 +195,6 @@ public class DownloadExercisesSteps {
         tempDir.toFile().delete();
         wireMockServer.stop();
         tmcCli.stopServer();
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 }
