@@ -9,7 +9,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +49,6 @@ public class SocketRunnable implements Runnable {
             throws IOException, TmcCoreException, InterruptedException, ExecutionException {
         CommandExecutor executor = new CommandExecutor(outputStream, this.socket, this.pool, this.cli);
         String input = inputReader.readLine();
-        System.err.println("Input: " + input);
         if (input == null) {
             writeToOutput(outputStream, "Input was invalid: null");
         }
