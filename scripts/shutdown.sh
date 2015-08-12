@@ -1,7 +1,14 @@
 #!/bin/bash
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-PIDFILE="$DIR/pidfile.pid"
+if [ -n "${XDG_RUNTIME_DIR+x}" ]; then
+  CONFIG_DIR=$XDG_RUNTIME_DIR/tmc
+elif [ -n "${XDG_CONFIG_HOME+x}" ]; then
+  CONFIG_DIR=$XDG_CONFIG_HOME/tmc
+else
+  CONFIG_DIR=$HOME/.config/tmc
+fi
+
+PIDFILE="$CONFIG_DIR/tmc-cli.pid"
 PID="$(cat "$PIDFILE")"
 
 kill "$PID"
