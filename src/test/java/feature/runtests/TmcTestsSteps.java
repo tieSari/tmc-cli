@@ -97,7 +97,6 @@ public class TmcTestsSteps {
     public void clean() throws InterruptedException, IOException {
         settings = new CliSettings();
         tmcCli.stopServer();
-        tmcCli.setServer("https://tmc.mooc.fi/staging");
         new File("config.properties").delete();
     }
 }
