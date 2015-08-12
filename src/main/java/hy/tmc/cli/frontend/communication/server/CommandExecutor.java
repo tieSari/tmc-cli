@@ -47,21 +47,6 @@ public class CommandExecutor {
      * @param inputLine input String
      */
     public void parseAndExecute(String inputLine) throws ProtocolException, TmcCoreException, IOException, InterruptedException, ExecutionException, IllegalStateException, ParseException {
-        if (this.cli.makeUpdate()) {
-            String msg;
-            try {
-                CliSettings settings = this.cli.defaultSettings();
-                if (settings.getCurrentCourse().isPresent()) {
-                    msg = checkUpdates(settings);
-                } else {
-                    msg = "Set your current course to get updates, type tmc set course <course id>\n";
-                }
-            }
-            catch (IllegalStateException ex) {
-                msg = "Could not check for updates, server address not set\n";
-            }
-            this.stream.write(msg.getBytes());
-        }
         String[] elements = parser.getElements(inputLine);
         String commandName = elements[0];
         HashMap<String, String> params = parser.giveData(elements, new HashMap<String, String>());
