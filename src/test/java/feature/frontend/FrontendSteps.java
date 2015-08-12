@@ -85,5 +85,6 @@ public class FrontendSteps {
         serverThread.interrupt();
         tmcCli.stopServer();
         cache.delete();
+        new File("config.properties").delete();
     }
 }

@@ -3,6 +3,7 @@ package feature.update;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -17,6 +18,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,6 +69,11 @@ public class UpdateSteps {
         setupExercises();
 
         mockDownload();
+    }
+    
+    @After
+    public void clean(){
+        new File("config.properties").delete();
     }
 
     private void setupExercises() {

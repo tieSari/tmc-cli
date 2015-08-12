@@ -13,6 +13,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import fi.helsinki.cs.tmc.core.TmcCore;
+import java.io.File;
 import org.hamcrest.CoreMatchers;
 
 import java.io.IOException;
@@ -31,6 +32,11 @@ public class LogoutSteps {
         testClient = new TestClient( new ConfigHandler().readPort());
         
         new ConfigHandler().writeLastUpdate(new Date());
+    }
+    
+    @After
+    public void clean(){
+        new File("config.properties").delete();
     }
 
     @Given("^logout command\\.$")
