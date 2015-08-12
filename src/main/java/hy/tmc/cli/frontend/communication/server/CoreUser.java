@@ -19,10 +19,13 @@ import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.CommandLineProgressObserver;
 import hy.tmc.cli.frontend.CourseFinder;
+import hy.tmc.cli.frontend.formatters.CheckstyleFormatter;
+import hy.tmc.cli.frontend.formatters.DefaultCheckstyleFormatter;
 import hy.tmc.cli.frontend.formatters.DefaultSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.DefaultTestResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.TestResultFormatter;
+import hy.tmc.cli.frontend.formatters.VimCheckstyleFormatter;
 import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.VimTestResultFormatter;
 import hy.tmc.cli.listeners.*;
@@ -105,14 +108,17 @@ public class CoreUser {
         // run tests need none of the defaults
         CliSettings settings = new CliSettings();
         settings.setMainDirectory(params.get("path"));
+
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
         ListenableFuture<Validations> checkstyle = convertToValidations(core.runCheckstyle(params.get("path"), settings));
         TestResultFormatter formatter;
+        CheckstyleFormatter checkFormatter;
         formatter = getTestResultFormatter(params);
-        TestsListener listener = new TestsListener(result, output, socket, formatter, verbose, true);
-        CheckstyleListener styleListener = new CheckstyleListener(checkstyle, output, socket);
+        checkFormatter = getCheckFormatter(params);
+
+        TestsListener listener = new TestsListener(result, checkstyle, output, socket, formatter, checkFormatter, verbose);
         result.addListener(listener, threadPool);
-        checkstyle.addListener(styleListener, threadPool);
+        checkstyle.addListener(listener, threadPool);
     }
 
     private TestResultFormatter getTestResultFormatter(Map<String, String> params) {
@@ -121,6 +127,16 @@ public class CoreUser {
             formatter = new VimTestResultFormatter();
         } else {
             formatter = new DefaultTestResultFormatter();
+        }
+        return formatter;
+    }
+
+    private CheckstyleFormatter getCheckFormatter(Map<String, String> params) {
+        CheckstyleFormatter formatter;
+        if (params.containsKey("--vim")) {
+            formatter = new VimCheckstyleFormatter();
+        } else {
+            formatter = new DefaultCheckstyleFormatter();
         }
         return formatter;
     }
@@ -135,9 +151,7 @@ public class CoreUser {
             ListenableFuture<Boolean> result = core.verifyCredentials(settings);
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
-        } catch (IllegalStateException ex) {
-            this.writeToOutputSocket(ex.getMessage());
-        } catch (ParseException | IOException ex) {
+        } catch (ParseException | IOException | IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
 
@@ -377,18 +391,19 @@ public class CoreUser {
     }
 
     /**
-     * Convert ValidationResult to Validations. When deprecation of ValidationResult in tmc-langs and tmc-core
-     * is ready, remove this.
+     * Convert ValidationResult to Validations. When deprecation of ValidationResult in tmc-langs
+     * and tmc-core is ready, remove this.
+     *
      * @param runCheckstyle
-     * @return 
+     * @return
      */
     private ListenableFuture<Validations> convertToValidations(ListenableFuture<ValidationResult> runCheckstyle) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Futures.transform(runCheckstyle, new Converter());
     }
-    
+
     /**
-     * This class is for converting the deprecated ValidationResult to Validations. 
-     * This shoul be removed when tmc-core is updated to use Validations.
+     * This class is for converting the deprecated ValidationResult to Validations. This shoul be
+     * removed when tmc-core is updated to use Validations.
      */
     private class Converter implements AsyncFunction<ValidationResult, Validations> {
 
@@ -396,7 +411,7 @@ public class CoreUser {
         public ListenableFuture<Validations> apply(ValidationResult result) throws Exception {
             Validations v = new Validations();
             v.setStrategy(result.getStrategy().name());
-            Map<File, List<fi.helsinki.cs.tmc.stylerunner.validation.ValidationError>> oldErrs 
+            Map<File, List<fi.helsinki.cs.tmc.stylerunner.validation.ValidationError>> oldErrs
                     = result.getValidationErrors();
             Map<String, List<ValidationError>> newErrs = new HashMap<>();
             for (File file : oldErrs.keySet()) {
@@ -416,9 +431,9 @@ public class CoreUser {
                 newErr.setSourceName(err.getSourceName());
                 ret.add(newErr);
             }
-            return null;
+            return ret;
         }
-        
+
     }
 
     private class DownloadCourse implements AsyncFunction<Course, List<Exercise>> {
