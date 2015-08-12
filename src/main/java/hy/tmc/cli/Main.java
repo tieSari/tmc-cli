@@ -1,6 +1,5 @@
 package hy.tmc.cli;
 
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import java.io.File;
 
@@ -12,7 +11,7 @@ public class Main {
     /**
      * Starts the main program.
      */
-    public static void main(String[] args) throws IOException, InterruptedException, ProtocolException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         File cacheFile = Paths.get("cache").toFile();
         if (!cacheFile.exists()) {
             cacheFile.createNewFile();

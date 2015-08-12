@@ -6,66 +6,9 @@ function command_submit () {
   echo "Submitting exercise..."
   if [ $# = 0 ]
     then
-    send_command_wait_output "submit path $(pwd)"
+    send_command "submit path $(pwd)"
   else
-    send_command_wait_output "submit path $(pwd) $1"
-  fi
-
-  echo "$OUTPUT"
-
-  if [[ $OUTPUT =~ All\ tests\ passed.*Please\ give\ feedback:.* ]]
-  then
-    OUTPUT=""
-    feedback
-  fi
-}
-
-function feedback () {
-  if [[ $OUTPUT =~ .*text ]]
-    then
-    text_feedback
-  else
-    int_feedback
-  fi
-}
-
-function int_feedback () {
-  echo "$OUTPUT"
-  read -p "> " answer
-  send_command_wait_output "answerQuestion answer $answer kind integer"
-  if [[ $OUTPUT =~ end ]]
-    then
-    echo "Thank you for your answers!"
-  else
-    feedback
-  fi
-}
-
-function text_feedback () {
-  TIMESTAMP=$(date +%s)
-  FEEDBACK="/tmp/feedback-$TIMESTAMP"
-  echo "" >> "$FEEDBACK"
-  echo "" >> "$FEEDBACK"
-  echo "#############" >> "$FEEDBACK"
-  echo "" >> "$FEEDBACK"
-  echo "Please enter feedback above the bar." >> "$FEEDBACK"
-  echo "" >> "$FEEDBACK"
-  echo "$OUTPUT" >> "$FEEDBACK"
-
-  if [[ -z "$EDITOR" ]]
-  then
-    $EDITOR "$FEEDBACK"
-  else
-    nano "$FEEDBACK"
-  fi
-
-  PARSEDOUTPUT=$(sed -n '/#############/q;p' "$FEEDBACK")
-  send_command_wait_output "answerQuestion kind text answer { ${PARSEDOUTPUT//$'\n'/\<newline\>} }"
-  if [[ $OUTPUT =~ end ]]
-    then
-    echo "Thank you for your answers!"
-  else
-    feedback $OUTPUT
+    send_command "submit path $(pwd) $1"
   fi
 }
 
@@ -199,15 +142,6 @@ function send_command () {
 
 }
 
-function send_command_wait_output () {
-    CONFIGPATH="$CONFIG_HOME/tmc/config.properties"
-    CONFIGPORT=$(grep "serverPort" < "$CONFIGPATH" | sed s/serverPort=//g)
-    OUTPUT=$(echo "$@" | nc localhost "$CONFIGPORT")
-
-    return 0;
-
-}
-
 control_c()
 # run if user hits control-c
 {
@@ -265,6 +199,7 @@ then
         "test") command_test;;
         "paste") command_paste;;
         "submit") command_submit;;
+        "download") send_command "help command download";;
         *) command_default "$@";;
     esac
     exit 0
