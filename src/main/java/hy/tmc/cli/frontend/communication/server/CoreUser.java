@@ -5,31 +5,39 @@ import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import fi.helsinki.cs.tmc.langs.domain.RunResult;
-import hy.tmc.cli.CliSettings;
-import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.frontend.CommandLineProgressObserver;
-import hy.tmc.cli.frontend.CourseFinder;
-import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
-import hy.tmc.cli.frontend.formatters.DefaultTestResultFormatter;
-import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
-import hy.tmc.cli.frontend.formatters.TestResultFormatter;
-import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
-import hy.tmc.cli.frontend.formatters.VimTestResultFormatter;
-import hy.tmc.cli.listeners.*;
 import fi.helsinki.cs.tmc.core.TmcCore;
-import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
+import fi.helsinki.cs.tmc.core.domain.submission.Validations;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
+import hy.tmc.cli.CliSettings;
+import hy.tmc.cli.TmcCli;
+import hy.tmc.cli.frontend.CommandLineProgressObserver;
+import hy.tmc.cli.frontend.CourseFinder;
+import hy.tmc.cli.frontend.formatters.CheckstyleFormatter;
+import hy.tmc.cli.frontend.formatters.DefaultCheckstyleFormatter;
+import hy.tmc.cli.frontend.formatters.DefaultSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.DefaultTestResultFormatter;
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.TestResultFormatter;
+import hy.tmc.cli.frontend.formatters.VimCheckstyleFormatter;
+import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.VimTestResultFormatter;
+import hy.tmc.cli.listeners.*;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -81,9 +89,6 @@ public class CoreUser {
             case "paste":
                 paste(params);
                 break;
-            case "getMail":
-                getMail(params);
-                break;
             case "update":
                 update(params);
                 break;
@@ -96,14 +101,21 @@ public class CoreUser {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
+        boolean verbose = params.containsKey("verbose");
         // run tests need none of the defaults
         CliSettings settings = new CliSettings();
         settings.setMainDirectory(params.get("path"));
+
         ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
+        ListenableFuture<Validations> checkstyle = convertToValidations(core.runCheckstyle(params.get("path"), settings));
         TestResultFormatter formatter;
+        CheckstyleFormatter checkFormatter;
         formatter = getTestResultFormatter(params);
-        TestsListener listener = new TestsListener(result, output, socket, formatter);
+        checkFormatter = getCheckFormatter(params);
+
+        TestsListener listener = new TestsListener(result, checkstyle, output, socket, formatter, checkFormatter, verbose);
         result.addListener(listener, threadPool);
+        checkstyle.addListener(listener, threadPool);
     }
 
     private TestResultFormatter getTestResultFormatter(Map<String, String> params) {
@@ -112,6 +124,16 @@ public class CoreUser {
             formatter = new VimTestResultFormatter();
         } else {
             formatter = new DefaultTestResultFormatter();
+        }
+        return formatter;
+    }
+
+    private CheckstyleFormatter getCheckFormatter(Map<String, String> params) {
+        CheckstyleFormatter formatter;
+        if (params.containsKey("--vim")) {
+            formatter = new VimCheckstyleFormatter();
+        } else {
+            formatter = new DefaultCheckstyleFormatter();
         }
         return formatter;
     }
@@ -126,11 +148,7 @@ public class CoreUser {
             ListenableFuture<Boolean> result = core.verifyCredentials(settings);
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
-        }
-        catch (IllegalStateException ex) {
-            this.writeToOutputSocket(ex.getMessage());
-        }
-        catch (ParseException | IOException ex) {
+        } catch (ParseException | IOException | IllegalStateException ex) {
             this.writeToOutputSocket(ex.getMessage());
         }
 
@@ -140,8 +158,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException | IOException | ParseException ex) {
+        } catch (IllegalStateException | IOException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -156,8 +173,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException | ParseException | IOException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -178,8 +194,7 @@ public class CoreUser {
                 } else {
                     writeToOutputSocket("Could not find current course from your path.");
                 }
-            }
-            catch (InterruptedException | ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
@@ -194,8 +209,7 @@ public class CoreUser {
                 throw new ProtocolException("Path required");
             }
             settings.setMainDirectory(params.get("path"));
-        }
-        catch (IllegalStateException | ParseException ex) {
+        } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -237,8 +251,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException | ParseException | IOException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -269,7 +282,7 @@ public class CoreUser {
         if (params.containsKey("--vim")) {
             formatter = new VimSubmissionResultFormatter();
         } else {
-            formatter = new CommandLineSubmissionResultFormatter();
+            formatter = new DefaultSubmissionResultFormatter();
         }
         return formatter;
     }
@@ -289,8 +302,7 @@ public class CoreUser {
         CliSettings settings;
         try {
             settings = this.tmcCli.defaultSettings();
-        }
-        catch (IllegalStateException | ParseException | IOException ex) {
+        } catch (IllegalStateException | ParseException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
         }
@@ -335,16 +347,11 @@ public class CoreUser {
         downloadFuture.addListener(new UpdateDownloadingListener(tmcCli, downloadFuture, output, socket), threadPool);
     }
 
-    public void getMail(Map<String, String> params) throws ProtocolException {
-
-    }
-
     private Optional<CliSettings> getDefaultSettings() throws ParseException, IllegalStateException {
         try {
             CliSettings settings = this.tmcCli.defaultSettings();
             return Optional.of(settings);
-        }
-        catch (IllegalStateException | IOException ex) {
+        } catch (IllegalStateException | IOException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return Optional.absent();
         }
@@ -376,6 +383,52 @@ public class CoreUser {
         String username = params.get("username");
         String password = params.get("password");
         return username == null || username.isEmpty() || password == null || password.isEmpty();
+    }
+
+    /**
+     * Convert ValidationResult to Validations. When deprecation of ValidationResult in tmc-langs
+     * and tmc-core is ready, remove this.
+     *
+     * @param runCheckstyle
+     * @return
+     */
+    private ListenableFuture<Validations> convertToValidations(ListenableFuture<ValidationResult> runCheckstyle) {
+        return Futures.transform(runCheckstyle, new Converter());
+    }
+
+    /**
+     * This class is for converting the deprecated ValidationResult to Validations. This shoul be
+     * removed when tmc-core is updated to use Validations.
+     */
+    private class Converter implements AsyncFunction<ValidationResult, Validations> {
+
+        @Override
+        public ListenableFuture<Validations> apply(ValidationResult result) throws Exception {
+            Validations v = new Validations();
+            v.setStrategy(result.getStrategy().name());
+            Map<File, List<fi.helsinki.cs.tmc.stylerunner.validation.ValidationError>> oldErrs
+                    = result.getValidationErrors();
+            Map<String, List<ValidationError>> newErrs = new HashMap<>();
+            for (File file : oldErrs.keySet()) {
+                newErrs.put(file.getName(), convertValidationError(oldErrs.get(file)));
+            }
+            v.setValidationErrors(newErrs);
+            return Futures.immediateFuture(v);
+        }
+
+        private List<ValidationError> convertValidationError(List<fi.helsinki.cs.tmc.stylerunner.validation.ValidationError> oldErrs) {
+            List<ValidationError> ret = new ArrayList<>();
+            for (fi.helsinki.cs.tmc.stylerunner.validation.ValidationError err : oldErrs) {
+                ValidationError newErr = new ValidationError();
+                newErr.setColumn(err.getColumn());
+                newErr.setLine(err.getLine());
+                newErr.setMessage(err.getMessage());
+                newErr.setSourceName(err.getSourceName());
+                ret.add(newErr);
+            }
+            return ret;
+        }
+
     }
 
     private class DownloadCourse implements AsyncFunction<Course, List<Exercise>> {

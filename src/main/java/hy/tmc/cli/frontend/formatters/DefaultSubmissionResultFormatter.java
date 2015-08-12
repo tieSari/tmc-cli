@@ -17,8 +17,14 @@ import java.util.Map.Entry;
  * CommandLineSubmissionResultFormatter gives submissionresult explainings for command line user
  * interface. ResultInterpreter class uses this class.
  */
-public class CommandLineSubmissionResultFormatter implements SubmissionResultFormatter {
+public class DefaultSubmissionResultFormatter implements SubmissionResultFormatter {
 
+    private CheckstyleFormatter checkstyleFormatter;
+    
+    public DefaultSubmissionResultFormatter() {
+        this.checkstyleFormatter = new DefaultCheckstyleFormatter();
+    }
+    
     @Override
     public String someTestsFailed() {
         return "Some tests failed on server. Summary: \n";
@@ -75,13 +81,6 @@ public class CommandLineSubmissionResultFormatter implements SubmissionResultFor
 
     @Override
     public String parseValidationErrors(Entry<String, List<ValidationError>> entry) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\nFile: ").append(entry.getKey());
-        for (ValidationError error : entry.getValue()) {
-            String errorLine = "\n  On line: " + error.getLine() + " Column: " + error.getColumn();
-            builder.append(coloredString(errorLine, YELLOW));
-            builder.append("\n    ").append(error.getMessage());
-        }
-        return builder.toString();
+        return this.checkstyleFormatter.checkstyleErrors(entry.getKey(), entry.getValue());
     }
 }

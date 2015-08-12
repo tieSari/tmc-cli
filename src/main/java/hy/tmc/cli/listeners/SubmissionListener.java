@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import hy.tmc.cli.backend.communication.SubmissionInterpreter;
-import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
+import hy.tmc.cli.frontend.formatters.DefaultSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 

@@ -1,16 +1,10 @@
 package hy.tmc.cli.frontend;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.CliSettings;
-import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-
+import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class CourseFinder {
 
@@ -34,8 +28,8 @@ public class CourseFinder {
     }
 
     /**
-     * Downloads all courses and iterates over them. Returns Course whose name matches with one
-     * folder in given path.
+     * Downloads all courses and iterates over them. Returns Course whose name
+     * matches with one folder in given path.
      *
      * @param foldersPath contains the names of the folders in path
      * @return Course

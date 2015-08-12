@@ -17,7 +17,6 @@ import fi.helsinki.cs.tmc.core.TmcCore;
 import java.io.IOException;
 
 import java.util.Date;
-import static org.junit.Assert.assertFalse;
 
 import static org.junit.Assert.assertTrue;
 
@@ -37,8 +36,6 @@ public class TmcTestsSteps {
 
     @Before
     public void setUp() throws IOException {
-
-        
         tmcCli = new TmcCli(new TmcCore(), false);
 
         tmcCli.setServer(SERVER_ADDRESS);

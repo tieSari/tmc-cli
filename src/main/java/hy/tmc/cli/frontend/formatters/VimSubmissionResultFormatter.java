@@ -4,12 +4,16 @@ package hy.tmc.cli.frontend.formatters;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
 import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
-
 public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
+
+    CheckstyleFormatter checkstyleFormatter;
+
+    public VimSubmissionResultFormatter() {
+        this.checkstyleFormatter = new VimCheckstyleFormatter();
+    }
 
     @Override
     public String someTestsFailed() {
@@ -17,8 +21,10 @@ public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
     }
 
     /**
-     * Tells if TestCase object is passed or failed, if failed, also information about failures.
-     * @param testCase 
+     * Tells if TestCase object is passed or failed, if failed, also information
+     * about failures.
+     *
+     * @param testCase
      * @return toString of StrinBuilder content
      */
     @Override
@@ -45,7 +51,7 @@ public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
     }
 
     /**
-     * Gives information about result points. 
+     * Gives information about result points.
      */
     @Override
     public String getPointsInformation(SubmissionResult result) {
@@ -59,14 +65,7 @@ public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
 
     @Override
     public String parseValidationErrors(Entry<String, List<ValidationError>> entry) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\nFile: ").append(entry.getKey());
-        for (ValidationError error : entry.getValue()) {
-            String errorLine = "\n  On line: " + error.getLine() + " Column: " + error.getColumn();
-            builder.append(errorLine);
-            builder.append("\n    ").append(error.getMessage());
-        }
-        return builder.toString();
+        return this.checkstyleFormatter.checkstyleErrors(entry.getKey(), entry.getValue());
     }
 
 }
