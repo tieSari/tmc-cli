@@ -69,7 +69,6 @@ public class ListExercisesSteps {
     public void closeServer() throws IOException {
         tmcCli.stopServer();
         wireMockServer.stop();
-        tmcCli.setServer("https://tmc.mooc.fi/staging");
         new File("config.properties").delete();
     }
 
