@@ -1,5 +1,6 @@
 package hy.tmc.cli.frontend.formatters;
 
+
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
 import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;

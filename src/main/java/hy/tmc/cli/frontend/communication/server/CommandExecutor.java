@@ -67,6 +67,21 @@ public class CommandExecutor {
         HashMap<String, String> params = parser.giveData(elements, new HashMap<String, String>());
         HashMap<String, Command> commandMap = createCommandMap(params);
         executeCommand(commandMap, commandName, params);
+        if (this.cli.makeUpdate()) {
+            String msg;
+            try {
+                CliSettings settings = this.cli.defaultSettings();
+                if (settings.getCurrentCourse().isPresent()) {
+                    msg = checkUpdates(settings);
+                } else {
+                    msg = "Set your current course to get updates, type tmc set course <course id>\n";
+                }
+            }
+            catch (IllegalStateException ex) {
+                msg = "Could not check for updates, server address not set\n";
+            }
+            this.stream.write(msg.getBytes());
+        }
     }
 
     public String checkUpdates(CliSettings settings) throws TmcCoreException, IOException, InterruptedException, ParseException, ExecutionException {

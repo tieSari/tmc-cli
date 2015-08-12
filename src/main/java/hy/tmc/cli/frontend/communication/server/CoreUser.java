@@ -29,7 +29,6 @@ import hy.tmc.cli.frontend.formatters.VimCheckstyleFormatter;
 import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
 import hy.tmc.cli.frontend.formatters.VimTestResultFormatter;
 import hy.tmc.cli.listeners.*;
-
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +37,7 @@ import java.net.URI;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -88,9 +88,6 @@ public class CoreUser {
                 break;
             case "paste":
                 paste(params);
-                break;
-            case "getMail":
-                getMail(params);
                 break;
             case "update":
                 update(params);
@@ -265,7 +262,8 @@ public class CoreUser {
             settings.setPath(params.get("path"));
             try {
                 sendSubmission(settings, params);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
@@ -349,10 +347,6 @@ public class CoreUser {
         downloadFuture.addListener(new UpdateDownloadingListener(tmcCli, downloadFuture, output, socket), threadPool);
     }
 
-    public void getMail(Map<String, String> params) throws ProtocolException {
-
-    }
-
     private Optional<CliSettings> getDefaultSettings() throws ParseException, IllegalStateException {
         try {
             CliSettings settings = this.tmcCli.defaultSettings();
@@ -367,7 +361,8 @@ public class CoreUser {
         try {
             output.write((message + "\n").getBytes());
             socket.close();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.err.println("Failed to print error message: ");
             System.err.println(ex.getMessage());
         }
