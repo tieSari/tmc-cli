@@ -70,7 +70,7 @@ public class PasteSteps {
         tmcCli.stopServer();
         tmcCli.setServer("https://tmc.mooc.fi/staging");
         wireMockServer.stop();
-        new File("config.properties").delete();
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     private void startWireMock() {

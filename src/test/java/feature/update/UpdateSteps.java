@@ -50,6 +50,10 @@ public class UpdateSteps {
 
     private String output;
     private long timeAtStart;
+    
+    private static final String SERVER_URI = "127.0.0.1";
+    private static final int SERVER_PORT = 8080;
+    private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
 
     /**
      * Setups client's config and starts WireMock.
@@ -65,6 +69,7 @@ public class UpdateSteps {
         when(coreMock.listCourses(any(TmcSettings.class))).thenReturn(Futures.immediateFuture(fake));
         tmcCli.login("bossman", "samu");
         new ConfigHandler().writeLastUpdate(new Date());
+        new ConfigHandler().writeServerAddress(SERVER_ADDRESS);
 
         setupExercises();
 
@@ -72,8 +77,8 @@ public class UpdateSteps {
     }
     
     @After
-    public void clean(){
-        new File("config.properties").delete();
+    public void clean() throws IOException{
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     private void setupExercises() {

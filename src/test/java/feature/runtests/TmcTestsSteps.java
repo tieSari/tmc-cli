@@ -97,6 +97,6 @@ public class TmcTestsSteps {
     public void clean() throws InterruptedException, IOException {
         settings = new CliSettings();
         tmcCli.stopServer();
-        new File("config.properties").delete();
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 }

@@ -72,8 +72,8 @@ public class LoginSteps {
     }
     
     @After
-    public void clean(){
-        new File("config.properties").delete();
+    public void clean() throws IOException{
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     private void startWireMock() {

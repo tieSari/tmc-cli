@@ -131,7 +131,7 @@ public class SubmitSteps {
     public void closeAll() throws IOException {
         wireMockServer.stop();
         tmcCli.stopServer();
-        new File("config.properties").delete();
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
  
 }

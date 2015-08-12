@@ -20,6 +20,7 @@ import java.util.Date;
 import hy.tmc.cli.CliSettings;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.assertThat;
 
@@ -44,8 +45,8 @@ public class SetCourseSteps {
     }
     
     @After
-    public void clean(){
-        new File("config.properties").delete();
+    public void clean() throws IOException{
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")

@@ -114,6 +114,6 @@ public class ListCoursesSteps {
     public void closeServer() throws IOException {
         tmcCli.stopServer();
         wireMockServer.stop();
-        new File("config.properties").delete();
+        new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 }
