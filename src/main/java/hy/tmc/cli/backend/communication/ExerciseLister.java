@@ -45,7 +45,7 @@ public class ExerciseLister {
         } else if (exercise.isAttempted()) {
             return coloredString("[ ] ", CommandLineColor.RED);
         } else {
-            return coloredString("[ ] ", CommandLineColor.WHITE);
+            return "[ ] ";
         }
     }
 
