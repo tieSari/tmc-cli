@@ -26,9 +26,9 @@ public class CommandLineProgressObserver implements ProgressObserver {
 
     @Override
     public void progress(Double completionPercentage, String progressMessage) {
-            NumberFormat formatter = new DecimalFormat("#0.0");
-            String percentage = formatter.format(completionPercentage);
-            String message = progressMessage + " (" + percentage + "% done)\n";
-            this.progress(message);
+        NumberFormat formatter = new DecimalFormat("#0.0");
+        String percentage = formatter.format(completionPercentage);
+        String message = progressMessage + " (" + percentage + "% done)\n";
+        this.progress(message);
     }
 }

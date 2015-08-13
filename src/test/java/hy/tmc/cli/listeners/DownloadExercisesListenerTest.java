@@ -1,12 +1,15 @@
 package hy.tmc.cli.listeners;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class DownloadExercisesListenerTest {
 
@@ -17,7 +20,7 @@ public class DownloadExercisesListenerTest {
         dll = new DownloadExercisesListener(null, null, null);
     }
 
-    @After
+    @After 
     public void tearDown() {
     }
 

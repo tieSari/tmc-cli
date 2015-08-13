@@ -1,12 +1,11 @@
 package hy.tmc.cli.testhelpers;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.Random;
+
+import static org.junit.Assert.fail;
 
 public class FileWriterHelper {
 
@@ -14,6 +13,7 @@ public class FileWriterHelper {
 
     /**
      * Writes stuff to file.
+     *
      * @param path to write
      */
     public void writeStuffToFile(String path) throws IOException {

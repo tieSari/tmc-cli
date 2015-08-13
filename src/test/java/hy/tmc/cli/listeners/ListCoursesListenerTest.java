@@ -1,7 +1,9 @@
 package hy.tmc.cli.listeners;
 
 import com.google.common.util.concurrent.ListenableFuture;
+
 import fi.helsinki.cs.tmc.core.domain.Course;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,9 +11,10 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import static org.hamcrest.CoreMatchers.containsString;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class ListCoursesListenerTest {
 
@@ -61,7 +64,7 @@ public class ListCoursesListenerTest {
     }
 
     private String expectedLine(String name, int id, int length) {
-        return name + spaces(name.length()-1, length) + id + "\n";
+        return name + spaces(name.length() - 1, length) + id + "\n";
     }
 
     private String spaces(int a, int b) {

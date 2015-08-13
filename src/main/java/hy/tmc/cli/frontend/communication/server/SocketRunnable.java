@@ -1,9 +1,12 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import hy.tmc.cli.TmcCli;
+
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
+import hy.tmc.cli.TmcCli;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,7 +23,8 @@ public class SocketRunnable implements Runnable {
     private ListeningExecutorService pool;
     private TmcCli cli;
 
-    public SocketRunnable(Socket clientSocket, TmcCore core, ListeningExecutorService pool, TmcCli cli) {
+    public SocketRunnable(Socket clientSocket, TmcCore core, ListeningExecutorService pool,
+        TmcCli cli) {
         this.socket = clientSocket;
         this.core = core;
         this.pool = pool;
@@ -34,7 +38,8 @@ public class SocketRunnable implements Runnable {
     public void run() {
         try {
             if (!socket.isClosed()) {
-                BufferedReader inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                BufferedReader inputReader =
+                    new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 handleInput(inputReader, outputStream);
             }
@@ -46,8 +51,9 @@ public class SocketRunnable implements Runnable {
     }
 
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException, TmcCoreException, InterruptedException, ExecutionException {
-        CommandExecutor executor = new CommandExecutor(outputStream, this.socket, this.pool, this.cli);
+        throws IOException, TmcCoreException, InterruptedException, ExecutionException {
+        CommandExecutor executor =
+            new CommandExecutor(outputStream, this.socket, this.pool, this.cli);
         String input = inputReader.readLine();
         if (input == null) {
             writeToOutput(outputStream, "Input was invalid: null");

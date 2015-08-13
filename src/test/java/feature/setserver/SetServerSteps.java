@@ -1,21 +1,24 @@
 package feature.setserver;
 
 import cucumber.api.java.After;
-import static org.junit.Assert.assertThat;
-import hy.tmc.cli.TmcCli;
-import hy.tmc.cli.configuration.ConfigHandler;
-
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import hy.tmc.cli.testhelpers.TestClient;
+
 import fi.helsinki.cs.tmc.core.TmcCore;
-import java.io.File;
+
+import hy.tmc.cli.TmcCli;
+import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.testhelpers.TestClient;
+
 import org.hamcrest.CoreMatchers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+
+import static org.junit.Assert.assertThat;
 
 public class SetServerSteps {
 
@@ -26,7 +29,7 @@ public class SetServerSteps {
     public void setUp() throws IOException {
         tmcCli = new TmcCli(new TmcCore(), false);
         tmcCli.startServer();
-        testClient = new TestClient( new ConfigHandler().readPort());
+        testClient = new TestClient(new ConfigHandler().readPort());
         new ConfigHandler().writeLastUpdate(new Date());
 
     }
@@ -42,13 +45,14 @@ public class SetServerSteps {
     }
 
     @Then("^the server will be \"(.*?)\"$")
-    public void the_server_will_be(String expectedOutput) throws Throwable {
+    public void the_server_will_be(String expectedOutput)
+        throws Throwable {
         String reply = testClient.reply();
         assertThat(reply, CoreMatchers.containsString(expectedOutput));
     }
-    
+
     @After
-    public void clean() throws IOException{
+    public void clean() throws IOException {
         new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 

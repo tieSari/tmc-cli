@@ -1,45 +1,51 @@
 package feature.paste;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
-import fi.helsinki.cs.tmc.core.TmcCore;
-import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+
+import org.hamcrest.CoreMatchers;
+import org.junit.Rule;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Date;
-import org.hamcrest.CoreMatchers;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import org.junit.Rule;
 
 public class PasteSteps {
-
-    private TestClient testClient;
-    private WireMockServer wireMockServer;
-    private String pasteCommand;
-
-    private TmcCli tmcCli;
 
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
     private final String coursesExtension;
+    @Rule WireMockRule wireMockRule = new WireMockRule();
+    private TestClient testClient;
+    private WireMockServer wireMockServer;
+    private String pasteCommand;
+    private TmcCli tmcCli;
     private UrlHelper urlHelper;
 
     public PasteSteps() {
@@ -49,12 +55,9 @@ public class PasteSteps {
         coursesExtension = urlHelper.withParams("/courses.json");
     }
 
-    @Rule
-    WireMockRule wireMockRule = new WireMockRule();
-
     @Before
     public void initializeServer() throws IOException {
-        
+
         tmcCli = new TmcCli(new TmcCore(), false);
 
         tmcCli.setServer(SERVER_ADDRESS);
@@ -77,8 +80,8 @@ public class PasteSteps {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
 
-        wireMockServer.stubFor(get(urlEqualTo("/user"))
-                .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
+        wireMockServer.stubFor(
+            get(urlEqualTo("/user")).withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(aResponse().withStatus(200)));
         wiremockGET("/courses.json", ExampleJson.allCoursesExample);
         wiremockGET("/courses/3.json", ExampleJson.courseExample);
@@ -89,33 +92,25 @@ public class PasteSteps {
 
     private void wiremockGET(String urlToMock, final String returnBody) {
         urlToMock = urlHelper.withParams(urlToMock);
-        wireMockServer.stubFor(get(urlEqualTo(urlToMock))
-                .willReturn(aResponse()
-                        .withBody(returnBody)
-                )
-        );
+        wireMockServer
+            .stubFor(get(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
     }
 
     private void wiremockPOST(String urlToMock, final String returnBody) {
         urlToMock = urlHelper.withParams(urlToMock);
-        wireMockServer.stubFor(post(urlEqualTo(urlToMock))
-                .willReturn(aResponse()
-                        .withBody(returnBody)
-                )
-        );
+        wireMockServer
+            .stubFor(post(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
     }
 
     private void wiremockPOSTwithPaste(String urlToMock, String returnBody) {
         urlToMock = urlHelper.withParams(urlToMock) + "&paste=1";
-        wireMockServer.stubFor(post(urlEqualTo(urlToMock))
-                .willReturn(aResponse()
-                        .withBody(returnBody)
-                )
-        );
+        wireMockServer
+            .stubFor(post(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")
-    public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
+    public void user_has_logged_in_with_username_and_password(String username, String password)
+        throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
         String result = testClient.getAllFromSocket();
         testClient.init();
@@ -123,7 +118,8 @@ public class PasteSteps {
     }
 
     @When("^user gives command paste with valid path \"(.*?)\" and exercise \"(.*?)\"$")
-    public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise) throws Throwable {
+    public void user_gives_command_paste_with_valid_path_and_exercise(String path, String exercise)
+        throws Throwable {
         this.pasteCommand = "paste path ";
         String pastePath = System.getProperty("user.dir") + path + File.separator + exercise;
         pastePath = Paths.get(pastePath).toString();
@@ -141,7 +137,8 @@ public class PasteSteps {
     }
 
     @Then("^user will see the paste url$")
-    public void user_will_see_the_paste_url() throws Throwable {
+    public void user_will_see_the_paste_url()
+        throws Throwable {
         String result = testClient.getAllFromSocket();
         assertThat(result, CoreMatchers.containsString("Paste submitted"));
     }

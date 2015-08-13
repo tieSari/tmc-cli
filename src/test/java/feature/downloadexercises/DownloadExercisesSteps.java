@@ -1,43 +1,50 @@
 package feature.downloadexercises;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+
+import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+
+import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
-import fi.helsinki.cs.tmc.core.TmcCore;
+
 import org.hamcrest.CoreMatchers;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import cucumber.api.PendingException;
 import java.util.Date;
-import hy.tmc.cli.CliSettings;
-import fi.helsinki.cs.tmc.core.communication.UrlHelper;
-import static org.junit.Assert.*;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DownloadExercisesSteps {
-
-    private TestClient testClient;
-
-    private WireMockServer wireMockServer;
-    private TmcCli tmcCli;
-    private Path tempDir;
-
-    private String output;
 
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
+    private TestClient testClient;
+    private WireMockServer wireMockServer;
+    private TmcCli tmcCli;
+    private Path tempDir;
+    private String output;
     private UrlHelper urlHelper;
 
     public DownloadExercisesSteps() {
@@ -66,45 +73,35 @@ public class DownloadExercisesSteps {
     private void wiremock() {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
-        wireMockServer.stubFor(get(urlEqualTo("/user"))
-                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
-                .willReturn(aResponse()
-                        .withStatus(200)));
+        wireMockServer.stubFor(
+            get(urlEqualTo("/user")).withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
+                .willReturn(aResponse().withStatus(200)));
 
         String urlMock = urlHelper.withParams("/courses.json");
-        wireMockServer.stubFor(get(urlEqualTo(urlMock))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.allCoursesExample
-                                .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
+        wireMockServer.stubFor(get(urlEqualTo(urlMock)).willReturn(
+            aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
+                ExampleJson.allCoursesExample
+                    .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
 
         urlMock = urlHelper.withParams("/courses/3.json");
-        wireMockServer.stubFor(get(urlEqualTo(urlMock))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.courseExample
-                                .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
+        wireMockServer.stubFor(get(urlEqualTo(urlMock)).willReturn(
+            aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
+                ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
 
         urlMock = urlHelper.withParams("/courses/21.json");
-        wireMockServer.stubFor(get(urlEqualTo(urlMock))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.courseExample
-                                .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS)
-                                .replaceFirst("3", "21"))));
+        wireMockServer.stubFor(get(urlEqualTo(urlMock)).willReturn(
+            aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
+                ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS)
+                    .replaceFirst("3", "21"))));
 
-        wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBodyFile("test.zip")));
+        wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip")).willReturn(
+            aResponse().withStatus(200).withHeader("Content-Type", "text/json")
+                .withBodyFile("test.zip")));
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"\\.$")
-    public void user_has_logged_in_with_username_and_password(String username, String password) throws Throwable {
+    public void user_has_logged_in_with_username_and_password(String username, String password)
+        throws Throwable {
         testClient.sendMessage("login username " + username + " password " + password);
         testClient.getAllFromSocket();
         testClient.init();
@@ -117,21 +114,20 @@ public class DownloadExercisesSteps {
     }
 
     @When("^user gives a download exercises command and course id that isnt a real id\\.$")
-    public void user_gives_a_download_exercises_command_and_course_id_that_isnt_a_real_id() throws Throwable {
+    public void user_gives_a_download_exercises_command_and_course_id_that_isnt_a_real_id()
+        throws Throwable {
         testClient.sendMessage("downloadExercises courseID 9999 path " + tempDir.toAbsolutePath());
         output = testClient.getAllFromSocket();
     }
 
     @When("^user gives a download exercises command and course id with locked exercises\\.$")
-    public void user_gives_a_download_exercises_command_and_course_id_with_locked_exercises() throws Throwable {
+    public void user_gives_a_download_exercises_command_and_course_id_with_locked_exercises()
+        throws Throwable {
         wireMockServer.stubFor(get(urlEqualTo(urlHelper.withParams("/courses/21.json")))
-                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.courseExample
-                                .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS)
-                                .replaceFirst("\"locked\": false", "\"locked\": true"))));
+            .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")).willReturn(
+                aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
+                    ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS)
+                        .replaceFirst("\"locked\": false", "\"locked\": true"))));
 
         testClient.sendMessage("downloadExercises courseID 21 path " + tempDir.toAbsolutePath());
         output = testClient.getAllFromSocket();
@@ -139,13 +135,16 @@ public class DownloadExercisesSteps {
 
     @When("^user gives a download exercises command and course name\\.$")
     public void user_gives_a_download_exercises_command_and_course_name() throws Throwable {
-        testClient.sendMessage("downloadExercises courseName 2013_ohpeJaOhja path " + tempDir.toAbsolutePath());
+        testClient.sendMessage(
+            "downloadExercises courseName 2013_ohpeJaOhja path " + tempDir.toAbsolutePath());
         output = testClient.getAllFromSocket();
     }
 
     @When("^user gives a download exercises command with a course name not on the server$")
-    public void user_gives_a_download_exercises_command_with_a_course_name_not_on_the_server() throws Throwable {
-        testClient.sendMessage("downloadExercises courseName notacourse path " + tempDir.toAbsolutePath());
+    public void user_gives_a_download_exercises_command_with_a_course_name_not_on_the_server()
+        throws Throwable {
+        testClient.sendMessage(
+            "downloadExercises courseName notacourse path " + tempDir.toAbsolutePath());
         output = testClient.getAllFromSocket();
     }
 
@@ -155,10 +154,11 @@ public class DownloadExercisesSteps {
     }
 
     @Then("^output should contain zip files and folders containing unzipped files$")
-    public void output_should_contain_zip_files_and_folders_containing_unzipped_files() throws Throwable {
-        assertTrue(new File(tempDir.toAbsolutePath()
-                + File.separator + "2013_ohpeJaOhja"
-                + File.separator + "viikko1").exists());
+    public void output_should_contain_zip_files_and_folders_containing_unzipped_files()
+        throws Throwable {
+        assertTrue(new File(
+            tempDir.toAbsolutePath() + File.separator + "2013_ohpeJaOhja" + File.separator
+                + "viikko1").exists());
         String exerciseCount = "153";
         assertThat(output, CoreMatchers.containsString(exerciseCount));
     }
@@ -169,7 +169,7 @@ public class DownloadExercisesSteps {
         File[] paths = getFileArray(filepath);
         boolean zips = false;
         for (File path : paths) {
-            if (path.getAbsolutePath().toString().endsWith(".zip")) {
+            if (path.getAbsolutePath().endsWith(".zip")) {
                 zips = true;
             }
         }
@@ -183,8 +183,7 @@ public class DownloadExercisesSteps {
      */
     public File[] getFileArray(String filepath) {
         File fi = new File(filepath);
-        File[] paths = fi.listFiles();
-        return paths;
+        return fi.listFiles();
     }
 
     /**

@@ -1,7 +1,6 @@
 package hy.tmc.cli;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
-import java.io.File;
 
 import java.io.IOException;
 import java.nio.file.Files;

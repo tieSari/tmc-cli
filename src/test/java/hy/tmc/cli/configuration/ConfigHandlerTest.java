@@ -1,9 +1,5 @@
 package hy.tmc.cli.configuration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +9,11 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,7 +35,7 @@ public class ConfigHandlerTest {
         assertEquals("test.properties", handler.getConfigFilePath());
         new File("test.properties").delete();
     }
-    
+
     @Test
     public void testXdgDefaultsCorrectly() {
         String xdgConf = "home/duck/.config";
@@ -42,7 +43,8 @@ public class ConfigHandlerTest {
         when(env.getenv(eq("XDG_CONFIG_HOME"))).thenReturn("");
         when(env.getHomeDirectory()).thenReturn("home/duck");
         String path = new ConfigHandler(env).getConfigFilePath();
-        String expected = xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        String expected =
+            xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
         assertEquals(expected, path);
     }
 
@@ -52,7 +54,8 @@ public class ConfigHandlerTest {
         when(env.getOsName()).thenReturn("Linux");
         when(env.getenv(eq("XDG_CONFIG_HOME"))).thenReturn(xdgConf);
         String path = new ConfigHandler(env).getConfigFilePath();
-        String expected = xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        String expected =
+            xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
         assertEquals(expected, path);
     }
 
@@ -62,17 +65,19 @@ public class ConfigHandlerTest {
         when(env.getOsName()).thenReturn("Mac OS X");
         when(env.getenv(eq("XDG_CONFIG_HOME"))).thenReturn(xdgConf);
         String path = new ConfigHandler(env).getConfigFilePath();
-        String expected = xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        String expected =
+            xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
         assertEquals(expected, path);
     }
-    
+
     @Test
     public void testConfigPathIsCorrectForFreeBsd() {
         String xdgConf = "home/duck/.config";
         when(env.getOsName()).thenReturn("FreeBsd");
         when(env.getenv(eq("XDG_CONFIG_HOME"))).thenReturn(xdgConf);
         String path = new ConfigHandler(env).getConfigFilePath();
-        String expected = xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        String expected =
+            xdgConf + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
         assertEquals(expected, path);
     }
 
@@ -82,7 +87,8 @@ public class ConfigHandlerTest {
         when(env.getOsName()).thenReturn("Windows 10");
         when(env.getenv(eq("APPDATA"))).thenReturn(appdata);
         String path = new ConfigHandler(env).getConfigFilePath();
-        String expected = appdata + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
+        String expected =
+            appdata + File.separatorChar + "tmc" + File.separatorChar + "config.properties";
         assertEquals(expected, path);
     }
 
@@ -104,8 +110,7 @@ public class ConfigHandlerTest {
             if (file.exists()) {
                 file.delete();
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("something went wrong");
         }
     }
@@ -113,8 +118,7 @@ public class ConfigHandlerTest {
     private void writeServerAddress(String address) {
         try {
             handler.writeServerAddress(address);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Something went wrong");
         }
     }
@@ -136,8 +140,7 @@ public class ConfigHandlerTest {
     public void canWriteAddressToConfig() {
         try {
             handler.writeServerAddress(address);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Something went wrong");
         }
     }
@@ -146,8 +149,7 @@ public class ConfigHandlerTest {
     public void canReadAddressFromConfig() {
         try {
             handler.writeServerAddress(address);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Failed writing to file");
         }
         String readAddress = handler.readServerAddress();
@@ -158,8 +160,7 @@ public class ConfigHandlerTest {
     public void canWritePortAddress() {
         try {
             handler.writePort(1234);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("failed to write port");
         }
     }
@@ -175,8 +176,7 @@ public class ConfigHandlerTest {
         try {
             handler.writePort(12355);
             assertEquals(12355, handler.readPort());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             fail("Failed to read or write port");
         }
     }

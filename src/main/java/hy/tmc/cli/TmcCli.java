@@ -1,10 +1,12 @@
 package hy.tmc.cli;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.server.Server;
+
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.domain.Course;
+
+import hy.tmc.cli.configuration.ConfigHandler;
+import hy.tmc.cli.frontend.communication.server.Server;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -15,9 +17,9 @@ public class TmcCli {
     private final TmcCore core;
     private final Server server;
     private final Thread serverThread;
+    private final String apiVersion = "7";
     private Session session;
     private ConfigHandler config;
-    private final String apiVersion = "7";
     private boolean makeUpdate = true;
 
     public TmcCli(TmcCore core) throws IOException {
@@ -27,7 +29,7 @@ public class TmcCli {
         server = new Server(this);
         serverThread = new Thread(server);
     }
-    
+
     public TmcCli(TmcCore core, boolean makeUpdate) throws IOException {
         this(core);
         this.makeUpdate = makeUpdate;
@@ -37,8 +39,8 @@ public class TmcCli {
         this(core);
         this.config = config;
     }
-    
-    public boolean makeUpdate(){
+
+    public boolean makeUpdate() {
         return this.makeUpdate;
     }
 
@@ -72,12 +74,12 @@ public class TmcCli {
         }
     }
 
-    public void setCurrentCourse(Course course) {
-        this.session.setCurrentCourse(course);
-    }
-
     public Optional<Course> getCurrentCourse() {
         return Optional.fromNullable(this.session.getCurrentCourse());
+    }
+
+    public void setCurrentCourse(Course course) {
+        this.session.setCurrentCourse(course);
     }
 
     /**
@@ -86,7 +88,7 @@ public class TmcCli {
      *
      * @return CliSettings with credentials and server address
      * @throws IllegalStateException if server address is not found in the
-     * config file
+     *                               config file
      */
     public CliSettings defaultSettings() throws IllegalStateException, ParseException, IOException {
         CliSettings settings = new CliSettings(apiVersion);
@@ -94,7 +96,7 @@ public class TmcCli {
         settings.setCurrentCourse(session.getCurrentCourse());
         settings.setServerAddress(config.readServerAddress());
         settings.setLastUpdate(config.readLastUpdate());
- 
+
         return settings;
     }
 

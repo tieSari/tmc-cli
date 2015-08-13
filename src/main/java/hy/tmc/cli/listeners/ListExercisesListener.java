@@ -2,24 +2,26 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.cli.backend.communication.ExerciseLister;
+
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
+
+import hy.tmc.cli.backend.communication.ExerciseLister;
+
 import java.io.DataOutputStream;
 import java.net.Socket;
-
-import java.util.List;
 
 public class ListExercisesListener extends ResultListener<Course> {
 
     private ExerciseLister lister;
     private Course current;
 
-    public ListExercisesListener(ListenableFuture<Course> commandResult, DataOutputStream output, Socket socket) {
+    public ListExercisesListener(ListenableFuture<Course> commandResult, DataOutputStream output,
+        Socket socket) {
         this(commandResult, output, socket, new ExerciseLister());
     }
-    
-    public ListExercisesListener(ListenableFuture<Course> commandResult, DataOutputStream output, Socket socket, ExerciseLister lister) {
+
+    public ListExercisesListener(ListenableFuture<Course> commandResult, DataOutputStream output,
+        Socket socket, ExerciseLister lister) {
         super(commandResult, output, socket);
         this.lister = lister;
     }

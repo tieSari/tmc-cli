@@ -24,7 +24,7 @@ public enum CommandLineColor {
     private final String foregroundCode;
     private final String backgroundCode;
 
-    private CommandLineColor(int code, boolean light) {
+    CommandLineColor(int code, boolean light) {
         this.baseCode = code;
         if (light) {
             this.foregroundCode = "9";
@@ -37,7 +37,7 @@ public enum CommandLineColor {
 
     /**
      * Get the color code corresponding to this color.
-     * 
+     *
      * @param foreground true if you want the foreground code, false otherwise
      * @return the foreground or background color code for this color
      */

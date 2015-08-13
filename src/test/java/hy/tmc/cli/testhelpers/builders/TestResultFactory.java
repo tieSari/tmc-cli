@@ -1,7 +1,5 @@
 package hy.tmc.cli.testhelpers.builders;
 
-import static org.junit.Assert.fail;
-
 import fi.helsinki.cs.tmc.langs.domain.TestResult;
 
 import java.io.File;
@@ -9,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static org.junit.Assert.fail;
 
 public class TestResultFactory {
 
@@ -28,22 +28,20 @@ public class TestResultFactory {
     private static TestResult kuusi() {
         TestResultBuilder builder = new TestResultBuilder();
 
-        builder.withName("KuusiTest test")
-                .withPassedStatus(false)
-                .withErrorMessage("Ohjelmasi pitäisi tulostaa 6 riviä, eli siinä pitäisi olla 6"
-                        + " System.out.println()-komentoa. expected:<6> but was:<1>")
-                .withStackTrace(stackTrace());
+        builder.withName("KuusiTest test").withPassedStatus(false).withErrorMessage(
+            "Ohjelmasi pitäisi tulostaa 6 riviä, eli siinä pitäisi olla 6"
+                + " System.out.println()-komentoa. expected:<6> but was:<1>")
+            .withStackTrace(stackTrace());
         return builder.build();
     }
 
     private static TestResult toinenKuusiTesti() {
         TestResultBuilder builder = new TestResultBuilder();
 
-        builder.withName("KuusiTest test")
-                .withErrorMessage("ComparisonFailure: Kuusen toinen rivi on väärin expected:"
-                        + "<  [ *]**> but was:<  []**>")
-                .withPassedStatus(false)
-                .withStackTrace(stackTrace());
+        builder.withName("KuusiTest test").withErrorMessage(
+            "ComparisonFailure: Kuusen toinen rivi on väärin expected:"
+                + "<  [ *]**> but was:<  []**>").withPassedStatus(false)
+            .withStackTrace(stackTrace());
         return builder.build();
     }
 

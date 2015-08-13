@@ -1,17 +1,21 @@
 package hy.tmc.cli.backend.communication;
 
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
+
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.frontend.formatters.DefaultSubmissionResultFormatter;
 import hy.tmc.cli.testhelpers.builders.SubmissionResultBuilder;
 import hy.tmc.cli.testhelpers.builders.TestCaseBuilder;
-import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
-import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
-import java.io.IOException;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SubmissionInterpreterTest {
 
@@ -31,7 +35,8 @@ public class SubmissionInterpreterTest {
         submissionInterpreter = new SubmissionInterpreter(new DefaultSubmissionResultFormatter());
     }
 
-    private ValidationError validationError(int line, int column, String message, String sourceName) {
+    private ValidationError validationError(int line, int column, String message,
+        String sourceName) {
         ValidationError error = new ValidationError();
         error.setLine(line);
         error.setColumn(column);
@@ -41,51 +46,35 @@ public class SubmissionInterpreterTest {
     }
 
     private SubmissionResult createFailedSubmission() {
-        TestCase fail1 = testBuilder.withName("testChristmasTree")
-                .withMessage("Expected 5 lines, there were 6").build();
-        TestCase fail2 = testBuilder.withName("testMath")
-                .withMessage("expected 5+3=8, got 5+3=0").withDetailedMessage("details").build();
+        TestCase fail1 =
+            testBuilder.withName("testChristmasTree").withMessage("Expected 5 lines, there were 6")
+                .build();
+        TestCase fail2 = testBuilder.withName("testMath").withMessage("expected 5+3=8, got 5+3=0")
+            .withDetailedMessage("details").build();
         TestCase pass = testBuilder.withName("testPizza").asSuccessfull().build();
 
-        SubmissionResult result = builder
-                .withStatus(SubmissionResult.Status.FAIL)
-                .withPoints("3.1", "3.2")
-                .withTestCase(fail1)
-                .withTestCase(pass)
-                .withTestCase(fail2).build();
-        return result;
+        return builder.withStatus(SubmissionResult.Status.FAIL).withPoints("3.1", "3.2")
+            .withTestCase(fail1).withTestCase(pass).withTestCase(fail2).build();
     }
 
     private SubmissionResult createSuccessfullSubmission() {
-        SubmissionResult result = builder
-                .withExerciseName(this.successful)
-                .withPoints("1.1", "1.2", "2.0")
-                .withAllTestsPassed()
-                .withTestCase(testBuilder.asSuccessfull().withName("e-z-test").build())
-                .withTestCase(testBuilder.asSuccessfull().withName("asdfTest").build())
-                .withSolutionUrl(this.modelSolutionUrl)
-                .build();
-        return result;
+        return builder.withExerciseName(this.successful).withPoints("1.1", "1.2", "2.0")
+            .withAllTestsPassed()
+            .withTestCase(testBuilder.asSuccessfull().withName("e-z-test").build())
+            .withTestCase(testBuilder.asSuccessfull().withName("asdfTest").build())
+            .withSolutionUrl(this.modelSolutionUrl).build();
     }
 
     private SubmissionResult createSuccesfulSubmissionWithCheckstyle() {
-        SubmissionResult result = builder
-                .withExerciseName(this.checkstyleSuccess)
-                .withAllTestsPassed()
-                .withValidations(null)
-                .build();
-        return result;
+        return builder.withExerciseName(this.checkstyleSuccess).withAllTestsPassed()
+            .withValidations(null).build();
     }
 
     private SubmissionResult createCheckstyleFailingSubmission() {
-        SubmissionResult result = builder
-                .withExerciseName(this.checkstyleFail)
-                .withValidationError("A.java",
-                        validationError(202, 18, "Class length is 478 lines (max allowed is 300)", ""))
-                .withValidationError("B.java",
-                        validationError(421, 24, "',' is not followed by whitespace.", ""))
-                .build();
-        return result;
+        return builder.withExerciseName(this.checkstyleFail).withValidationError("A.java",
+            validationError(202, 18, "Class length is 478 lines (max allowed is 300)", ""))
+            .withValidationError("B.java",
+                validationError(421, 24, "',' is not followed by whitespace.", "")).build();
     }
 
     @Test
@@ -179,7 +168,8 @@ public class SubmissionInterpreterTest {
     }
 
     @Test
-    public void resultWithNoCheckstyleDoesntContainCheckstyleErrors() throws InterruptedException, IOException, ProtocolException {
+    public void resultWithNoCheckstyleDoesntContainCheckstyleErrors()
+        throws InterruptedException, IOException, ProtocolException {
         SubmissionResult result = createSuccessfullSubmission();
 
         String output = submissionInterpreter.summary(result, true);

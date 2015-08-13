@@ -1,12 +1,12 @@
 package hy.tmc.cli.configuration;
 
 import com.google.common.base.Strings;
-import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -16,15 +16,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 /**
  * Writes data to config file and reads from it.
  */
 public class ConfigHandler {
 
-    private Path configFilePath;
     private final String portFieldName = "serverPort";
     private final String serverAddressFieldName = "serverAddress";
     private final String lastUpdate = "lastUpdate";
+    private Path configFilePath;
     private EnvironmentWrapper environment;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
@@ -75,8 +77,7 @@ public class ConfigHandler {
             }
             InputStream inputStream = new FileInputStream(propertyFile);
             prop.load(inputStream);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
         }
         return prop;

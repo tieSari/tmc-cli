@@ -2,15 +2,21 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
+
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.mockito.Mockito.*;
-
 import java.io.DataOutputStream;
 import java.net.Socket;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ResultListenerTest {
 
@@ -41,7 +47,8 @@ public class ResultListenerTest {
         String objectToParse = "blabla";
         String parsedObject = "Hello!";
         when(future.get()).thenReturn(objectToParse);
-        ResultListenerImpl resultListener = new ResultListenerImpl(future, output, socket, parsedObject);
+        ResultListenerImpl resultListener =
+            new ResultListenerImpl(future, output, socket, parsedObject);
         resultListener.run();
         verify(output).write(eq((parsedObject + "\n").getBytes()));
     }
@@ -51,25 +58,25 @@ public class ResultListenerTest {
         String objectToParse = "blabla";
         String parsedObject = null;
         when(future.get()).thenReturn(objectToParse);
-        ResultListenerImpl resultListener = new ResultListenerImpl(future, output, socket, parsedObject);
+        ResultListenerImpl resultListener =
+            new ResultListenerImpl(future, output, socket, parsedObject);
         resultListener.run();
         verify(output, times(0)).write(any(byte.class));
     }
 }
 
+
 class ResultListenerImpl extends ResultListener {
 
     private String data;
 
-    public ResultListenerImpl(ListenableFuture commandResult,
-            DataOutputStream output, Socket socket,
-            String data) {
+    public ResultListenerImpl(ListenableFuture commandResult, DataOutputStream output,
+        Socket socket, String data) {
         super(commandResult, output, socket);
         this.data = data;
     }
 
-    @Override
-    protected Optional<String> parseData(Object result) {
+    @Override protected Optional<String> parseData(Object result) {
         if (data == null) {
             return Optional.absent();
         } else {
@@ -77,8 +84,7 @@ class ResultListenerImpl extends ResultListener {
         }
     }
 
-    @Override
-    protected void extraActions(Object result) {
+    @Override protected void extraActions(Object result) {
 
     }
 }

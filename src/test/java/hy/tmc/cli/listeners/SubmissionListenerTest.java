@@ -1,14 +1,18 @@
 package hy.tmc.cli.listeners;
 
-import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import static org.junit.Assert.assertEquals;
+
+import hy.tmc.cli.backend.communication.SubmissionInterpreter;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import org.mockito.Mockito;
+
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class SubmissionListenerTest {
@@ -25,15 +29,13 @@ public class SubmissionListenerTest {
 
     @Test
     public void parseDataTest() {
-
         sl = new SubmissionListener(null, null, null, itptr, true);
         assertEquals("detailed", sl.parseData(new SubmissionResult()).get());
     }
 
     @Test
     public void parseDataTest2() {
-
         sl = new SubmissionListener(null, null, null, itptr, false);
         assertEquals("not detailed", sl.parseData(new SubmissionResult()).get());
-    }  
+    }
 }

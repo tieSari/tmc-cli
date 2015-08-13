@@ -1,17 +1,27 @@
 package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import hy.tmc.cli.TmcCli;
+
 import fi.helsinki.cs.tmc.core.TmcCore;
+
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
-import java.io.IOException;
+
 import org.junit.After;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.*;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class ServerTest {
 
@@ -42,7 +52,7 @@ public class ServerTest {
         }
     }
 
-    @After
+    @After 
     public void after() throws IOException {
         server.close();
         serverThread.interrupt();

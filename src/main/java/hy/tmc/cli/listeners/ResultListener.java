@@ -2,6 +2,7 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -15,7 +16,8 @@ public abstract class ResultListener<T> implements Runnable {
     private DataOutputStream output;
     private Socket socket;
 
-    public ResultListener(ListenableFuture<T> commandResult, DataOutputStream output, Socket socket) {
+    public ResultListener(ListenableFuture<T> commandResult, DataOutputStream output,
+        Socket socket) {
         this.commandResult = commandResult;
         this.output = output;
         this.socket = socket;
@@ -66,7 +68,9 @@ public abstract class ResultListener<T> implements Runnable {
      * @param ex exception which can be any exception
      */
     private void printLog(Exception ex) {
-        System.err.println(ex.getMessage() + "\n" + Arrays.toString(ex.getCause().getStackTrace()) + "\n" + Arrays.toString(ex.getStackTrace()));
+        System.err.println(
+            ex.getMessage() + "\n" + Arrays.toString(ex.getCause().getStackTrace()) + "\n" + Arrays
+                .toString(ex.getStackTrace()));
     }
 
     private void writeToOutput(final String commandOutput) {

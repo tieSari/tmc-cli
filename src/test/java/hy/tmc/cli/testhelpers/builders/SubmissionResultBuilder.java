@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult.Status;
 import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
 import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
 import fi.helsinki.cs.tmc.core.domain.submission.Validations;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

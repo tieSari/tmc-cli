@@ -1,8 +1,11 @@
 package hy.tmc.cli.frontend;
 
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.core.domain.Course;
+
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
+
 import java.io.File;
 import java.util.List;
 
@@ -38,8 +41,7 @@ public class CourseFinder {
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {
-                    Optional<Course> courseOptional = Optional.of(course);
-                    return courseOptional;
+                    return Optional.of(course);
                 }
             }
         }

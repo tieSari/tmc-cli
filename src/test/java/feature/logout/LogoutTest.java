@@ -2,10 +2,10 @@ package feature.logout;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
+
 import org.junit.runner.RunWith;
 
-@RunWith(Cucumber.class)
-@CucumberOptions(features = {"src/test/resources/features/logout.feature"})
+@RunWith(Cucumber.class) @CucumberOptions(features = {"src/test/resources/features/logout.feature"})
 public class LogoutTest {
-    
+
 }

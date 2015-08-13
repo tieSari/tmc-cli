@@ -1,10 +1,12 @@
 package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class DefaultListenerTest {
 
@@ -15,7 +17,7 @@ public class DefaultListenerTest {
     public void setUp() {
     }
 
-    @After
+    @After 
     public void tearDown() {
     }
 

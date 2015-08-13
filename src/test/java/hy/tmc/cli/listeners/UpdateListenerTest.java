@@ -1,13 +1,18 @@
 package hy.tmc.cli.listeners;
 
-import hy.tmc.cli.TmcCli;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+
+import hy.tmc.cli.TmcCli;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

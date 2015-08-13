@@ -1,6 +1,5 @@
 package hy.tmc.cli;
 
-
 import fi.helsinki.cs.tmc.core.domain.Course;
 
 public class Session {
@@ -8,13 +7,13 @@ public class Session {
     private String username;
     private String password;
     private Course currentCourse;
-    
+
     public Session() {
         this.username = "";
         this.password = "";
         this.currentCourse = null;
     }
-    
+
     public Session(String username, String password) {
         this.username = username;
         this.password = password;

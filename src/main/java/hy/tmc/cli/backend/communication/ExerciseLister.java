@@ -1,16 +1,17 @@
 package hy.tmc.cli.backend.communication;
 
-
-import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
-import hy.tmc.cli.frontend.CommandLineColor;
-import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
-import static hy.tmc.cli.frontend.CommandLineColor.RED;
-import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+
+import hy.tmc.cli.frontend.CommandLineColor;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
+import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
 
 public class ExerciseLister {
 
@@ -30,9 +31,8 @@ public class ExerciseLister {
         StringBuilder builder = new StringBuilder();
 
         for (Exercise exercise : exercises) {
-            builder.append(buildSuccessOrFailMessage(exercise))
-                    .append(exercise.getName())
-                    .append("\n");
+            builder.append(buildSuccessOrFailMessage(exercise)).append(exercise.getName())
+                .append("\n");
 
         }
         builder.append(endSummary(exercises));
@@ -63,14 +63,14 @@ public class ExerciseLister {
             total++;
         }
         return coloredString("Completed: " + completed + percentage(completed, total), GREEN) + " "
-                + coloredString("Attempted: " + attempted + percentage(attempted, total), RED) + " "
-                + coloredString("Total: " + total, WHITE);
+            + coloredString("Attempted: " + attempted + percentage(attempted, total), RED) + " "
+            + coloredString("Total: " + total, WHITE);
     }
 
     private String percentage(int amount, int total) {
         double percentage = 100.0 * amount / total;
         NumberFormat formatter = new DecimalFormat("#0.0");
-        
-        return " (" + formatter.format(percentage) +"%)";
+
+        return " (" + formatter.format(percentage) + "%)";
     }
 }

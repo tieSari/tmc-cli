@@ -2,35 +2,33 @@ package feature.frontend;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import static org.junit.Assert.assertTrue;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 
+import fi.helsinki.cs.tmc.core.TmcCore;
+
+import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 import hy.tmc.cli.testhelpers.TestClient;
 
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import hy.tmc.cli.TmcCli;
-import fi.helsinki.cs.tmc.core.TmcCore;
 import java.io.File;
-
 import java.io.IOException;
 import java.util.Date;
 
+import static org.junit.Assert.assertTrue;
+
 public class FrontendSteps {
-
-    private int port;
-
-    private Thread serverThread;
-    private Server server;
-    private TestClient testClient;
-
-    private TmcCli tmcCli;
 
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
     File cache;
+    private int port;
+    private Thread serverThread;
+    private Server server;
+    private TestClient testClient;
+    private TmcCli tmcCli;
 
     /**
      * Set up server and testclient.
@@ -64,7 +62,8 @@ public class FrontendSteps {
      * @throws Throwable if something fails
      */
     @Then("^output should contains commands\\.$")
-    public void output_should_contains_commands() throws Throwable {
+    public void output_should_contains_commands()
+        throws Throwable {
         String contents = testClient.reply();
         assertTrue(contents.contains("Commands:"));
     }

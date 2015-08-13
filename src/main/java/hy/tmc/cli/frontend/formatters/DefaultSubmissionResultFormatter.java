@@ -1,17 +1,17 @@
 package hy.tmc.cli.frontend.formatters;
 
-import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
-import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
-
-import static hy.tmc.cli.frontend.CommandLineColor.BLUE;
-import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
-import static hy.tmc.cli.frontend.CommandLineColor.RED;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
 import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
 
 import java.util.List;
 import java.util.Map.Entry;
+
+import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
+import static hy.tmc.cli.frontend.CommandLineColor.BLUE;
+import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
+import static hy.tmc.cli.frontend.CommandLineColor.RED;
+import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
 
 /**
  * CommandLineSubmissionResultFormatter gives submissionresult explainings for command line user
@@ -20,11 +20,11 @@ import java.util.Map.Entry;
 public class DefaultSubmissionResultFormatter implements SubmissionResultFormatter {
 
     private CheckstyleFormatter checkstyleFormatter;
-    
+
     public DefaultSubmissionResultFormatter() {
         this.checkstyleFormatter = new DefaultCheckstyleFormatter();
     }
-    
+
     @Override
     public String someTestsFailed() {
         return "Some tests failed on server. Summary: \n";
@@ -40,16 +40,12 @@ public class DefaultSubmissionResultFormatter implements SubmissionResultFormatt
     public String testCaseDescription(TestCase testCase) {
         StringBuilder destination = new StringBuilder();
         if (testCase.isSuccessful()) {
-            destination.append(coloredString(" PASSED: ", GREEN))
-                    .append(testCase.getName())
-                    .append("\n");
+            destination.append(coloredString(" PASSED: ", GREEN)).append(testCase.getName())
+                .append("\n");
             return destination.toString();
         }
-        destination.append(coloredString(" FAILED: ", RED))
-                .append(testCase.getName())
-                .append(" ")
-                .append(testCase.getMessage())
-                .append("\n");
+        destination.append(coloredString(" FAILED: ", RED)).append(testCase.getName()).append(" ")
+            .append(testCase.getMessage()).append("\n");
         return destination.toString();
     }
 

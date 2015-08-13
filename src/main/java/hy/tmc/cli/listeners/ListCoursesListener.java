@@ -2,30 +2,32 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
+
 import fi.helsinki.cs.tmc.core.domain.Course;
+
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.List;
 
 public class ListCoursesListener extends ResultListener<List<Course>> {
 
-    public ListCoursesListener(ListenableFuture<List<Course>> commandResult, DataOutputStream output, Socket socket) {
+    public ListCoursesListener(ListenableFuture<List<Course>> commandResult,
+        DataOutputStream output, Socket socket) {
         super(commandResult, output, socket);
     }
 
     @Override
     public Optional<String> parseData(List<Course> courses) {
         String courselist = getCourseNames(courses);
-        if(courselist == null){
+        if (courselist == null) {
             return Optional.absent();
         } else {
             return Optional.of(courselist);
         }
     }
-    
+
     @Override
     public void extraActions(List<Course> courses) {
-
     }
 
     private int getLongest(List<Course> courses) {
@@ -43,13 +45,11 @@ public class ListCoursesListener extends ResultListener<List<Course>> {
         StringBuilder result = new StringBuilder();
 
         result.append("NAME");
-        result = addSpaces(result, "NAME", getLongest(courses))
-                .append("ID\n");
+        result = addSpaces(result, "NAME", getLongest(courses)).append("ID\n");
         for (Course course : courses) {
             String name = course.getName();
             result.append(name);
-            result = addSpaces(result, name, getLongest(courses))
-                    .append(course.getId());
+            result = addSpaces(result, name, getLongest(courses)).append(course.getId());
             result.append("\n");
         }
 
