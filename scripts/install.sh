@@ -1,15 +1,12 @@
 #!/bin/bash
-
 Deps=('nohup' 'pgrep' 'netcat' 'ps' 'sed' 'trap' 'kill' 'echo' 'curl' 'unzip');
 
 command_not_exists(){
 	! (hash "$1" 2>/dev/null);
 }
 
-for i in "${Deps[@]}"
-do
-	:
-	if command_not_exists "$i" ; then
+for i in "${Deps[@]}"; do
+	if command_not_exists "$i"; then
 		printf "%s is required but not installed in your computer. \n" "$i";
 	fi
 done

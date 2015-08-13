@@ -26,13 +26,13 @@ public class ScriptTest {
 
     @BeforeClass
     public static void setupClass() throws IOException, Exception {
-        Path pidfile = Paths.get("scripts", "pidfile.pid");
-        Files.write(pidfile, "1".getBytes());
+        Files.createDirectories(pidPath().getParent());
+        Files.write(pidPath(), "1".getBytes());
     }
 
     @AfterClass
     public static void tearDownClass() throws IOException {
-        Files.delete(Paths.get("scripts", "pidfile.pid"));
+        Files.deleteIfExists(pidPath());
     }
 
     @After
@@ -220,6 +220,16 @@ public class ScriptTest {
 
         ProcessRunner runner = new ProcessRunner(args, Paths.get("scripts"));
         return runner.call();
+    }
+
+    private static Path pidPath() {
+        if (System.getenv().get("XDG_RUNTIME_DIR") != null) {
+            return Paths.get(System.getenv("XDG_RUNTIME_DIR"), "tmc", "tmc-cli.pid");
+        }
+        if (System.getenv().get("XDG_CONFIG_HOME") != null) {
+            return Paths.get(System.getenv("XDG_CONFIG_HOME"), "tmc", "tmc-cli.pid");
+        }
+        return Paths.get(System.getenv("HOME"), ".config", "tmc", "tmc-cli.pid");
     }
 
 }
