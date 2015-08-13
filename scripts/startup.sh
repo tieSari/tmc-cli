@@ -36,7 +36,7 @@ mkdir -p "$DATA_DIR"
 
 LOGPATH="$DATA_DIR/tmc-cli.log"
 
-if [ ! -f "$PID" ]; then
+if [ ! -f "$PIDFILE" ]; then
   start_server
   exit 0
 fi
