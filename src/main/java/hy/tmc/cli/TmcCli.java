@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.domain.Course;
-
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
 
@@ -117,12 +117,9 @@ public class TmcCli {
      *                               config file
      */
     public CliSettings defaultSettings() throws IllegalStateException, ParseException, IOException {
-//        CliSettings settings = new CliSettings(apiVersion);
-//        settings.setUserData(session.getUsername(), session.getPassword());
-//        settings.setCurrentCourse(session.getCurrentCourse());
-//        settings.setServerAddress(config.readServerAddress());
-//        settings.setLastUpdate(config.readLastUpdate());
-        if (settings.getServerAddress() == null) throw new IllegalStateException("Server address not set");
+        if (settings.getServerAddress() == null) {
+            throw new IllegalStateException("Server address not set");
+        }
         return settings;
     }
 

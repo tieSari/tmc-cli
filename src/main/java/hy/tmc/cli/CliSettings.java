@@ -84,7 +84,7 @@ public class CliSettings implements TmcSettings {
     public Date getLastUpdate() {
         try {
             return config.readLastUpdate();
-        } catch (ParseException | IOException e) {
+        } catch (ParseException | IOException | NullPointerException e) {
             e.printStackTrace();
             return new Date(0);
         }

@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class CommandExecutor {
@@ -57,8 +58,8 @@ public class CommandExecutor {
         ExecutionException, IllegalStateException, ParseException {
         String[] elements = parser.getElements(inputLine);
         String commandName = elements[0];
-        HashMap<String, String> params = parser.giveData(elements, new HashMap<String, String>());
-        HashMap<String, Command> commandMap = createCommandMap(params);
+        Map<String, String> params = parser.giveData(elements, new HashMap<String, String>());
+        Map<String, Command> commandMap = createCommandMap(params);
         executeCommand(commandMap, commandName, params);
         if (this.cli.makeUpdate()) {
             String msg;
@@ -98,7 +99,7 @@ public class CommandExecutor {
         }
     }
 
-    public HashMap<String, Command> createCommandMap(HashMap<String, String> params) {
+    public Map<String, Command> createCommandMap(Map<String, String> params) {
         HashMap<String, Command> map = new HashMap<>();
         map.put("help", new Help(this.cli, params.get("command")));
         map.put("setServer", new SetServer(this.cli, params.get("tmc-server")));
@@ -107,8 +108,8 @@ public class CommandExecutor {
         return map;
     }
 
-    private void executeCommand(HashMap<String, Command> commandMap, String commandName,
-        HashMap<String, String> params)
+    private void executeCommand(Map<String, Command> commandMap, String commandName,
+        Map<String, String> params)
         throws ProtocolException, IOException, TmcCoreException, InterruptedException,
         ExecutionException, IllegalStateException {
         CoreUser coreUser = new CoreUser(cli, stream, socket, pool);
