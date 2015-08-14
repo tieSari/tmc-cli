@@ -2,8 +2,11 @@ package hy.tmc.cli.listeners;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.cli.TmcCli;
+
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+
+import hy.tmc.cli.TmcCli;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -15,7 +18,8 @@ public class UpdateDownloadingListener extends ResultListener<List<Exercise>> {
 
     TmcCli cli;
 
-    public UpdateDownloadingListener(TmcCli cli, ListenableFuture commandResult, DataOutputStream output, Socket socket) {
+    public UpdateDownloadingListener(TmcCli cli, ListenableFuture commandResult,
+        DataOutputStream output, Socket socket) {
         super(commandResult, output, socket);
         this.cli = cli;
     }

@@ -1,18 +1,20 @@
 package hy.tmc.cli.frontend.formatters;
 
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
-import fi.helsinki.cs.tmc.langs.domain.RunResult.Status;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
+
+import hy.tmc.cli.testhelpers.builders.RunResultBuilder;
+import hy.tmc.cli.testhelpers.builders.TestResultFactory;
+import org.junit.Test;
+
+import java.util.List;
+
 import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.COMPILE_FAILED;
 import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.GENERIC_ERROR;
 import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.PASSED;
 import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.TESTS_FAILED;
-import fi.helsinki.cs.tmc.langs.domain.TestResult;
-import hy.tmc.cli.testhelpers.builders.RunResultBuilder;
-import hy.tmc.cli.testhelpers.builders.TestResultFactory;
-import java.util.List;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.powermock.core.spi.testresult.Result;
+
+import static org.junit.Assert.assertTrue;
 
 public class CommandLineFormatterTest {
 
@@ -30,10 +32,8 @@ public class CommandLineFormatterTest {
         allPassed = new RunResultBuilder().withStatus(PASSED).build();
         compileError = new RunResultBuilder().withStatus(COMPILE_FAILED).build();
         genericError = new RunResultBuilder().withStatus(GENERIC_ERROR).build();
-        allFailed = new RunResultBuilder()
-                .withStatus(TESTS_FAILED)
-                .withTests(TestResultFactory.failedTests())
-                .build();
+        allFailed = new RunResultBuilder().withStatus(TESTS_FAILED)
+            .withTests(TestResultFactory.failedTests()).build();
         formatter = new DefaultTestResultFormatter();
         passed = TestResultFactory.passedTests();
     }

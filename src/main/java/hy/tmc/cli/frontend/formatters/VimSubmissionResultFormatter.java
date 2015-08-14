@@ -1,9 +1,9 @@
 package hy.tmc.cli.frontend.formatters;
 
-
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
 import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
+
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -33,7 +33,8 @@ public class VimSubmissionResultFormatter implements SubmissionResultFormatter {
         if (testCase.isSuccessful()) {
             des.append(" PASSED: ").append(testCase.getName());
         }
-        des.append(" FAILED: ").append(testCase.getName()).append("\n  ").append(testCase.getMessage());
+        des.append(" FAILED: ").append(testCase.getName()).append("\n  ")
+            .append(testCase.getMessage());
         return des.toString();
     }
 

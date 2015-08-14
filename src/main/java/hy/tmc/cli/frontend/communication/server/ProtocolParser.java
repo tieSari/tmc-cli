@@ -9,7 +9,7 @@ public class ProtocolParser {
     public ProtocolParser() {
 
     }
-    
+
     public String[] getElements(String userInput) throws ProtocolException {
         List<String> items = new ArrayList<>();
         boolean parsingLongValue = false;
@@ -22,21 +22,14 @@ public class ProtocolParser {
         return array;
     }
 
-    private void handleSingleWord(boolean parsingLongValue, String word, List<String> items, String multiWordItem) {
+    private void handleSingleWord(boolean parsingLongValue, String word, List<String> items,
+        String multiWordItem) {
         if (parsingLongValue) {
             if (word.contains("}")) {
-                parsingLongValue = false;
                 items.add(multiWordItem.trim());
-                multiWordItem = "";
-            } else {
-                multiWordItem += " " + word;
             }
-        } else {
-            if (word.contains("{")) {
-                parsingLongValue = true;
-            } else {
-                items.add(word);
-            }
+        } else if (!word.contains("{")) {
+            items.add(word);
         }
     }
 

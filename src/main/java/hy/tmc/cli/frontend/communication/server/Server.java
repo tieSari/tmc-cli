@@ -2,9 +2,11 @@ package hy.tmc.cli.frontend.communication.server;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+
+import fi.helsinki.cs.tmc.core.TmcCore;
+
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
-import fi.helsinki.cs.tmc.core.TmcCore;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,7 +69,8 @@ public class Server implements Runnable {
                 if (!serverSocket.isClosed()) {
                     Socket clientSocket = serverSocket.accept();
                     System.err.println("New socketRunnable");
-                    socketThreadPool.submit(new SocketRunnable(clientSocket, tmcCore, socketThreadPool, cli));
+                    socketThreadPool
+                        .submit(new SocketRunnable(clientSocket, tmcCore, socketThreadPool, cli));
                 }
             } catch (IOException e) {
                 System.err.println(e.getMessage());

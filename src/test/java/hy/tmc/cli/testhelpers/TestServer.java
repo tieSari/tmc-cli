@@ -10,16 +10,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import static org.junit.Assert.fail;
 
 public class TestServer implements Runnable {
 
+    private final Map<String, String> mocks;
     private ServerSocket serverSocket;
     private boolean isRunning;
     private BufferedReader in;
     private Socket clientSocket;
     private int port;
-    private final Map<String, String> mocks;
 
     public TestServer() throws IOException {
         initServerSocket();
@@ -31,8 +30,7 @@ public class TestServer implements Runnable {
             serverSocket = new ServerSocket(0);
             port = serverSocket.getLocalPort();
             new ConfigHandler().writePort(port);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println("Server creation failed");
             System.err.println(ex.getMessage());
         }
@@ -57,28 +55,29 @@ public class TestServer implements Runnable {
             try {
                 if (!serverSocket.isClosed()) {
                     clientSocket = serverSocket.accept();
-                    BufferedReader inputReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    DataOutputStream outputStream = new DataOutputStream(clientSocket.getOutputStream());
+                    BufferedReader inputReader =
+                        new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    DataOutputStream outputStream =
+                        new DataOutputStream(clientSocket.getOutputStream());
                     handleInput(inputReader, outputStream);
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
     }
-    
+
     public void mock(String input, String willReturn) {
         this.mocks.put(input, willReturn);
     }
 
     private void handleInput(BufferedReader inputReader, DataOutputStream outputStream)
-            throws IOException {
+        throws IOException {
         String input = inputReader.readLine();
         if (input == null) {
             writeToOutput(outputStream, "received null");
         }
-               
+
         if (mocks.containsKey(input)) {
             writeToOutput(outputStream, mocks.get(input));
         } else {
@@ -90,7 +89,7 @@ public class TestServer implements Runnable {
         outputStream.write((message).getBytes());
         clientSocket.close();
     }
-    
+
     /**
      * Closes serverSocket.
      *

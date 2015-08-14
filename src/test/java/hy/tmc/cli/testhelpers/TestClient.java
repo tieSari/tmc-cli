@@ -1,23 +1,17 @@
 package hy.tmc.cli.testhelpers;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class TestClient {
 
+    private final int portnumber;
     private Socket socket;
     private PrintStream output;
     private BufferedReader input;
-    private final int portnumber;
 
     public TestClient(int portnumber) throws IOException {
         this.portnumber = portnumber;

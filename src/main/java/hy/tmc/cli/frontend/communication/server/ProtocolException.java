@@ -14,6 +14,7 @@ public class ProtocolException extends Exception {
 
     /**
      * ProtocolException can give a message.
+     *
      * @param message is a final string.
      */
     public ProtocolException(final String message) {
@@ -22,9 +23,9 @@ public class ProtocolException extends Exception {
 
     /**
      * ProtocolException can have cause as parameter.
-     * 
+     *
      * @param message final string message
-     * @param cause cause wfi.helsinki.cs exception is thrown
+     * @param cause   cause wfi.helsinki.cs exception is thrown
      */
     public ProtocolException(final String message, final Throwable cause) {
         super(message, cause);
@@ -32,7 +33,7 @@ public class ProtocolException extends Exception {
 
     /**
      * ProtocolException can only have a cause.
-     * 
+     *
      * @param cause wfi.helsinki.cs exception is thrown
      */
     public ProtocolException(final Throwable cause) {

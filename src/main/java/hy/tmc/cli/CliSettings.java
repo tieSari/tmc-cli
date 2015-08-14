@@ -1,10 +1,14 @@
 package hy.tmc.cli;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.configuration.ConfigHandler;
+
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 
+import hy.tmc.cli.configuration.ConfigHandler;
+
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 
 public class CliSettings implements TmcSettings {
@@ -23,22 +27,28 @@ public class CliSettings implements TmcSettings {
 
     public CliSettings(String apiVersion) {
         this.apiVersion = apiVersion;
+        try {
+            this.config = new ConfigHandler();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     public CliSettings(String mainDirectory, String apiVersion) {
         this(apiVersion);
         this.mainDirectory = mainDirectory;
     }
 
     public CliSettings() {
-        this.apiVersion = "7";
+        this("7");
     }
 
     /**
      * Constructor for tests.
+     *
      * @param handler Dependency injected configHandler (mock for exemple)
      */
-    public CliSettings(ConfigHandler handler, String mainDirectory, String apiVersion){
+    public CliSettings(ConfigHandler handler, String mainDirectory, String apiVersion) {
         this.mainDirectory = mainDirectory;
         this.apiVersion = apiVersion;
         this.config = handler;
@@ -49,38 +59,53 @@ public class CliSettings implements TmcSettings {
         return this.serverAddress;
     }
 
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
     @Override
     public String getPassword() {
         return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public String getUsername() {
         return this.username;
     }
-    
-    public void setPath(String path){
-        this.path = path;
+
+    public void setUsername(String username) {
+        this.username = username;
     }
-    
-    public Date getLastUpdate(){
-        return lastUpdate;
+
+    public Date getLastUpdate() {
+        try {
+            return config.readLastUpdate();
+        } catch (ParseException | IOException | NullPointerException e) {
+            e.printStackTrace();
+            return new Date(0);
+        }
     }
-    
-    public void setLastUpdate(Date time){
+
+    public void setLastUpdate(Date time) {
         this.lastUpdate = time;
     }
-    
-    public String getPath(){
+
+    public String getPath() {
         return this.path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override
     public boolean userDataExists() {
-        if (this.username == null || this.password == null) {
-            return false;
-        }
-        return !this.username.isEmpty() && !this.password.isEmpty();
+        return !(this.username == null || this.password == null) &&
+            !this.username.isEmpty() && !this.password.isEmpty();
     }
 
     @Override
@@ -91,25 +116,13 @@ public class CliSettings implements TmcSettings {
         return Optional.of(this.currentCourse);
     }
 
-    @Override
-    public String apiVersion() {
-        return apiVersion;
-    }
-
     public void setCurrentCourse(Course currentCourse) {
         this.currentCourse = currentCourse;
     }
 
-    public void setServerAddress(String serverAddress) {
-        this.serverAddress = serverAddress;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String apiVersion() {
+        return apiVersion;
     }
 
     public void setApiVersion(String apiVersion) {
@@ -132,7 +145,7 @@ public class CliSettings implements TmcSettings {
     public String getTmcMainDirectory() {
         return this.mainDirectory;
     }
-    
+
     /**
      * Sets the data for current user.
      *
@@ -144,15 +157,17 @@ public class CliSettings implements TmcSettings {
         this.password = password;
     }
 
-    public void logOutCurrentUser() {
+    public void clear() {
         username = "";
         password = "";
+        this.currentCourse = null;
+        serverAddress = "";
     }
-    
-    
+
+
     @Override
     public String clientName() {
-       return "tmc_cli";
+        return "tmc_cli";
     }
 
     @Override

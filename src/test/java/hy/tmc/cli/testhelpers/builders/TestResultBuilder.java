@@ -40,7 +40,7 @@ public class TestResultBuilder {
         this.points.add(point);
         return this;
     }
-    
+
     public TestResultBuilder withErrorMessage(String errMsg) {
         this.errorMessage = errMsg;
         return this;
@@ -63,6 +63,6 @@ public class TestResultBuilder {
 
     public TestResult build() {
         return new TestResult(name, passed, ImmutableList.copyOf(points), errorMessage,
-                ImmutableList.copyOf(stackTrace));
+            ImmutableList.copyOf(stackTrace));
     }
 }

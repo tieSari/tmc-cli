@@ -1,6 +1,7 @@
 package hy.tmc.cli.frontend.formatters;
 
 import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
+
 import java.util.List;
 
 public class VimCheckstyleFormatter implements CheckstyleFormatter {

@@ -1,16 +1,21 @@
 package hy.tmc.cli.listeners;
 
-import hy.tmc.cli.backend.communication.ExerciseLister;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import java.util.ArrayList;
-import java.util.List;
-import static org.junit.Assert.assertEquals;
+
+import hy.tmc.cli.backend.communication.ExerciseLister;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.eq;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

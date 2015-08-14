@@ -2,10 +2,12 @@ package hy.tmc.cli.commands;
 
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.frontend.communication.commands.Help;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.mock;
 
 public class HelpTest {
@@ -71,7 +73,7 @@ public class HelpTest {
         help = new Help(cli, "logout");
         assertEquals(expectedMessage("logout"), help.call());
     }
-    
+
     @Test
     public void testMessageForUnknownCommand() throws Exception {
         help = new Help(cli, "ankka");
@@ -82,24 +84,24 @@ public class HelpTest {
         switch (command) {
             case "help":
                 return "'help' will list all commands, help <command-name> will "
-                        + "display a help message for that command";
+                    + "display a help message for that command";
             case "test":
                 return "Runs the local tests for an exercise. You need to be in "
-                        + "that exercise directory, or any subdirectory";
+                    + "that exercise directory, or any subdirectory";
             case "submit":
                 return "Submits an exercise to the tmc-server. You need to be in"
-                        + " that exercise directory, or any subdirectory";
+                    + " that exercise directory, or any subdirectory";
             case "paste":
                 return "Creates a tmc-paste of an exercise. You need to be in"
-                        + " that exercise directory, or any subdirectory";
+                    + " that exercise directory, or any subdirectory";
             case "download":
                 return "'Download <course ID>' downloads a course with the id from "
-                        + "the tmc-server. Use 'list courses' to see all courses and their ids. "
-                        + "The courses exercises will be downloaded under the current directory";
+                    + "the tmc-server. Use 'list courses' to see all courses and their ids. "
+                    + "The courses exercises will be downloaded under the current directory";
             case "list":
                 return "'list courses' will list all courses on the tmc-server specified."
-                        + "'list exercises' will list all exercises of the current course. "
-                        + "You must be in the course directory, or any subdirectory.";
+                    + "'list exercises' will list all exercises of the current course. "
+                    + "You must be in the course directory, or any subdirectory.";
             case "set":
                 return "set server <tmc-server address> will change your tmc-server to the one given";
             case "login":

@@ -1,23 +1,27 @@
 package hy.tmc.cli.backend.communication;
 
+import fi.helsinki.cs.tmc.core.domain.Exercise;
+
 import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import hy.tmc.cli.testhelpers.builders.ExerciseBuilder;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
 
 public class ExerciseListerTest {
 
     ExerciseLister lister;
     ExerciseBuilder builder;
-    
+
     public ExerciseListerTest() {
         builder = new ExerciseBuilder();
     }
@@ -55,7 +59,8 @@ public class ExerciseListerTest {
     }
 
     @Test
-    public void withOneAttemptedExerciseOutputContainsNoX() throws ProtocolException, IOException {
+    public void withOneAttemptedExerciseOutputContainsNoX()
+        throws ProtocolException, IOException {
         List<Exercise> exercises = new ArrayList<>();
 
         exercises.add(new Exercise());
@@ -66,7 +71,7 @@ public class ExerciseListerTest {
         assertFalse(lister.buildExercisesInfo(exercises).contains("x"));
 
     }
-    
+
     @Test
     public void outputSummaryIsCorrect() throws ProtocolException, IOException {
         List<Exercise> exercises = new ArrayList<>();
@@ -80,7 +85,7 @@ public class ExerciseListerTest {
         System.out.println("Info: " + info);
         NumberFormat formatter = new DecimalFormat("#0.0");
         assertTrue(info.contains(formatter.format(25.0) + "%"));
-        assertTrue(info.contains("Attempted: 2 ("+formatter.format(50.0)+"%)"));
+        assertTrue(info.contains("Attempted: 2 (" + formatter.format(50.0) + "%)"));
         assertTrue(info.contains("Total: 4"));
     }
 

@@ -1,7 +1,7 @@
 package hy.tmc.cli;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
-import java.io.File;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,19 +13,10 @@ public class Main {
     /**
      * Starts the main program.
      */
-    public static void main(String[] args) throws IOException, InterruptedException {
-        Path cacheFile;
-        if (System.getenv("XDG_CACHE_HOME") == null) {
-            cacheFile = Paths.get(System.getenv("XDG_CACHE_HOME"), "tmc", "cache");
-        } else {
-            cacheFile = Paths.get(System.getenv("HOME"), ".cache", "tmc", "cache");
-        }
-        Files.createDirectories(cacheFile.getParent());
-        if (!Files.exists(cacheFile)) {
-            Files.createFile(cacheFile);
-        }
-        TmcCore core = new TmcCore(cacheFile.toFile());
-        TmcCli cli = new TmcCli(core);
+    public static void main(String[] args)
+        throws IOException, InterruptedException, TmcCoreException {
+
+        TmcCli cli = new TmcCli();
         cli.startServer();
     }
 }

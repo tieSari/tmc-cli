@@ -2,49 +2,55 @@ package hy.tmc.cli.frontend.formatters;
 
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.domain.TestResult;
+
 import hy.tmc.cli.frontend.ColorFormatter;
+
+import java.util.List;
+
 import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
 import static hy.tmc.cli.frontend.CommandLineColor.GREEN;
 import static hy.tmc.cli.frontend.CommandLineColor.RED;
 import static hy.tmc.cli.frontend.CommandLineColor.WHITE;
-import java.util.List;
 
 
 public class DefaultTestResultFormatter implements TestResultFormatter {
 
     private String testPadding;
     private String stackTracePadding;
-    
+
     /**
-     * CommandLineTestResultFormatter gives testresult explainings for command line user interface. 
-     * ResultInterpreter class uses this class. 
+     * CommandLineTestResultFormatter gives testresult explainings for command line user interface.
+     * ResultInterpreter class uses this class.
      */
     public DefaultTestResultFormatter() {
         this.testPadding = "  ";
         this.stackTracePadding = testPadding + " ";
     }
-    
+
     /**
      * Interprets status of RunResult.
+     *
      * @param result RunResult
      */
     @Override
     public String interpretStatus(RunResult result) {
         switch (result.status) {
-          case PASSED:
-              return ColorFormatter.coloredString("All tests passed.", GREEN) + " You can now submit";
-          case COMPILE_FAILED:
-              return ColorFormatter.coloredString("Code did not compile.", WHITE, RED);
-          case GENERIC_ERROR:
-              return ColorFormatter.coloredString("Failed due to an internal error", RED, WHITE);
-          default:
-              throw new IllegalArgumentException("bad argument");
+            case PASSED:
+                return ColorFormatter.coloredString("All tests passed.", GREEN)
+                    + " You can now submit";
+            case COMPILE_FAILED:
+                return ColorFormatter.coloredString("Code did not compile.", WHITE, RED);
+            case GENERIC_ERROR:
+                return ColorFormatter.coloredString("Failed due to an internal error", RED, WHITE);
+            default:
+                throw new IllegalArgumentException("bad argument");
         }
     }
 
     /**
      * Some tests failed -explanation
-     * @return 
+     *
+     * @return
      */
     @Override
     public String someTestsFailed() {
@@ -53,7 +59,8 @@ public class DefaultTestResultFormatter implements TestResultFormatter {
 
     /**
      * No tests passed -explanation
-     * @return 
+     *
+     * @return
      */
     @Override
     public String noTestsPassed() {
@@ -62,8 +69,9 @@ public class DefaultTestResultFormatter implements TestResultFormatter {
 
     /**
      * How much tests passed.
+     *
      * @param amount
-     * @return 
+     * @return
      */
     @Override
     public String howMuchTestsPassed(int amount) {
@@ -73,8 +81,9 @@ public class DefaultTestResultFormatter implements TestResultFormatter {
 
     /**
      * Get explanation of passed tests
+     *
      * @param passed
-     * @return 
+     * @return
      */
     @Override
     public String getPassedTests(List<TestResult> passed) {
@@ -87,25 +96,21 @@ public class DefaultTestResultFormatter implements TestResultFormatter {
 
     /**
      * Get explanation of a single failed testResult. Expects that result is failed.
+     *
      * @param failed
-     * @return 
+     * @return
      */
     @Override
     public String getFailedTestOutput(TestResult failed) {
-        StringBuilder output = new StringBuilder();
-        output.append(testPadding);
-        output.append(coloredString("FAILED ", RED))
-                .append(failed.name)
-                .append(": ")
-                .append(failed.errorMessage)
-                .append("\n");
-        return output.toString();
+        return testPadding +
+            coloredString("FAILED ", RED) + failed.name + ": " + failed.errorMessage + "\n";
     }
 
     /**
      * Get stack trace of test result.
+     *
      * @param result
-     * @return 
+     * @return
      */
     @Override
     public String getStackTrace(TestResult result) {
@@ -118,8 +123,9 @@ public class DefaultTestResultFormatter implements TestResultFormatter {
 
     /**
      * Get how much tests failed.
+     *
      * @param amount
-     * @return 
+     * @return
      */
     @Override
     public String howMuchTestsFailed(int amount) {

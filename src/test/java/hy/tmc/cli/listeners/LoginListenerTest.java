@@ -1,18 +1,26 @@
 package hy.tmc.cli.listeners;
 
 import com.google.common.util.concurrent.ListenableFuture;
+
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
+
 import org.hamcrest.CoreMatchers;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.mockito.Mockito;
 
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertThat;
+
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class LoginListenerTest {
 
@@ -35,12 +43,14 @@ public class LoginListenerTest {
 
     @Test
     public void parseDataSuccess() {
-        assertThat(this.listener.parseData(true).get(), CoreMatchers.containsString("Auth successful"));
+        assertThat(this.listener.parseData(true).get(),
+            CoreMatchers.containsString("Auth successful"));
     }
 
     @Test
     public void parseDataFail() {
-        assertThat(this.listener.parseData(false).get(), CoreMatchers.containsString("Auth unsuccessful"));
+        assertThat(this.listener.parseData(false).get(),
+            CoreMatchers.containsString("Auth unsuccessful"));
     }
 
     @Test

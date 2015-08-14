@@ -8,7 +8,8 @@ import java.net.Socket;
 
 public class DefaultListener extends ResultListener<String> {
 
-    public DefaultListener(ListenableFuture<String> commandResult, DataOutputStream output, Socket socket) {
+    public DefaultListener(ListenableFuture<String> commandResult, DataOutputStream output,
+        Socket socket) {
         super(commandResult, output, socket);
     }
 

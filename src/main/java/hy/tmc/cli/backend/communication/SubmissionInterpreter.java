@@ -1,11 +1,10 @@
 package hy.tmc.cli.backend.communication;
 
-import com.google.common.base.Optional;
-
-import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.TestCase;
 import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
+
+import hy.tmc.cli.frontend.formatters.SubmissionResultFormatter;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class SubmissionInterpreter {
     /**
      * Organizes SubmissionResult into human-readable form.
      *
-     * @param result the SubmissionResult object given by tmc-core
+     * @param result   the SubmissionResult object given by tmc-core
      * @param detailed true for stack trace, always show successful.
      * @return a String containing human-readable information about tests. TimeOutMessage if result
      * is null.
@@ -31,9 +30,8 @@ public class SubmissionInterpreter {
         if (result.isAllTestsPassed()) {
             return buildSuccessMessage(result, detailed);
         } else {
-            return formatter.someTestsFailed()
-                    + testCaseResults(result.getTestCases(), detailed)
-                    + checkStyleErrors(result);
+            return formatter.someTestsFailed() + testCaseResults(result.getTestCases(), detailed)
+                + checkStyleErrors(result);
         }
     }
 
@@ -60,10 +58,9 @@ public class SubmissionInterpreter {
 
     private String buildSuccessMessage(SubmissionResult result, boolean detailed) {
         StringBuilder builder = new StringBuilder();
-        builder.append(formatter.allTestsPassed())
-                .append(formatter.getPointsInformation(result))
-                .append(testCaseResults(result.getTestCases(), detailed))
-                .append(formatter.viewModelSolution(result.getSolutionUrl()));
+        builder.append(formatter.allTestsPassed()).append(formatter.getPointsInformation(result))
+            .append(testCaseResults(result.getTestCases(), detailed))
+            .append(formatter.viewModelSolution(result.getSolutionUrl()));
         return builder.toString();
     }
 

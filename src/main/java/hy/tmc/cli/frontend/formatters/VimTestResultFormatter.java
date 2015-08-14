@@ -2,6 +2,7 @@ package hy.tmc.cli.frontend.formatters;
 
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.domain.TestResult;
+
 import java.util.List;
 
 public class VimTestResultFormatter implements TestResultFormatter {
@@ -58,8 +59,7 @@ public class VimTestResultFormatter implements TestResultFormatter {
      */
     @Override
     public String howMuchTestsPassed(int amount) {
-        String passed = amount + " tests passed:\n";
-        return passed;
+        return amount + " tests passed:\n";
     }
 
     /**
@@ -67,8 +67,7 @@ public class VimTestResultFormatter implements TestResultFormatter {
      */
     @Override
     public String howMuchTestsFailed(int amount) {
-        String failed = amount + " tests failed:\n";
-        return failed;
+        return amount + " tests failed:\n";
     }
 
     /**
@@ -88,13 +87,7 @@ public class VimTestResultFormatter implements TestResultFormatter {
      */
     @Override
     public String getFailedTestOutput(TestResult failed) {
-        StringBuilder output = new StringBuilder();
-        output.append(testPadding);
-        output.append(failed.name)
-                .append(" failed: ")
-                .append(failed.errorMessage)
-                .append("\n");
-        return output.toString();
+        return testPadding + failed.name + " failed: " + failed.errorMessage + "\n";
     }
 
     /**
