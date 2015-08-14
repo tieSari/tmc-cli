@@ -7,6 +7,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 
 import hy.tmc.cli.configuration.ConfigHandler;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 
 public class CliSettings implements TmcSettings {
@@ -25,6 +27,11 @@ public class CliSettings implements TmcSettings {
 
     public CliSettings(String apiVersion) {
         this.apiVersion = apiVersion;
+        try {
+            this.config = new ConfigHandler();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public CliSettings(String mainDirectory, String apiVersion) {
@@ -33,7 +40,7 @@ public class CliSettings implements TmcSettings {
     }
 
     public CliSettings() {
-        this.apiVersion = "7";
+        this("7");
     }
 
     /**
@@ -75,7 +82,12 @@ public class CliSettings implements TmcSettings {
     }
 
     public Date getLastUpdate() {
-        return lastUpdate;
+        try {
+            return config.readLastUpdate();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            return new Date(0);
+        }
     }
 
     public void setLastUpdate(Date time) {
@@ -145,9 +157,11 @@ public class CliSettings implements TmcSettings {
         this.password = password;
     }
 
-    public void logOutCurrentUser() {
+    public void clear() {
         username = "";
         password = "";
+        this.currentCourse = null;
+        serverAddress = "";
     }
 
 

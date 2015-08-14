@@ -2,6 +2,7 @@ package hy.tmc.cli;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
 
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.cli.configuration.ConfigHandler;
 
 import org.junit.After;
@@ -29,7 +30,7 @@ public class TmcCliTest {
     }
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, TmcCoreException {
         config = Mockito.mock(ConfigHandler.class);
         core = Mockito.mock(TmcCore.class);
         client = new TmcCli(core, config);
@@ -42,6 +43,7 @@ public class TmcCliTest {
     @Test
     public void testLogin() throws IllegalStateException, ParseException, IOException {
         client.login("pekka", "ankka");
+        client.setServer("xkcd.com");
         CliSettings settings = client.defaultSettings();
         assertEquals("pekka", settings.getUsername());
         assertEquals("ankka", settings.getPassword());
@@ -60,7 +62,7 @@ public class TmcCliTest {
     public void testDefaultSettings()
         throws IllegalStateException, ParseException, IOException {
         String address = "https://test.mooc.ankka.fi";
-        when(config.readServerAddress()).thenReturn(address);
+        client.setServer(address);
         CliSettings settings = client.defaultSettings();
         assertEquals(address, settings.getServerAddress());
         assertEquals("7", settings.apiVersion());
@@ -69,9 +71,7 @@ public class TmcCliTest {
     @Test
     public void testSetServer() throws IOException, ParseException {
         String address = "https://test.mooc.ankka.fi";
-        when(config.readServerAddress()).thenReturn(address);
         client.setServer(address);
-        verify(config).writeServerAddress(eq(address));
         assertEquals(address, client.defaultSettings().getServerAddress());
     }
 

@@ -76,7 +76,8 @@ class ResultListenerImpl extends ResultListener {
         this.data = data;
     }
 
-    @Override protected Optional<String> parseData(Object result) {
+    @Override
+    protected Optional<String> parseData(Object result) {
         if (data == null) {
             return Optional.absent();
         } else {
@@ -84,7 +85,7 @@ class ResultListenerImpl extends ResultListener {
         }
     }
 
-    @Override protected void extraActions(Object result) {
-
+    @Override
+    protected void extraActions(Object result) {
     }
 }

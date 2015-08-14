@@ -15,10 +15,12 @@ public class DownloadExercisesListener extends ResultListener<List<Exercise>> {
         super(exercisesFuture, output, socket);
     }
 
-    @Override protected Optional<String> parseData(List<Exercise> result) {
+    @Override
+    protected Optional<String> parseData(List<Exercise> result) {
         return Optional.of("Downloaded " + result.size() + " exercises.");
     }
 
-    @Override protected void extraActions(List<Exercise> result) {
+    @Override
+    protected void extraActions(List<Exercise> result) {
     }
 }

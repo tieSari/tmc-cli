@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
 
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
@@ -32,11 +33,11 @@ public class ServerTest {
     Thread serverThread;
 
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, TmcCoreException {
         tmcCore = mock(TmcCore.class);
 
         socketThreadPool = Mockito.mock(ListeningExecutorService.class);
-        server = new Server(new TmcCli(tmcCore), socketThreadPool);
+        server = new Server(new TmcCli(tmcCore, null), socketThreadPool);
 
         serverThread = new Thread(server);
         serverThread.start();

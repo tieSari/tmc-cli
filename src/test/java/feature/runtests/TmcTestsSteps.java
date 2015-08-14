@@ -7,6 +7,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import hy.tmc.cli.CliSettings;
@@ -34,8 +35,8 @@ public class TmcTestsSteps {
     private CliSettings settings;
 
     @Before
-    public void setUp() throws IOException {
-        tmcCli = new TmcCli(new TmcCore(), false);
+    public void setUp() throws IOException, TmcCoreException {
+        tmcCli = new TmcCli(false);
 
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();

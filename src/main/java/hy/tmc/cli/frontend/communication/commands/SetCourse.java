@@ -50,9 +50,9 @@ public class SetCourse extends Command<String> {
         if (StringUtils.isNumeric(course)) {
             int courseId = Integer.parseInt(course);
             String courseUrl = new UrlHelper(settings).getCourseUrl(courseId);
-            return tmcCli.getCore().getCourse(settings, courseUrl);
+            return tmcCli.getCore().getCourse(courseUrl);
         } else {
-            return tmcCli.getCore().getCourseByName(settings, course);
+            return tmcCli.getCore().getCourseByName(course);
         }
     }
 }

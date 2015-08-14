@@ -24,11 +24,13 @@ public class UpdateDownloadingListener extends ResultListener<List<Exercise>> {
         this.cli = cli;
     }
 
-    @Override protected Optional<String> parseData(List<Exercise> result) {
+    @Override
+    protected Optional<String> parseData(List<Exercise> result) {
         return Optional.of(result.size() + " updates downloaded");
     }
 
-    @Override protected void extraActions(List<Exercise> result) {
+    @Override
+    protected void extraActions(List<Exercise> result) {
         if (result.isEmpty()) {
             return;
         }

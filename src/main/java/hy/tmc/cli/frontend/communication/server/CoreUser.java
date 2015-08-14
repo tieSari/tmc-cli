@@ -111,7 +111,8 @@ public class CoreUser {
         }
     }
 
-    public void runTests(Map<String, String> params) throws ProtocolException, TmcCoreException {
+    public void runTests(Map<String, String> params)
+        throws ProtocolException, TmcCoreException, IOException {
         if (!params.containsKey("path") || params.get("path").isEmpty()) {
             throw new ProtocolException("File path to exercise required.");
         }
@@ -120,9 +121,9 @@ public class CoreUser {
         CliSettings settings = new CliSettings();
         settings.setMainDirectory(params.get("path"));
 
-        ListenableFuture<RunResult> result = core.test(params.get("path"), settings);
+        ListenableFuture<RunResult> result = core.test(params.get("path"));
         ListenableFuture<Validations> checkstyle =
-            convertToValidations(core.runCheckstyle(params.get("path"), settings));
+            convertToValidations(core.runCheckstyle(params.get("path")));
         TestResultFormatter formatter;
         CheckstyleFormatter checkFormatter;
         formatter = getTestResultFormatter(params);
@@ -163,7 +164,7 @@ public class CoreUser {
         try {
             CliSettings settings = this.tmcCli.defaultSettings();
             settings.setUserData(params.get("username"), params.get("password"));
-            ListenableFuture<Boolean> result = core.verifyCredentials(settings);
+            ListenableFuture<Boolean> result = core.verifyCredentials();
             LoginListener listener = new LoginListener(result, output, socket, tmcCli, settings);
             result.addListener(listener, threadPool);
         } catch (ParseException | IOException | IllegalStateException ex) {
@@ -182,7 +183,7 @@ public class CoreUser {
             return;
         }
         if (loginIsDone(settings)) {
-            ListenableFuture<List<Course>> coursesFuture = core.listCourses(settings);
+            ListenableFuture<List<Course>> coursesFuture = core.listCourses();
             ResultListener coursesListener = new ListCoursesListener(coursesFuture, output, socket);
             coursesFuture.addListener(coursesListener, threadPool);
         }
@@ -203,10 +204,10 @@ public class CoreUser {
             }
             try {
                 Optional<Course> currentCourse = this.courseFinder
-                    .getCurrentCourse(params.get("path"), core.listCourses(settings).get());
+                    .getCurrentCourse(params.get("path"), core.listCourses().get());
                 if (currentCourse.isPresent()) {
                     ListenableFuture<Course> course =
-                        core.getCourse(settings, currentCourse.get().getDetailsUrl());
+                        core.getCourse(currentCourse.get().getDetailsUrl());
                     ResultListener exercisesListener =
                         new ListExercisesListener(course, output, socket);
                     course.addListener(exercisesListener, threadPool);
@@ -252,12 +253,12 @@ public class CoreUser {
 
     private ListenableFuture<List<Exercise>> downloadById(int id, CliSettings settings)
         throws ProtocolException, TmcCoreException {
-        return core.downloadExercises(settings.getTmcMainDirectory(), "" + id, settings, observer);
+        return core.downloadExercises(settings.getTmcMainDirectory(), "" + id, observer);
     }
 
     private ListenableFuture downloadByName(String name, CliSettings settings)
         throws TmcCoreException, IOException {
-        ListenableFuture courseFuture = core.getCourseByName(settings, name);
+        ListenableFuture courseFuture = core.getCourseByName(name);
         DownloadCourse dl = new DownloadCourse(settings);
         return Futures.transform(courseFuture, dl);
     }
@@ -291,7 +292,7 @@ public class CoreUser {
     private void sendSubmission(CliSettings settings, Map<String, String> params)
         throws TmcCoreException, ExecutionException, InterruptedException {
         fetchCourseToSettings(settings);
-        ListenableFuture<SubmissionResult> result = core.submit(params.get("path"), settings);
+        ListenableFuture<SubmissionResult> result = core.submit(params.get("path"));
         SubmissionResultFormatter formatter;
         formatter = getSubmissionFormatter(params);
         result.addListener(new SubmissionListener(result, output, socket, formatter), threadPool);
@@ -309,7 +310,7 @@ public class CoreUser {
 
     private void fetchCourseToSettings(CliSettings settings)
         throws TmcCoreException, InterruptedException, ExecutionException {
-        List<Course> courses = core.listCourses(settings).get(); // wait for completion
+        List<Course> courses = core.listCourses().get(); // wait for completion
         Optional<Course> course = this.courseFinder.getCurrentCourse(settings.getPath(), courses);
         if (course.isPresent()) {
             settings.setCurrentCourse(course.get());
@@ -335,7 +336,7 @@ public class CoreUser {
             settings.setPath(params.get("path"));
             fetchCourseToSettings(settings);
             settings.setUserData(settings.getUsername(), settings.getPassword());
-            ListenableFuture<URI> result = core.pasteWithComment(params.get("path"), settings, "");
+            ListenableFuture<URI> result = core.pasteWithComment(params.get("path"), "");
             result.addListener(new PasteListener(result, output, socket), threadPool);
         }
     }
@@ -368,7 +369,7 @@ public class CoreUser {
         settings.setMainDirectory(path);
         ListenableFuture<List<Exercise>> downloadFuture;
         ListenableFuture<List<Exercise>> updateFuture =
-            core.getNewAndUpdatedExercises(settings.getCurrentCourse().get(), settings);
+            core.getNewAndUpdatedExercises(settings.getCurrentCourse().get());
         downloadFuture = Futures.transform(updateFuture, new DownloadUpdates(settings));
         downloadFuture
             .addListener(new UpdateDownloadingListener(tmcCli, downloadFuture, output, socket),
@@ -474,7 +475,7 @@ public class CoreUser {
         @Override
         public ListenableFuture<List<Exercise>> apply(Course course) throws Exception {
             String id = "" + course.getId();
-            return core.downloadExercises(settings.getTmcMainDirectory(), id, settings, observer);
+            return core.downloadExercises(settings.getTmcMainDirectory(), id, observer);
         }
 
     }
@@ -495,7 +496,7 @@ public class CoreUser {
                 return Futures.immediateFuture(updatedAndNewExercises); // skip the download
             }
             CoreUser.this.observer.progress("update information received, starting download\n");
-            return core.downloadExercises(updatedAndNewExercises, settings, observer);
+            return core.downloadExercises(updatedAndNewExercises, observer);
         }
     }
 }

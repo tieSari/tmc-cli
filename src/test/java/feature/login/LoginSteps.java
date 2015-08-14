@@ -48,10 +48,7 @@ public class LoginSteps {
      */
     @Before
     public void initializeServer() throws IOException, TmcCoreException {
-        //TmcCore core = Mockito.mock(TmcCore.class);
-        TmcCore core = new TmcCore();
-
-        tmcCli = new TmcCli(core, false);
+        tmcCli = new TmcCli(false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         port = new ConfigHandler().readPort();

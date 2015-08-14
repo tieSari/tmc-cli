@@ -11,6 +11,7 @@ import cucumber.api.java.en.When;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -40,7 +41,7 @@ public class ListCoursesSteps {
     private WireMockServer wireMockServer;
     private TmcCli tmcCli;
 
-    public ListCoursesSteps() {
+    public ListCoursesSteps() throws IOException {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
         coursesExtension = new UrlHelper(settings).withParams("/courses.json");
@@ -50,8 +51,8 @@ public class ListCoursesSteps {
      * Setups client's config and starts WireMock.
      */
     @Before
-    public void setUpServer() throws IOException {
-        tmcCli = new TmcCli(new TmcCore(), false);
+    public void setUpServer() throws IOException, TmcCoreException {
+        tmcCli = new TmcCli(false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());

@@ -48,7 +48,7 @@ public class CommandExecutorTest {
         executor = new CommandExecutor(cli);
         List<Exercise> exerciseList = new ArrayList<>();
         exerciseList.add(new Exercise());
-        when(core.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
+        when(core.getNewAndUpdatedExercises(any(Course.class)))
             .thenReturn(Futures.immediateFuture(exerciseList));
     }
 
@@ -68,7 +68,7 @@ public class CommandExecutorTest {
         throws TmcCoreException, IOException, IllegalStateException, InterruptedException,
         ParseException, ExecutionException {
         List<Exercise> exerciseList = new ArrayList<>();
-        when(core.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
+        when(core.getNewAndUpdatedExercises(any(Course.class)))
             .thenReturn(Futures.immediateFuture(exerciseList));
         CliSettings settings = new CliSettings();
         settings.setCurrentCourse(new Course());

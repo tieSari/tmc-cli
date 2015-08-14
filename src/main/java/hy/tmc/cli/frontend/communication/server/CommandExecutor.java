@@ -86,7 +86,7 @@ public class CommandExecutor {
         double mins = (current.getTime() - lastUpdate.getTime()) / (60 * 1000);
         if (mins > pollInterval) {
             ListenableFuture<List<Exercise>> updates = this.cli.getCore()
-                .getNewAndUpdatedExercises(settings.getCurrentCourse().or(new Course()), settings);
+                .getNewAndUpdatedExercises(settings.getCurrentCourse().or(new Course()));
             List<Exercise> exercises = updates.get();
             if (exercises.isEmpty()) {
                 return "No updates available.\n";

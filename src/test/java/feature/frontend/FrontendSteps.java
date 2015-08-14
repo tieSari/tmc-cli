@@ -7,6 +7,7 @@ import cucumber.api.java.en.Then;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
 
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.frontend.communication.server.Server;
@@ -36,7 +37,7 @@ public class FrontendSteps {
      * @throws IOException if server initializing fails
      */
     @Before
-    public void setUpServer() throws IOException {
+    public void setUpServer() throws IOException, TmcCoreException {
         serverThread = new Thread(server);
         serverThread.start();
         new ConfigHandler().writePort(SERVER_PORT);
@@ -44,7 +45,7 @@ public class FrontendSteps {
         cache = new File("cache");
         cache.createNewFile();
 
-        tmcCli = new TmcCli(new TmcCore(cache), false);
+        tmcCli = new TmcCli(false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());

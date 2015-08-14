@@ -12,6 +12,7 @@ import cucumber.api.java.en.When;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -48,7 +49,7 @@ public class PasteSteps {
     private TmcCli tmcCli;
     private UrlHelper urlHelper;
 
-    public PasteSteps() {
+    public PasteSteps() throws IOException {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
         this.urlHelper = new UrlHelper(settings);
@@ -56,9 +57,9 @@ public class PasteSteps {
     }
 
     @Before
-    public void initializeServer() throws IOException {
+    public void initializeServer() throws IOException, TmcCoreException {
 
-        tmcCli = new TmcCli(new TmcCore(), false);
+        tmcCli = new TmcCli(false);
 
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();

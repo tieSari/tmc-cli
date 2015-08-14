@@ -12,6 +12,7 @@ import cucumber.api.java.en.When;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -55,11 +56,11 @@ public class SubmitSteps {
      * defines routes for two scenario.
      */
     @Before
-    public void initializeServer() throws IOException {
+    public void initializeServer() throws IOException, TmcCoreException {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
 
-        tmcCli = new TmcCli(new TmcCore(), false);
+        tmcCli = new TmcCli(false);
 
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();

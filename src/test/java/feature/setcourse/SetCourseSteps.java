@@ -42,7 +42,7 @@ public class SetCourseSteps {
 
     @Before
     public void setUp() throws Exception {
-        tmcCli = new TmcCli(new TmcCore(), false);
+        tmcCli = new TmcCli(false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());

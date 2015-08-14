@@ -8,6 +8,7 @@ import cucumber.api.java.en.When;
 
 import fi.helsinki.cs.tmc.core.TmcCore;
 
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
@@ -26,8 +27,8 @@ public class SetServerSteps {
     private TmcCli tmcCli;
 
     @Before
-    public void setUp() throws IOException {
-        tmcCli = new TmcCli(new TmcCore(), false);
+    public void setUp() throws IOException, TmcCoreException {
+        tmcCli = new TmcCli(false);
         tmcCli.startServer();
         testClient = new TestClient(new ConfigHandler().readPort());
         new ConfigHandler().writeLastUpdate(new Date());

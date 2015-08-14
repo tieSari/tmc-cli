@@ -68,12 +68,15 @@ public class UpdateSteps {
         coreMock = mock(TmcCore.class);
         tmcCli = new TmcCli(coreMock, true);
         tmcCli.startServer();
-        testClient = new TestClient(new ConfigHandler().readPort());
+        int a = new ConfigHandler().readPort();
+        System.out.println(a);
+        testClient = new TestClient(a);
+
         List<Course> fake = new ArrayList<>();
         fake.add(new Course("course"));
-        when(coreMock.listCourses(any(TmcSettings.class)))
-            .thenReturn(Futures.immediateFuture(fake));
+        when(coreMock.listCourses()).thenReturn(Futures.immediateFuture(fake));
         tmcCli.login("bossman", "samu");
+        tmcCli.setServer(SERVER_ADDRESS);
         new ConfigHandler().writeLastUpdate(new Date());
         new ConfigHandler().writeServerAddress(SERVER_ADDRESS);
 
@@ -98,7 +101,7 @@ public class UpdateSteps {
 
     @Given("^changed and new exercises$")
     public void changed_and_new_exercises() throws Throwable {
-        when(coreMock.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
+        when(coreMock.getNewAndUpdatedExercises(any(Course.class)))
             .thenReturn(fakeExercises(example1, example2));
         timeAtStart = System.currentTimeMillis();
     }
@@ -112,8 +115,7 @@ public class UpdateSteps {
     @Then("^the updates should be downloaded$")
     public void the_updates_should_be_downloaded()
         throws Throwable {
-        verify(coreMock).downloadExercises(any(List.class), any(TmcSettings.class),
-            any(ProgressObserver.class));
+        verify(coreMock).downloadExercises(any(List.class), any(ProgressObserver.class));
     }
 
     @Then("^the last update time should be the current time$")
@@ -134,7 +136,7 @@ public class UpdateSteps {
 
     @Given("^there are no updates$")
     public void there_are_no_updates() throws Throwable {
-        when(coreMock.getNewAndUpdatedExercises(any(Course.class), any(TmcSettings.class)))
+        when(coreMock.getNewAndUpdatedExercises(any(Course.class)))
             .thenReturn(fakeExercises());
     }
 
@@ -148,11 +150,11 @@ public class UpdateSteps {
     @Then("^no downloads should have happened$")
     public void no_downloads_should_have_happened()
         throws Throwable {
-        verify(coreMock, times(0)).downloadExercises(any(List.class), any(TmcSettings.class));
-        verify(coreMock, times(0)).downloadExercises(any(List.class), any(TmcSettings.class),
+        verify(coreMock, times(0)).downloadExercises(any(List.class));
+        verify(coreMock, times(0)).downloadExercises(any(List.class),
             any(ProgressObserver.class));
         verify(coreMock, times(0))
-            .downloadExercises(anyString(), anyString(), any(TmcSettings.class),
+            .downloadExercises(anyString(), anyString(),
                 any(ProgressObserver.class));
     }
 
@@ -161,7 +163,7 @@ public class UpdateSteps {
         throws Throwable {
         List<Course> courses = new ArrayList<>();
         courses.add(new Course("alksdfj"));
-        when(coreMock.listCourses(any(TmcSettings.class)))
+        when(coreMock.listCourses())
             .thenReturn(Futures.immediateFuture(courses));
     }
 
@@ -178,7 +180,7 @@ public class UpdateSteps {
     }
 
     private void mockDownload() throws TmcCoreException {
-        when(coreMock.downloadExercises(any(List.class), any(TmcSettings.class),
+        when(coreMock.downloadExercises(any(List.class),
             any(ProgressObserver.class)))
             .thenAnswer(new Answer<ListenableFuture<List<Exercise>>>() {
                 @Override
