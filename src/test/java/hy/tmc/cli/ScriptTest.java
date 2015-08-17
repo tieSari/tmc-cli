@@ -24,6 +24,7 @@ public class ScriptTest {
     private Thread serverThread;
     private String runningPath = Paths.get("scripts").toAbsolutePath().toString();
     private static Path jar;
+    private static boolean fakedJarfile;
 
     public ScriptTest() throws IOException {
         servu = new TestServer();
@@ -32,7 +33,10 @@ public class ScriptTest {
     @BeforeClass
     public static void setupClass() throws Exception {
         jar = Paths.get("scripts", "tmc-client.jar");
-        Files.createFile(jar);
+        if (!Files.exists(jar)) {
+            fakedJarfile = true;
+            Files.createFile(jar);
+        }
         Files.createDirectories(pidPath().getParent());
         Files.write(pidPath(), "1".getBytes());
     }
@@ -40,7 +44,9 @@ public class ScriptTest {
     @AfterClass
     public static void tearDownClass() throws IOException {
         Files.deleteIfExists(pidPath());
-        Files.delete(jar);
+        if (fakedJarfile) {
+            Files.deleteIfExists(jar);
+        }
     }
 
     /**
