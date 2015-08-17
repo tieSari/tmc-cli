@@ -90,7 +90,7 @@ public class CommandExecutor {
                 .getNewAndUpdatedExercises(settings.getCurrentCourse().or(new Course()));
             List<Exercise> exercises = updates.get();
             if (exercises.isEmpty()) {
-                return "No updates available.\n";
+                return "";
             } else {
                 return "Updates available. Type tmc update to download exercises.\n";
             }
