@@ -74,7 +74,7 @@ public class CommandExecutorTest {
         settings.setCurrentCourse(new Course());
         settings.setLastUpdate(sdf.parse("04-4-1950 10:00:00"));
         String result = executor.checkUpdates(settings);
-        assertTrue(result.contains("No updates available"));
+        assertTrue(result.equals(""));
     }
 
 }
