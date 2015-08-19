@@ -22,6 +22,7 @@ import org.hamcrest.CoreMatchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
@@ -57,7 +58,7 @@ public class DownloadExercisesSteps {
      * Setups client's config and starts WireMock.
      */
     @Before
-    public void setUpServer() throws IOException, TmcCoreException {
+    public void setUpServer() throws IOException, TmcCoreException, URISyntaxException {
         tmcCli = new TmcCli(false);
         tmcCli.setServer(SERVER_ADDRESS);
         Date date = new Date();
@@ -71,7 +72,7 @@ public class DownloadExercisesSteps {
         wiremock();
     }
 
-    private void wiremock() {
+    private void wiremock() throws URISyntaxException {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
         wireMockServer.stubFor(

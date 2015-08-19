@@ -2,6 +2,7 @@ package feature.setcourse;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -18,17 +19,26 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import hy.tmc.cli.testhelpers.TestClient;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.hamcrest.CoreMatchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static fi.helsinki.cs.tmc.core.communication.TmcConstants.API_VERSION_PARAM;
+import static fi.helsinki.cs.tmc.core.communication.TmcConstants.CLIENT_NAME_PARAM;
+import static fi.helsinki.cs.tmc.core.communication.TmcConstants.CLIENT_VERSION_PARAM;
 import static org.junit.Assert.assertThat;
 
 public class SetCourseSteps {
@@ -79,11 +89,11 @@ public class SetCourseSteps {
     @After
     public void clear() throws Exception {
         tmcCli.stopServer();
-        tmcCli.setServer("https://tmc.mooc.fi/staging");
+        tmcCli.setServer("");
         wireMockServer.stop();
     }
 
-    private void startWireMock(String username, String password) {
+    private void startWireMock(String username, String password) throws URISyntaxException {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
 
@@ -94,10 +104,17 @@ public class SetCourseSteps {
         wiremockGET("/courses/21.json", ExampleJson.courseExample);
     }
 
-    private void wiremockGET(String urlToMock, final String returnBody) {
+    private void wiremockGET(String urlToMock, final String returnBody) throws URISyntaxException {
         CliSettings settings = new CliSettings();
+        urlToMock = new URIBuilder(urlToMock)
+            .addParameter("api_version", settings.apiVersion())
+            .addParameter("client", settings.clientName())
+            .addParameter("client_version", settings.clientVersion())
+            .build().toString();
+
         settings.setServerAddress(SERVER_ADDRESS);
-        urlToMock = new UrlHelper(settings).withParams(urlToMock);
+
+        System.out.println(urlToMock);
         wireMockServer
             .stubFor(get(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
     }

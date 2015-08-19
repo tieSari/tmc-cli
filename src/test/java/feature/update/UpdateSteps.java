@@ -22,12 +22,14 @@ import hy.tmc.cli.configuration.ConfigHandler;
 import hy.tmc.cli.testhelpers.TestClient;
 import hy.tmc.cli.testhelpers.builders.ExerciseBuilder;
 
+import org.hamcrest.CoreMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import javax.swing.text.DateFormatter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +42,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -154,7 +157,7 @@ public class UpdateSteps {
         verify(coreMock, times(0)).downloadExercises(any(List.class),
             any(ProgressObserver.class));
         verify(coreMock, times(0))
-            .downloadExercises(anyString(), anyString(),
+            .downloadExercises(any(Path.class), anyInt(),
                 any(ProgressObserver.class));
     }
 

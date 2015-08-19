@@ -40,9 +40,9 @@ public class TmcCli {
     public TmcCli() throws IOException, TmcCoreException {
         Path cacheFile;
         if (System.getenv("XDG_CACHE_HOME") != null) {
-            cacheFile = Paths.get(System.getenv("XDG_CACHE_HOME"), "tmc", "cache");
+            cacheFile = Paths.get(System.getenv("XDG_CACHE_HOME"), "tmc", "tmc-cli-cache.json");
         } else {
-            cacheFile = Paths.get(System.getenv("HOME"), ".cache", "tmc", "cache");
+            cacheFile = Paths.get(System.getenv("HOME"), ".cache", "tmc", "tmc-cli-cache.json");
         }
         Files.createDirectories(cacheFile.getParent());
         if (!Files.exists(cacheFile)) {
@@ -50,7 +50,7 @@ public class TmcCli {
         }
         settings = new CliSettings(apiVersion);
         core = new TmcCore(settings);
-        core.setCacheFile(cacheFile.toFile());
+        core.setExerciseChecksumCacheLocation(cacheFile);
         this.config = new ConfigHandler();
         server = new Server(this);
         serverThread = new Thread(server);

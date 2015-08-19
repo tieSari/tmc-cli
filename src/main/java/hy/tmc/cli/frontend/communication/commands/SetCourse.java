@@ -13,6 +13,8 @@ import hy.tmc.cli.frontend.communication.server.ProtocolException;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 public class SetCourse extends Command<String> {
@@ -49,7 +51,13 @@ public class SetCourse extends Command<String> {
         throws TmcCoreException, IOException {
         if (StringUtils.isNumeric(course)) {
             int courseId = Integer.parseInt(course);
-            String courseUrl = new UrlHelper(settings).getCourseUrl(courseId);
+            URI courseUrl = null;
+            try {
+                courseUrl = new URI(new UrlHelper(settings).getCourseUrl(courseId));
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                return null;
+            }
             return tmcCli.getCore().getCourse(courseUrl);
         } else {
             return tmcCli.getCore().getCourseByName(course);
