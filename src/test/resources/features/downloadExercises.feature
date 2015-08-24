@@ -23,7 +23,7 @@ Feature: Downloading exercises -command
     Scenario: Download exercises with a wrong course id
         Given user has logged in with username "pihla" and password "juuh".
         When user gives a download exercises command and course id that isnt a real id.
-        Then output should contain "Could not find the course. Please check your internet connection".
+        Then output should contain "Unable to download exercises: unable to identify course.".
 
     Scenario: Download exercises with a wrong course name
         Given user has logged in with username "pihla" and password "juuh".

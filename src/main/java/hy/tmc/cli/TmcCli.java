@@ -50,6 +50,7 @@ public class TmcCli {
         }
         settings = new CliSettings(apiVersion);
         core = new TmcCore(settings);
+
         core.setExerciseChecksumCacheLocation(cacheFile);
         this.config = new ConfigHandler();
         server = new Server(this);
@@ -109,12 +110,11 @@ public class TmcCli {
     }
 
     /**
-     * The default settings include credentials from current session, and a
-     * server address from the config file.
+     * The default settings include credentials from current session, and a server address from the
+     * config file.
      *
      * @return CliSettings with credentials and server address
-     * @throws IllegalStateException if server address is not found in the
-     *                               config file
+     * @throws IllegalStateException if server address is not found in the config file
      */
     public CliSettings defaultSettings() throws IllegalStateException, ParseException, IOException {
         if (settings.getServerAddress() == null) {

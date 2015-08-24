@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static fi.helsinki.cs.tmc.langs.domain.RunResult.Status.PASSED;
+import java.util.HashMap;
 
 public class TestsListener implements Runnable {
 
@@ -31,10 +32,9 @@ public class TestsListener implements Runnable {
     private CheckstyleFormatter checkstyleFormatter;
     private Socket socket;
 
-
     public TestsListener(ListenableFuture<RunResult> testsResult,
-        ListenableFuture<Validations> checkstyle, DataOutputStream output, Socket socket,
-        TestResultFormatter interpreter, CheckstyleFormatter checkFormatter, boolean verbose) {
+            ListenableFuture<Validations> checkstyle, DataOutputStream output, Socket socket,
+            TestResultFormatter interpreter, CheckstyleFormatter checkFormatter, boolean verbose) {
 
         this.output = output;
         this.socket = socket;
@@ -56,9 +56,9 @@ public class TestsListener implements Runnable {
         }
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, List<ValidationError>> entry : result.getValidationErrors()
-            .entrySet()) {
+                .entrySet()) {
             builder.append(
-                this.checkstyleFormatter.checkstyleErrors(entry.getKey(), entry.getValue()));
+                    this.checkstyleFormatter.checkstyleErrors(entry.getKey(), entry.getValue()));
         }
 
         return builder.toString();
@@ -69,7 +69,17 @@ public class TestsListener implements Runnable {
         if (this.checkstyleFuture.isDone() && this.runResultFuture.isDone()) {
             try {
                 RunResult tests = this.runResultFuture.get();
-                Validations checks = this.checkstyleFuture.get();
+                Validations checks;
+                try {
+                    checks = this.checkstyleFuture.get();
+                } catch (ExecutionException ex) {
+                    if (ex.getCause() instanceof UnsupportedOperationException) {
+                        checks = new Validations();
+                        checks.setValidationErrors(new HashMap<String, List<ValidationError>>());
+                    } else {
+                        throw ex;
+                    }
+                }
 
                 if (tests.status == PASSED && !checks.getValidationErrors().isEmpty()) {
                     output.write("All tests passed, but there are checkstyle errors.\n".getBytes());
@@ -84,7 +94,8 @@ public class TestsListener implements Runnable {
                 output.write("\n".getBytes());
                 socket.close();
 
-            } catch (InterruptedException | ExecutionException | IOException ex) {
+            }
+            catch (InterruptedException | ExecutionException | IOException ex) {
                 System.err.println(ex.getMessage());
                 Logger.getLogger(TestsListener.class.getName()).log(Level.SEVERE, null, ex);
             }
