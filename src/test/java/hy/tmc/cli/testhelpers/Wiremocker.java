@@ -6,6 +6,8 @@ import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 
 import hy.tmc.cli.CliSettings;
 
+import java.net.URISyntaxException;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -60,8 +62,12 @@ public class Wiremocker {
     private void wiremockGET(WireMockServer server, final String urlToMock,
         final String returnBody) {
 
-        server.stubFor(get(urlEqualTo(helper.withParams(urlToMock)))
-                .willReturn(aResponse().withBody(returnBody)));
+        try {
+            server.stubFor(get(urlEqualTo(helper.withParams(urlToMock)))
+                    .willReturn(aResponse().withBody(returnBody)));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -69,7 +75,11 @@ public class Wiremocker {
      */
     private void wiremockPOST(WireMockServer server, final String urlToMock,
         final String returnBody) {
-        server.stubFor(post(urlEqualTo(helper.withParams(urlToMock)))
-                .willReturn(aResponse().withBody(returnBody)));
+        try {
+            server.stubFor(post(urlEqualTo(helper.withParams(urlToMock)))
+                    .willReturn(aResponse().withBody(returnBody)));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }

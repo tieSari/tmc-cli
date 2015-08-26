@@ -24,6 +24,7 @@ import org.junit.Rule;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Date;
 
@@ -49,7 +50,7 @@ public class PasteSteps {
     private TmcCli tmcCli;
     private UrlHelper urlHelper;
 
-    public PasteSteps() throws IOException {
+    public PasteSteps() throws IOException, URISyntaxException {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
         this.urlHelper = new UrlHelper(settings);
@@ -57,7 +58,7 @@ public class PasteSteps {
     }
 
     @Before
-    public void initializeServer() throws IOException, TmcCoreException {
+    public void initializeServer() throws IOException, TmcCoreException, URISyntaxException {
 
         tmcCli = new TmcCli(false);
 
@@ -77,7 +78,7 @@ public class PasteSteps {
         new File(new ConfigHandler().getConfigFilePath()).delete();
     }
 
-    private void startWireMock() {
+    private void startWireMock() throws URISyntaxException {
         wireMockServer = new WireMockServer();
         wireMockServer.start();
 
@@ -91,19 +92,20 @@ public class PasteSteps {
         wiremockGET("/submissions/1781.json", ExampleJson.successfulSubmission);
     }
 
-    private void wiremockGET(String urlToMock, final String returnBody) {
+    private void wiremockGET(String urlToMock, final String returnBody) throws URISyntaxException {
         urlToMock = urlHelper.withParams(urlToMock);
         wireMockServer
             .stubFor(get(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
     }
 
-    private void wiremockPOST(String urlToMock, final String returnBody) {
+    private void wiremockPOST(String urlToMock, final String returnBody) throws URISyntaxException {
         urlToMock = urlHelper.withParams(urlToMock);
         wireMockServer
             .stubFor(post(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
     }
 
-    private void wiremockPOSTwithPaste(String urlToMock, String returnBody) {
+    private void wiremockPOSTwithPaste(String urlToMock, String returnBody)
+        throws URISyntaxException {
         urlToMock = urlHelper.withParams(urlToMock) + "&paste=1";
         wireMockServer
             .stubFor(post(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));

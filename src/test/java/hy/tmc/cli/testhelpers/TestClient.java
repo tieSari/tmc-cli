@@ -66,7 +66,7 @@ public class TestClient {
      *
      * @return last reply from frontend
      */
-    public String reply() {
+    public String reply() throws IOException {
         try {
             String reply = input.readLine();
             if (reply == null) {

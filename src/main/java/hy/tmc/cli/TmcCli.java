@@ -40,9 +40,9 @@ public class TmcCli {
     public TmcCli() throws IOException, TmcCoreException {
         Path cacheFile;
         if (System.getenv("XDG_CACHE_HOME") != null) {
-            cacheFile = Paths.get(System.getenv("XDG_CACHE_HOME"), "tmc", "cache");
+            cacheFile = Paths.get(System.getenv("XDG_CACHE_HOME"), "tmc", "tmc-cli-cache.json");
         } else {
-            cacheFile = Paths.get(System.getenv("HOME"), ".cache", "tmc", "cache");
+            cacheFile = Paths.get(System.getenv("HOME"), ".cache", "tmc", "tmc-cli-cache.json");
         }
         Files.createDirectories(cacheFile.getParent());
         if (!Files.exists(cacheFile)) {
@@ -50,7 +50,8 @@ public class TmcCli {
         }
         settings = new CliSettings(apiVersion);
         core = new TmcCore(settings);
-        core.setCacheFile(cacheFile.toFile());
+
+        core.setExerciseChecksumCacheLocation(cacheFile);
         this.config = new ConfigHandler();
         server = new Server(this);
         serverThread = new Thread(server);
@@ -109,12 +110,11 @@ public class TmcCli {
     }
 
     /**
-     * The default settings include credentials from current session, and a
-     * server address from the config file.
+     * The default settings include credentials from current session, and a server address from the
+     * config file.
      *
      * @return CliSettings with credentials and server address
-     * @throws IllegalStateException if server address is not found in the
-     *                               config file
+     * @throws IllegalStateException if server address is not found in the config file
      */
     public CliSettings defaultSettings() throws IllegalStateException, ParseException, IOException {
         if (settings.getServerAddress() == null) {

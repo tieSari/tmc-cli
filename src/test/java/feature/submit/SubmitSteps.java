@@ -24,6 +24,7 @@ import org.junit.Rule;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Date;
 
@@ -35,8 +36,8 @@ public class SubmitSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    private final String coursesExtension;
-    @Rule WireMockRule wireMockRule = new WireMockRule();
+
+    private String coursesExtension;
     private int port;
     private TestClient testClient;
     private TmcCli tmcCli;
@@ -44,11 +45,18 @@ public class SubmitSteps {
     private WireMockServer wireMockServer;
     private UrlHelper urlHelper;
     private String submitCommand;
+
+    @Rule WireMockRule wireMockRule = new WireMockRule();
+
     public SubmitSteps() {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
         this.urlHelper = new UrlHelper(settings);
-        coursesExtension = urlHelper.withParams("/courses.json");
+        try {
+            coursesExtension = urlHelper.withParams("/courses.json");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

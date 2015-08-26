@@ -22,6 +22,7 @@ import org.hamcrest.CoreMatchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Date;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -41,7 +42,7 @@ public class ListCoursesSteps {
     private WireMockServer wireMockServer;
     private TmcCli tmcCli;
 
-    public ListCoursesSteps() throws IOException {
+    public ListCoursesSteps() throws IOException, URISyntaxException {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
         coursesExtension = new UrlHelper(settings).withParams("/courses.json");

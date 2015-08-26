@@ -20,6 +20,7 @@ import hy.tmc.cli.testhelpers.TestClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Date;
 
@@ -42,7 +43,7 @@ public class ListExercisesSteps {
     private WireMockServer wireMockServer;
     private UrlHelper urlHelper;
 
-    public ListExercisesSteps() throws IOException {
+    public ListExercisesSteps() throws IOException, URISyntaxException {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
         this.urlHelper = new UrlHelper(settings);
@@ -53,7 +54,7 @@ public class ListExercisesSteps {
      * Setups client's config and starts WireMock.
      */
     @Before
-    public void setUpServer() throws IOException, TmcCoreException {
+    public void setUpServer() throws IOException, TmcCoreException, URISyntaxException {
         tmcCli = new TmcCli(false);
         tmcCli.setServer(SERVER_ADDRESS);
         tmcCli.startServer();
@@ -75,7 +76,7 @@ public class ListExercisesSteps {
     public void user_has_not_logged_in() throws Throwable {
     }
 
-    private void startWireMock() {
+    private void startWireMock() throws URISyntaxException {
         wireMockServer = new WireMockServer(wireMockConfig().port(SERVER_PORT));
         wireMockServer.start();
         wireMockServer.stubFor(get(urlEqualTo("/user")).willReturn(aResponse().withStatus(200)));

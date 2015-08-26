@@ -47,6 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,9 +123,9 @@ public class CoreUser {
         CliSettings settings = new CliSettings();
         settings.setMainDirectory(params.get("path"));
 
-        ListenableFuture<RunResult> result = core.test(params.get("path"));
+        ListenableFuture<RunResult> result = core.test(Paths.get(params.get("path")));
         ListenableFuture<Validations> checkstyle =
-            convertToValidations(core.runCheckstyle(params.get("path")));
+            convertToValidations(core.runCheckstyle(Paths.get(params.get("path"))));
         TestResultFormatter formatter;
         CheckstyleFormatter checkFormatter;
         formatter = getTestResultFormatter(params);
@@ -207,15 +209,15 @@ public class CoreUser {
                     .getCurrentCourse(params.get("path"), core.listCourses().get());
                 if (currentCourse.isPresent()) {
                     ListenableFuture<Course> course =
-                        core.getCourse(currentCourse.get().getDetailsUrl());
+                        core.getCourse(new URI(currentCourse.get().getDetailsUrl()));
                     ResultListener exercisesListener =
                         new ListExercisesListener(course, output, socket);
                     course.addListener(exercisesListener, threadPool);
                 } else {
                     writeToOutputSocket("Could not find current course from your path.");
                 }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | ExecutionException | URISyntaxException e) {
+                writeToOutputSocket("Error :" + e.toString());
             }
         }
     }
@@ -253,7 +255,7 @@ public class CoreUser {
 
     private ListenableFuture<List<Exercise>> downloadById(int id, CliSettings settings)
         throws ProtocolException, TmcCoreException {
-        return core.downloadExercises(settings.getTmcMainDirectory(), "" + id, observer);
+        return core.downloadExercises(Paths.get(settings.getTmcMainDirectory()), id, observer);
     }
 
     private ListenableFuture downloadByName(String name, CliSettings settings)
@@ -292,7 +294,7 @@ public class CoreUser {
     private void sendSubmission(CliSettings settings, Map<String, String> params)
         throws TmcCoreException, ExecutionException, InterruptedException {
         fetchCourseToSettings(settings);
-        ListenableFuture<SubmissionResult> result = core.submit(params.get("path"));
+        ListenableFuture<SubmissionResult> result = core.submit(Paths.get(params.get("path")));
         SubmissionResultFormatter formatter;
         formatter = getSubmissionFormatter(params);
         result.addListener(new SubmissionListener(result, output, socket, formatter), threadPool);
@@ -336,7 +338,7 @@ public class CoreUser {
             settings.setPath(params.get("path"));
             fetchCourseToSettings(settings);
             settings.setUserData(settings.getUsername(), settings.getPassword());
-            ListenableFuture<URI> result = core.pasteWithComment(params.get("path"), "");
+            ListenableFuture<URI> result = core.pasteWithComment(Paths.get(params.get("path")), "");
             result.addListener(new PasteListener(result, output, socket), threadPool);
         }
     }
@@ -463,7 +465,6 @@ public class CoreUser {
 
     }
 
-
     private class DownloadCourse implements AsyncFunction<Course, List<Exercise>> {
 
         CliSettings settings;
@@ -474,12 +475,11 @@ public class CoreUser {
 
         @Override
         public ListenableFuture<List<Exercise>> apply(Course course) throws Exception {
-            String id = "" + course.getId();
-            return core.downloadExercises(settings.getTmcMainDirectory(), id, observer);
+            int id = course.getId();
+            return core.downloadExercises(Paths.get(settings.getTmcMainDirectory()), id, observer);
         }
 
     }
-
 
     private class DownloadUpdates implements AsyncFunction<List<Exercise>, List<Exercise>> {
 
