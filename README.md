@@ -64,4 +64,4 @@ Tmc-cli was started by Ohjelmistotuotantoprojekti kesä 2015 (Software engineeri
 * Chang Rajani
 * Jani Luukko
 
-It was then improved by [RAGE -research group](https://www.cs.helsinki.fi/en/rage/) and it's current maintainer also.
+It was later improved by [RAGE -research group](https://www.cs.helsinki.fi/en/rage/).
