@@ -9,10 +9,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
-
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -24,6 +23,7 @@ import org.junit.Rule;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -42,7 +42,7 @@ public class PasteSteps {
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    private final String coursesExtension;
+    private final URI coursesExtension;
     @Rule WireMockRule wireMockRule = new WireMockRule();
     private TestClient testClient;
     private WireMockServer wireMockServer;
@@ -54,7 +54,7 @@ public class PasteSteps {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
         this.urlHelper = new UrlHelper(settings);
-        coursesExtension = urlHelper.withParams("/courses.json");
+        coursesExtension = urlHelper.withParams(new URI("/courses.json"));
     }
 
     @Before
@@ -85,30 +85,30 @@ public class PasteSteps {
         wireMockServer.stubFor(
             get(urlEqualTo("/user")).withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(aResponse().withStatus(200)));
-        wiremockGET("/courses.json", ExampleJson.allCoursesExample);
-        wiremockGET("/courses/3.json", ExampleJson.courseExample);
-        wiremockPOSTwithPaste("/exercises/286/submissions.json", ExampleJson.pasteResponse);
-        wiremockPOST("/exercises/286/submissions.json", ExampleJson.pasteResponse);
-        wiremockGET("/submissions/1781.json", ExampleJson.successfulSubmission);
+        wiremockGET(new URI("/courses.json"), ExampleJson.allCoursesExample);
+        wiremockGET(new URI("/courses/3.json"), ExampleJson.courseExample);
+        wiremockPOSTwithPaste(new URI("/exercises/286/submissions.json"), ExampleJson.pasteResponse);
+        wiremockPOST(new URI("/exercises/286/submissions.json"), ExampleJson.pasteResponse);
+        wiremockGET(new URI("/submissions/1781.json"), ExampleJson.successfulSubmission);
     }
 
-    private void wiremockGET(String urlToMock, final String returnBody) throws URISyntaxException {
+    private void wiremockGET(URI urlToMock, final String returnBody) throws URISyntaxException {
         urlToMock = urlHelper.withParams(urlToMock);
         wireMockServer
-            .stubFor(get(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
+            .stubFor(get(urlEqualTo(urlToMock.toString())).willReturn(aResponse().withBody(returnBody)));
     }
 
-    private void wiremockPOST(String urlToMock, final String returnBody) throws URISyntaxException {
+    private void wiremockPOST(URI urlToMock, final String returnBody) throws URISyntaxException {
         urlToMock = urlHelper.withParams(urlToMock);
         wireMockServer
-            .stubFor(post(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
+            .stubFor(post(urlEqualTo(urlToMock.toString())).willReturn(aResponse().withBody(returnBody)));
     }
 
-    private void wiremockPOSTwithPaste(String urlToMock, String returnBody)
+    private void wiremockPOSTwithPaste(URI urlToMock, String returnBody)
         throws URISyntaxException {
-        urlToMock = urlHelper.withParams(urlToMock) + "&paste=1";
+        urlToMock = urlHelper.withParams(urlToMock.resolve("&paste=1"));
         wireMockServer
-            .stubFor(post(urlEqualTo(urlToMock)).willReturn(aResponse().withBody(returnBody)));
+            .stubFor(post(urlEqualTo(urlToMock.toString())).willReturn(aResponse().withBody(returnBody)));
     }
 
     @Given("^user has logged in with username \"(.*?)\" and password \"(.*?)\"$")

@@ -1,5 +1,14 @@
 package feature.downloadexercises;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
 
 import cucumber.api.java.After;
@@ -8,10 +17,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
-
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -22,20 +30,12 @@ import org.hamcrest.CoreMatchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class DownloadExercisesSteps {
 
@@ -79,19 +79,19 @@ public class DownloadExercisesSteps {
             get(urlEqualTo("/user")).withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA=="))
                 .willReturn(aResponse().withStatus(200)));
 
-        String urlMock = urlHelper.withParams("/courses.json");
-        wireMockServer.stubFor(get(urlEqualTo(urlMock)).willReturn(
+        URI urlMock = urlHelper.withParams(new URI("/courses.json"));
+        wireMockServer.stubFor(get(urlEqualTo(urlMock.toString())).willReturn(
             aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
                 ExampleJson.allCoursesExample
                     .replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
 
-        urlMock = urlHelper.withParams("/courses/3.json");
-        wireMockServer.stubFor(get(urlEqualTo(urlMock)).willReturn(
+        urlMock = urlHelper.withParams(new URI("/courses/3.json"));
+        wireMockServer.stubFor(get(urlEqualTo(urlMock.toString())).willReturn(
             aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
                 ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS))));
 
-        urlMock = urlHelper.withParams("/courses/21.json");
-        wireMockServer.stubFor(get(urlEqualTo(urlMock)).willReturn(
+        urlMock = urlHelper.withParams(new URI("/courses/21.json"));
+        wireMockServer.stubFor(get(urlEqualTo(urlMock.toString())).willReturn(
             aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
                 ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS)
                     .replaceFirst("3", "21"))));
@@ -125,7 +125,7 @@ public class DownloadExercisesSteps {
     @When("^user gives a download exercises command and course id with locked exercises\\.$")
     public void user_gives_a_download_exercises_command_and_course_id_with_locked_exercises()
         throws Throwable {
-        wireMockServer.stubFor(get(urlEqualTo(urlHelper.withParams("/courses/21.json")))
+        wireMockServer.stubFor(get(urlEqualTo(urlHelper.withParams(new URI("/courses/21.json")).toString()))
             .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")).willReturn(
                 aResponse().withStatus(200).withHeader("Content-Type", "text/json").withBody(
                     ExampleJson.courseExample.replace("https://tmc.mooc.fi/staging", SERVER_ADDRESS)

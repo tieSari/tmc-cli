@@ -15,7 +15,8 @@ import fi.helsinki.cs.tmc.core.domain.submission.ValidationError;
 import fi.helsinki.cs.tmc.core.domain.submission.Validations;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
-import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
+import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
+
 
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
@@ -47,7 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class CoreUser {
         boolean verbose = params.containsKey("verbose");
         // run tests need none of the defaults
         CliSettings settings = new CliSettings();
-        settings.setMainDirectory(params.get("path"));
+        settings.setMainDirectory(Paths.get(params.get("path")));
 
         ListenableFuture<RunResult> result = core.test(Paths.get(params.get("path")));
         ListenableFuture<Validations> checkstyle =
@@ -209,14 +210,14 @@ public class CoreUser {
                     .getCurrentCourse(params.get("path"), core.listCourses().get());
                 if (currentCourse.isPresent()) {
                     ListenableFuture<Course> course =
-                        core.getCourse(new URI(currentCourse.get().getDetailsUrl()));
+                        core.getCourse(currentCourse.get().getName());
                     ResultListener exercisesListener =
                         new ListExercisesListener(course, output, socket);
                     course.addListener(exercisesListener, threadPool);
                 } else {
                     writeToOutputSocket("Could not find current course from your path.");
                 }
-            } catch (InterruptedException | ExecutionException | URISyntaxException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 writeToOutputSocket("Error :" + e.toString());
             }
         }
@@ -231,7 +232,7 @@ public class CoreUser {
             if (params.get("path") == null || params.get("path").isEmpty()) {
                 throw new ProtocolException("Path required");
             }
-            settings.setMainDirectory(params.get("path"));
+            settings.setMainDirectory(Paths.get(params.get("path")));
         } catch (IllegalStateException | ParseException ex) {
             this.writeToOutputSocket(ex.getMessage());
             return;
@@ -255,7 +256,7 @@ public class CoreUser {
 
     private ListenableFuture<List<Exercise>> downloadById(int id, CliSettings settings)
         throws ProtocolException, TmcCoreException {
-        return core.downloadExercises(Paths.get(settings.getTmcMainDirectory()), id, observer);
+        return core.downloadExercises(settings.getTmcMainDirectory(), id, observer);
     }
 
     private ListenableFuture downloadByName(String name, CliSettings settings)
@@ -367,7 +368,7 @@ public class CoreUser {
             writeToOutputSocket(error);
             return;
         }
-        String path = currentPath.substring(0, currentPath.indexOf(courseName));
+        Path path = Paths.get(currentPath.substring(0, currentPath.indexOf(courseName)));
         settings.setMainDirectory(path);
         ListenableFuture<List<Exercise>> downloadFuture;
         ListenableFuture<List<Exercise>> updateFuture =
@@ -439,7 +440,7 @@ public class CoreUser {
             throws Exception {
             Validations v = new Validations();
             v.setStrategy(result.getStrategy().name());
-            Map<File, List<fi.helsinki.cs.tmc.stylerunner.validation.ValidationError>> oldErrs =
+            Map<File, List<fi.helsinki.cs.tmc.langs.abstraction.ValidationError>> oldErrs =
                 result.getValidationErrors();
             Map<String, List<ValidationError>> newErrs = new HashMap<>();
             for (File file : oldErrs.keySet()) {
@@ -450,9 +451,9 @@ public class CoreUser {
         }
 
         private List<ValidationError> convertValidationError(
-            List<fi.helsinki.cs.tmc.stylerunner.validation.ValidationError> oldErrs) {
+            List<fi.helsinki.cs.tmc.langs.abstraction.ValidationError> oldErrs) {
             List<ValidationError> ret = new ArrayList<>();
-            for (fi.helsinki.cs.tmc.stylerunner.validation.ValidationError err : oldErrs) {
+            for (fi.helsinki.cs.tmc.langs.abstraction.ValidationError err : oldErrs) {
                 ValidationError newErr = new ValidationError();
                 newErr.setColumn(err.getColumn());
                 newErr.setLine(err.getLine());
@@ -476,7 +477,7 @@ public class CoreUser {
         @Override
         public ListenableFuture<List<Exercise>> apply(Course course) throws Exception {
             int id = course.getId();
-            return core.downloadExercises(Paths.get(settings.getTmcMainDirectory()), id, observer);
+            return core.downloadExercises(settings.getTmcMainDirectory(), id, observer);
         }
 
     }

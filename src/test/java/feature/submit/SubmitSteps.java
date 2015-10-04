@@ -9,10 +9,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
-
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -24,6 +23,7 @@ import org.junit.Rule;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -37,7 +37,7 @@ public class SubmitSteps {
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
 
-    private String coursesExtension;
+    private URI coursesExtension;
     private int port;
     private TestClient testClient;
     private TmcCli tmcCli;
@@ -53,7 +53,7 @@ public class SubmitSteps {
         settings.setServerAddress(SERVER_ADDRESS);
         this.urlHelper = new UrlHelper(settings);
         try {
-            coursesExtension = urlHelper.withParams("/courses.json");
+            coursesExtension = urlHelper.withParams(new URI("/courses.json"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class SubmitSteps {
      * defines routes for two scenario.
      */
     @Before
-    public void initializeServer() throws IOException, TmcCoreException {
+    public void initializeServer() throws IOException, TmcCoreException, URISyntaxException {
         configHandler = new ConfigHandler();
         configHandler.writeServerAddress(SERVER_ADDRESS);
 

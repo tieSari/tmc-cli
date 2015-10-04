@@ -8,6 +8,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import hy.tmc.cli.configuration.ConfigHandler;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class CliSettings implements TmcSettings {
     private String password;
     private String apiVersion;
     private int pid;
-    private String mainDirectory;
+    private Path mainDirectory;
     private String path;
     private String courseID;
     private ConfigHandler config;
@@ -34,7 +35,7 @@ public class CliSettings implements TmcSettings {
         }
     }
 
-    public CliSettings(String mainDirectory, String apiVersion) {
+    public CliSettings(Path mainDirectory, String apiVersion) {
         this(apiVersion);
         this.mainDirectory = mainDirectory;
     }
@@ -48,7 +49,7 @@ public class CliSettings implements TmcSettings {
      *
      * @param handler Dependency injected configHandler (mock for exemple)
      */
-    public CliSettings(ConfigHandler handler, String mainDirectory, String apiVersion) {
+    public CliSettings(ConfigHandler handler, Path mainDirectory, String apiVersion) {
         this.mainDirectory = mainDirectory;
         this.apiVersion = apiVersion;
         this.config = handler;
@@ -129,7 +130,7 @@ public class CliSettings implements TmcSettings {
         this.apiVersion = apiVersion;
     }
 
-    public void setMainDirectory(String mainDirectory) {
+    public void setMainDirectory(Path mainDirectory) {
         this.mainDirectory = mainDirectory;
     }
 
@@ -142,7 +143,7 @@ public class CliSettings implements TmcSettings {
     }
 
     @Override
-    public String getTmcMainDirectory() {
+    public Path getTmcMainDirectory() {
         return this.mainDirectory;
     }
 

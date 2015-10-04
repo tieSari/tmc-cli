@@ -1,5 +1,11 @@
 package feature.listcourses;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertThat;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
 
 import cucumber.api.java.After;
@@ -8,10 +14,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
-
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
 import hy.tmc.cli.CliSettings;
 import hy.tmc.cli.TmcCli;
 import hy.tmc.cli.configuration.ConfigHandler;
@@ -22,22 +27,16 @@ import org.hamcrest.CoreMatchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-
-import static org.junit.Assert.assertThat;
 
 public class ListCoursesSteps {
 
     private static final String SERVER_URI = "127.0.0.1";
     private static final int SERVER_PORT = 8080;
     private static final String SERVER_ADDRESS = "http://" + SERVER_URI + ":" + SERVER_PORT;
-    private final String coursesExtension;
+    private final URI coursesExtension;
     private TestClient testClient;
     private WireMockServer wireMockServer;
     private TmcCli tmcCli;
@@ -45,7 +44,7 @@ public class ListCoursesSteps {
     public ListCoursesSteps() throws IOException, URISyntaxException {
         CliSettings settings = new CliSettings();
         settings.setServerAddress(SERVER_ADDRESS);
-        coursesExtension = new UrlHelper(settings).withParams("/courses.json");
+        coursesExtension = new UrlHelper(settings).withParams(new URI("/courses.json"));
     }
 
     /**
@@ -69,7 +68,7 @@ public class ListCoursesSteps {
         wireMockServer.stubFor(
             get(urlEqualTo("/user")).withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(aResponse().withStatus(200)));
-        wireMockServer.stubFor(get(urlEqualTo(coursesExtension))
+        wireMockServer.stubFor(get(urlEqualTo(coursesExtension.toString()))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0")).willReturn(
                     aResponse().withStatus(200).withHeader("Content-Type", "application/json")
                         .withBody(ExampleJson.allCoursesExample)));

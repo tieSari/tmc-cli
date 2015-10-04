@@ -2,6 +2,8 @@ package hy.tmc.cli.testhelpers.builders;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 
+import java.net.URI;
+
 public class ExerciseBuilder {
 
     private Exercise exercise;
@@ -25,7 +27,7 @@ public class ExerciseBuilder {
         return this;
     }
 
-    public ExerciseBuilder withReturnUrl(String returnUrl) {
+    public ExerciseBuilder withReturnUrl(URI returnUrl) {
         exercise.setReturnUrl(returnUrl);
         return this;
     }
@@ -40,7 +42,7 @@ public class ExerciseBuilder {
         return this;
     }
 
-    public ExerciseBuilder withSubmissionUrl(String submissionUrl) {
+    public ExerciseBuilder withSubmissionUrl(URI submissionUrl) {
         exercise.setExerciseSubmissionsUrl(submissionUrl);
         return this;
     }
@@ -60,7 +62,7 @@ public class ExerciseBuilder {
         return this;
     }
 
-    public ExerciseBuilder withSolutionUrl(String solution) {
+    public ExerciseBuilder withSolutionUrl(URI solution) {
         exercise.setSolutionDownloadUrl(solution);
         return this;
     }
